@@ -19,6 +19,7 @@
 import { buttonDefaults } from './Button/button.variants.js'
 import { avatarDefaults } from './Avatar/avatar.variants.js'
 import { avatarGroupDefaults } from './AvatarGroup/avatar-group.variants.js'
+import { alertDefaults } from './Alert/alert.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -44,6 +45,7 @@ const componentDefaults = {
     button: buttonDefaults,
     avatar: avatarDefaults,
     avatarGroup: avatarGroupDefaults,
+    alert: alertDefaults,
     icons: iconsDefaults
 }
 
@@ -61,6 +63,7 @@ export type UIConfig = {
 export type ButtonConfig = UIConfig['button']
 export type AvatarConfig = UIConfig['avatar']
 export type AvatarGroupConfig = UIConfig['avatarGroup']
+export type AlertConfig = UIConfig['alert']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================
