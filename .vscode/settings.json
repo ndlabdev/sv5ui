@@ -1,0 +1,25 @@
+{
+    "editor.guides.bracketPairs": "active",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features",
+        "editor.autoClosingBrackets": "always"
+    },
+	"[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+    },
+    "typescript.tsdk": "node_modules\\typescript\\lib"
+}
