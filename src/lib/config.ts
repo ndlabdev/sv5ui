@@ -26,7 +26,8 @@ import { buttonDefaults } from './Button/button.variants.js'
  * Default icons used across components
  * Add new icons here as needed - no type changes required
  */
-const iconsDefaults: Record<string, string> = {
+const iconsDefaults = {
+    // Default icons used across components
     loading: 'lucide:loader-2',
     chevronDown: 'lucide:chevron-down',
     chevronRight: 'lucide:chevron-right',

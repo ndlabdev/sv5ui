@@ -9,12 +9,13 @@
 
     let {
         name,
-        size = '1em',
+        size = 24,
         color,
         flipH = false,
         flipV = false,
         rotate = 0,
-        class: className
+        class: className,
+        ...restProps
     }: Props = $props()
 
     const flip = $derived.by(() => {
@@ -35,4 +36,5 @@
     {flip}
     rotate={rotateValue}
     class="shrink-0 {className ?? ''}"
+    {...restProps}
 />

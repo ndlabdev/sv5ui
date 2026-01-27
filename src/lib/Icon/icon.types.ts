@@ -1,4 +1,9 @@
-export interface IconProps {
+import type { IconProps as IconifyProps } from '@iconify/svelte'
+
+export interface IconProps extends Omit<IconifyProps, 'icon' | 'width' | 'height' | 'rotate' | 'flip' | 'class'> {
+    /** Additional CSS classes */
+    class?: string
+
     /**
      * Icon name in Iconify format: "collection:icon-name"
      * @example "lucide:home", "mdi:account", "heroicons:star"
@@ -36,7 +41,4 @@ export interface IconProps {
      * @default 0
      */
     rotate?: 0 | 90 | 180 | 270
-
-    /** Additional CSS classes */
-    class?: string
 }
