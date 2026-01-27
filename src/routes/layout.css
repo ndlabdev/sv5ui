@@ -81,10 +81,6 @@
   --color-inverse-surface: oklch(0.208 0.042 265.75);
   --color-inverse-on-surface: oklch(0.929 0.013 255.51);
   --color-inverse-primary: oklch(0.707 0.165 254.62);
-
-  /* ========== BACKGROUND (Legacy) ========== */
-  --color-background: var(--color-surface);
-  --color-on-background: var(--color-on-surface);
 }
 
 /* ============================================
@@ -229,10 +225,6 @@
   --color-inverse-surface: var(--color-inverse-surface);
   --color-inverse-on-surface: var(--color-inverse-on-surface);
   --color-inverse-primary: var(--color-inverse-primary);
-
-  /* Background (Legacy) */
-  --color-background: var(--color-background);
-  --color-on-background: var(--color-on-background);
 
   /* ========== RADIUS ========== */
   --radius-xs: 0.125rem;

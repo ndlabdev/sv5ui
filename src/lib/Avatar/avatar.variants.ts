@@ -27,8 +27,4 @@ export const avatarVariants = tv({
 export type AvatarVariantProps = VariantProps<typeof avatarVariants>
 export type AvatarSlots = keyof ReturnType<typeof avatarVariants>
 
-/**
- * Avatar defaults - inherited from avatarVariants.defaultVariants
- * @internal Used by config system
- */
 export const avatarDefaults = avatarVariants.defaultVariants

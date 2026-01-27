@@ -7,6 +7,8 @@
  *
  * defineConfig({
  *     button: { variant: 'outline', color: 'secondary' },
+ *     avatar: { size: 'lg' },
+ *     avatarGroup: { size: 'lg' },
  *     icons: { loading: 'svg-spinners:ring-resize' }
  * })
  * ```
@@ -15,6 +17,8 @@
 // ==================== IMPORTS ====================
 
 import { buttonDefaults } from './Button/button.variants.js'
+import { avatarDefaults } from './Avatar/avatar.variants.js'
+import { avatarGroupDefaults } from './AvatarGroup/avatar-group.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -38,9 +42,9 @@ const iconsDefaults = {
 
 const componentDefaults = {
     button: buttonDefaults,
+    avatar: avatarDefaults,
+    avatarGroup: avatarGroupDefaults,
     icons: iconsDefaults
-    // accordion: accordionDefaults,
-    // alert: alertDefaults,
 }
 
 // ==================== DERIVED TYPES ====================
@@ -55,6 +59,8 @@ export type UIConfig = {
 
 /** Re-export component config types for external use */
 export type ButtonConfig = UIConfig['button']
+export type AvatarConfig = UIConfig['avatar']
+export type AvatarGroupConfig = UIConfig['avatarGroup']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================
@@ -87,13 +93,13 @@ export function resetConfig(): void {
     cachedConfigs = {}
 }
 
-// ==================== INTERNAL: GENERIC CONFIG GETTER ====================
+// ==================== COMPONENT CONFIG GETTER ====================
 
 /**
  * Get merged config for any component (memoized)
  * @internal
  */
-function getComponentConfig<K extends ComponentName>(component: K): ComponentDefaults[K] {
+export function getComponentConfig<K extends ComponentName>(component: K): ComponentDefaults[K] {
     if (!(component in cachedConfigs)) {
         cachedConfigs[component] = {
             ...componentDefaults[component],
@@ -102,11 +108,3 @@ function getComponentConfig<K extends ComponentName>(component: K): ComponentDef
     }
     return cachedConfigs[component] as ComponentDefaults[K]
 }
-
-// ==================== COMPONENT CONFIG GETTERS ====================
-
-/** @internal */
-export const getButtonConfig = () => getComponentConfig('button')
-
-/** @internal */
-export const getIconsConfig = () => getComponentConfig('icons')

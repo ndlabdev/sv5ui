@@ -1,9 +1,7 @@
 <script lang="ts" module>
-    import type { AvatarProps } from './avatar.types.js'
-    import type { AvatarVariantProps } from './avatar.variants.js'
+    import type { AvatarProps, AvatarSize } from './avatar.types.js'
 
     export type Props = AvatarProps
-    export type AvatarSize = NonNullable<AvatarVariantProps['size']>
 
     const SIZE_PX: Record<AvatarSize, number> = {
         '3xs': 16,

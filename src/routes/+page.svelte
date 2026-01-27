@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toggleMode, mode } from 'mode-watcher'
-	import { Button, Icon, Avatar } from '$lib/index.js'
+	import { Button, Icon, Avatar, AvatarGroup } from '$lib/index.js'
 
 	const variants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'link'] as const
 	const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
@@ -258,23 +258,83 @@
 				</div>
 			</div>
 
-			<!-- Avatar Group -->
-			<div class="space-y-2">
-				<h3 class="font-medium">Avatar Stack</h3>
-				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
-					<div class="flex -space-x-3">
-						<Avatar src="https://i.pravatar.cc/150?img=1" alt="User 1" class="ring-2 ring-surface" />
-						<Avatar src="https://i.pravatar.cc/150?img=2" alt="User 2" class="ring-2 ring-surface" />
-						<Avatar src="https://i.pravatar.cc/150?img=3" alt="User 3" class="ring-2 ring-surface" />
-						<Avatar alt="+5" class="ring-2 ring-surface" />
-					</div>
+		</section>
 
-					<div class="flex -space-x-2">
-						<Avatar src="https://i.pravatar.cc/150?img=10" alt="User" size="sm" class="ring-2 ring-surface" />
-						<Avatar src="https://i.pravatar.cc/150?img=11" alt="User" size="sm" class="ring-2 ring-surface" />
-						<Avatar src="https://i.pravatar.cc/150?img=12" alt="User" size="sm" class="ring-2 ring-surface" />
-						<Avatar src="https://i.pravatar.cc/150?img=13" alt="User" size="sm" class="ring-2 ring-surface" />
-					</div>
+		<!-- ==================== AVATAR GROUP SECTION ==================== -->
+		<section class="space-y-4">
+			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Avatar Group</h2>
+			<p class="text-on-surface-variant">
+				Display a stack of overlapping avatars with optional overflow indicator.
+			</p>
+
+			<!-- Basic Usage -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Basic Usage</h3>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<AvatarGroup
+						avatars={[
+							{ src: 'https://i.pravatar.cc/150?img=1', alt: 'User 1' },
+							{ src: 'https://i.pravatar.cc/150?img=2', alt: 'User 2' },
+							{ src: 'https://i.pravatar.cc/150?img=3', alt: 'User 3' },
+							{ src: 'https://i.pravatar.cc/150?img=4', alt: 'User 4' }
+						]}
+					/>
+				</div>
+			</div>
+
+			<!-- Max Limit -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Max Limit</h3>
+				<p class="text-sm text-on-surface-variant">
+					Use <code class="rounded bg-surface-container-highest px-1">max</code> to limit visible avatars. Excess shown as "+N".
+				</p>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<AvatarGroup
+						max={3}
+						avatars={[
+							{ src: 'https://i.pravatar.cc/150?img=1', alt: 'User 1' },
+							{ src: 'https://i.pravatar.cc/150?img=2', alt: 'User 2' },
+							{ src: 'https://i.pravatar.cc/150?img=3', alt: 'User 3' },
+							{ src: 'https://i.pravatar.cc/150?img=4', alt: 'User 4' },
+							{ src: 'https://i.pravatar.cc/150?img=5', alt: 'User 5' },
+							{ src: 'https://i.pravatar.cc/150?img=6', alt: 'User 6' }
+						]}
+					/>
+				</div>
+			</div>
+
+			<!-- Sizes -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Sizes</h3>
+				<div class="flex flex-wrap items-end gap-6 rounded-lg bg-surface-container-high p-4">
+					{#each avatarSizes as size}
+						<div class="flex flex-col items-center gap-2">
+							<AvatarGroup
+								{size}
+								avatars={[
+									{ src: 'https://i.pravatar.cc/150?img=1', alt: 'User 1' },
+									{ src: 'https://i.pravatar.cc/150?img=2', alt: 'User 2' },
+									{ src: 'https://i.pravatar.cc/150?img=3', alt: 'User 3' }
+								]}
+							/>
+							<span class="text-xs text-on-surface-variant">{size}</span>
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<!-- With Children -->
+			<div class="space-y-2">
+				<h3 class="font-medium">With Children</h3>
+				<p class="text-sm text-on-surface-variant">
+					Use slot content for full control over child avatars.
+				</p>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<AvatarGroup size="lg">
+						<Avatar src="https://i.pravatar.cc/150?img=10" alt="User A" />
+						<Avatar src="https://i.pravatar.cc/150?img=11" alt="User B" />
+						<Avatar alt="New" />
+					</AvatarGroup>
 				</div>
 			</div>
 		</section>

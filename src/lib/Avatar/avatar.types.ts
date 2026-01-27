@@ -3,12 +3,14 @@ import type { Avatar } from 'bits-ui'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { AvatarVariantProps, AvatarSlots } from './avatar.variants.js'
 
+export type AvatarSize = NonNullable<AvatarVariantProps['size']>
+
 export type AvatarProps = Omit<Avatar.RootProps, 'children'> & {
     /**
      * Controls the dimensions of the avatar.
      * @default 'md'
      */
-    size?: NonNullable<AvatarVariantProps['size']>
+    size?: AvatarSize
 
     /**
      * URL of the image to display.

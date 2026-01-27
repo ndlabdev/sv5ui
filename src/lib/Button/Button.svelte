@@ -7,12 +7,13 @@
 <script lang="ts">
     import { Button } from 'bits-ui'
     import { buttonVariants } from './button.variants.js'
-    import { getButtonConfig, getIconsConfig } from '../config.js'
+    import { getComponentConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import Avatar, { type AvatarSize } from '../Avatar/Avatar.svelte'
+    import Avatar from '../Avatar/Avatar.svelte'
+	import type { AvatarSize } from '../Avatar/avatar.types.js';
 
-    const config = getButtonConfig()
-    const icons = getIconsConfig()
+    const config = getComponentConfig('button')
+    const icons = getComponentConfig('icons')
 
     let {
         ref = $bindable(null),
