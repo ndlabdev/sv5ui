@@ -9,8 +9,8 @@
     import { buttonVariants } from './button.variants.js'
     import { getButtonConfig, getIconsConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
+    import Avatar, { type AvatarSize } from '../Avatar/Avatar.svelte'
 
-    // Get merged configs (user config + defaults)
     const config = getButtonConfig()
     const icons = getIconsConfig()
 
@@ -31,6 +31,7 @@
         leadingIcon,
         trailingIcon,
         trailing = false,
+        avatar,
         leadingSlot,
         trailingSlot,
         children,
@@ -38,15 +39,10 @@
         ...restProps
     }: Props = $props()
 
-    // Determine if icon-only mode (no label/children content)
     const isIconOnly = $derived(square || (!label && !children))
-
-    const isLeading = $derived(
-        (!!icon && !trailing) || (loading && !trailing) || !!leadingIcon
-    )
+    const isLeading = $derived((!!icon && !trailing) || (loading && !trailing) || !!leadingIcon)
     const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
 
-    // Computed icon names
     const leadingIconName = $derived(
         loading && isLeading ? loadingIcon : (leadingIcon || (isLeading && !trailing ? icon : undefined))
     )
@@ -54,14 +50,13 @@
         loading && isTrailing ? loadingIcon : (trailingIcon || (trailing ? icon : undefined))
     )
 
-    // Get slot classes from variants
     const slots = $derived(
         buttonVariants({
             variant,
             color,
             size,
             block,
-            square: isIconOnly || square,
+            square: isIconOnly,
             loading,
             leading: isLeading,
             trailing: isTrailing
@@ -72,16 +67,22 @@
     const labelClass = $derived(slots.label({ class: ui?.label }))
     const leadingIconClass = $derived(slots.leadingIcon({ class: ui?.leadingIcon }))
     const trailingIconClass = $derived(slots.trailingIcon({ class: ui?.trailingIcon }))
-
-    // bits-ui Button handles disabled state internally
-    const isDisabled = $derived(disabled || loading)
+    const leadingAvatarClass = $derived(slots.leadingAvatar({ class: ui?.leadingAvatar }))
+    const leadingAvatarSize = $derived(slots.leadingAvatarSize() as AvatarSize)
 </script>
 
-{#snippet buttonContent()}
+<Button.Root
+    bind:ref
+    class={baseClass}
+    disabled={disabled || loading}
+    {...restProps}
+>
     {#if leadingSlot}
         {@render leadingSlot()}
     {:else if isLeading && leadingIconName}
         <Icon name={leadingIconName} class={leadingIconClass} />
+    {:else if avatar}
+        <Avatar {...avatar} size={leadingAvatarSize} class={leadingAvatarClass} />
     {/if}
 
     {#if !isIconOnly}
@@ -97,13 +98,4 @@
     {:else if isTrailing && trailingIconName}
         <Icon name={trailingIconName} class={trailingIconClass} />
     {/if}
-{/snippet}
-
-<Button.Root
-    bind:ref
-    class={baseClass}
-    disabled={isDisabled}
-    {...restProps}
->
-    {@render buttonContent()}
 </Button.Root>

@@ -419,42 +419,58 @@
 
 			<!-- Button with Avatar -->
 			<div class="space-y-2">
-				<h3 class="font-medium">Button with Avatar</h3>
+				<h3 class="font-medium">With Avatar</h3>
 				<p class="text-sm text-on-surface-variant">
-					Use <code class="rounded bg-surface-container-highest px-1">leadingSlot</code> to add Avatar inside Button.
+					Use the <code class="rounded bg-surface-container-highest px-1">avatar</code> prop to display an avatar before the label. Size is auto-resolved from button size.
 				</p>
 				<div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
-					{#snippet avatar1()}
-						<Avatar src="https://i.pravatar.cc/150?img=1" alt="John" size="3xs" />
-					{/snippet}
-					<Button variant="soft" color="primary" leadingSlot={avatar1} label="John Doe" />
-
-					{#snippet avatar2()}
-						<Avatar src="https://i.pravatar.cc/150?img=2" alt="Jane" size="3xs" />
-					{/snippet}
-					<Button variant="outline" color="secondary" leadingSlot={avatar2} label="Jane Smith" />
-
-					{#snippet avatar3()}
-						<Avatar alt="AB" size="3xs" class="bg-tertiary" ui={{ fallback: 'text-on-tertiary text-[8px]' }} />
-					{/snippet}
-					<Button variant="solid" color="tertiary" leadingSlot={avatar3} label="New User" />
-
-					{#snippet avatar4()}
-						<Avatar src="https://i.pravatar.cc/150?img=5" alt="User" size="2xs" />
-					{/snippet}
-					<Button variant="ghost" color="secondary" size="lg" leadingSlot={avatar4} label="Profile" trailingIcon="lucide:chevron-down" />
+					<Button
+						variant="soft"
+						color="primary"
+						avatar={{ src: 'https://i.pravatar.cc/150?img=1', alt: 'John' }}
+						label="John Doe"
+					/>
+					<Button
+						variant="outline"
+						color="secondary"
+						avatar={{ src: 'https://i.pravatar.cc/150?img=2', alt: 'Jane' }}
+						label="Jane Smith"
+					/>
+					<Button
+						variant="solid"
+						color="tertiary"
+						avatar={{ alt: 'New' }}
+						label="New User"
+					/>
+					<Button
+						variant="ghost"
+						color="secondary"
+						avatar={{ src: 'https://i.pravatar.cc/150?img=5', alt: 'User' }}
+						label="Profile"
+						trailingIcon="lucide:chevron-down"
+					/>
 				</div>
 
-				<!-- User Menu Style -->
+				<!-- Avatar sizes across button sizes -->
+				<div class="flex flex-wrap items-end gap-3 rounded-lg bg-surface-container-high p-4">
+					{#each sizes as size}
+						<Button
+							variant="soft"
+							color="primary"
+							{size}
+							avatar={{ src: 'https://i.pravatar.cc/150?img=3', alt: 'User' }}
+							label={size.toUpperCase()}
+						/>
+					{/each}
+				</div>
+
+				<!-- User menu style -->
 				<div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
-					{#snippet userAvatar()}
-						<Avatar src="https://i.pravatar.cc/150?img=8" alt="Alice" size="2xs" class="ring-2 ring-primary/30" />
-					{/snippet}
 					<Button
 						variant="soft"
 						color="primary"
 						size="lg"
-						leadingSlot={userAvatar}
+						avatar={{ src: 'https://i.pravatar.cc/150?img=8', alt: 'Alice' }}
 						trailingIcon="lucide:chevron-down"
 					>
 						<span class="flex flex-col items-start text-left">
@@ -462,11 +478,19 @@
 							<span class="text-xs opacity-70">alice@example.com</span>
 						</span>
 					</Button>
-
-					{#snippet teamAvatar()}
-						<Avatar alt="TM" size="2xs" class="bg-success" ui={{ fallback: 'text-on-success text-[10px]' }} />
-					{/snippet}
-					<Button variant="outline" color="success" leadingSlot={teamAvatar} label="Team Alpha" />
+					<Button
+						variant="outline"
+						color="success"
+						avatar={{ alt: 'TM' }}
+						label="Team Alpha"
+					/>
+					<Button
+						variant="subtle"
+						color="info"
+						avatar={{ src: 'https://i.pravatar.cc/150?img=12', alt: 'Bot' }}
+						label="AI Assistant"
+						trailingIcon="lucide:sparkles"
+					/>
 				</div>
 			</div>
 
