@@ -7,17 +7,22 @@
 <script lang="ts">
     import { Button } from 'bits-ui'
     import { buttonVariants } from './button.variants.js'
+    import { getButtonConfig, getIconsConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
+
+    // Get merged configs (user config + defaults)
+    const config = getButtonConfig()
+    const icons = getIconsConfig()
 
     let {
         ref = $bindable(null),
         ui,
-        color = 'primary',
-        variant = 'solid',
-        size = 'md',
+        color = config.color,
+        variant = config.variant,
+        size = config.size,
         label,
         loading = false,
-        loadingIcon = 'lucide:loader-2',
+        loadingIcon = icons.loading,
         disabled = false,
         block = false,
         square = false,

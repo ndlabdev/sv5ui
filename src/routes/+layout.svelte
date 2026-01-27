@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { ModeWatcher } from "mode-watcher";
-	import './layout.css';
+	import { ModeWatcher } from 'mode-watcher'
+	import './layout.css'
+	import '$lib/sv5ui.config.js'
 
-	const { children } = $props();
+	const { children } = $props()
 </script>
 
 <ModeWatcher />

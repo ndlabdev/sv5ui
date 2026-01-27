@@ -770,6 +770,144 @@
 			</div>
 		</section>
 
+		<!-- ==================== GETTING STARTED SECTION ==================== -->
+		<section class="space-y-4">
+			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Getting Started</h2>
+			<p class="text-on-surface-variant">
+				Quick setup guide for SV5UI.
+			</p>
+
+			<!-- Step 1: Install -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Step 1: Install</h3>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">npm install sv5ui</code></pre>
+				</div>
+			</div>
+
+			<!-- Step 2: Setup Layout -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Step 2: Setup Layout</h3>
+				<p class="text-sm text-on-surface-variant">
+					Import theme CSS and ModeWatcher in your root layout:
+				</p>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{'// src/routes/+layout.svelte\n<script>\n    import \'sv5ui/theme.css\'          // Theme with dark mode support\n    import { ModeWatcher } from \'sv5ui\' // Dark mode handler\n<\/script>\n\n<ModeWatcher \/>\n<slot \/>'}</code></pre>
+				</div>
+			</div>
+
+			<!-- Step 3: Use Components -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Step 3: Use Components</h3>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{'<script>\n    import { Button, Icon, toggleMode } from \'sv5ui\'\n<\/script>\n\n<Button label="Click me" \/>\n<Button variant="outline" color="error" label="Delete" \/>\n<Button icon="lucide:moon" onclick={toggleMode} square \/>'}</code></pre>
+				</div>
+			</div>
+
+			<!-- That's it! -->
+			<div class="rounded-lg bg-success-container p-4 text-on-success-container">
+				<p class="font-medium">Done! Theme, dark mode, and components are ready to use.</p>
+			</div>
+		</section>
+
+		<!-- ==================== CUSTOMIZATION SECTION ==================== -->
+		<section class="space-y-4">
+			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Customization (Optional)</h2>
+			<p class="text-on-surface-variant">
+				Customize defaults and colors when needed.
+			</p>
+
+			<!-- Custom Defaults -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Custom Component Defaults</h3>
+				<p class="text-sm text-on-surface-variant">
+					Create a config file to change default props:
+				</p>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{`// src/sv5ui.config.ts
+import { defineConfig } from 'sv5ui'
+
+defineConfig({
+    button: {
+        variant: 'outline',  // Change default variant
+        color: 'secondary',  // Change default color
+        size: 'sm'           // Change default size
+    }
+})`}</code></pre>
+				</div>
+				<p class="mt-2 text-sm text-on-surface-variant">
+					Then import it in your layout:
+				</p>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{'// +layout.svelte\n<script>\n    import \'sv5ui/theme.css\'\n    import \'../sv5ui.config\'  // Add this line\n    import { ModeWatcher } from \'sv5ui\'\n<\/script>'}</code></pre>
+				</div>
+			</div>
+
+			<!-- Custom Colors -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Custom Colors</h3>
+				<p class="text-sm text-on-surface-variant">
+					Override theme colors in your own CSS file (after importing theme.css):
+				</p>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{`/* src/app.css */
+:root {
+    --color-primary: oklch(0.6 0.2 260);
+    --color-on-primary: oklch(1 0 0);
+}
+
+.dark {
+    --color-primary: oklch(0.75 0.15 260);
+}`}</code></pre>
+				</div>
+			</div>
+
+			<!-- Reset Config -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Reset Config</h3>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{`import { resetConfig } from 'sv5ui'
+
+// Reset to library defaults
+resetConfig()`}</code></pre>
+				</div>
+			</div>
+
+			<!-- Customizing Variants -->
+			<div class="space-y-3 rounded-lg bg-surface-container-high p-4">
+				<h3 class="font-medium">Customizing Variants (button.variants.ts)</h3>
+				<p class="text-sm text-on-surface-variant">
+					To add new variants or modify existing ones, edit the <code class="rounded bg-surface-container-highest px-1">button.variants.ts</code> file:
+				</p>
+				<div class="rounded-lg bg-surface-container-highest p-4">
+					<pre class="overflow-x-auto text-sm"><code class="text-on-surface">{`// src/lib/Button/button.variants.ts
+export const buttonVariants = tv({
+    variants: {
+        variant: {
+            solid: '',
+            outline: '',
+            soft: '',
+            // Add your custom variant
+            gradient: '',
+        },
+        // ...
+    },
+    compoundVariants: [
+        // Add styles for your custom variant
+        {
+            variant: 'gradient',
+            color: 'primary',
+            class: {
+                base: 'bg-gradient-to-r from-primary to-tertiary text-on-primary'
+            }
+        },
+        // ...
+    ]
+})`}</code></pre>
+				</div>
+			</div>
+		</section>
+
 		<!-- ==================== COLOR PALETTE SECTION ==================== -->
 		<section class="space-y-4">
 			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Color Palette</h2>

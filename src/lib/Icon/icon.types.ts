@@ -1,6 +1,3 @@
-/** Rotation angles supported by Iconify (in degrees) */
-export type IconRotation = 0 | 90 | 180 | 270
-
 export interface IconProps {
     /**
      * Icon name in Iconify format: "collection:icon-name"
@@ -38,7 +35,7 @@ export interface IconProps {
      * Rotate icon by specified degrees
      * @default 0
      */
-    rotate?: IconRotation
+    rotate?: 0 | 90 | 180 | 270
 
     /** Additional CSS classes */
     class?: string

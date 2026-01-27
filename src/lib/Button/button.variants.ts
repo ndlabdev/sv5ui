@@ -423,3 +423,9 @@ export const buttonVariants = tv({
 
 export type ButtonVariantProps = VariantProps<typeof buttonVariants>
 export type ButtonSlots = keyof ReturnType<typeof buttonVariants>
+
+/**
+ * Button defaults - inherited from buttonVariants.defaultVariants
+ * @internal Used by config system
+ */
+export const buttonDefaults = buttonVariants.defaultVariants

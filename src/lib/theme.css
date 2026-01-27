@@ -1,0 +1,138 @@
+/**
+ * SV5UI Theme - Material Design 3 inspired
+ *
+ * Import this in your app:
+ * import 'sv5ui/theme.css'
+ *
+ * To customize colors, override CSS variables in your own CSS file.
+ */
+
+@import 'tailwindcss';
+
+/* ==================== LIGHT THEME ==================== */
+:root {
+    /* Primary */
+    --color-primary: oklch(0.55 0.2 250);
+    --color-on-primary: oklch(1 0 0);
+    --color-primary-container: oklch(0.92 0.04 250);
+    --color-on-primary-container: oklch(0.25 0.08 250);
+
+    /* Secondary */
+    --color-secondary: oklch(0.55 0.12 280);
+    --color-on-secondary: oklch(1 0 0);
+    --color-secondary-container: oklch(0.92 0.03 280);
+    --color-on-secondary-container: oklch(0.25 0.06 280);
+
+    /* Tertiary */
+    --color-tertiary: oklch(0.55 0.15 320);
+    --color-on-tertiary: oklch(1 0 0);
+    --color-tertiary-container: oklch(0.92 0.04 320);
+    --color-on-tertiary-container: oklch(0.25 0.08 320);
+
+    /* Error */
+    --color-error: oklch(0.55 0.2 25);
+    --color-on-error: oklch(1 0 0);
+    --color-error-container: oklch(0.92 0.05 25);
+    --color-on-error-container: oklch(0.25 0.1 25);
+
+    /* Success */
+    --color-success: oklch(0.55 0.17 145);
+    --color-on-success: oklch(1 0 0);
+    --color-success-container: oklch(0.92 0.04 145);
+    --color-on-success-container: oklch(0.25 0.08 145);
+
+    /* Warning */
+    --color-warning: oklch(0.7 0.18 85);
+    --color-on-warning: oklch(0.2 0.05 85);
+    --color-warning-container: oklch(0.92 0.05 85);
+    --color-on-warning-container: oklch(0.3 0.1 85);
+
+    /* Info */
+    --color-info: oklch(0.6 0.15 230);
+    --color-on-info: oklch(1 0 0);
+    --color-info-container: oklch(0.92 0.03 230);
+    --color-on-info-container: oklch(0.25 0.07 230);
+
+    /* Surface */
+    --color-surface: oklch(0.99 0.002 250);
+    --color-on-surface: oklch(0.2 0.02 250);
+    --color-on-surface-variant: oklch(0.45 0.02 250);
+    --color-surface-container-lowest: oklch(1 0 0);
+    --color-surface-container-low: oklch(0.97 0.002 250);
+    --color-surface-container: oklch(0.95 0.004 250);
+    --color-surface-container-high: oklch(0.93 0.004 250);
+    --color-surface-container-highest: oklch(0.91 0.006 250);
+
+    /* Outline */
+    --color-outline: oklch(0.55 0.02 250);
+    --color-outline-variant: oklch(0.8 0.01 250);
+
+    /* Inverse */
+    --color-inverse-surface: oklch(0.25 0.015 250);
+    --color-inverse-on-surface: oklch(0.95 0.005 250);
+    --color-inverse-primary: oklch(0.8 0.12 250);
+}
+
+/* ==================== DARK THEME ==================== */
+.dark {
+    /* Primary */
+    --color-primary: oklch(0.8 0.12 250);
+    --color-on-primary: oklch(0.25 0.08 250);
+    --color-primary-container: oklch(0.35 0.12 250);
+    --color-on-primary-container: oklch(0.92 0.04 250);
+
+    /* Secondary */
+    --color-secondary: oklch(0.8 0.08 280);
+    --color-on-secondary: oklch(0.25 0.06 280);
+    --color-secondary-container: oklch(0.35 0.08 280);
+    --color-on-secondary-container: oklch(0.92 0.03 280);
+
+    /* Tertiary */
+    --color-tertiary: oklch(0.8 0.1 320);
+    --color-on-tertiary: oklch(0.25 0.08 320);
+    --color-tertiary-container: oklch(0.35 0.1 320);
+    --color-on-tertiary-container: oklch(0.92 0.04 320);
+
+    /* Error */
+    --color-error: oklch(0.8 0.12 25);
+    --color-on-error: oklch(0.25 0.1 25);
+    --color-error-container: oklch(0.35 0.14 25);
+    --color-on-error-container: oklch(0.92 0.05 25);
+
+    /* Success */
+    --color-success: oklch(0.75 0.12 145);
+    --color-on-success: oklch(0.25 0.08 145);
+    --color-success-container: oklch(0.35 0.1 145);
+    --color-on-success-container: oklch(0.92 0.04 145);
+
+    /* Warning */
+    --color-warning: oklch(0.8 0.13 85);
+    --color-on-warning: oklch(0.25 0.08 85);
+    --color-warning-container: oklch(0.4 0.12 85);
+    --color-on-warning-container: oklch(0.92 0.05 85);
+
+    /* Info */
+    --color-info: oklch(0.75 0.1 230);
+    --color-on-info: oklch(0.25 0.07 230);
+    --color-info-container: oklch(0.35 0.1 230);
+    --color-on-info-container: oklch(0.92 0.03 230);
+
+    /* Surface */
+    --color-surface: oklch(0.15 0.01 250);
+    --color-on-surface: oklch(0.9 0.01 250);
+    --color-on-surface-variant: oklch(0.7 0.015 250);
+    --color-surface-container-lowest: oklch(0.1 0.008 250);
+    --color-surface-container-low: oklch(0.18 0.01 250);
+    --color-surface-container: oklch(0.2 0.012 250);
+    --color-surface-container-high: oklch(0.24 0.012 250);
+    --color-surface-container-highest: oklch(0.28 0.015 250);
+
+    /* Outline */
+    --color-outline: oklch(0.55 0.015 250);
+    --color-outline-variant: oklch(0.35 0.015 250);
+
+    /* Inverse */
+    --color-inverse-surface: oklch(0.9 0.01 250);
+    --color-inverse-on-surface: oklch(0.25 0.015 250);
+    --color-inverse-primary: oklch(0.55 0.2 250);
+}
