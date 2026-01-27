@@ -1,299 +1,425 @@
-// button.variants.ts
 import { tv, type VariantProps } from 'tailwind-variants'
 
 export const buttonVariants = tv({
-    base: [
-        // Layout
-        'inline-flex items-center justify-center gap-2',
-        // Typography
-        'font-medium',
-        // Shape
-        'rounded-md',
-        // Transition
-        'transition-all duration-150',
-        // Focus
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        // Disabled
-        'disabled:opacity-50 disabled:pointer-events-none',
-        // Cursor
-        'cursor-pointer'
-    ],
-
+    slots: {
+        base: [
+            'rounded-md font-medium inline-flex items-center justify-center',
+            'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
+            'disabled:opacity-75 aria-disabled:opacity-75',
+            'transition-colors'
+        ],
+        label: 'truncate',
+        leadingIcon: 'shrink-0',
+        leadingAvatar: 'shrink-0',
+        leadingAvatarSize: '',
+        trailingIcon: 'shrink-0'
+    },
     variants: {
         variant: {
             solid: '',
+            outline: '',
             soft: '',
-            outline: 'border bg-transparent',
-            ghost: 'bg-transparent',
-            link: 'bg-transparent underline-offset-4 hover:underline',
-            elevated: 'shadow-md hover:shadow-lg'
+            subtle: '',
+            ghost: '',
+            link: ''
         },
-
         color: {
-            primary: 'focus-visible:ring-primary',
-            secondary: 'focus-visible:ring-secondary',
-            tertiary: 'focus-visible:ring-tertiary',
-            error: 'focus-visible:ring-error',
-            success: 'focus-visible:ring-success',
-            warning: 'focus-visible:ring-warning',
-            neutral: 'focus-visible:ring-outline'
+            primary: '',
+            secondary: '',
+            tertiary: '',
+            success: '',
+            warning: '',
+            error: '',
+            info: ''
         },
-
         size: {
-            xs: 'h-7 px-2 text-xs rounded',
-            sm: 'h-8 px-3 text-sm rounded-md',
-            md: 'h-10 px-4 text-sm rounded-md',
-            lg: 'h-11 px-5 text-base rounded-md',
-            xl: 'h-12 px-6 text-lg rounded-lg',
-            icon: 'size-10 p-0 rounded-md',
-            'icon-xs': 'size-7 p-0 rounded',
-            'icon-sm': 'size-8 p-0 rounded-md',
-            'icon-lg': 'size-11 p-0 rounded-md',
-            'icon-xl': 'size-12 p-0 rounded-lg'
+            xs: {
+                base: 'px-2 py-1 text-xs gap-1 rounded',
+                leadingIcon: 'size-3.5',
+                leadingAvatarSize: '3xs',
+                trailingIcon: 'size-3.5'
+            },
+            sm: {
+                base: 'px-2.5 py-1.5 text-xs gap-1.5 rounded-md',
+                leadingIcon: 'size-4',
+                leadingAvatarSize: '3xs',
+                trailingIcon: 'size-4'
+            },
+            md: {
+                base: 'px-3 py-2 text-sm gap-1.5 rounded-md',
+                leadingIcon: 'size-5',
+                leadingAvatarSize: '2xs',
+                trailingIcon: 'size-5'
+            },
+            lg: {
+                base: 'px-4 py-2.5 text-sm gap-2 rounded-md',
+                leadingIcon: 'size-5',
+                leadingAvatarSize: '2xs',
+                trailingIcon: 'size-5'
+            },
+            xl: {
+                base: 'px-5 py-3 text-base gap-2.5 rounded-lg',
+                leadingIcon: 'size-6',
+                leadingAvatarSize: 'xs',
+                trailingIcon: 'size-6'
+            }
         },
-
-        fullWidth: {
-            true: 'w-full',
-            false: ''
+        block: {
+            true: {
+                base: 'w-full',
+                trailingIcon: 'ms-auto'
+            }
         },
-
+        square: {
+            true: ''
+        },
+        leading: {
+            true: ''
+        },
+        trailing: {
+            true: ''
+        },
         loading: {
-            true: 'cursor-wait',
-            false: ''
+            true: ''
         }
     },
-
     compoundVariants: [
-        // ========== SOLID ==========
+        // ========== SOLID VARIANTS ==========
         {
             variant: 'solid',
             color: 'primary',
-            class: 'bg-primary text-on-primary hover:bg-primary/90 active:bg-primary/80'
+            class: {
+                base: 'bg-primary text-on-primary hover:bg-primary/90 active:bg-primary/80 disabled:bg-primary aria-disabled:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary'
+            }
         },
         {
             variant: 'solid',
             color: 'secondary',
-            class: 'bg-secondary text-on-secondary hover:bg-secondary/90 active:bg-secondary/80'
+            class: {
+                base: 'bg-secondary text-on-secondary hover:bg-secondary/90 active:bg-secondary/80 disabled:bg-secondary aria-disabled:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary'
+            }
         },
         {
             variant: 'solid',
             color: 'tertiary',
-            class: 'bg-tertiary text-on-tertiary hover:bg-tertiary/90 active:bg-tertiary/80'
-        },
-        {
-            variant: 'solid',
-            color: 'error',
-            class: 'bg-error text-on-error hover:bg-error/90 active:bg-error/80'
+            class: {
+                base: 'bg-tertiary text-on-tertiary hover:bg-tertiary/90 active:bg-tertiary/80 disabled:bg-tertiary aria-disabled:bg-tertiary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tertiary'
+            }
         },
         {
             variant: 'solid',
             color: 'success',
-            class: 'bg-success text-on-success hover:bg-success/90 active:bg-success/80'
+            class: {
+                base: 'bg-success text-on-success hover:bg-success/90 active:bg-success/80 disabled:bg-success aria-disabled:bg-success focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success'
+            }
         },
         {
             variant: 'solid',
             color: 'warning',
-            class: 'bg-warning text-on-warning hover:bg-warning/90 active:bg-warning/80'
+            class: {
+                base: 'bg-warning text-on-warning hover:bg-warning/90 active:bg-warning/80 disabled:bg-warning aria-disabled:bg-warning focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-warning'
+            }
         },
         {
             variant: 'solid',
-            color: 'neutral',
-            class: 'bg-on-surface text-surface hover:bg-on-surface/90 active:bg-on-surface/80'
+            color: 'error',
+            class: {
+                base: 'bg-error text-on-error hover:bg-error/90 active:bg-error/80 disabled:bg-error aria-disabled:bg-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-error'
+            }
+        },
+        {
+            variant: 'solid',
+            color: 'info',
+            class: {
+                base: 'bg-info text-on-info hover:bg-info/90 active:bg-info/80 disabled:bg-info aria-disabled:bg-info focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info'
+            }
         },
 
-        // ========== SOFT ==========
+        // ========== OUTLINE VARIANTS ==========
         {
-            variant: 'soft',
+            variant: 'outline',
             color: 'primary',
-            class: 'bg-primary-container text-on-primary-container hover:bg-primary-container/80'
+            class: {
+                base: 'ring ring-inset ring-primary text-primary hover:bg-primary-container active:bg-primary-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-primary'
+            }
         },
         {
-            variant: 'soft',
+            variant: 'outline',
             color: 'secondary',
-            class: 'bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80'
+            class: {
+                base: 'ring ring-inset ring-secondary text-secondary hover:bg-secondary-container active:bg-secondary-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-secondary'
+            }
         },
         {
-            variant: 'soft',
+            variant: 'outline',
             color: 'tertiary',
-            class: 'bg-tertiary-container text-on-tertiary-container hover:bg-tertiary-container/80'
+            class: {
+                base: 'ring ring-inset ring-tertiary text-tertiary hover:bg-tertiary-container active:bg-tertiary-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-tertiary'
+            }
         },
         {
-            variant: 'soft',
-            color: 'error',
-            class: 'bg-error-container text-on-error-container hover:bg-error-container/80'
-        },
-        {
-            variant: 'soft',
+            variant: 'outline',
             color: 'success',
-            class: 'bg-success-container text-on-success-container hover:bg-success-container/80'
+            class: {
+                base: 'ring ring-inset ring-success text-success hover:bg-success-container active:bg-success-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-success'
+            }
         },
         {
-            variant: 'soft',
+            variant: 'outline',
             color: 'warning',
-            class: 'bg-warning-container text-on-warning-container hover:bg-warning-container/80'
+            class: {
+                base: 'ring ring-inset ring-warning text-warning hover:bg-warning-container active:bg-warning-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-warning'
+            }
         },
         {
-            variant: 'soft',
-            color: 'neutral',
-            class: 'bg-surface-container-highest text-on-surface hover:bg-surface-container-highest/80'
+            variant: 'outline',
+            color: 'error',
+            class: {
+                base: 'ring ring-inset ring-error text-error hover:bg-error-container active:bg-error-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-error'
+            }
+        },
+        {
+            variant: 'outline',
+            color: 'info',
+            class: {
+                base: 'ring ring-inset ring-info text-info hover:bg-info-container active:bg-info-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-info'
+            }
         },
 
-        // ========== OUTLINE ==========
+        // ========== SOFT VARIANTS ==========
         {
-            variant: 'outline',
+            variant: 'soft',
             color: 'primary',
-            class: 'border-primary text-primary hover:bg-primary-container'
+            class: {
+                base: 'text-on-primary-container bg-primary-container hover:bg-primary-container/80 active:bg-primary-container/70 focus-visible:bg-primary-container/80 disabled:bg-primary-container aria-disabled:bg-primary-container'
+            }
         },
         {
-            variant: 'outline',
+            variant: 'soft',
             color: 'secondary',
-            class: 'border-secondary text-secondary hover:bg-secondary-container'
+            class: {
+                base: 'text-on-secondary-container bg-secondary-container hover:bg-secondary-container/80 active:bg-secondary-container/70 focus-visible:bg-secondary-container/80 disabled:bg-secondary-container aria-disabled:bg-secondary-container'
+            }
         },
         {
-            variant: 'outline',
+            variant: 'soft',
             color: 'tertiary',
-            class: 'border-tertiary text-tertiary hover:bg-tertiary-container'
+            class: {
+                base: 'text-on-tertiary-container bg-tertiary-container hover:bg-tertiary-container/80 active:bg-tertiary-container/70 focus-visible:bg-tertiary-container/80 disabled:bg-tertiary-container aria-disabled:bg-tertiary-container'
+            }
         },
         {
-            variant: 'outline',
-            color: 'error',
-            class: 'border-error text-error hover:bg-error-container'
-        },
-        {
-            variant: 'outline',
+            variant: 'soft',
             color: 'success',
-            class: 'border-success text-success hover:bg-success-container'
+            class: {
+                base: 'text-on-success-container bg-success-container hover:bg-success-container/80 active:bg-success-container/70 focus-visible:bg-success-container/80 disabled:bg-success-container aria-disabled:bg-success-container'
+            }
         },
         {
-            variant: 'outline',
+            variant: 'soft',
             color: 'warning',
-            class: 'border-warning text-warning hover:bg-warning-container'
+            class: {
+                base: 'text-on-warning-container bg-warning-container hover:bg-warning-container/80 active:bg-warning-container/70 focus-visible:bg-warning-container/80 disabled:bg-warning-container aria-disabled:bg-warning-container'
+            }
         },
         {
-            variant: 'outline',
-            color: 'neutral',
-            class: 'border-outline text-on-surface hover:bg-surface-container'
+            variant: 'soft',
+            color: 'error',
+            class: {
+                base: 'text-on-error-container bg-error-container hover:bg-error-container/80 active:bg-error-container/70 focus-visible:bg-error-container/80 disabled:bg-error-container aria-disabled:bg-error-container'
+            }
+        },
+        {
+            variant: 'soft',
+            color: 'info',
+            class: {
+                base: 'text-on-info-container bg-info-container hover:bg-info-container/80 active:bg-info-container/70 focus-visible:bg-info-container/80 disabled:bg-info-container aria-disabled:bg-info-container'
+            }
         },
 
-        // ========== GHOST ==========
+        // ========== SUBTLE VARIANTS ==========
         {
-            variant: 'ghost',
+            variant: 'subtle',
             color: 'primary',
-            class: 'text-primary hover:bg-primary-container'
+            class: {
+                base: 'text-on-primary-container ring ring-inset ring-primary/25 bg-primary-container hover:bg-primary-container/80 active:bg-primary-container/70 disabled:bg-primary-container aria-disabled:bg-primary-container focus-visible:ring-2 focus-visible:ring-primary'
+            }
         },
         {
-            variant: 'ghost',
+            variant: 'subtle',
             color: 'secondary',
-            class: 'text-secondary hover:bg-secondary-container'
+            class: {
+                base: 'text-on-secondary-container ring ring-inset ring-secondary/25 bg-secondary-container hover:bg-secondary-container/80 active:bg-secondary-container/70 disabled:bg-secondary-container aria-disabled:bg-secondary-container focus-visible:ring-2 focus-visible:ring-secondary'
+            }
         },
         {
-            variant: 'ghost',
+            variant: 'subtle',
             color: 'tertiary',
-            class: 'text-tertiary hover:bg-tertiary-container'
+            class: {
+                base: 'text-on-tertiary-container ring ring-inset ring-tertiary/25 bg-tertiary-container hover:bg-tertiary-container/80 active:bg-tertiary-container/70 disabled:bg-tertiary-container aria-disabled:bg-tertiary-container focus-visible:ring-2 focus-visible:ring-tertiary'
+            }
         },
         {
-            variant: 'ghost',
-            color: 'error',
-            class: 'text-error hover:bg-error-container'
-        },
-        {
-            variant: 'ghost',
+            variant: 'subtle',
             color: 'success',
-            class: 'text-success hover:bg-success-container'
+            class: {
+                base: 'text-on-success-container ring ring-inset ring-success/25 bg-success-container hover:bg-success-container/80 active:bg-success-container/70 disabled:bg-success-container aria-disabled:bg-success-container focus-visible:ring-2 focus-visible:ring-success'
+            }
         },
         {
-            variant: 'ghost',
+            variant: 'subtle',
             color: 'warning',
-            class: 'text-warning hover:bg-warning-container'
+            class: {
+                base: 'text-on-warning-container ring ring-inset ring-warning/25 bg-warning-container hover:bg-warning-container/80 active:bg-warning-container/70 disabled:bg-warning-container aria-disabled:bg-warning-container focus-visible:ring-2 focus-visible:ring-warning'
+            }
         },
         {
-            variant: 'ghost',
-            color: 'neutral',
-            class: 'text-on-surface-variant hover:bg-surface-container'
+            variant: 'subtle',
+            color: 'error',
+            class: {
+                base: 'text-on-error-container ring ring-inset ring-error/25 bg-error-container hover:bg-error-container/80 active:bg-error-container/70 disabled:bg-error-container aria-disabled:bg-error-container focus-visible:ring-2 focus-visible:ring-error'
+            }
+        },
+        {
+            variant: 'subtle',
+            color: 'info',
+            class: {
+                base: 'text-on-info-container ring ring-inset ring-info/25 bg-info-container hover:bg-info-container/80 active:bg-info-container/70 disabled:bg-info-container aria-disabled:bg-info-container focus-visible:ring-2 focus-visible:ring-info'
+            }
         },
 
-        // ========== LINK ==========
+        // ========== GHOST VARIANTS ==========
         {
-            variant: 'link',
+            variant: 'ghost',
             color: 'primary',
-            class: 'text-primary'
+            class: {
+                base: 'text-primary hover:bg-primary-container active:bg-primary-container focus-visible:bg-primary-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
         },
         {
-            variant: 'link',
+            variant: 'ghost',
             color: 'secondary',
-            class: 'text-secondary'
+            class: {
+                base: 'text-secondary hover:bg-secondary-container active:bg-secondary-container focus-visible:bg-secondary-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
         },
         {
-            variant: 'link',
+            variant: 'ghost',
             color: 'tertiary',
-            class: 'text-tertiary'
+            class: {
+                base: 'text-tertiary hover:bg-tertiary-container active:bg-tertiary-container focus-visible:bg-tertiary-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
         },
         {
-            variant: 'link',
-            color: 'error',
-            class: 'text-error'
-        },
-        {
-            variant: 'link',
+            variant: 'ghost',
             color: 'success',
-            class: 'text-success'
+            class: {
+                base: 'text-success hover:bg-success-container active:bg-success-container focus-visible:bg-success-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
         },
         {
-            variant: 'link',
+            variant: 'ghost',
             color: 'warning',
-            class: 'text-warning'
+            class: {
+                base: 'text-warning hover:bg-warning-container active:bg-warning-container focus-visible:bg-warning-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
         },
         {
-            variant: 'link',
-            color: 'neutral',
-            class: 'text-on-surface-variant'
+            variant: 'ghost',
+            color: 'error',
+            class: {
+                base: 'text-error hover:bg-error-container active:bg-error-container focus-visible:bg-error-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
+        },
+        {
+            variant: 'ghost',
+            color: 'info',
+            class: {
+                base: 'text-info hover:bg-info-container active:bg-info-container focus-visible:bg-info-container disabled:bg-transparent aria-disabled:bg-transparent'
+            }
         },
 
-        // ========== ELEVATED ==========
+        // ========== LINK VARIANTS ==========
         {
-            variant: 'elevated',
+            variant: 'link',
             color: 'primary',
-            class: 'bg-primary text-on-primary hover:bg-primary/90'
+            class: {
+                base: 'text-primary hover:text-primary/75 active:text-primary/75 underline-offset-4 hover:underline disabled:text-primary aria-disabled:text-primary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary'
+            }
         },
         {
-            variant: 'elevated',
+            variant: 'link',
             color: 'secondary',
-            class: 'bg-surface-container-low text-primary hover:bg-surface-container'
+            class: {
+                base: 'text-secondary hover:text-secondary/75 active:text-secondary/75 underline-offset-4 hover:underline disabled:text-secondary aria-disabled:text-secondary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-secondary'
+            }
         },
         {
-            variant: 'elevated',
+            variant: 'link',
             color: 'tertiary',
-            class: 'bg-tertiary text-on-tertiary hover:bg-tertiary/90'
+            class: {
+                base: 'text-tertiary hover:text-tertiary/75 active:text-tertiary/75 underline-offset-4 hover:underline disabled:text-tertiary aria-disabled:text-tertiary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-tertiary'
+            }
         },
         {
-            variant: 'elevated',
-            color: 'error',
-            class: 'bg-error text-on-error hover:bg-error/90'
-        },
-        {
-            variant: 'elevated',
+            variant: 'link',
             color: 'success',
-            class: 'bg-success text-on-success hover:bg-success/90'
+            class: {
+                base: 'text-success hover:text-success/75 active:text-success/75 underline-offset-4 hover:underline disabled:text-success aria-disabled:text-success focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-success'
+            }
         },
         {
-            variant: 'elevated',
+            variant: 'link',
             color: 'warning',
-            class: 'bg-warning text-on-warning hover:bg-warning/90'
+            class: {
+                base: 'text-warning hover:text-warning/75 active:text-warning/75 underline-offset-4 hover:underline disabled:text-warning aria-disabled:text-warning focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warning'
+            }
         },
         {
-            variant: 'elevated',
-            color: 'neutral',
-            class: 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+            variant: 'link',
+            color: 'error',
+            class: {
+                base: 'text-error hover:text-error/75 active:text-error/75 underline-offset-4 hover:underline disabled:text-error aria-disabled:text-error focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-error'
+            }
+        },
+        {
+            variant: 'link',
+            color: 'info',
+            class: {
+                base: 'text-info hover:text-info/75 active:text-info/75 underline-offset-4 hover:underline disabled:text-info aria-disabled:text-info focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-info'
+            }
+        },
+
+        // ========== SQUARE SIZE ADJUSTMENTS ==========
+        { square: true, size: 'xs', class: { base: 'p-1' } },
+        { square: true, size: 'sm', class: { base: 'p-1.5' } },
+        { square: true, size: 'md', class: { base: 'p-1.5' } },
+        { square: true, size: 'lg', class: { base: 'p-2' } },
+        { square: true, size: 'xl', class: { base: 'p-2.5' } },
+
+        // ========== LOADING ICON ANIMATION ==========
+        {
+            loading: true,
+            leading: true,
+            class: {
+                leadingIcon: 'animate-spin'
+            }
+        },
+        {
+            loading: true,
+            leading: false,
+            trailing: true,
+            class: {
+                trailingIcon: 'animate-spin'
+            }
         }
     ],
-
     defaultVariants: {
         variant: 'solid',
         color: 'primary',
-        size: 'md',
-        fullWidth: false,
-        loading: false
+        size: 'md'
     }
 })
 
 export type ButtonVariantProps = VariantProps<typeof buttonVariants>
+export type ButtonSlots = keyof ReturnType<typeof buttonVariants>

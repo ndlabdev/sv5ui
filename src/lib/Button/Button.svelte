@@ -5,53 +5,100 @@
 </script>
 
 <script lang="ts">
-    import Icon from '../Icon/Icon.svelte'
+    import { Button } from 'bits-ui'
     import { buttonVariants } from './button.variants.js'
+    import Icon from '../Icon/Icon.svelte'
 
     let {
-        variant = 'solid',
+        ref = $bindable(null),
+        ui,
         color = 'primary',
+        variant = 'solid',
         size = 'md',
-        disabled = false,
+        label,
         loading = false,
-        iconLeading,
-        iconTrailing,
-        fullWidth = false,
+        loadingIcon = 'lucide:loader-2',
+        disabled = false,
+        block = false,
+        square = false,
+        truncate = false,
+        icon,
+        leadingIcon,
+        trailingIcon,
+        trailing = false,
+        leadingSlot,
+        trailingSlot,
         children,
         class: className,
         ...restProps
     }: Props = $props()
 
-    const classes = $derived(
+    // Determine if icon-only mode (no label/children content)
+    const isIconOnly = $derived(square || (!label && !children))
+
+    const isLeading = $derived(
+        (!!icon && !trailing) || (loading && !trailing) || !!leadingIcon
+    )
+    const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
+
+    // Computed icon names
+    const leadingIconName = $derived(
+        loading && isLeading ? loadingIcon : (leadingIcon || (isLeading && !trailing ? icon : undefined))
+    )
+    const trailingIconName = $derived(
+        loading && isTrailing ? loadingIcon : (trailingIcon || (trailing ? icon : undefined))
+    )
+
+    // Get slot classes from variants
+    const slots = $derived(
         buttonVariants({
             variant,
             color,
             size,
-            fullWidth,
+            block,
+            square: isIconOnly || square,
             loading,
-            class: className
+            leading: isLeading,
+            trailing: isTrailing
         })
     )
 
+    const baseClass = $derived(slots.base({ class: [className, ui?.base] }))
+    const labelClass = $derived(slots.label({ class: ui?.label }))
+    const leadingIconClass = $derived(slots.leadingIcon({ class: ui?.leadingIcon }))
+    const trailingIconClass = $derived(slots.trailingIcon({ class: ui?.trailingIcon }))
+
+    // bits-ui Button handles disabled state internally
     const isDisabled = $derived(disabled || loading)
 </script>
 
-<button
-    class={classes}
+{#snippet buttonContent()}
+    {#if leadingSlot}
+        {@render leadingSlot()}
+    {:else if isLeading && leadingIconName}
+        <Icon name={leadingIconName} class={leadingIconClass} />
+    {/if}
+
+    {#if !isIconOnly}
+        {#if label}
+            <span class={labelClass}>{label}</span>
+        {:else if children}
+            <span class={labelClass}>{@render children()}</span>
+        {/if}
+    {/if}
+
+    {#if trailingSlot}
+        {@render trailingSlot()}
+    {:else if isTrailing && trailingIconName}
+        <Icon name={trailingIconName} class={trailingIconClass} />
+    {/if}
+{/snippet}
+
+<Button.Root
+    bind:ref
+    class={baseClass}
     disabled={isDisabled}
     {...restProps}
 >
-    {#if loading}
-        <Icon name="lucide:loader-2" class="animate-spin" />
-    {:else if iconLeading}
-        <Icon name={iconLeading} />
-    {/if}
-
-    {#if children}
-        {@render children()}
-    {/if}
-
-    {#if iconTrailing && !loading}
-        <Icon name={iconTrailing} />
-    {/if}
-</button>
+    {@render buttonContent()}
+</Button.Root>
