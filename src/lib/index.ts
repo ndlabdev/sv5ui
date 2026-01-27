@@ -1,6 +1,7 @@
 // Components
 export * from './Icon/index.js'
 export * from './Button/index.js'
+export * from './Avatar/index.js'
 
 // Configuration
 export { defineConfig, getConfig, resetConfig } from './config.js'

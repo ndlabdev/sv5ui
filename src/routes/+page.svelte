@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { toggleMode, mode } from 'mode-watcher'
-	import { Button, Icon } from '$lib/index.js'
+	import { Button, Icon, Avatar } from '$lib/index.js'
 
 	const variants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'link'] as const
 	const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
 	const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
+	const avatarSizes = ['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const
 </script>
 
 <div class="min-h-screen bg-surface text-on-surface">
@@ -179,6 +180,105 @@
 			</div>
 		</section>
 
+		<!-- ==================== AVATAR SECTION ==================== -->
+		<section class="space-y-4">
+			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Avatar</h2>
+			<p class="text-on-surface-variant">
+				Display user profile images with fallback to initials.
+			</p>
+
+			<!-- Basic Avatar -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Basic Usage</h3>
+				<div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
+					<Avatar src="https://i.pravatar.cc/150?img=1" alt="John Doe" />
+					<Avatar src="https://i.pravatar.cc/150?img=2" alt="Jane Smith" />
+					<Avatar src="https://i.pravatar.cc/150?img=3" alt="Bob Wilson" />
+					<Avatar alt="No Image" />
+					<Avatar text="AB" />
+				</div>
+			</div>
+
+			<!-- Avatar Sizes -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Sizes</h3>
+				<div class="flex flex-wrap items-end gap-4 rounded-lg bg-surface-container-high p-4">
+					{#each avatarSizes as size}
+						<div class="flex flex-col items-center gap-2">
+							<Avatar src="https://i.pravatar.cc/150?img=5" alt="User" {size} />
+							<span class="text-xs text-on-surface-variant">{size}</span>
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Fallback Initials -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Fallback Initials</h3>
+				<p class="text-sm text-on-surface-variant">
+					Auto-generates initials from <code class="rounded bg-surface-container-highest px-1">alt</code> text when no image.
+				</p>
+				<div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
+					<Avatar alt="John Doe" size="lg" />
+					<Avatar alt="Jane Smith" size="lg" />
+					<Avatar alt="Bob" size="lg" />
+					<Avatar alt="Alice Brown Carter" size="lg" />
+					<Avatar text="XY" size="lg" />
+				</div>
+			</div>
+
+			<!-- Custom Styling with ui prop -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Custom Styling</h3>
+				<div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
+					<Avatar
+						src="https://i.pravatar.cc/150?img=10"
+						alt="User"
+						size="xl"
+						class="ring-2 ring-primary ring-offset-2 ring-offset-surface"
+					/>
+					<Avatar
+						src="https://i.pravatar.cc/150?img=11"
+						alt="User"
+						size="xl"
+						class="ring-2 ring-success"
+					/>
+					<Avatar
+						alt="VIP"
+						size="xl"
+						class="bg-primary"
+						ui={{ fallback: 'text-on-primary' }}
+					/>
+					<Avatar
+						alt="Pro"
+						size="xl"
+						class="bg-linear-to-br from-primary to-tertiary"
+						ui={{ fallback: 'text-white font-bold' }}
+					/>
+				</div>
+			</div>
+
+			<!-- Avatar Group -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Avatar Stack</h3>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<div class="flex -space-x-3">
+						<Avatar src="https://i.pravatar.cc/150?img=1" alt="User 1" class="ring-2 ring-surface" />
+						<Avatar src="https://i.pravatar.cc/150?img=2" alt="User 2" class="ring-2 ring-surface" />
+						<Avatar src="https://i.pravatar.cc/150?img=3" alt="User 3" class="ring-2 ring-surface" />
+						<Avatar alt="+5" class="ring-2 ring-surface" />
+					</div>
+
+					<div class="flex -space-x-2">
+						<Avatar src="https://i.pravatar.cc/150?img=10" alt="User" size="sm" class="ring-2 ring-surface" />
+						<Avatar src="https://i.pravatar.cc/150?img=11" alt="User" size="sm" class="ring-2 ring-surface" />
+						<Avatar src="https://i.pravatar.cc/150?img=12" alt="User" size="sm" class="ring-2 ring-surface" />
+						<Avatar src="https://i.pravatar.cc/150?img=13" alt="User" size="sm" class="ring-2 ring-surface" />
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<!-- ==================== BUTTON SECTION ==================== -->
 		<section class="space-y-6">
 			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Button</h2>
@@ -314,6 +414,59 @@
 						<span class="font-bold">Bold</span>
 						<span class="font-light">& Light</span>
 					</Button>
+				</div>
+			</div>
+
+			<!-- Button with Avatar -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Button with Avatar</h3>
+				<p class="text-sm text-on-surface-variant">
+					Use <code class="rounded bg-surface-container-highest px-1">leadingSlot</code> to add Avatar inside Button.
+				</p>
+				<div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
+					{#snippet avatar1()}
+						<Avatar src="https://i.pravatar.cc/150?img=1" alt="John" size="3xs" />
+					{/snippet}
+					<Button variant="soft" color="primary" leadingSlot={avatar1} label="John Doe" />
+
+					{#snippet avatar2()}
+						<Avatar src="https://i.pravatar.cc/150?img=2" alt="Jane" size="3xs" />
+					{/snippet}
+					<Button variant="outline" color="secondary" leadingSlot={avatar2} label="Jane Smith" />
+
+					{#snippet avatar3()}
+						<Avatar alt="AB" size="3xs" class="bg-tertiary" ui={{ fallback: 'text-on-tertiary text-[8px]' }} />
+					{/snippet}
+					<Button variant="solid" color="tertiary" leadingSlot={avatar3} label="New User" />
+
+					{#snippet avatar4()}
+						<Avatar src="https://i.pravatar.cc/150?img=5" alt="User" size="2xs" />
+					{/snippet}
+					<Button variant="ghost" color="secondary" size="lg" leadingSlot={avatar4} label="Profile" trailingIcon="lucide:chevron-down" />
+				</div>
+
+				<!-- User Menu Style -->
+				<div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
+					{#snippet userAvatar()}
+						<Avatar src="https://i.pravatar.cc/150?img=8" alt="Alice" size="2xs" class="ring-2 ring-primary/30" />
+					{/snippet}
+					<Button
+						variant="soft"
+						color="primary"
+						size="lg"
+						leadingSlot={userAvatar}
+						trailingIcon="lucide:chevron-down"
+					>
+						<span class="flex flex-col items-start text-left">
+							<span class="text-sm font-medium">Alice Johnson</span>
+							<span class="text-xs opacity-70">alice@example.com</span>
+						</span>
+					</Button>
+
+					{#snippet teamAvatar()}
+						<Avatar alt="TM" size="2xs" class="bg-success" ui={{ fallback: 'text-on-success text-[10px]' }} />
+					{/snippet}
+					<Button variant="outline" color="success" leadingSlot={teamAvatar} label="Team Alpha" />
 				</div>
 			</div>
 
@@ -554,7 +707,7 @@
 							variant="solid"
 							color="primary"
 							label="Gradient"
-							ui={{ base: 'bg-gradient-to-r from-primary to-tertiary hover:from-primary/90 hover:to-tertiary/90' }}
+							ui={{ base: 'bg-linear-to-r from-primary to-tertiary hover:from-primary/90 hover:to-tertiary/90' }}
 						/>
 
 						<!-- Border Dashed -->
@@ -608,7 +761,7 @@
 							variant="ghost"
 							color="primary"
 							label="Gradient Text"
-							ui={{ label: 'bg-gradient-to-r from-primary to-tertiary bg-clip-text text-transparent' }}
+							ui={{ label: 'bg-linear-to-r from-primary to-tertiary bg-clip-text text-transparent' }}
 						/>
 					</div>
 				</div>
@@ -898,7 +1051,7 @@ export const buttonVariants = tv({
             variant: 'gradient',
             color: 'primary',
             class: {
-                base: 'bg-gradient-to-r from-primary to-tertiary text-on-primary'
+                base: 'bg-linear-to-r from-primary to-tertiary text-on-primary'
             }
         },
         // ...
