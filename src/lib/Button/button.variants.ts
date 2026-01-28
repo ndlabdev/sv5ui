@@ -424,4 +424,7 @@ export const buttonVariants = tv({
 export type ButtonVariantProps = VariantProps<typeof buttonVariants>
 export type ButtonSlots = keyof ReturnType<typeof buttonVariants>
 
-export const buttonDefaults = buttonVariants.defaultVariants
+export const buttonDefaults = {
+    defaultVariants: buttonVariants.defaultVariants,
+    slots: {} as Partial<Record<ButtonSlots, string>>
+}

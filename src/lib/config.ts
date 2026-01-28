@@ -6,9 +6,14 @@
  * import { defineConfig } from 'sv5ui'
  *
  * defineConfig({
- *     button: { variant: 'outline', color: 'secondary' },
- *     avatar: { size: 'lg' },
- *     avatarGroup: { size: 'lg' },
+ *     button: {
+ *         defaultVariants: { variant: 'outline', color: 'secondary' },
+ *         slots: { base: 'shadow-md', label: 'font-bold' }
+ *     },
+ *     avatar: {
+ *         defaultVariants: { size: 'lg' },
+ *         slots: { root: 'ring-2 ring-primary' }
+ *     },
  *     icons: { loading: 'svg-spinners:ring-resize' }
  * })
  * ```
@@ -56,9 +61,14 @@ const componentDefaults = {
 type ComponentDefaults = typeof componentDefaults
 type ComponentName = keyof ComponentDefaults
 
+/** Deep partial type for component config */
+type DeepPartial<T> = {
+    [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
+}
+
 /** Config for each component - derived from its defaults */
 export type UIConfig = {
-    [K in ComponentName]?: Partial<ComponentDefaults[K]>
+    [K in ComponentName]?: DeepPartial<ComponentDefaults[K]>
 }
 
 /** Re-export component config types for external use */
@@ -102,15 +112,44 @@ export function resetConfig(): void {
 // ==================== COMPONENT CONFIG GETTER ====================
 
 /**
+ * Deep merge utility for config objects
+ */
+function deepMerge<T extends Record<string, unknown>>(target: T, source: DeepPartial<T>): T {
+    const result = { ...target } as T
+    for (const key in source) {
+        const sourceValue = source[key]
+        const targetValue = target[key]
+        if (
+            sourceValue !== undefined &&
+            typeof sourceValue === 'object' &&
+            sourceValue !== null &&
+            !Array.isArray(sourceValue) &&
+            typeof targetValue === 'object' &&
+            targetValue !== null &&
+            !Array.isArray(targetValue)
+        ) {
+            result[key] = deepMerge(
+                targetValue as Record<string, unknown>,
+                sourceValue as DeepPartial<Record<string, unknown>>
+            ) as T[Extract<keyof T, string>]
+        } else if (sourceValue !== undefined) {
+            result[key] = sourceValue as T[Extract<keyof T, string>]
+        }
+    }
+    return result
+}
+
+/**
  * Get merged config for any component (memoized)
  * @internal
  */
 export function getComponentConfig<K extends ComponentName>(component: K): ComponentDefaults[K] {
     if (!(component in cachedConfigs)) {
-        cachedConfigs[component] = {
-            ...componentDefaults[component],
-            ...globalConfig[component]
-        } as ComponentDefaults[K]
+        const defaults = componentDefaults[component]
+        const userConfig = globalConfig[component]
+        cachedConfigs[component] = userConfig
+            ? deepMerge(defaults as Record<string, unknown>, userConfig as DeepPartial<Record<string, unknown>>) as ComponentDefaults[K]
+            : defaults
     }
     return cachedConfigs[component] as ComponentDefaults[K]
 }

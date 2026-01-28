@@ -6,14 +6,17 @@
 
 <script lang="ts">
     import { avatarGroupVariants } from './avatar-group.variants.js'
+    import { getComponentConfig } from '../config.js'
     import { setContext } from 'svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
 
+    const config = getComponentConfig('avatarGroup')
+
     let {
         as = 'div',
         ui,
-        size = 'md',
+        size = config.defaultVariants.size ?? 'md',
         avatars,
         max,
         class: className,
@@ -22,8 +25,8 @@
     }: Props = $props()
 
     const slots = $derived(avatarGroupVariants({ size }))
-    const rootClass = $derived(slots.root({ class: [className, ui?.root] }))
-    const baseClass = $derived(slots.base({ class: ui?.base }))
+    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
+    const baseClass = $derived(slots.base({ class: [config.slots.base, ui?.base] }))
 
     setContext<{ size: AvatarSize; baseClass: string }>('avatarGroup', {
         get size() {

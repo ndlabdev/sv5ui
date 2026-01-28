@@ -13,7 +13,7 @@
     let {
         as = 'div',
         ui,
-        variant = config.variant,
+        variant = config.defaultVariants.variant,
         class: className,
         header,
         children,
@@ -23,10 +23,10 @@
 
     const slots = $derived(cardVariants({ variant }))
 
-    const rootClass = $derived(slots.root({ class: [className, ui?.root] }))
-    const headerClass = $derived(header ? slots.header({ class: ui?.header }) : '')
-    const bodyClass = $derived(children ? slots.body({ class: ui?.body }) : '')
-    const footerClass = $derived(footer ? slots.footer({ class: ui?.footer }) : '')
+    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
+    const headerClass = $derived(header ? slots.header({ class: [config.slots.header, ui?.header] }) : '')
+    const bodyClass = $derived(children ? slots.body({ class: [config.slots.body, ui?.body] }) : '')
+    const footerClass = $derived(footer ? slots.footer({ class: [config.slots.footer, ui?.footer] }) : '')
 </script>
 
 <svelte:element this={as} class={rootClass} {...restProps}>

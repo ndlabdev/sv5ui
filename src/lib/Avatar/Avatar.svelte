@@ -19,7 +19,10 @@
 <script lang="ts">
     import { Avatar } from 'bits-ui'
     import { avatarVariants } from './avatar.variants.js'
+    import { getComponentConfig } from '../config.js'
     import { getContext } from 'svelte'
+
+    const config = getComponentConfig('avatar')
 
     let {
         ref = $bindable(null),
@@ -36,7 +39,7 @@
 
     const groupContext = getContext<{ size: AvatarSize; baseClass: string } | undefined>('avatarGroup')
 
-    const resolvedSize = $derived(size ?? groupContext?.size ?? 'md')
+    const resolvedSize = $derived(size ?? groupContext?.size ?? config.defaultVariants.size ?? 'md')
     const sizePx = $derived(SIZE_PX[resolvedSize])
 
     const initials = $derived(
@@ -44,9 +47,9 @@
     )
 
     const slots = $derived(avatarVariants({ size: resolvedSize }))
-    const rootClass = $derived(slots.root({ class: [groupContext?.baseClass, className, ui?.root] }))
-    const imageClass = $derived(slots.image({ class: ui?.image }))
-    const fallbackClass = $derived(slots.fallback({ class: ui?.fallback }))
+    const rootClass = $derived(slots.root({ class: [config.slots.root, groupContext?.baseClass, className, ui?.root] }))
+    const imageClass = $derived(slots.image({ class: [config.slots.image, ui?.image] }))
+    const fallbackClass = $derived(slots.fallback({ class: [config.slots.fallback, ui?.fallback] }))
 </script>
 
 <Avatar.Root bind:ref class={rootClass} {delayMs} {...restProps}>

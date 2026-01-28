@@ -238,4 +238,7 @@ export const alertVariants = tv({
 export type AlertVariantProps = VariantProps<typeof alertVariants>
 export type AlertSlots = keyof ReturnType<typeof alertVariants>
 
-export const alertDefaults = alertVariants.defaultVariants
+export const alertDefaults = {
+    defaultVariants: alertVariants.defaultVariants,
+    slots: {} as Partial<Record<AlertSlots, string>>
+}

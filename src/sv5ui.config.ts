@@ -14,7 +14,18 @@
 import { defineConfig } from '$lib/config.js'
 
 defineConfig({
-    // Add more component configs as they become available
-    // accordion: { ... },
-    // alert: { ... },
+    // Example: customize button defaults and slots
+    // button: {
+    //     defaultVariants: { variant: 'outline', color: 'secondary' },
+    //     slots: { base: 'shadow-md', label: 'font-bold' }
+    // },
+
+    // Example: customize avatar
+    // avatar: {
+    //     defaultVariants: { size: 'lg' },
+    //     slots: { root: 'ring-2 ring-primary' }
+    // },
+
+    // Example: customize icons
+    // icons: { loading: 'svg-spinners:ring-resize' }
 })

@@ -44,4 +44,7 @@ export const avatarGroupVariants = tv({
 export type AvatarGroupVariantProps = VariantProps<typeof avatarGroupVariants>
 export type AvatarGroupSlots = keyof ReturnType<typeof avatarGroupVariants>
 
-export const avatarGroupDefaults = avatarGroupVariants.defaultVariants
+export const avatarGroupDefaults = {
+    defaultVariants: avatarGroupVariants.defaultVariants,
+    slots: {} as Partial<Record<AvatarGroupSlots, string>>
+}

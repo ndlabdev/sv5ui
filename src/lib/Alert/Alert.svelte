@@ -11,6 +11,9 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import Button from '../Button/Button.svelte'
 
+    const config = getComponentConfig('alert')
+    const icons = getComponentConfig('icons')
+
     let {
         as = 'div',
         ui,
@@ -18,9 +21,9 @@
         description,
         icon,
         avatar,
-        color = 'primary',
-        variant = 'soft',
-        orientation = 'horizontal',
+        color = config.defaultVariants.color,
+        variant = config.defaultVariants.variant,
+        orientation = config.defaultVariants.orientation,
         open = true,
         close = false,
         closeIcon,
@@ -35,8 +38,6 @@
         ...restProps
     }: Props = $props()
 
-    const icons = getComponentConfig('icons')
-
     const resolvedCloseIcon = $derived(closeIcon ?? icons.close)
 
     const slots = $derived(
@@ -47,14 +48,14 @@
         })
     )
 
-    const rootClass = $derived(slots.root({ class: [className, ui?.root] }))
-    const wrapperClass = $derived(slots.wrapper({ class: ui?.wrapper }))
-    const titleClass = $derived(slots.title({ class: ui?.title }))
-    const descriptionClass = $derived(slots.description({ class: ui?.description }))
-    const iconClass = $derived(slots.icon({ class: ui?.icon }))
-    const avatarClass = $derived(slots.avatar({ class: ui?.avatar }))
-    const actionsClass = $derived(slots.actions({ class: ui?.actions }))
-    const closeClass = $derived(slots.close({ class: ui?.close }))
+    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
+    const wrapperClass = $derived(slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }))
+    const titleClass = $derived(slots.title({ class: [config.slots.title, ui?.title] }))
+    const descriptionClass = $derived(slots.description({ class: [config.slots.description, ui?.description] }))
+    const iconClass = $derived(slots.icon({ class: [config.slots.icon, ui?.icon] }))
+    const avatarClass = $derived(slots.avatar({ class: [config.slots.avatar, ui?.avatar] }))
+    const actionsClass = $derived(slots.actions({ class: [config.slots.actions, ui?.actions] }))
+    const closeClass = $derived(slots.close({ class: [config.slots.close, ui?.close] }))
 
     const closeButtonProps = $derived.by(() => {
         if (!close) return null

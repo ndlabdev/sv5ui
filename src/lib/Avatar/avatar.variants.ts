@@ -27,4 +27,7 @@ export const avatarVariants = tv({
 export type AvatarVariantProps = VariantProps<typeof avatarVariants>
 export type AvatarSlots = keyof ReturnType<typeof avatarVariants>
 
-export const avatarDefaults = avatarVariants.defaultVariants
+export const avatarDefaults = {
+    defaultVariants: avatarVariants.defaultVariants,
+    slots: {} as Partial<Record<AvatarSlots, string>>
+}

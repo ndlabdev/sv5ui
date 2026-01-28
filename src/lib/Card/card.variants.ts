@@ -31,4 +31,7 @@ export const cardVariants = tv({
 export type CardVariantProps = VariantProps<typeof cardVariants>
 export type CardSlots = keyof ReturnType<typeof cardVariants>
 
-export const cardDefaults = cardVariants.defaultVariants
+export const cardDefaults = {
+    defaultVariants: cardVariants.defaultVariants,
+    slots: {} as Partial<Record<CardSlots, string>>
+}

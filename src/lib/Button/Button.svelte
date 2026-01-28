@@ -18,9 +18,9 @@
     let {
         ref = $bindable(null),
         ui,
-        color = config.color,
-        variant = config.variant,
-        size = config.size,
+        color = config.defaultVariants.color,
+        variant = config.defaultVariants.variant,
+        size = config.defaultVariants.size,
         label,
         loading = false,
         loadingIcon = icons.loading,
@@ -64,11 +64,11 @@
         })
     )
 
-    const baseClass = $derived(slots.base({ class: [className, ui?.base] }))
-    const labelClass = $derived(slots.label({ class: ui?.label }))
-    const leadingIconClass = $derived(slots.leadingIcon({ class: ui?.leadingIcon }))
-    const trailingIconClass = $derived(slots.trailingIcon({ class: ui?.trailingIcon }))
-    const leadingAvatarClass = $derived(slots.leadingAvatar({ class: ui?.leadingAvatar }))
+    const baseClass = $derived(slots.base({ class: [config.slots.base, className, ui?.base] }))
+    const labelClass = $derived(slots.label({ class: [config.slots.label, ui?.label] }))
+    const leadingIconClass = $derived(slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }))
+    const trailingIconClass = $derived(slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }))
+    const leadingAvatarClass = $derived(slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }))
     const leadingAvatarSize = $derived(slots.leadingAvatarSize() as AvatarSize)
 </script>
 
