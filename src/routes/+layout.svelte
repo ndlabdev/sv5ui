@@ -16,7 +16,8 @@
 		{ href: '/card', label: 'Card', icon: 'lucide:square' },
 		{ href: '/link', label: 'Link', icon: 'lucide:link' },
 		{ href: '/button', label: 'Button', icon: 'lucide:mouse-pointer-click' },
-		{ href: '/separator', label: 'Separator', icon: 'lucide:minus' }
+		{ href: '/separator', label: 'Separator', icon: 'lucide:minus' },
+		{ href: '/chip', label: 'Chip', icon: 'lucide:circle-dot' }
 	]
 
 	const docItems = [

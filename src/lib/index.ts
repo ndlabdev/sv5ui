@@ -7,6 +7,7 @@ export * from './Alert/index.js'
 export * from './Card/index.js'
 export * from './Link/index.js'
 export * from './Separator/index.js'
+export * from './Chip/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

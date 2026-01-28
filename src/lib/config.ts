@@ -28,6 +28,7 @@ import { alertDefaults } from './Alert/alert.variants.js'
 import { cardDefaults } from './Card/card.variants.js'
 import { linkDefaults } from './Link/link.variants.js'
 import { separatorDefaults } from './Separator/separator.variants.js'
+import { chipDefaults } from './Chip/chip.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -57,6 +58,7 @@ const componentDefaults = {
     card: cardDefaults,
     link: linkDefaults,
     separator: separatorDefaults,
+    chip: chipDefaults,
     icons: iconsDefaults
 }
 
@@ -83,6 +85,7 @@ export type AlertConfig = UIConfig['alert']
 export type CardConfig = UIConfig['card']
 export type LinkConfig = UIConfig['link']
 export type SeparatorConfig = UIConfig['separator']
+export type ChipConfig = UIConfig['chip']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================
