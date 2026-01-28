@@ -11,7 +11,7 @@
  * ```
  */
 
-import { defineConfig } from './config.js'
+import { defineConfig } from '$lib/config.js'
 
 defineConfig({
     // Add more component configs as they become available

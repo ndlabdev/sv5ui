@@ -1,138 +1,259 @@
 /**
- * SV5UI Theme - Material Design 3 inspired
+ * SV5UI Theme - Material Design 3 Inspired
  *
  * Import this in your app:
- * import 'sv5ui/theme.css'
+ * @import 'sv5ui/theme.css';
  *
  * To customize colors, override CSS variables in your own CSS file.
  */
 
 @import 'tailwindcss';
 
-/* ==================== LIGHT THEME ==================== */
+/* ============================================
+ * DARK MODE CONFIGURATION
+ * Supports both class="dark" and prefers-color-scheme
+ * ============================================ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================
+ * LIGHT THEME (Default)
+ * ============================================ */
 :root {
-    /* Primary */
-    --color-primary: oklch(0.55 0.2 250);
-    --color-on-primary: oklch(1 0 0);
-    --color-primary-container: oklch(0.92 0.04 250);
-    --color-on-primary-container: oklch(0.25 0.08 250);
+  /* ========== PRIMARY ========== */
+  --color-primary: oklch(0.546 0.245 262.88);
+  --color-on-primary: oklch(1 0 0);
+  --color-primary-container: oklch(0.932 0.032 255.59);
+  --color-on-primary-container: oklch(0.283 0.091 267.94);
 
-    /* Secondary */
-    --color-secondary: oklch(0.55 0.12 280);
-    --color-on-secondary: oklch(1 0 0);
-    --color-secondary-container: oklch(0.92 0.03 280);
-    --color-on-secondary-container: oklch(0.25 0.06 280);
+  /* ========== SECONDARY ========== */
+  --color-secondary: oklch(0.446 0.043 257.28);
+  --color-on-secondary: oklch(1 0 0);
+  --color-secondary-container: oklch(0.929 0.013 255.51);
+  --color-on-secondary-container: oklch(0.208 0.042 265.75);
 
-    /* Tertiary */
-    --color-tertiary: oklch(0.55 0.15 320);
-    --color-on-tertiary: oklch(1 0 0);
-    --color-tertiary-container: oklch(0.92 0.04 320);
-    --color-on-tertiary-container: oklch(0.25 0.08 320);
+  /* ========== TERTIARY ========== */
+  --color-tertiary: oklch(0.541 0.281 293.54);
+  --color-on-tertiary: oklch(1 0 0);
+  --color-tertiary-container: oklch(0.943 0.029 294.59);
+  --color-on-tertiary-container: oklch(0.283 0.141 291.09);
 
-    /* Error */
-    --color-error: oklch(0.55 0.2 25);
-    --color-on-error: oklch(1 0 0);
-    --color-error-container: oklch(0.92 0.05 25);
-    --color-on-error-container: oklch(0.25 0.1 25);
+  /* ========== ERROR ========== */
+  --color-error: oklch(0.577 0.245 27.33);
+  --color-on-error: oklch(1 0 0);
+  --color-error-container: oklch(0.936 0.032 17.72);
+  --color-on-error-container: oklch(0.258 0.092 26.04);
 
-    /* Success */
-    --color-success: oklch(0.55 0.17 145);
-    --color-on-success: oklch(1 0 0);
-    --color-success-container: oklch(0.92 0.04 145);
-    --color-on-success-container: oklch(0.25 0.08 145);
+  /* ========== SUCCESS ========== */
+  --color-success: oklch(0.627 0.194 149.21);
+  --color-on-success: oklch(1 0 0);
+  --color-success-container: oklch(0.962 0.044 156.74);
+  --color-on-success-container: oklch(0.266 0.065 152.93);
 
-    /* Warning */
-    --color-warning: oklch(0.7 0.18 85);
-    --color-on-warning: oklch(0.2 0.05 85);
-    --color-warning-container: oklch(0.92 0.05 85);
-    --color-on-warning-container: oklch(0.3 0.1 85);
+  /* ========== WARNING ========== */
+  --color-warning: oklch(0.666 0.179 58.32);
+  --color-on-warning: oklch(0.279 0.077 45.64);
+  --color-warning-container: oklch(0.962 0.059 95.26);
+  --color-on-warning-container: oklch(0.279 0.077 45.64);
 
-    /* Info */
-    --color-info: oklch(0.6 0.15 230);
-    --color-on-info: oklch(1 0 0);
-    --color-info-container: oklch(0.92 0.03 230);
-    --color-on-info-container: oklch(0.25 0.07 230);
+  /* ========== INFO ========== */
+  --color-info: oklch(0.598 0.158 241.97);
+  --color-on-info: oklch(1 0 0);
+  --color-info-container: oklch(0.918 0.044 240.11);
+  --color-on-info-container: oklch(0.257 0.09 243.43);
 
-    /* Surface */
-    --color-surface: oklch(0.99 0.002 250);
-    --color-on-surface: oklch(0.2 0.02 250);
-    --color-on-surface-variant: oklch(0.45 0.02 250);
-    --color-surface-container-lowest: oklch(1 0 0);
-    --color-surface-container-low: oklch(0.97 0.002 250);
-    --color-surface-container: oklch(0.95 0.004 250);
-    --color-surface-container-high: oklch(0.93 0.004 250);
-    --color-surface-container-highest: oklch(0.91 0.006 250);
+  /* ========== SURFACE ========== */
+  --color-surface: oklch(0.985 0.002 247.84);
+  --color-on-surface: oklch(0.145 0.014 247.09);
+  --color-on-surface-variant: oklch(0.446 0.043 257.28);
 
-    /* Outline */
-    --color-outline: oklch(0.55 0.02 250);
-    --color-outline-variant: oklch(0.8 0.01 250);
+  /* ========== SURFACE CONTAINERS (M3) ========== */
+  --color-surface-container-lowest: oklch(1 0 0);
+  --color-surface-container-low: oklch(0.976 0.004 247.84);
+  --color-surface-container: oklch(0.968 0.007 247.9);
+  --color-surface-container-high: oklch(0.956 0.008 247.86);
+  --color-surface-container-highest: oklch(0.929 0.013 255.51);
 
-    /* Inverse */
-    --color-inverse-surface: oklch(0.25 0.015 250);
-    --color-inverse-on-surface: oklch(0.95 0.005 250);
-    --color-inverse-primary: oklch(0.8 0.12 250);
+  /* ========== SURFACE DIM & BRIGHT ========== */
+  --color-surface-dim: oklch(0.869 0.022 252.89);
+  --color-surface-bright: oklch(0.985 0.002 247.84);
+
+  /* ========== OUTLINE ========== */
+  --color-outline: oklch(0.554 0.046 257.42);
+  --color-outline-variant: oklch(0.789 0.029 256.79);
+
+  /* ========== INVERSE ========== */
+  --color-inverse-surface: oklch(0.208 0.042 265.75);
+  --color-inverse-on-surface: oklch(0.929 0.013 255.51);
+  --color-inverse-primary: oklch(0.707 0.165 254.62);
 }
 
-/* ==================== DARK THEME ==================== */
+/* ============================================
+ * DARK THEME
+ * ============================================ */
 .dark {
-    /* Primary */
-    --color-primary: oklch(0.8 0.12 250);
-    --color-on-primary: oklch(0.25 0.08 250);
-    --color-primary-container: oklch(0.35 0.12 250);
-    --color-on-primary-container: oklch(0.92 0.04 250);
+  /* ========== PRIMARY ========== */
+  --color-primary: oklch(0.707 0.165 254.62);
+  --color-on-primary: oklch(0.379 0.146 265.52);
+  --color-primary-container: oklch(0.424 0.199 265.64);
+  --color-on-primary-container: oklch(0.882 0.059 254.13);
 
-    /* Secondary */
-    --color-secondary: oklch(0.8 0.08 280);
-    --color-on-secondary: oklch(0.25 0.06 280);
-    --color-secondary-container: oklch(0.35 0.08 280);
-    --color-on-secondary-container: oklch(0.92 0.03 280);
+  /* ========== SECONDARY ========== */
+  --color-secondary: oklch(0.704 0.04 256.79);
+  --color-on-secondary: oklch(0.279 0.041 260.03);
+  --color-secondary-container: oklch(0.372 0.044 257.29);
+  --color-on-secondary-container: oklch(0.869 0.022 252.89);
 
-    /* Tertiary */
-    --color-tertiary: oklch(0.8 0.1 320);
-    --color-on-tertiary: oklch(0.25 0.08 320);
-    --color-tertiary-container: oklch(0.35 0.1 320);
-    --color-on-tertiary-container: oklch(0.92 0.04 320);
+  /* ========== TERTIARY ========== */
+  --color-tertiary: oklch(0.702 0.183 293.54);
+  --color-on-tertiary: oklch(0.368 0.174 292.52);
+  --color-tertiary-container: oklch(0.432 0.232 292.76);
+  --color-on-tertiary-container: oklch(0.894 0.057 293.28);
 
-    /* Error */
-    --color-error: oklch(0.8 0.12 25);
-    --color-on-error: oklch(0.25 0.1 25);
-    --color-error-container: oklch(0.35 0.14 25);
-    --color-on-error-container: oklch(0.92 0.05 25);
+  /* ========== ERROR ========== */
+  --color-error: oklch(0.704 0.191 22.22);
+  --color-on-error: oklch(0.396 0.141 25.72);
+  --color-error-container: oklch(0.444 0.177 26.9);
+  --color-on-error-container: oklch(0.885 0.062 18.33);
 
-    /* Success */
-    --color-success: oklch(0.75 0.12 145);
-    --color-on-success: oklch(0.25 0.08 145);
-    --color-success-container: oklch(0.35 0.1 145);
-    --color-on-success-container: oklch(0.92 0.04 145);
+  /* ========== SUCCESS ========== */
+  --color-success: oklch(0.792 0.209 151.71);
+  --color-on-success: oklch(0.393 0.095 152.54);
+  --color-success-container: oklch(0.448 0.119 151.33);
+  --color-on-success-container: oklch(0.871 0.15 154.45);
 
-    /* Warning */
-    --color-warning: oklch(0.8 0.13 85);
-    --color-on-warning: oklch(0.25 0.08 85);
-    --color-warning-container: oklch(0.4 0.12 85);
-    --color-on-warning-container: oklch(0.92 0.05 85);
+  /* ========== WARNING ========== */
+  --color-warning: oklch(0.828 0.189 84.43);
+  --color-on-warning: oklch(0.414 0.112 45.9);
+  --color-warning-container: oklch(0.473 0.137 46.2);
+  --color-on-warning-container: oklch(0.879 0.169 91.61);
 
-    /* Info */
-    --color-info: oklch(0.75 0.1 230);
-    --color-on-info: oklch(0.25 0.07 230);
-    --color-info-container: oklch(0.35 0.1 230);
-    --color-on-info-container: oklch(0.92 0.03 230);
+  /* ========== INFO ========== */
+  --color-info: oklch(0.697 0.127 241.97);
+  --color-on-info: oklch(0.32 0.103 243.43);
+  --color-info-container: oklch(0.398 0.125 242.76);
+  --color-on-info-container: oklch(0.869 0.066 240.11);
 
-    /* Surface */
-    --color-surface: oklch(0.15 0.01 250);
-    --color-on-surface: oklch(0.9 0.01 250);
-    --color-on-surface-variant: oklch(0.7 0.015 250);
-    --color-surface-container-lowest: oklch(0.1 0.008 250);
-    --color-surface-container-low: oklch(0.18 0.01 250);
-    --color-surface-container: oklch(0.2 0.012 250);
-    --color-surface-container-high: oklch(0.24 0.012 250);
-    --color-surface-container-highest: oklch(0.28 0.015 250);
+  /* ========== SURFACE ========== */
+  --color-surface: oklch(0.145 0.014 247.09);
+  --color-on-surface: oklch(0.929 0.013 255.51);
+  --color-on-surface-variant: oklch(0.704 0.04 256.79);
 
-    /* Outline */
-    --color-outline: oklch(0.55 0.015 250);
-    --color-outline-variant: oklch(0.35 0.015 250);
+  /* ========== SURFACE CONTAINERS (M3) ========== */
+  --color-surface-container-lowest: oklch(0.105 0.014 249.09);
+  --color-surface-container-low: oklch(0.168 0.018 251.09);
+  --color-surface-container: oklch(0.208 0.024 253.09);
+  --color-surface-container-high: oklch(0.248 0.029 255.09);
+  --color-surface-container-highest: oklch(0.279 0.033 256.09);
 
-    /* Inverse */
-    --color-inverse-surface: oklch(0.9 0.01 250);
-    --color-inverse-on-surface: oklch(0.25 0.015 250);
-    --color-inverse-primary: oklch(0.55 0.2 250);
+  /* ========== SURFACE DIM & BRIGHT ========== */
+  --color-surface-dim: oklch(0.145 0.014 247.09);
+  --color-surface-bright: oklch(0.372 0.044 257.29);
+
+  /* ========== OUTLINE ========== */
+  --color-outline: oklch(0.554 0.046 257.42);
+  --color-outline-variant: oklch(0.372 0.044 257.29);
+
+  /* ========== INVERSE ========== */
+  --color-inverse-surface: oklch(0.929 0.013 255.51);
+  --color-inverse-on-surface: oklch(0.279 0.041 260.03);
+  --color-inverse-primary: oklch(0.546 0.245 262.88);
+}
+
+/* ============================================
+ * REGISTER WITH TAILWIND
+ * ============================================ */
+@theme inline {
+  /* Primary */
+  --color-primary: var(--color-primary);
+  --color-on-primary: var(--color-on-primary);
+  --color-primary-container: var(--color-primary-container);
+  --color-on-primary-container: var(--color-on-primary-container);
+
+  /* Secondary */
+  --color-secondary: var(--color-secondary);
+  --color-on-secondary: var(--color-on-secondary);
+  --color-secondary-container: var(--color-secondary-container);
+  --color-on-secondary-container: var(--color-on-secondary-container);
+
+  /* Tertiary */
+  --color-tertiary: var(--color-tertiary);
+  --color-on-tertiary: var(--color-on-tertiary);
+  --color-tertiary-container: var(--color-tertiary-container);
+  --color-on-tertiary-container: var(--color-on-tertiary-container);
+
+  /* Error */
+  --color-error: var(--color-error);
+  --color-on-error: var(--color-on-error);
+  --color-error-container: var(--color-error-container);
+  --color-on-error-container: var(--color-on-error-container);
+
+  /* Success */
+  --color-success: var(--color-success);
+  --color-on-success: var(--color-on-success);
+  --color-success-container: var(--color-success-container);
+  --color-on-success-container: var(--color-on-success-container);
+
+  /* Warning */
+  --color-warning: var(--color-warning);
+  --color-on-warning: var(--color-on-warning);
+  --color-warning-container: var(--color-warning-container);
+  --color-on-warning-container: var(--color-on-warning-container);
+
+  /* Info */
+  --color-info: var(--color-info);
+  --color-on-info: var(--color-on-info);
+  --color-info-container: var(--color-info-container);
+  --color-on-info-container: var(--color-on-info-container);
+
+  /* Surface */
+  --color-surface: var(--color-surface);
+  --color-on-surface: var(--color-on-surface);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+
+  /* Surface Containers */
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container: var(--color-surface-container);
+  --color-surface-container-high: var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+
+  /* Surface Dim & Bright */
+  --color-surface-dim: var(--color-surface-dim);
+  --color-surface-bright: var(--color-surface-bright);
+
+  /* Outline */
+  --color-outline: var(--color-outline);
+  --color-outline-variant: var(--color-outline-variant);
+
+  /* Inverse */
+  --color-inverse-surface: var(--color-inverse-surface);
+  --color-inverse-on-surface: var(--color-inverse-on-surface);
+  --color-inverse-primary: var(--color-inverse-primary);
+
+  /* ========== RADIUS ========== */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* ============================================
+ * BASE STYLES
+ * ============================================ */
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-surface text-on-surface;
+  }
 }

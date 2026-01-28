@@ -6,8 +6,6 @@ export * from './AvatarGroup/index.js'
 export * from './Alert/index.js'
 
 // Configuration
-export { defineConfig, getConfig, resetConfig } from './config.js'
-export type { UIConfig, ButtonConfig, AvatarConfig, AvatarGroupConfig, AlertConfig, IconsConfig } from './config.js'
+export { defineConfig } from './config.js'
+export type { UIConfig } from './config.js'
 
-// Re-export mode-watcher for convenience
-export { ModeWatcher, toggleMode, setMode, resetMode, mode } from 'mode-watcher'

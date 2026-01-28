@@ -10,7 +10,7 @@
     import { getComponentConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
-	import type { AvatarSize } from '../Avatar/avatar.types.js';
+    import type { AvatarSize } from '../Avatar/avatar.types.js'
 
     const config = getComponentConfig('button')
     const icons = getComponentConfig('icons')
