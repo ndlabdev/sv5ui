@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { toggleMode, mode } from 'mode-watcher'
-	import { Button, Icon, Avatar, AvatarGroup, Alert, Card } from '$lib/index.js'
+	import { Button, Icon, Avatar, AvatarGroup, Alert, Card, Link } from '$lib/index.js'
 
 	const variants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'link'] as const
 	const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
 	const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 	const avatarSizes = ['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const
+	const linkColors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
 </script>
 
 <div class="min-h-screen bg-surface text-on-surface">
@@ -737,6 +738,362 @@
 						Use the <code class="rounded bg-surface-container-highest px-1">as</code> prop to render as different HTML elements for better semantics.
 					</p>
 				</Card>
+			</div>
+		</section>
+
+		<!-- ==================== LINK SECTION ==================== -->
+		<section class="space-y-4">
+			<h2 class="border-b border-outline-variant pb-2 text-xl font-semibold">Link</h2>
+			<p class="text-on-surface-variant">
+				Navigation link with automatic active state detection, color variants, and external link handling.
+			</p>
+
+			<!-- Colors -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Colors</h3>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					{#each linkColors as color}
+						<Link href="/" {color}>{color}</Link>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Active State -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Active State</h3>
+				<p class="text-sm text-on-surface-variant">
+					Active state is auto-detected from the current route. Use <code class="rounded bg-surface-container-highest px-1">active</code> to override.
+				</p>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<Link href="/" active={true} color="primary">Active (forced)</Link>
+					<Link href="/" active={false} color="primary">Inactive (forced)</Link>
+					<Link href="/" color="secondary">Auto-detected</Link>
+				</div>
+			</div>
+
+			<!-- Active with Custom Classes -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Active & Inactive Classes</h3>
+				<p class="text-sm text-on-surface-variant">
+					Apply custom classes based on active state using <code class="rounded bg-surface-container-highest px-1">activeClass</code> and <code class="rounded bg-surface-container-highest px-1">inactiveClass</code>.
+				</p>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<Link href="/" active={true} activeClass="font-bold underline underline-offset-4">
+						Active (bold + underline)
+					</Link>
+					<Link href="/other" inactiveClass="opacity-50">
+						Inactive (dimmed)
+					</Link>
+				</div>
+			</div>
+
+			<!-- Disabled -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Disabled</h3>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					{#each linkColors as color}
+						<Link href="/" {color} disabled>{color}</Link>
+					{/each}
+				</div>
+			</div>
+
+			<!-- External Links -->
+			<div class="space-y-2">
+				<h3 class="font-medium">External Links</h3>
+				<p class="text-sm text-on-surface-variant">
+					External URLs are auto-detected. Adds <code class="rounded bg-surface-container-highest px-1">rel="noopener noreferrer"</code> and <code class="rounded bg-surface-container-highest px-1">target="_blank"</code> automatically.
+				</p>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<Link href="https://svelte.dev" color="primary">
+						<Icon name="lucide:external-link" size="14" class="mr-1" />
+						Svelte
+					</Link>
+					<Link href="https://tailwindcss.com" color="secondary">
+						<Icon name="lucide:external-link" size="14" class="mr-1" />
+						Tailwind CSS
+					</Link>
+					<Link href="https://github.com" color="tertiary">
+						<Icon name="lucide:external-link" size="14" class="mr-1" />
+						GitHub
+					</Link>
+				</div>
+			</div>
+
+			<!-- Hash Links & Paths -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Hash Links & Internal Paths</h3>
+				<p class="text-sm text-on-surface-variant">
+					Links to page sections via hash and internal routes. Active state auto-detects based on the current URL.
+				</p>
+				<div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+					<!-- Hash Links (anchor navigation) -->
+					<div>
+						<p class="mb-2 text-xs font-medium uppercase tracking-wider text-on-surface-variant">Hash anchors</p>
+						<div class="flex flex-wrap items-center gap-4">
+							<Link href="#colors" color="primary">#colors</Link>
+							<Link href="#active-state" color="secondary">#active-state</Link>
+							<Link href="#disabled" color="tertiary">#disabled</Link>
+							<Link href="#external-links" color="success">#external-links</Link>
+						</div>
+					</div>
+
+					<!-- Internal Paths -->
+					<div>
+						<p class="mb-2 text-xs font-medium uppercase tracking-wider text-on-surface-variant">Internal paths</p>
+						<div class="flex flex-wrap items-center gap-4">
+							<Link href="/" color="primary">/</Link>
+							<Link href="/about" color="secondary">/about</Link>
+							<Link href="/docs" color="tertiary">/docs</Link>
+							<Link href="/docs/components" color="info">/docs/components</Link>
+							<Link href="/docs/components/link" color="success">/docs/components/link</Link>
+						</div>
+					</div>
+
+					<!-- Path with query params -->
+					<div>
+						<p class="mb-2 text-xs font-medium uppercase tracking-wider text-on-surface-variant">With query & hash</p>
+						<div class="flex flex-wrap items-center gap-4">
+							<Link href="/?tab=overview" color="primary">/?tab=overview</Link>
+							<Link href="/?tab=docs&lang=en" color="secondary">/?tab=docs&lang=en</Link>
+							<Link href="/docs#intro" color="tertiary">/docs#intro</Link>
+							<Link href="/docs?v=5#api" color="info">/docs?v=5#api</Link>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Matching Modes -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Matching Modes</h3>
+				<p class="text-sm text-on-surface-variant">
+					Control how active state is detected using
+					<code class="rounded bg-surface-container-highest px-1">exact</code>,
+					<code class="rounded bg-surface-container-highest px-1">exactQuery</code>, and
+					<code class="rounded bg-surface-container-highest px-1">exactHash</code>.
+				</p>
+				<div class="overflow-x-auto">
+					<table class="w-full text-sm">
+						<thead>
+							<tr class="border-b border-outline-variant">
+								<th class="px-3 py-2 text-left font-medium text-on-surface-variant">Prop</th>
+								<th class="px-3 py-2 text-left font-medium text-on-surface-variant">Link</th>
+								<th class="px-3 py-2 text-left font-medium text-on-surface-variant">Preview</th>
+								<th class="px-3 py-2 text-left font-medium text-on-surface-variant">Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Prefix match (default) -->
+							<tr class="border-b border-outline-variant/50">
+								<td class="px-3 py-2 font-mono text-xs text-on-surface-variant">default</td>
+								<td class="px-3 py-2 font-mono text-xs">/</td>
+								<td class="px-3 py-2">
+									<Link href="/" color="primary" activeClass="font-semibold">Home</Link>
+								</td>
+								<td class="px-3 py-2 text-on-surface-variant">Prefix match — active if URL starts with href</td>
+							</tr>
+							<!-- Exact match -->
+							<tr class="border-b border-outline-variant/50">
+								<td class="px-3 py-2 font-mono text-xs text-on-surface-variant">exact</td>
+								<td class="px-3 py-2 font-mono text-xs">/</td>
+								<td class="px-3 py-2">
+									<Link href="/" color="primary" exact activeClass="font-semibold">Home (exact)</Link>
+								</td>
+								<td class="px-3 py-2 text-on-surface-variant">Only active when pathname is exactly "/"</td>
+							</tr>
+							<!-- exactQuery: true -->
+							<tr class="border-b border-outline-variant/50">
+								<td class="px-3 py-2 font-mono text-xs text-on-surface-variant">exactQuery</td>
+								<td class="px-3 py-2 font-mono text-xs">/?tab=all</td>
+								<td class="px-3 py-2">
+									<Link href="/?tab=all" color="secondary" exactQuery={true} activeClass="font-semibold">
+										tab=all (exact)
+									</Link>
+								</td>
+								<td class="px-3 py-2 text-on-surface-variant">Query params must match exactly</td>
+							</tr>
+							<!-- exactQuery: partial -->
+							<tr class="border-b border-outline-variant/50">
+								<td class="px-3 py-2 font-mono text-xs text-on-surface-variant">exactQuery="partial"</td>
+								<td class="px-3 py-2 font-mono text-xs">/?tab=all</td>
+								<td class="px-3 py-2">
+									<Link href="/?tab=all" color="tertiary" exactQuery="partial" activeClass="font-semibold">
+										tab=all (partial)
+									</Link>
+								</td>
+								<td class="px-3 py-2 text-on-surface-variant">Link's params must be a subset of current</td>
+							</tr>
+							<!-- exactHash -->
+							<tr class="border-b border-outline-variant/50">
+								<td class="px-3 py-2 font-mono text-xs text-on-surface-variant">exactHash</td>
+								<td class="px-3 py-2 font-mono text-xs">/#section</td>
+								<td class="px-3 py-2">
+									<Link href="/#section" color="success" exactHash activeClass="font-semibold">
+										#section
+									</Link>
+								</td>
+								<td class="px-3 py-2 text-on-surface-variant">Hash must also match for active state</td>
+							</tr>
+							<!-- Combined -->
+							<tr>
+								<td class="px-3 py-2 font-mono text-xs text-on-surface-variant">exact + exactHash</td>
+								<td class="px-3 py-2 font-mono text-xs">/#top</td>
+								<td class="px-3 py-2">
+									<Link href="/#top" color="info" exact exactHash activeClass="font-semibold">
+										Exact + Hash
+									</Link>
+								</td>
+								<td class="px-3 py-2 text-on-surface-variant">Both pathname and hash must match exactly</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Raw Mode -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Raw Mode</h3>
+				<p class="text-sm text-on-surface-variant">
+					Strips all default styling. Only <code class="rounded bg-surface-container-highest px-1">class</code>, <code class="rounded bg-surface-container-highest px-1">activeClass</code>, and <code class="rounded bg-surface-container-highest px-1">inactiveClass</code> apply.
+				</p>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<Link href="/" raw class="text-on-surface underline decoration-primary underline-offset-4 hover:decoration-2">
+						Custom styled link
+					</Link>
+					<Link href="/" raw class="rounded-md bg-primary-container px-3 py-1 text-on-primary-container hover:bg-primary-container/80">
+						Chip-style link
+					</Link>
+				</div>
+			</div>
+
+			<!-- UI Slot Overrides -->
+			<div class="space-y-2">
+				<h3 class="font-medium">UI Slot Overrides</h3>
+				<div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+					<Link href="/" color="primary" ui={{ base: 'underline underline-offset-4 decoration-2' }}>
+						Underlined
+					</Link>
+					<Link href="/" color="success" ui={{ base: 'font-bold text-lg' }}>
+						Bold & Large
+					</Link>
+					<Link href="/" color="error" ui={{ base: 'uppercase tracking-wider text-xs font-semibold' }}>
+						Uppercase
+					</Link>
+				</div>
+			</div>
+
+			<!-- Colors x Active Matrix -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Colors x State</h3>
+				<div class="overflow-x-auto">
+					<table class="w-full">
+						<thead>
+							<tr class="border-b border-outline-variant">
+								<th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant">Color</th>
+								<th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant">Default</th>
+								<th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant">Active</th>
+								<th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant">Disabled</th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each linkColors as color}
+								<tr class="border-b border-outline-variant/50">
+									<td class="px-3 py-3 text-sm font-medium capitalize text-on-surface-variant">{color}</td>
+									<td class="px-3 py-3">
+										<Link href="/demo" {color}>Link text</Link>
+									</td>
+									<td class="px-3 py-3">
+										<Link href="/" {color} active={true}>Link text</Link>
+									</td>
+									<td class="px-3 py-3">
+										<Link href="/" {color} disabled>Link text</Link>
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- Real World Examples -->
+			<div class="space-y-2">
+				<h3 class="font-medium">Real World Examples</h3>
+				<div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+					<!-- Navigation Bar -->
+					<div>
+						<p class="mb-2 text-sm font-medium text-on-surface-variant">Navigation</p>
+						<nav class="flex items-center gap-6">
+							<Link href="/" color="primary" exact activeClass="font-semibold" active={true}>Home</Link>
+							<Link href="/about" color="primary" activeClass="font-semibold">About</Link>
+							<Link href="/docs" color="primary" activeClass="font-semibold">Docs</Link>
+							<Link href="/pricing" color="primary" activeClass="font-semibold">Pricing</Link>
+						</nav>
+					</div>
+
+					<!-- Sidebar Menu -->
+					<div>
+						<p class="mb-2 text-sm font-medium text-on-surface-variant">Sidebar</p>
+						<div class="flex w-56 flex-col gap-1">
+							<Link
+								href="/"
+								raw
+								active={true}
+								activeClass="bg-primary-container text-on-primary-container font-medium"
+								inactiveClass="text-on-surface-variant hover:bg-surface-container-highest"
+								class="rounded-md px-3 py-2 text-sm"
+							>
+								<Icon name="lucide:layout-dashboard" size="16" class="mr-2" />
+								Dashboard
+							</Link>
+							<Link
+								href="/settings"
+								raw
+								activeClass="bg-primary-container text-on-primary-container font-medium"
+								inactiveClass="text-on-surface-variant hover:bg-surface-container-highest"
+								class="rounded-md px-3 py-2 text-sm"
+							>
+								<Icon name="lucide:settings" size="16" class="mr-2" />
+								Settings
+							</Link>
+							<Link
+								href="/users"
+								raw
+								activeClass="bg-primary-container text-on-primary-container font-medium"
+								inactiveClass="text-on-surface-variant hover:bg-surface-container-highest"
+								class="rounded-md px-3 py-2 text-sm"
+							>
+								<Icon name="lucide:users" size="16" class="mr-2" />
+								Users
+							</Link>
+						</div>
+					</div>
+
+					<!-- Breadcrumb -->
+					<div>
+						<p class="mb-2 text-sm font-medium text-on-surface-variant">Breadcrumb</p>
+						<nav class="flex items-center gap-1 text-sm">
+							<Link href="/" color="secondary">Home</Link>
+							<Icon name="lucide:chevron-right" size="14" class="text-on-surface-variant" />
+							<Link href="/docs" color="secondary">Docs</Link>
+							<Icon name="lucide:chevron-right" size="14" class="text-on-surface-variant" />
+							<span class="text-on-surface-variant">Components</span>
+						</nav>
+					</div>
+
+					<!-- Footer Links -->
+					<div>
+						<p class="mb-2 text-sm font-medium text-on-surface-variant">Footer</p>
+						<div class="flex items-center gap-4 text-sm">
+							<Link href="/privacy" color="secondary">Privacy Policy</Link>
+							<span class="text-outline">|</span>
+							<Link href="/terms" color="secondary">Terms of Service</Link>
+							<span class="text-outline">|</span>
+							<Link href="https://github.com" color="secondary">
+								<Icon name="lucide:github" size="14" class="mr-1" />
+								GitHub
+							</Link>
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 

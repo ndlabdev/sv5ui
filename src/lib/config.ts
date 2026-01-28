@@ -26,6 +26,7 @@ import { avatarDefaults } from './Avatar/avatar.variants.js'
 import { avatarGroupDefaults } from './AvatarGroup/avatar-group.variants.js'
 import { alertDefaults } from './Alert/alert.variants.js'
 import { cardDefaults } from './Card/card.variants.js'
+import { linkDefaults } from './Link/link.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -53,6 +54,7 @@ const componentDefaults = {
     avatarGroup: avatarGroupDefaults,
     alert: alertDefaults,
     card: cardDefaults,
+    link: linkDefaults,
     icons: iconsDefaults
 }
 
@@ -77,6 +79,7 @@ export type AvatarConfig = UIConfig['avatar']
 export type AvatarGroupConfig = UIConfig['avatarGroup']
 export type AlertConfig = UIConfig['alert']
 export type CardConfig = UIConfig['card']
+export type LinkConfig = UIConfig['link']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================

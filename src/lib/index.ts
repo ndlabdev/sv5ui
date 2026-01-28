@@ -5,6 +5,7 @@ export * from './Avatar/index.js'
 export * from './AvatarGroup/index.js'
 export * from './Alert/index.js'
 export * from './Card/index.js'
+export * from './Link/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
