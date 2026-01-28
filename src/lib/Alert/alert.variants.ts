@@ -21,6 +21,7 @@ export const alertVariants = tv({
         color: {
             primary: '',
             secondary: '',
+            tertiary: '',
             success: '',
             warning: '',
             error: '',
@@ -95,6 +96,13 @@ export const alertVariants = tv({
                 root: 'bg-info text-on-info'
             }
         },
+        {
+            variant: 'solid',
+            color: 'tertiary',
+            class: {
+                root: 'bg-tertiary text-on-tertiary'
+            }
+        },
 
         // ========== OUTLINE VARIANTS ==========
         {
@@ -137,6 +145,13 @@ export const alertVariants = tv({
             color: 'info',
             class: {
                 root: 'text-info ring ring-inset ring-info/25'
+            }
+        },
+        {
+            variant: 'outline',
+            color: 'tertiary',
+            class: {
+                root: 'text-tertiary ring ring-inset ring-tertiary/25'
             }
         },
 
@@ -183,6 +198,13 @@ export const alertVariants = tv({
                 root: 'bg-info/10 text-info'
             }
         },
+        {
+            variant: 'soft',
+            color: 'tertiary',
+            class: {
+                root: 'bg-tertiary/10 text-tertiary'
+            }
+        },
 
         // ========== SUBTLE VARIANTS ==========
         {
@@ -225,6 +247,13 @@ export const alertVariants = tv({
             color: 'info',
             class: {
                 root: 'bg-info/10 text-info ring ring-inset ring-info/25'
+            }
+        },
+        {
+            variant: 'subtle',
+            color: 'tertiary',
+            class: {
+                root: 'bg-tertiary/10 text-tertiary ring ring-inset ring-tertiary/25'
             }
         }
     ],

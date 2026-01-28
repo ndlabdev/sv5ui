@@ -92,17 +92,18 @@ describe('Alert', () => {
             await expect.element(root).toHaveClass(/ring/)
         })
 
-        it('should default to soft variant', async () => {
+        it('should default to solid variant', async () => {
             const { container } = render(Alert, { title: 'Test' })
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/bg-primary\/10/)
+            await expect.element(root).toHaveClass(/bg-primary/)
+            await expect.element(root).toHaveClass(/text-on-primary/)
         })
     })
 
     // ==================== COLORS ====================
 
     describe('colors', () => {
-        const colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info'] as const
+        const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
 
         for (const color of colors) {
             it(`should apply ${color} color classes`, async () => {
@@ -115,7 +116,7 @@ describe('Alert', () => {
         it('should default to primary color', async () => {
             const { container } = render(Alert, { title: 'Test' })
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/text-primary/)
+            await expect.element(root).toHaveClass(/bg-primary/)
         })
     })
 
