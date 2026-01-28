@@ -27,6 +27,7 @@ import { avatarGroupDefaults } from './AvatarGroup/avatar-group.variants.js'
 import { alertDefaults } from './Alert/alert.variants.js'
 import { cardDefaults } from './Card/card.variants.js'
 import { linkDefaults } from './Link/link.variants.js'
+import { separatorDefaults } from './Separator/separator.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -55,6 +56,7 @@ const componentDefaults = {
     alert: alertDefaults,
     card: cardDefaults,
     link: linkDefaults,
+    separator: separatorDefaults,
     icons: iconsDefaults
 }
 
@@ -80,6 +82,7 @@ export type AvatarGroupConfig = UIConfig['avatarGroup']
 export type AlertConfig = UIConfig['alert']
 export type CardConfig = UIConfig['card']
 export type LinkConfig = UIConfig['link']
+export type SeparatorConfig = UIConfig['separator']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================
