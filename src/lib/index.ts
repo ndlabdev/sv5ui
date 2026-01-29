@@ -10,6 +10,7 @@ export * from './Separator/index.js'
 export * from './Chip/index.js'
 export * from './Progress/index.js'
 export * from './Badge/index.js'
+export * from './Container/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

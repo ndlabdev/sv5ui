@@ -19,7 +19,8 @@
 		{ href: '/separator', label: 'Separator', icon: 'lucide:minus' },
 		{ href: '/chip', label: 'Chip', icon: 'lucide:circle-dot' },
 		{ href: '/progress', label: 'Progress', icon: 'lucide:loader' },
-		{ href: '/badge', label: 'Badge', icon: 'lucide:tag' }
+		{ href: '/badge', label: 'Badge', icon: 'lucide:tag' },
+		{ href: '/container', label: 'Container', icon: 'lucide:box' }
 	]
 
 	const docItems = [
