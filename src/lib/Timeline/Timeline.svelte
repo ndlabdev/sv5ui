@@ -34,7 +34,7 @@
     function getState(index: number): TimelineItemState {
         if (activeIndex === -1) return 'pending'
         if (index === activeIndex) return 'active'
-        return reverse ? (index > activeIndex ? 'completed' : 'pending') : (index < activeIndex ? 'completed' : 'pending')
+        return index < activeIndex ? 'completed' : 'pending'
     }
 </script>
 
@@ -55,7 +55,7 @@
                     </div>
                 {/if}
 
-                {#if index < items.length - 1}
+                {#if reverse ? index > 0 : index < items.length - 1}
                     <div class={slots.separator({ class: ui?.separator })}></div>
                 {/if}
             </div>

@@ -67,7 +67,11 @@ export const timelineVariants = tv({
         }
     },
     compoundVariants: [
-        // Color + reverse (false)
+        // Orientation + reverse (visual direction)
+        { orientation: 'vertical', reverse: true, class: { root: 'flex-col-reverse' } },
+        { orientation: 'horizontal', reverse: true, class: { root: 'flex-row-reverse' } },
+
+        // Color + separator styling (reverse=false: completed gets color)
         { color: 'primary', reverse: false, class: { separator: 'group-data-[state=completed]:bg-primary' } },
         { color: 'secondary', reverse: false, class: { separator: 'group-data-[state=completed]:bg-secondary' } },
         { color: 'tertiary', reverse: false, class: { separator: 'group-data-[state=completed]:bg-tertiary' } },
@@ -77,7 +81,7 @@ export const timelineVariants = tv({
         { color: 'info', reverse: false, class: { separator: 'group-data-[state=completed]:bg-info' } },
         { color: 'surface', reverse: false, class: { separator: 'group-data-[state=completed]:bg-inverse-surface' } },
 
-        // Color + reverse (true)
+        // Color + separator styling (reverse=true: active AND completed get color)
         { color: 'primary', reverse: true, class: { separator: 'group-data-[state=active]:bg-primary group-data-[state=completed]:bg-primary' } },
         { color: 'secondary', reverse: true, class: { separator: 'group-data-[state=active]:bg-secondary group-data-[state=completed]:bg-secondary' } },
         { color: 'tertiary', reverse: true, class: { separator: 'group-data-[state=active]:bg-tertiary group-data-[state=completed]:bg-tertiary' } },
