@@ -8,6 +8,7 @@ export * from './Card/index.js'
 export * from './Link/index.js'
 export * from './Separator/index.js'
 export * from './Chip/index.js'
+export * from './Progress/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
