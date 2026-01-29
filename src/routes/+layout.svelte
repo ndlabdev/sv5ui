@@ -20,7 +20,8 @@
 		{ href: '/chip', label: 'Chip', icon: 'lucide:circle-dot' },
 		{ href: '/progress', label: 'Progress', icon: 'lucide:loader' },
 		{ href: '/badge', label: 'Badge', icon: 'lucide:tag' },
-		{ href: '/container', label: 'Container', icon: 'lucide:box' }
+		{ href: '/container', label: 'Container', icon: 'lucide:box' },
+		{ href: '/timeline', label: 'Timeline', icon: 'lucide:git-commit-horizontal' }
 	]
 
 	const docItems = [

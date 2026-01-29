@@ -11,6 +11,7 @@ export * from './Chip/index.js'
 export * from './Progress/index.js'
 export * from './Badge/index.js'
 export * from './Container/index.js'
+export * from './Timeline/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

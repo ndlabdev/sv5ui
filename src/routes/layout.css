@@ -3,3 +3,5 @@
  * Import theme from lib to avoid duplication
  */
 @import '../lib/theme.css';
+
+@source "../../src";
