@@ -9,6 +9,7 @@ export * from './Link/index.js'
 export * from './Separator/index.js'
 export * from './Chip/index.js'
 export * from './Progress/index.js'
+export * from './Badge/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

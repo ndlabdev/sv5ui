@@ -30,6 +30,7 @@ import { linkDefaults } from './Link/link.variants.js'
 import { separatorDefaults } from './Separator/separator.variants.js'
 import { chipDefaults } from './Chip/chip.variants.js'
 import { progressDefaults } from './Progress/progress.variants.js'
+import { badgeDefaults } from './Badge/badge.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -61,6 +62,7 @@ const componentDefaults = {
     separator: separatorDefaults,
     chip: chipDefaults,
     progress: progressDefaults,
+    badge: badgeDefaults,
     icons: iconsDefaults
 }
 
@@ -89,6 +91,7 @@ export type LinkConfig = UIConfig['link']
 export type SeparatorConfig = UIConfig['separator']
 export type ChipConfig = UIConfig['chip']
 export type ProgressConfig = UIConfig['progress']
+export type BadgeConfig = UIConfig['badge']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================
