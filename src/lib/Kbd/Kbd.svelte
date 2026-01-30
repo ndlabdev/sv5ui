@@ -24,10 +24,10 @@
 </script>
 
 <script lang="ts">
-    import { kbdVariants, kbdKeysMap, kbdKeysPlatformMap } from './kbd.variants.js'
+    import { kbdVariants, kbdKeysMap, kbdKeysPlatformMap, kbdDefaults } from './kbd.variants.js'
     import { getComponentConfig } from '../config.js'
 
-    const config = getComponentConfig('kbd')
+    const config = getComponentConfig('kbd', kbdDefaults)
 
     let {
         as = 'kbd',

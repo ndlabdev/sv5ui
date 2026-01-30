@@ -2,7 +2,7 @@
 	"name": "sv5ui",
 	"version": "0.0.1",
 	"description": "A modern Svelte 5 UI component library with Tailwind CSS",
-	"author": "",
+	"author": "ndlabdev",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -83,10 +83,17 @@
 	"keywords": [
 		"svelte",
 		"svelte5",
+		"svelte-components",
 		"ui",
+		"ui-library",
 		"components",
+		"component-library",
 		"tailwindcss",
-		"component-library"
+		"tailwind",
+		"design-system",
+		"typescript",
+		"dark-mode",
+		"accessible"
 	],
 	"dependencies": {
 		"@iconify/svelte": "^5.2.1",

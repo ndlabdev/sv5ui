@@ -5,10 +5,11 @@
 </script>
 
 <script lang="ts">
-    import { containerVariants } from './container.variants.js'
+    import { containerVariants, containerDefaults } from './container.variants.js'
     import { getComponentConfig } from '../config.js'
 
-    const config = getComponentConfig('container')
+    const config = getComponentConfig('container', containerDefaults)
+    const slots = containerVariants()
 
     let {
         as = 'div',
@@ -17,8 +18,6 @@
         children,
         ...restProps
     }: Props = $props()
-
-    const slots = $derived(containerVariants())
 
     const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
 </script>

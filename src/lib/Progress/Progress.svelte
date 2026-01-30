@@ -6,10 +6,10 @@
 
 <script lang="ts">
     import { Progress } from 'bits-ui'
-    import { progressVariants } from './progress.variants.js'
+    import { progressVariants, progressDefaults } from './progress.variants.js'
     import { getComponentConfig } from '../config.js'
 
-    const config = getComponentConfig('progress')
+    const config = getComponentConfig('progress', progressDefaults)
 
     let {
         ref = $bindable(null),
@@ -42,17 +42,17 @@
         return inverted ? `transform: translateY(-${offset}%);` : `transform: translateY(${offset}%);`
     })
 
-    const slots = $derived(progressVariants({ animation, color, size, orientation, inverted }))
-
-    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
-    const baseClass = $derived(slots.base({ class: [config.slots.base, ui?.base] }))
-    const indicatorClass = $derived(slots.indicator({ class: [config.slots.indicator, ui?.indicator] }))
-    const statusClass = $derived(slots.status({ class: [config.slots.status, ui?.status] }))
-    const stepsBaseClass = $derived(slots.steps({ class: [config.slots.steps, ui?.steps] }))
-
-    const stepVariants = $derived({
-        active: progressVariants({ size, step: 'active' }).steps(),
-        other: progressVariants({ size, step: 'other' }).steps()
+    const classes = $derived.by(() => {
+        const slots = progressVariants({ animation, color, size, orientation, inverted })
+        return {
+            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+            base: slots.base({ class: [config.slots.base, ui?.base] }),
+            indicator: slots.indicator({ class: [config.slots.indicator, ui?.indicator] }),
+            status: slots.status({ class: [config.slots.status, ui?.status] }),
+            stepsBase: slots.steps({ class: [config.slots.steps, ui?.steps] }),
+            stepActive: progressVariants({ size, step: 'active' }).steps(),
+            stepOther: progressVariants({ size, step: 'other' }).steps()
+        }
     })
 </script>
 
@@ -60,11 +60,11 @@
     bind:ref
     value={value ?? undefined}
     max={maxValue}
-    class={rootClass}
+    class={classes.root}
     {...restProps}
 >
     {#if status && !Array.isArray(max)}
-        <div class={statusClass} style={isIndeterminate ? '' : `width: ${percent}%;`}>
+        <div class={classes.status} style={isIndeterminate ? '' : `width: ${percent}%;`}>
             {#if statusSlot}
                 {@render statusSlot({ percent })}
             {:else}
@@ -73,14 +73,14 @@
         </div>
     {/if}
 
-    <div class={baseClass}>
-        <div class={indicatorClass} data-state={state} style={indicatorStyle}></div>
+    <div class={classes.base}>
+        <div class={classes.indicator} data-state={state} style={indicatorStyle}></div>
     </div>
 
     {#if Array.isArray(max)}
-        <div class={stepsBaseClass}>
+        <div class={classes.stepsBase}>
             {#each max as step, index (index)}
-                <span class={value != null && index <= value ? stepVariants.active : stepVariants.other}>
+                <span class={value != null && index <= value ? classes.stepActive : classes.stepOther}>
                     {step}
                 </span>
             {/each}

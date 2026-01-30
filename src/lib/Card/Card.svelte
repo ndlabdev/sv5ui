@@ -5,10 +5,10 @@
 </script>
 
 <script lang="ts">
-    import { cardVariants } from './card.variants.js'
+    import { cardVariants, cardDefaults } from './card.variants.js'
     import { getComponentConfig } from '../config.js'
 
-    const config = getComponentConfig('card')
+    const config = getComponentConfig('card', cardDefaults)
 
     let {
         as = 'div',
@@ -21,29 +21,32 @@
         ...restProps
     }: Props = $props()
 
-    const slots = $derived(cardVariants({ variant }))
-
-    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
-    const headerClass = $derived(header ? slots.header({ class: [config.slots.header, ui?.header] }) : '')
-    const bodyClass = $derived(children ? slots.body({ class: [config.slots.body, ui?.body] }) : '')
-    const footerClass = $derived(footer ? slots.footer({ class: [config.slots.footer, ui?.footer] }) : '')
+    const classes = $derived.by(() => {
+        const slots = cardVariants({ variant })
+        return {
+            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+            header: header ? slots.header({ class: [config.slots.header, ui?.header] }) : '',
+            body: children ? slots.body({ class: [config.slots.body, ui?.body] }) : '',
+            footer: footer ? slots.footer({ class: [config.slots.footer, ui?.footer] }) : ''
+        }
+    })
 </script>
 
-<svelte:element this={as} class={rootClass} {...restProps}>
+<svelte:element this={as} class={classes.root} {...restProps}>
     {#if header}
-        <div class={headerClass}>
+        <div class={classes.header}>
             {@render header()}
         </div>
     {/if}
 
     {#if children}
-        <div class={bodyClass}>
+        <div class={classes.body}>
             {@render children()}
         </div>
     {/if}
 
     {#if footer}
-        <div class={footerClass}>
+        <div class={classes.footer}>
             {@render footer()}
         </div>
     {/if}

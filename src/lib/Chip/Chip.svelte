@@ -5,10 +5,10 @@
 </script>
 
 <script lang="ts">
-    import { chipVariants } from './chip.variants.js'
+    import { chipVariants, chipDefaults } from './chip.variants.js'
     import { getComponentConfig } from '../config.js'
 
-    const config = getComponentConfig('chip')
+    const config = getComponentConfig('chip', chipDefaults)
 
     let {
         as = 'div',
@@ -26,17 +26,20 @@
         ...restProps
     }: Props = $props()
 
-    const slots = $derived(chipVariants({ color, size, position, inset, standalone }))
-
-    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
-    const baseClass = $derived(slots.base({ class: [config.slots.base, ui?.base] }))
+    const classes = $derived.by(() => {
+        const slots = chipVariants({ color, size, position, inset, standalone })
+        return {
+            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+            base: slots.base({ class: [config.slots.base, ui?.base] })
+        }
+    })
 </script>
 
-<svelte:element this={as} class={rootClass} {...restProps}>
+<svelte:element this={as} class={classes.root} {...restProps}>
     {@render children?.()}
 
     {#if show}
-        <span class={baseClass}>
+        <span class={classes.base}>
             {#if content}
                 {@render content()}
             {:else if text !== undefined}

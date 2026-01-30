@@ -18,11 +18,11 @@
 
 <script lang="ts">
     import { Avatar } from 'bits-ui'
-    import { avatarVariants } from './avatar.variants.js'
+    import { avatarVariants, avatarDefaults } from './avatar.variants.js'
     import { getComponentConfig } from '../config.js'
     import { getContext } from 'svelte'
 
-    const config = getComponentConfig('avatar')
+    const config = getComponentConfig('avatar', avatarDefaults)
 
     let {
         ref = $bindable(null),
@@ -46,20 +46,24 @@
         text || (alt ? alt.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() : '')
     )
 
-    const slots = $derived(avatarVariants({ size: resolvedSize }))
-    const rootClass = $derived(slots.root({ class: [config.slots.root, groupContext?.baseClass, className, ui?.root] }))
-    const imageClass = $derived(slots.image({ class: [config.slots.image, ui?.image] }))
-    const fallbackClass = $derived(slots.fallback({ class: [config.slots.fallback, ui?.fallback] }))
+    const classes = $derived.by(() => {
+        const slots = avatarVariants({ size: resolvedSize })
+        return {
+            root: slots.root({ class: [config.slots.root, groupContext?.baseClass, className, ui?.root] }),
+            image: slots.image({ class: [config.slots.image, ui?.image] }),
+            fallback: slots.fallback({ class: [config.slots.fallback, ui?.fallback] })
+        }
+    })
 </script>
 
-<Avatar.Root bind:ref class={rootClass} {delayMs} {...restProps}>
+<Avatar.Root bind:ref class={classes.root} {delayMs} {...restProps}>
     {#if children}
         {@render children()}
     {:else}
         {#if src}
-            <Avatar.Image {src} alt={alt ?? ''} class={imageClass} width={sizePx} height={sizePx} />
+            <Avatar.Image {src} alt={alt ?? ''} class={classes.image} width={sizePx} height={sizePx} />
         {/if}
-        <Avatar.Fallback class={fallbackClass}>
+        <Avatar.Fallback class={classes.fallback}>
             {initials}
         </Avatar.Fallback>
     {/if}

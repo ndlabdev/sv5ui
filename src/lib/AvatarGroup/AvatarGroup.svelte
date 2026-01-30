@@ -5,13 +5,13 @@
 </script>
 
 <script lang="ts">
-    import { avatarGroupVariants } from './avatar-group.variants.js'
+    import { avatarGroupVariants, avatarGroupDefaults } from './avatar-group.variants.js'
     import { getComponentConfig } from '../config.js'
     import { setContext } from 'svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
 
-    const config = getComponentConfig('avatarGroup')
+    const config = getComponentConfig('avatarGroup', avatarGroupDefaults)
 
     let {
         as = 'div',
@@ -24,16 +24,20 @@
         ...restProps
     }: Props = $props()
 
-    const slots = $derived(avatarGroupVariants({ size }))
-    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
-    const baseClass = $derived(slots.base({ class: [config.slots.base, ui?.base] }))
+    const classes = $derived.by(() => {
+        const slots = avatarGroupVariants({ size })
+        return {
+            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+            base: slots.base({ class: [config.slots.base, ui?.base] })
+        }
+    })
 
     setContext<{ size: AvatarSize; baseClass: string }>('avatarGroup', {
         get size() {
             return size
         },
         get baseClass() {
-            return baseClass
+            return classes.base
         }
     })
 
@@ -48,7 +52,7 @@
     )
 </script>
 
-<svelte:element this={as} class={rootClass} {...restProps}>
+<svelte:element this={as} class={classes.root} {...restProps}>
     {#if avatars}
         {#if overflowCount > 0}
             <Avatar text={`+${overflowCount}`} />

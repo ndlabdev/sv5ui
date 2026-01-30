@@ -45,10 +45,10 @@
 
 <script lang="ts">
     import { page } from '$app/state'
-    import { linkVariants } from './link.variants.js'
+    import { linkVariants, linkDefaults } from './link.variants.js'
     import { getComponentConfig } from '../config.js'
 
-    const config = getComponentConfig('link')
+    const config = getComponentConfig('link', linkDefaults)
 
     let {
         href,

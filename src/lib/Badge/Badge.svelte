@@ -5,13 +5,13 @@
 </script>
 
 <script lang="ts">
-    import { badgeVariants } from './badge.variants.js'
+    import { badgeVariants, badgeDefaults } from './badge.variants.js'
     import { getComponentConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
 
-    const config = getComponentConfig('badge')
+    const config = getComponentConfig('badge', badgeDefaults)
 
     let {
         as = 'span',
@@ -34,38 +34,41 @@
 
     const isIconOnly = $derived(!!icon || (square && !label && !children))
 
-    const slots = $derived(badgeVariants({ variant, color, size, square: isIconOnly || square }))
-
-    const baseClass = $derived(slots.base({ class: [config.slots.base, className, ui?.base] }))
-    const labelClass = $derived(slots.label({ class: [config.slots.label, ui?.label] }))
-    const leadingIconClass = $derived(slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }))
-    const trailingIconClass = $derived(slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }))
-    const leadingAvatarClass = $derived(slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }))
-    const leadingAvatarSize = $derived(slots.leadingAvatarSize() as AvatarSize)
+    const classes = $derived.by(() => {
+        const slots = badgeVariants({ variant, color, size, square: isIconOnly || square })
+        return {
+            base: slots.base({ class: [config.slots.base, className, ui?.base] }),
+            label: slots.label({ class: [config.slots.label, ui?.label] }),
+            leadingIcon: slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }),
+            trailingIcon: slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }),
+            leadingAvatar: slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }),
+            leadingAvatarSize: slots.leadingAvatarSize() as AvatarSize
+        }
+    })
 </script>
 
-<svelte:element this={as} class={baseClass} {...restProps}>
+<svelte:element this={as} class={classes.base} {...restProps}>
     {#if leading}
         {@render leading()}
     {:else if avatar}
-        <Avatar {...avatar} size={leadingAvatarSize} class={leadingAvatarClass} />
+        <Avatar {...avatar} size={classes.leadingAvatarSize} class={classes.leadingAvatar} />
     {:else if leadingIcon}
-        <Icon name={leadingIcon} class={leadingIconClass} />
+        <Icon name={leadingIcon} class={classes.leadingIcon} />
     {/if}
 
     {#if icon}
-        <Icon name={icon} class={leadingIconClass} />
+        <Icon name={icon} class={classes.leadingIcon} />
     {:else if !isIconOnly}
         {#if label != null}
-            <span class={labelClass}>{label}</span>
+            <span class={classes.label}>{label}</span>
         {:else if children}
-            <span class={labelClass}>{@render children()}</span>
+            <span class={classes.label}>{@render children()}</span>
         {/if}
     {/if}
 
     {#if trailing}
         {@render trailing()}
     {:else if trailingIcon}
-        <Icon name={trailingIcon} class={trailingIconClass} />
+        <Icon name={trailingIcon} class={classes.trailingIcon} />
     {/if}
 </svelte:element>

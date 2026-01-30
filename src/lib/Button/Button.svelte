@@ -6,14 +6,14 @@
 
 <script lang="ts">
     import { Button } from 'bits-ui'
-    import { buttonVariants } from './button.variants.js'
-    import { getComponentConfig } from '../config.js'
+    import { buttonVariants, buttonDefaults } from './button.variants.js'
+    import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
 
-    const config = getComponentConfig('button')
-    const icons = getComponentConfig('icons')
+    const config = getComponentConfig('button', buttonDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
         ref = $bindable(null),
@@ -51,8 +51,8 @@
         loading && isTrailing ? loadingIcon : (trailingIcon || (trailing ? icon : undefined))
     )
 
-    const slots = $derived(
-        buttonVariants({
+    const classes = $derived.by(() => {
+        const slots = buttonVariants({
             variant,
             color,
             size,
@@ -62,41 +62,42 @@
             leading: isLeading,
             trailing: isTrailing
         })
-    )
-
-    const baseClass = $derived(slots.base({ class: [config.slots.base, className, ui?.base] }))
-    const labelClass = $derived(slots.label({ class: [config.slots.label, ui?.label] }))
-    const leadingIconClass = $derived(slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }))
-    const trailingIconClass = $derived(slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }))
-    const leadingAvatarClass = $derived(slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }))
-    const leadingAvatarSize = $derived(slots.leadingAvatarSize() as AvatarSize)
+        return {
+            base: slots.base({ class: [config.slots.base, className, ui?.base] }),
+            label: slots.label({ class: [config.slots.label, ui?.label] }),
+            leadingIcon: slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }),
+            trailingIcon: slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }),
+            leadingAvatar: slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }),
+            leadingAvatarSize: slots.leadingAvatarSize() as AvatarSize
+        }
+    })
 </script>
 
 <Button.Root
     bind:ref
-    class={baseClass}
+    class={classes.base}
     disabled={disabled || loading}
     {...restProps}
 >
     {#if leadingSlot}
         {@render leadingSlot()}
     {:else if isLeading && leadingIconName}
-        <Icon name={leadingIconName} class={leadingIconClass} />
+        <Icon name={leadingIconName} class={classes.leadingIcon} />
     {:else if avatar}
-        <Avatar {...avatar} size={leadingAvatarSize} class={leadingAvatarClass} />
+        <Avatar {...avatar} size={classes.leadingAvatarSize} class={classes.leadingAvatar} />
     {/if}
 
     {#if !isIconOnly}
         {#if label}
-            <span class={labelClass}>{label}</span>
+            <span class={classes.label}>{label}</span>
         {:else if children}
-            <span class={labelClass}>{@render children()}</span>
+            <span class={classes.label}>{@render children()}</span>
         {/if}
     {/if}
 
     {#if trailingSlot}
         {@render trailingSlot()}
     {:else if isTrailing && trailingIconName}
-        <Icon name={trailingIconName} class={trailingIconClass} />
+        <Icon name={trailingIconName} class={classes.trailingIcon} />
     {/if}
 </Button.Root>

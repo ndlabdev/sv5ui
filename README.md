@@ -1,65 +1,124 @@
-# Svelte library
+# SV5UI
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+A modern, fully-typed Svelte 5 UI component library built with Tailwind CSS 4.
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/sv5ui.svg)](https://www.npmjs.com/package/sv5ui)
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Svelte 5** - Built with runes, snippets, and the latest Svelte 5 features
+- **Tailwind CSS 4** - Utility-first styling with [Tailwind Variants](https://www.tailwind-variants.org/) for type-safe composable variants
+- **OKLCH Colors** - Semantic color tokens with light/dark mode support
+- **Fully Typed** - Complete TypeScript support with strict mode
+- **Accessible** - Built on [Bits UI](https://bits-ui.com) headless primitives
+- **Customizable** - Global config system to override default variants and slot styles
 
-```sh
-# create a new project in the current directory
-npx sv create
+## Installation
 
-# create a new project in my-app
-npx sv create my-app
+```bash
+npm install sv5ui
 ```
 
-To recreate this project with the same configuration:
+Peer dependencies: `svelte >= 5.0.0`, `tailwindcss >= 4.0.0`
 
-```sh
-# recreate this project
-pnpm dlx sv create --template library --types ts --add prettier eslint vitest="usages:unit,component" tailwindcss="plugins:none" --install pnpm sv5ui
+## Quick Start
+
+```css
+/* layout.css */
+@import 'sv5ui/theme.css';
+@source "../../node_modules/sv5ui/dist";
 ```
 
-## Developing
+```svelte
+<script>
+  import { Button, Alert, Avatar, Badge } from 'sv5ui'
+</script>
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+<Button variant="solid" color="primary">Click me</Button>
+<Alert title="Heads up!" description="Something happened." color="info" variant="soft" />
+<Avatar src="/photo.jpg" alt="John Doe" size="lg" />
+<Badge label="New" color="success" />
 ```
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+## Components
 
-## Building
+| Component | Description |
+|-----------|-------------|
+| **Alert** | Notification banners with actions and close support |
+| **Avatar** | User avatar with image fallback and auto-generated initials |
+| **AvatarGroup** | Grouped avatars with overflow count |
+| **Badge** | Status indicators and tags |
+| **Button** | Interactive button with loading, icon, and block modes |
+| **Card** | Content container with header/body/footer slots |
+| **Chip** | Compact notification indicators with positioning |
+| **Container** | Responsive layout wrapper with max-width constraints |
+| **Icon** | Iconify wrapper with 200,000+ icons |
+| **Kbd** | Keyboard key display with automatic symbol mapping |
+| **Link** | Smart navigation with active state detection |
+| **Progress** | Determinate/indeterminate progress bars with step mode |
+| **Separator** | Dividers with optional label, icon, or avatar content |
+| **Timeline** | Sequence/step visualization with states |
 
-To build your library:
+> Browse the interactive docs by running `pnpm dev` and opening [localhost:5173](http://localhost:5173).
 
-```sh
-npm pack
+## Theming
+
+SV5UI uses OKLCH color space with semantic tokens. Light and dark modes work automatically.
+
+**Available color tokens:** `primary`, `secondary`, `tertiary`, `success`, `warning`, `error`, `info`, `surface`
+
+**Dark mode** via `.dark` class or `prefers-color-scheme`, managed through [mode-watcher](https://github.com/svecosystem/mode-watcher).
+
+**Custom colors** by overriding CSS variables:
+
+```css
+:root {
+  --color-primary: oklch(0.55 0.25 270);
+  --color-secondary: oklch(0.45 0.15 240);
+}
 ```
 
-To create a production version of your showcase app:
+## Customization
 
-```sh
-npm run build
+### Per-instance overrides
+
+Override slot styles on any component via the `ui` prop:
+
+```svelte
+<Button ui={{ base: 'rounded-full', label: 'font-bold uppercase' }}>
+  Custom
+</Button>
 ```
 
-You can preview the production build with `npm run preview`.
+### Global defaults
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Use `defineConfig` to set library-wide defaults:
 
-## Publishing
+```typescript
+import { defineConfig } from 'sv5ui'
 
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```sh
-npm publish
+defineConfig({
+  button: {
+    defaultVariants: { variant: 'outline', size: 'lg' },
+    slots: { base: 'shadow-md' }
+  },
+  icons: { loading: 'svg-spinners:ring-resize' }
+})
 ```
+
+## Development
+
+```bash
+pnpm install      # Install dependencies
+pnpm dev          # Start dev server
+pnpm test         # Run tests
+pnpm check        # Type check
+pnpm prepack      # Build library
+pnpm lint         # Lint
+pnpm format       # Format
+```
+
+## License
+
+[MIT](LICENSE)

@@ -6,13 +6,13 @@
 
 <script lang="ts">
     import { Separator } from 'bits-ui'
-    import { separatorVariants } from './separator.variants.js'
+    import { separatorVariants, separatorDefaults } from './separator.variants.js'
     import { getComponentConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
 
-    const config = getComponentConfig('separator')
+    const config = getComponentConfig('separator', separatorDefaults)
 
     let {
         ref = $bindable(null),
@@ -32,33 +32,36 @@
 
     const hasContent = $derived(!!label || !!icon || !!avatar || !!content)
 
-    const slots = $derived(separatorVariants({ color, size, type, orientation }))
-
-    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
-    const borderClass = $derived(slots.border({ class: [config.slots.border, ui?.border] }))
-    const containerClass = $derived(slots.container({ class: [config.slots.container, ui?.container] }))
-    const iconClass = $derived(slots.icon({ class: [config.slots.icon, ui?.icon] }))
-    const avatarClass = $derived(slots.avatar({ class: [config.slots.avatar, ui?.avatar] }))
-    const avatarSize = $derived(slots.avatarSize() as AvatarSize)
-    const labelClass = $derived(slots.label({ class: [config.slots.label, ui?.label] }))
+    const classes = $derived.by(() => {
+        const slots = separatorVariants({ color, size, type, orientation })
+        return {
+            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+            border: slots.border({ class: [config.slots.border, ui?.border] }),
+            container: slots.container({ class: [config.slots.container, ui?.container] }),
+            icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
+            avatar: slots.avatar({ class: [config.slots.avatar, ui?.avatar] }),
+            avatarSize: slots.avatarSize() as AvatarSize,
+            label: slots.label({ class: [config.slots.label, ui?.label] })
+        }
+    })
 </script>
 
-<Separator.Root bind:ref class={rootClass} {orientation} {decorative} {...restProps}>
-    <div class={borderClass}></div>
+<Separator.Root bind:ref class={classes.root} {orientation} {decorative} {...restProps}>
+    <div class={classes.border}></div>
 
     {#if hasContent}
-        <div class={containerClass}>
+        <div class={classes.container}>
             {#if content}
                 {@render content()}
             {:else if avatar}
-                <Avatar {...avatar} size={avatar.size ?? avatarSize} class={avatarClass} />
+                <Avatar {...avatar} size={avatar.size ?? classes.avatarSize} class={classes.avatar} />
             {:else if icon}
-                <Icon name={icon} class={iconClass} />
+                <Icon name={icon} class={classes.icon} />
             {:else if label}
-                <span class={labelClass}>{label}</span>
+                <span class={classes.label}>{label}</span>
             {/if}
         </div>
 
-        <div class={borderClass}></div>
+        <div class={classes.border}></div>
     {/if}
 </Separator.Root>

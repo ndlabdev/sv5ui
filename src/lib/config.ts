@@ -19,94 +19,36 @@
  * ```
  */
 
-// ==================== IMPORTS ====================
+// ==================== ICONS DEFAULTS ====================
 
-import { buttonDefaults } from './Button/button.variants.js'
-import { avatarDefaults } from './Avatar/avatar.variants.js'
-import { avatarGroupDefaults } from './AvatarGroup/avatar-group.variants.js'
-import { alertDefaults } from './Alert/alert.variants.js'
-import { cardDefaults } from './Card/card.variants.js'
-import { linkDefaults } from './Link/link.variants.js'
-import { separatorDefaults } from './Separator/separator.variants.js'
-import { chipDefaults } from './Chip/chip.variants.js'
-import { progressDefaults } from './Progress/progress.variants.js'
-import { badgeDefaults } from './Badge/badge.variants.js'
-import { containerDefaults } from './Container/container.variants.js'
-import { timelineDefaults } from './Timeline/timeline.variants.js'
-import { kbdDefaults } from './Kbd/kbd.variants.js'
-
-// ==================== COMPONENT DEFAULTS (user-configurable) ====================
-
-/**
- * Registry of user-configurable component defaults
- * To add a new component, just add its defaults here
- */
 /**
  * Default icons used across components
- * Add new icons here as needed - no type changes required
  */
-const iconsDefaults = {
-    // Default icons used across components
+export const iconsDefaults = {
     loading: 'lucide:loader-2',
     chevronDown: 'lucide:chevron-down',
     chevronRight: 'lucide:chevron-right',
     close: 'lucide:x',
     check: 'lucide:check'
-    // ...add more as needed
 }
 
-const componentDefaults = {
-    button: buttonDefaults,
-    avatar: avatarDefaults,
-    avatarGroup: avatarGroupDefaults,
-    alert: alertDefaults,
-    card: cardDefaults,
-    link: linkDefaults,
-    separator: separatorDefaults,
-    chip: chipDefaults,
-    progress: progressDefaults,
-    badge: badgeDefaults,
-    container: containerDefaults,
-    timeline: timelineDefaults,
-    kbd: kbdDefaults,
-    icons: iconsDefaults
-}
+// ==================== TYPES ====================
 
-// ==================== DERIVED TYPES ====================
-
-type ComponentDefaults = typeof componentDefaults
-type ComponentName = keyof ComponentDefaults
-
-/** Deep partial type for component config */
+/** Deep partial type for config objects */
 type DeepPartial<T> = {
     [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
 }
 
-/** Config for each component - derived from its defaults */
+/** Generic component config shape */
 export type UIConfig = {
-    [K in ComponentName]?: DeepPartial<ComponentDefaults[K]>
+    [key: string]: DeepPartial<Record<string, unknown>> | undefined
+    icons?: DeepPartial<typeof iconsDefaults>
 }
-
-/** Re-export component config types for external use */
-export type ButtonConfig = UIConfig['button']
-export type AvatarConfig = UIConfig['avatar']
-export type AvatarGroupConfig = UIConfig['avatarGroup']
-export type AlertConfig = UIConfig['alert']
-export type CardConfig = UIConfig['card']
-export type LinkConfig = UIConfig['link']
-export type SeparatorConfig = UIConfig['separator']
-export type ChipConfig = UIConfig['chip']
-export type ProgressConfig = UIConfig['progress']
-export type BadgeConfig = UIConfig['badge']
-export type ContainerConfig = UIConfig['container']
-export type TimelineConfig = UIConfig['timeline']
-export type KbdConfig = UIConfig['kbd']
-export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================
 
 let globalConfig: UIConfig = {}
-let cachedConfigs: Partial<Record<ComponentName, ComponentDefaults[ComponentName]>> = {}
+let cachedConfigs: Record<string, unknown> = {}
 
 // ==================== PUBLIC API ====================
 
@@ -115,7 +57,7 @@ let cachedConfigs: Partial<Record<ComponentName, ComponentDefaults[ComponentName
  */
 export function defineConfig(config: UIConfig): void {
     globalConfig = config
-    cachedConfigs = {} // Invalidate cache
+    cachedConfigs = {}
 }
 
 /**
@@ -164,16 +106,17 @@ function deepMerge<T extends Record<string, unknown>>(target: T, source: DeepPar
 }
 
 /**
- * Get merged config for any component (memoized)
+ * Get merged config for a component (memoized).
+ * Each component passes its own defaults, so config.ts doesn't import any variant files.
+ * This enables proper tree-shaking: unused components are excluded from the bundle.
  * @internal
  */
-export function getComponentConfig<K extends ComponentName>(component: K): ComponentDefaults[K] {
+export function getComponentConfig<T extends Record<string, unknown>>(component: string, defaults: T): T {
     if (!(component in cachedConfigs)) {
-        const defaults = componentDefaults[component]
         const userConfig = globalConfig[component]
         cachedConfigs[component] = userConfig
-            ? deepMerge(defaults as Record<string, unknown>, userConfig as DeepPartial<Record<string, unknown>>) as ComponentDefaults[K]
+            ? deepMerge(defaults as Record<string, unknown>, userConfig as DeepPartial<Record<string, unknown>>) as T
             : defaults
     }
-    return cachedConfigs[component] as ComponentDefaults[K]
+    return cachedConfigs[component] as T
 }

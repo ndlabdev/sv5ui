@@ -5,14 +5,14 @@
 </script>
 
 <script lang="ts">
-    import { alertVariants } from './alert.variants.js'
-    import { getComponentConfig } from '../config.js'
+    import { alertVariants, alertDefaults } from './alert.variants.js'
+    import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import Button from '../Button/Button.svelte'
 
-    const config = getComponentConfig('alert')
-    const icons = getComponentConfig('icons')
+    const config = getComponentConfig('alert', alertDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
         as = 'div',
@@ -40,22 +40,19 @@
 
     const resolvedCloseIcon = $derived(closeIcon ?? icons.close)
 
-    const slots = $derived(
-        alertVariants({
-            variant,
-            color,
-            orientation
-        })
-    )
-
-    const rootClass = $derived(slots.root({ class: [config.slots.root, className, ui?.root] }))
-    const wrapperClass = $derived(slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }))
-    const titleClass = $derived(slots.title({ class: [config.slots.title, ui?.title] }))
-    const descriptionClass = $derived(slots.description({ class: [config.slots.description, ui?.description] }))
-    const iconClass = $derived(slots.icon({ class: [config.slots.icon, ui?.icon] }))
-    const avatarClass = $derived(slots.avatar({ class: [config.slots.avatar, ui?.avatar] }))
-    const actionsClass = $derived(slots.actions({ class: [config.slots.actions, ui?.actions] }))
-    const closeClass = $derived(slots.close({ class: [config.slots.close, ui?.close] }))
+    const classes = $derived.by(() => {
+        const slots = alertVariants({ variant, color, orientation })
+        return {
+            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+            wrapper: slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
+            title: slots.title({ class: [config.slots.title, ui?.title] }),
+            description: slots.description({ class: [config.slots.description, ui?.description] }),
+            icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
+            avatar: slots.avatar({ class: [config.slots.avatar, ui?.avatar] }),
+            actions: slots.actions({ class: [config.slots.actions, ui?.actions] }),
+            close: slots.close({ class: [config.slots.close, ui?.close] })
+        }
+    })
 
     const closeButtonProps = $derived.by(() => {
         if (!close) return null
@@ -69,27 +66,27 @@
 </script>
 
 {#if open}
-    <svelte:element this={as} class={rootClass} role="alert" {...restProps}>
+    <svelte:element this={as} class={classes.root} role="alert" {...restProps}>
         {#if leading}
             {@render leading()}
         {:else if icon}
-            <Icon name={icon} class={iconClass} />
+            <Icon name={icon} class={classes.icon} />
         {:else if avatar}
-            <Avatar {...avatar} class={avatarClass} />
+            <Avatar {...avatar} class={classes.avatar} />
         {/if}
 
         {#if title || description || titleSlot || descriptionSlot}
-            <div class={wrapperClass}>
+            <div class={classes.wrapper}>
                 {#if titleSlot}
                     {@render titleSlot()}
                 {:else if title}
-                    <div class={titleClass}>{title}</div>
+                    <div class={classes.title}>{title}</div>
                 {/if}
 
                 {#if descriptionSlot}
                     {@render descriptionSlot()}
                 {:else if description}
-                    <div class={descriptionClass}>{description}</div>
+                    <div class={classes.description}>{description}</div>
                 {/if}
             </div>
         {/if}
@@ -97,7 +94,7 @@
         {#if actionsSlot}
             {@render actionsSlot()}
         {:else if actions && actions.length > 0}
-            <div class={actionsClass}>
+            <div class={classes.actions}>
                 {#each actions as action, index (index)}
                     <Button size="xs" variant="outline" color={color} {...action} />
                 {/each}
@@ -105,7 +102,7 @@
         {/if}
 
         {#if closeSlot}
-            <div class={closeClass}>
+            <div class={classes.close}>
                 {@render closeSlot()}
             </div>
         {:else if closeButtonProps}
@@ -115,7 +112,7 @@
                 color={color}
                 size="xs"
                 square
-                class={closeClass}
+                class={classes.close}
                 onclick={handleClose}
                 aria-label="Close alert"
                 {...closeButtonProps}
