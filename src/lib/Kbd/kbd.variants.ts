@@ -99,3 +99,7 @@ export const kbdKeysPlatformMap: Record<string, { mac: string; other: string }> 
 }
 
 export type KbdVariantProps = VariantProps<typeof kbdVariants>
+
+export const kbdDefaults = {
+    defaultVariants: kbdVariants.defaultVariants
+}

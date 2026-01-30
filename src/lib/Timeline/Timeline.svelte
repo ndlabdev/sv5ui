@@ -7,16 +7,19 @@
 <script lang="ts">
     import { timelineVariants } from './timeline.variants.js'
     import type { TimelineItemState } from './timeline.types.js'
+    import { getComponentConfig } from '../config.js'
     import Avatar from '../Avatar/Avatar.svelte'
     import Icon from '../Icon/Icon.svelte'
+
+    const config = getComponentConfig('timeline')
 
     let {
         as = 'div',
         items = [],
-        size = 'md',
-        color = 'primary',
-        orientation = 'vertical',
-        reverse = false,
+        size = config.defaultVariants.size,
+        color = config.defaultVariants.color,
+        orientation = config.defaultVariants.orientation,
+        reverse = config.defaultVariants.reverse,
         value,
         class: className,
         ui,
@@ -38,15 +41,15 @@
     }
 </script>
 
-<svelte:element this={as} class={slots.root({ class: [className, ui?.root] })} {...restProps}>
+<svelte:element this={as} class={slots.root({ class: [config.slots.root, className, ui?.root] })} {...restProps}>
     {#each items as item, index (item.value ?? index)}
         {@const state = getState(index)}
-        <div class={slots.item({ class: [ui?.item, item.class] })} data-state={state}>
-            <div class={slots.container({ class: ui?.container })}>
+        <div class={slots.item({ class: [config.slots.item, ui?.item, item.class] })} data-state={state}>
+            <div class={slots.container({ class: [config.slots.container, ui?.container] })}>
                 {#if indicator}
                     {@render indicator({ item, index, state })}
                 {:else}
-                    <div class={slots.indicator({ class: ui?.indicator })}>
+                    <div class={slots.indicator({ class: [config.slots.indicator, ui?.indicator] })}>
                         {#if item.avatar}
                             <Avatar {...item.avatar} size={size} />
                         {:else if item.icon}
@@ -56,27 +59,27 @@
                 {/if}
 
                 {#if reverse ? index > 0 : index < items.length - 1}
-                    <div class={slots.separator({ class: ui?.separator })}></div>
+                    <div class={slots.separator({ class: [config.slots.separator, ui?.separator] })}></div>
                 {/if}
             </div>
 
-            <div class={slots.wrapper({ class: ui?.wrapper })}>
+            <div class={slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] })}>
                 {#if dateSlot}
                     {@render dateSlot({ item, index, state })}
                 {:else if item.date}
-                    <div class={slots.date({ class: ui?.date })}>{item.date}</div>
+                    <div class={slots.date({ class: [config.slots.date, ui?.date] })}>{item.date}</div>
                 {/if}
 
                 {#if titleSlot}
                     {@render titleSlot({ item, index, state })}
                 {:else if item.title}
-                    <div class={slots.title({ class: ui?.title })}>{item.title}</div>
+                    <div class={slots.title({ class: [config.slots.title, ui?.title] })}>{item.title}</div>
                 {/if}
 
                 {#if descriptionSlot}
                     {@render descriptionSlot({ item, index, state })}
                 {:else if item.description}
-                    <div class={slots.description({ class: ui?.description })}>{item.description}</div>
+                    <div class={slots.description({ class: [config.slots.description, ui?.description] })}>{item.description}</div>
                 {/if}
 
                 {#if content}

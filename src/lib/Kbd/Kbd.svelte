@@ -25,13 +25,16 @@
 
 <script lang="ts">
     import { kbdVariants, kbdKeysMap, kbdKeysPlatformMap } from './kbd.variants.js'
+    import { getComponentConfig } from '../config.js'
+
+    const config = getComponentConfig('kbd')
 
     let {
         as = 'kbd',
         value,
-        color = 'surface',
-        size = 'md',
-        variant = 'outline',
+        color = config.defaultVariants.color,
+        size = config.defaultVariants.size,
+        variant = config.defaultVariants.variant,
         class: className,
         children,
         ...restProps

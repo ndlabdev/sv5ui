@@ -32,6 +32,8 @@ import { chipDefaults } from './Chip/chip.variants.js'
 import { progressDefaults } from './Progress/progress.variants.js'
 import { badgeDefaults } from './Badge/badge.variants.js'
 import { containerDefaults } from './Container/container.variants.js'
+import { timelineDefaults } from './Timeline/timeline.variants.js'
+import { kbdDefaults } from './Kbd/kbd.variants.js'
 
 // ==================== COMPONENT DEFAULTS (user-configurable) ====================
 
@@ -65,6 +67,8 @@ const componentDefaults = {
     progress: progressDefaults,
     badge: badgeDefaults,
     container: containerDefaults,
+    timeline: timelineDefaults,
+    kbd: kbdDefaults,
     icons: iconsDefaults
 }
 
@@ -95,6 +99,8 @@ export type ChipConfig = UIConfig['chip']
 export type ProgressConfig = UIConfig['progress']
 export type BadgeConfig = UIConfig['badge']
 export type ContainerConfig = UIConfig['container']
+export type TimelineConfig = UIConfig['timeline']
+export type KbdConfig = UIConfig['kbd']
 export type IconsConfig = UIConfig['icons']
 
 // ==================== GLOBAL STATE ====================

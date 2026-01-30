@@ -78,7 +78,7 @@
 
 		<!-- Sidebar -->
 		<aside
-			class="fixed top-[57px] left-0 z-40 h-[calc(100vh-57px)] w-64 shrink-0 overflow-y-auto border-r border-outline-variant bg-surface-container transition-transform duration-200 lg:sticky lg:translate-x-0 {sidebarOpen ? 'translate-x-0' : '-translate-x-full'}"
+			class="fixed top-14.25 left-0 z-40 h-[calc(100vh-57px)] w-64 shrink-0 overflow-y-auto border-r border-outline-variant bg-surface-container transition-transform duration-200 lg:sticky lg:translate-x-0 {sidebarOpen ? 'translate-x-0' : '-translate-x-full'}"
 		>
 			<nav class="p-4">
 				<p class="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">

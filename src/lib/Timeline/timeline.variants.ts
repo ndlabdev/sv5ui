@@ -123,3 +123,8 @@ export const timelineVariants = tv({
 
 export type TimelineVariantProps = VariantProps<typeof timelineVariants>
 export type TimelineSlots = keyof ReturnType<typeof timelineVariants>
+
+export const timelineDefaults = {
+    defaultVariants: timelineVariants.defaultVariants,
+    slots: {} as Partial<Record<TimelineSlots, string>>
+}
