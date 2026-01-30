@@ -52,13 +52,15 @@ describe('Chip', () => {
         it('should default to md size', () => {
             const { container } = render(Chip)
             const chip = container.querySelector('span')!
-            expect(chip.className).toMatch(/size-3\b/)
+            expect(chip.className).toMatch(/h-\[8px\]/)
+            expect(chip.className).toMatch(/min-w-\[8px\]/)
         })
 
         it('should apply lg size', () => {
             const { container } = render(Chip, { size: 'lg' })
             const chip = container.querySelector('span')!
-            expect(chip.className).toMatch(/size-3\.5/)
+            expect(chip.className).toMatch(/h-\[9px\]/)
+            expect(chip.className).toMatch(/min-w-\[9px\]/)
         })
     })
 

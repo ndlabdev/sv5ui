@@ -13,6 +13,7 @@ export * from './Badge/index.js'
 export * from './Kbd/index.js'
 export * from './Container/index.js'
 export * from './Timeline/index.js'
+export * from './User/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

@@ -17,15 +17,15 @@ export const chipVariants = tv({
             surface: { base: 'bg-inverse-surface text-inverse-on-surface' }
         },
         size: {
-            '3xs': { base: 'size-1 text-[4px]' },
-            '2xs': { base: 'size-1.5 text-[5px]' },
-            xs: { base: 'size-2 text-[6px]' },
-            sm: { base: 'size-2.5 text-[7px]' },
-            md: { base: 'size-3 text-[8px]' },
-            lg: { base: 'size-3.5 text-[9px]' },
-            xl: { base: 'size-4 text-[10px]' },
-            '2xl': { base: 'size-5 text-[11px]' },
-            '3xl': { base: 'size-6 text-[12px]' }
+            '3xs': 'h-[4px] min-w-[4px] text-[4px]',
+            '2xs': 'h-[5px] min-w-[5px] text-[5px]',
+            xs: 'h-[6px] min-w-[6px] text-[6px]',
+            sm: 'h-[7px] min-w-[7px] text-[7px]',
+            md: 'h-[8px] min-w-[8px] text-[8px]',
+            lg: 'h-[9px] min-w-[9px] text-[9px]',
+            xl: 'h-[10px] min-w-[10px] text-[10px]',
+            '2xl': 'h-[11px] min-w-[11px] text-[11px]',
+            '3xl': 'h-[12px] min-w-[12px] text-[12px]'
         },
         position: {
             'top-right': { base: 'top-0 right-0' },

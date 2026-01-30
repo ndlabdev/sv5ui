@@ -22,7 +22,8 @@
 		{ href: '/badge', label: 'Badge', icon: 'lucide:tag' },
 		{ href: '/kbd', label: 'Kbd', icon: 'lucide:keyboard' },
 		{ href: '/container', label: 'Container', icon: 'lucide:box' },
-		{ href: '/timeline', label: 'Timeline', icon: 'lucide:git-commit-horizontal' }
+		{ href: '/timeline', label: 'Timeline', icon: 'lucide:git-commit-horizontal' },
+		{ href: '/user', label: 'User', icon: 'lucide:user' }
 	]
 
 	const docItems = [
