@@ -2,7 +2,7 @@
 	import { Button, Icon } from '$lib/index.js'
 
 	const variants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'link'] as const
-	const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
+	const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
 	const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 </script>
 

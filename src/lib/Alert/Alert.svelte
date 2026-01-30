@@ -96,7 +96,7 @@
         {:else if actions && actions.length > 0}
             <div class={classes.actions}>
                 {#each actions as action, index (index)}
-                    <Button size="xs" variant="outline" color={color} {...action} />
+                    <Button size="xs" {...action} />
                 {/each}
             </div>
         {/if}
@@ -108,10 +108,8 @@
         {:else if closeButtonProps}
             <Button
                 icon={resolvedCloseIcon}
-                variant="ghost"
-                color={color}
-                size="xs"
-                square
+                variant="link"
+                color="surface"
                 class={classes.close}
                 onclick={handleClose}
                 aria-label="Close alert"

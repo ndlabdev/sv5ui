@@ -30,7 +30,8 @@ export const buttonVariants = tv({
             success: '',
             warning: '',
             error: '',
-            info: ''
+            info: '',
+            surface: ''
         },
         size: {
             xs: {
@@ -134,6 +135,13 @@ export const buttonVariants = tv({
                 base: 'bg-info text-on-info hover:bg-info/90 active:bg-info/80 disabled:bg-info aria-disabled:bg-info focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info'
             }
         },
+        {
+            variant: 'solid',
+            color: 'surface',
+            class: {
+                base: 'bg-inverse-surface text-inverse-on-surface hover:bg-inverse-surface/90 active:bg-inverse-surface/80 disabled:bg-inverse-surface aria-disabled:bg-inverse-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverse-surface'
+            }
+        },
 
         // ========== OUTLINE VARIANTS ==========
         {
@@ -183,6 +191,13 @@ export const buttonVariants = tv({
             color: 'info',
             class: {
                 base: 'ring ring-inset ring-info text-info hover:bg-info-container active:bg-info-container disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-info'
+            }
+        },
+        {
+            variant: 'outline',
+            color: 'surface',
+            class: {
+                base: 'ring ring-inset ring-outline-variant text-on-surface-variant hover:bg-surface-container-highest active:bg-surface-container-highest disabled:bg-transparent aria-disabled:bg-transparent focus-visible:ring-2 focus-visible:ring-outline'
             }
         },
 
@@ -236,6 +251,13 @@ export const buttonVariants = tv({
                 base: 'text-on-info-container bg-info-container hover:bg-info-container/80 active:bg-info-container/70 focus-visible:bg-info-container/80 disabled:bg-info-container aria-disabled:bg-info-container'
             }
         },
+        {
+            variant: 'soft',
+            color: 'surface',
+            class: {
+                base: 'text-on-surface bg-surface-container-highest hover:bg-surface-container-highest/80 active:bg-surface-container-highest/70 focus-visible:bg-surface-container-highest/80 disabled:bg-surface-container-highest aria-disabled:bg-surface-container-highest'
+            }
+        },
 
         // ========== SUBTLE VARIANTS ==========
         {
@@ -285,6 +307,13 @@ export const buttonVariants = tv({
             color: 'info',
             class: {
                 base: 'text-on-info-container ring ring-inset ring-info/25 bg-info-container hover:bg-info-container/80 active:bg-info-container/70 disabled:bg-info-container aria-disabled:bg-info-container focus-visible:ring-2 focus-visible:ring-info'
+            }
+        },
+        {
+            variant: 'subtle',
+            color: 'surface',
+            class: {
+                base: 'text-on-surface ring ring-inset ring-outline-variant bg-surface-container-highest hover:bg-surface-container-highest/80 active:bg-surface-container-highest/70 disabled:bg-surface-container-highest aria-disabled:bg-surface-container-highest focus-visible:ring-2 focus-visible:ring-outline'
             }
         },
 
@@ -338,6 +367,13 @@ export const buttonVariants = tv({
                 base: 'text-info hover:bg-info-container active:bg-info-container focus-visible:bg-info-container disabled:bg-transparent aria-disabled:bg-transparent'
             }
         },
+        {
+            variant: 'ghost',
+            color: 'surface',
+            class: {
+                base: 'text-on-surface-variant hover:bg-surface-container-highest active:bg-surface-container-highest focus-visible:bg-surface-container-highest disabled:bg-transparent aria-disabled:bg-transparent'
+            }
+        },
 
         // ========== LINK VARIANTS ==========
         {
@@ -387,6 +423,13 @@ export const buttonVariants = tv({
             color: 'info',
             class: {
                 base: 'text-info hover:text-info/75 active:text-info/75 underline-offset-4 hover:underline disabled:text-info aria-disabled:text-info focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-info'
+            }
+        },
+        {
+            variant: 'link',
+            color: 'surface',
+            class: {
+                base: 'text-on-surface-variant hover:text-on-surface-variant/75 active:text-on-surface-variant/75 underline-offset-4 hover:underline disabled:text-on-surface-variant aria-disabled:text-on-surface-variant focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-outline'
             }
         },
 

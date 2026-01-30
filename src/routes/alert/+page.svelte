@@ -42,6 +42,7 @@
 			<Alert color="warning" title="Warning" description="Please review before proceeding." />
 			<Alert color="error" title="Error" description="Something went wrong." />
 			<Alert color="info" title="Info" description="Here's some useful information." />
+			<Alert color="surface" title="Surface" description="Neutral surface color alert." />
 		</div>
 	</section>
 
@@ -143,7 +144,7 @@
 				<thead>
 					<tr class="border-b border-outline-variant">
 						<th class="px-2 py-3 text-left text-sm font-medium text-on-surface-variant">Variant</th>
-						{#each ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as color}
+						{#each ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as color}
 							<th class="px-2 py-3 text-center text-sm font-medium capitalize text-on-surface-variant">{color}</th>
 						{/each}
 					</tr>
@@ -152,7 +153,7 @@
 					{#each ['solid', 'outline', 'soft', 'subtle'] as variant}
 						<tr class="border-b border-outline-variant/50">
 							<td class="px-2 py-3 text-sm font-medium capitalize text-on-surface-variant">{variant}</td>
-							{#each ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as color}
+							{#each ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as color}
 								<td class="px-2 py-3">
 									<Alert {variant} {color} title={color} class="min-w-48" />
 								</td>
