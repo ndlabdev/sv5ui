@@ -15,6 +15,7 @@ export * from './Container/index.js'
 export * from './Timeline/index.js'
 export * from './User/index.js'
 export * from './Empty/index.js'
+export * from './Skeleton/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

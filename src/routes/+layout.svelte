@@ -24,7 +24,8 @@
 		{ href: '/container', label: 'Container', icon: 'lucide:box' },
 		{ href: '/timeline', label: 'Timeline', icon: 'lucide:git-commit-horizontal' },
 		{ href: '/user', label: 'User', icon: 'lucide:user' },
-		{ href: '/empty', label: 'Empty', icon: 'lucide:inbox' }
+		{ href: '/empty', label: 'Empty', icon: 'lucide:inbox' },
+		{ href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' }
 	]
 
 	const docItems = [
