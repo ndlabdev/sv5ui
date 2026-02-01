@@ -1,30 +1,12 @@
 <script lang="ts" module>
     import type { KbdProps } from './kbd.types.js'
+    import { resolveKey } from './useKbd.svelte.js'
 
     export type Props = KbdProps
-
-    /** Detect macOS/iOS platform (computed once) */
-    const isMac =
-        typeof navigator !== 'undefined' && /Macintosh|Mac OS|iPhone|iPad|iPod/i.test(navigator.userAgent)
-
-    /** Resolve key to display symbol */
-    function resolveKey(value: string | undefined): string | null {
-        if (!value) return null
-
-        const key = value.toLowerCase()
-
-        // Platform-specific keys (meta, ctrl, alt)
-        if (key in kbdKeysPlatformMap) {
-            return isMac ? kbdKeysPlatformMap[key].mac : kbdKeysPlatformMap[key].other
-        }
-
-        // Static key symbols
-        return kbdKeysMap[key] ?? value
-    }
 </script>
 
 <script lang="ts">
-    import { kbdVariants, kbdKeysMap, kbdKeysPlatformMap, kbdDefaults } from './kbd.variants.js'
+    import { kbdVariants, kbdDefaults } from './kbd.variants.js'
     import { getComponentConfig } from '../config.js'
 
     const config = getComponentConfig('kbd', kbdDefaults)
