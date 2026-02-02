@@ -1,3 +1,3 @@
 export { default as Kbd } from './Kbd.svelte'
 export type { KbdProps } from './kbd.types.js'
-export { resolveKey, resolveShortcut, formatShortcut } from './useKbd.svelte.js'
+export { formatShortcut, useKbd } from './useKbd.svelte.js'

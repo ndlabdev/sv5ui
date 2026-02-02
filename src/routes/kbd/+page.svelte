@@ -1,9 +1,29 @@
 <script lang="ts">
-	import { Kbd } from '$lib/index.js'
+	import { Kbd, useKbd } from '$lib/index.js'
 
 	const colors = ['primary', 'secondary', 'success', 'warning', 'error', 'info', 'surface'] as const
 	const variants = ['solid', 'outline', 'soft', 'subtle'] as const
 	const sizes = ['sm', 'md', 'lg'] as const
+
+	let shortcutLog = $state<string[]>([])
+	let searchOpen = $state(false)
+
+	const kbd = useKbd({
+		shortcuts: {
+			'ctrl+k': () => {
+				searchOpen = !searchOpen
+				shortcutLog = [...shortcutLog, 'Ctrl+K → Toggle search'].slice(-5)
+			},
+			'ctrl+shift+p': () => {
+				shortcutLog = [...shortcutLog, 'Ctrl+Shift+P → Command palette'].slice(-5)
+			},
+			'escape': () => {
+				searchOpen = false
+				shortcutLog = [...shortcutLog, 'Escape → Close'].slice(-5)
+			}
+		},
+		captureModifiers: true
+	})
 
 	const modifierKeys = ['meta', 'ctrl', 'alt', 'shift'] as const
 	const specialKeys = ['enter', 'escape', 'tab', 'backspace', 'delete', 'space'] as const
@@ -267,6 +287,75 @@
 			<Kbd>PgDn</Kbd>
 			<Kbd>Home</Kbd>
 			<Kbd>End</Kbd>
+		</div>
+	</section>
+
+	<!-- useKbd Hook: Shortcut Listener -->
+	<section class="space-y-3">
+		<h2 class="text-lg font-semibold">useKbd — Shortcut Listener</h2>
+		<p class="text-sm text-on-surface-variant">
+			Try pressing the shortcuts below. The hook listens for keyboard events and fires callbacks.
+		</p>
+		<div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+			<div class="flex flex-wrap gap-4 text-sm">
+				<span class="flex items-center gap-1">
+					<Kbd value="ctrl" size="sm" /> + <Kbd value="K" size="sm" /> Toggle search
+				</span>
+				<span class="flex items-center gap-1">
+					<Kbd value="ctrl" size="sm" /> + <Kbd value="shift" size="sm" /> + <Kbd>P</Kbd> Command palette
+				</span>
+				<span class="flex items-center gap-1">
+					<Kbd value="escape" size="sm" /> Close
+				</span>
+			</div>
+
+			{#if searchOpen}
+				<div class="flex items-center gap-2 rounded-lg border border-primary/50 bg-surface-container p-3">
+					<span class="flex-1 text-sm text-on-surface-variant">Search is open! Press <Kbd value="escape" size="sm" class="mx-0.5" /> to close.</span>
+				</div>
+			{/if}
+
+			{#if shortcutLog.length > 0}
+				<div class="space-y-1 rounded-md bg-surface-container p-3">
+					<p class="text-xs font-medium text-on-surface-variant">Recent shortcuts:</p>
+					{#each shortcutLog as entry}
+						<p class="font-mono text-xs text-on-surface">{entry}</p>
+					{/each}
+				</div>
+			{/if}
+		</div>
+	</section>
+
+	<!-- useKbd Hook: Reactive Key State -->
+	<section class="space-y-3">
+		<h2 class="text-lg font-semibold">useKbd — Reactive Key State</h2>
+		<p class="text-sm text-on-surface-variant">
+			Hold any key to see it tracked in real-time. The <code class="rounded bg-surface-container-highest px-1 text-xs">pressedKeys</code> set and <code class="rounded bg-surface-container-highest px-1 text-xs">isPressed()</code> update reactively.
+		</p>
+		<div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+			<div class="flex flex-wrap gap-2">
+				{#each ['shift', 'ctrl', 'alt', 'meta'] as key}
+					<div
+						class="rounded-lg border px-3 py-2 text-sm transition-colors {kbd.isPressed(key)
+							? 'border-primary bg-primary-container text-on-primary-container'
+							: 'border-outline-variant bg-surface-container text-on-surface-variant'}"
+					>
+						<Kbd value={key} size="sm" variant={kbd.isPressed(key) ? 'solid' : 'outline'} color={kbd.isPressed(key) ? 'primary' : 'surface'} />
+						<span class="ml-1">{kbd.isPressed(key) ? 'Pressed' : 'Released'}</span>
+					</div>
+				{/each}
+			</div>
+
+			<div class="rounded-md bg-surface-container p-3">
+				<p class="text-xs font-medium text-on-surface-variant">Currently pressed keys:</p>
+				<p class="mt-1 font-mono text-sm text-on-surface">
+					{#if kbd.pressedKeys.size > 0}
+						{[...kbd.pressedKeys].join(' + ')}
+					{:else}
+						<span class="text-on-surface-variant">None</span>
+					{/if}
+				</p>
+			</div>
 		</div>
 	</section>
 </div>
