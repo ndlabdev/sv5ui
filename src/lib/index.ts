@@ -17,6 +17,7 @@ export * from './User/index.js'
 export * from './Empty/index.js'
 export * from './Skeleton/index.js'
 export * from './Drawer/index.js'
+export * from './Tooltip/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
