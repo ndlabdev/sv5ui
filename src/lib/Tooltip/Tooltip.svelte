@@ -13,7 +13,6 @@
     const config = getComponentConfig('tooltip', tooltipDefaults)
 
     let {
-        // Root props
         open = $bindable(false),
         onOpenChange,
         delayDuration,
@@ -21,7 +20,6 @@
         disableCloseOnTriggerClick,
         ignoreNonKeyboardFocus,
         disabled = false,
-        // Content props
         side = config.defaultVariants.side ?? 'bottom',
         sideOffset = 8,
         align = 'center',
@@ -32,10 +30,11 @@
         sticky = 'partial',
         hideWhenDetached = false,
         onEscapeKeydown,
-        // Own props
+        forceMount,
         text,
         kbds,
         arrow = false,
+        transition = config.defaultVariants.transition ?? true,
         portal = true,
         ui,
         class: className,
@@ -50,7 +49,7 @@
     const showArrow = $derived(!!arrow)
 
     // Compute variant classes
-    const variantSlots = $derived(tooltipVariants({ side }))
+    const variantSlots = $derived(tooltipVariants({ side, transition }))
     const classes = $derived({
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
         arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] }),
@@ -77,7 +76,7 @@
 
         {#if hasKbds}
             <span class={classes.kbds}>
-                {#each kbds as kbd, index}
+                {#each kbds as kbd, index (index)}
                     {#if index > 0}
                         <span class="mx-0.5 text-inverse-on-surface/60">·</span>
                     {/if}
@@ -104,6 +103,7 @@
         {sticky}
         {hideWhenDetached}
         {onEscapeKeydown}
+        {forceMount}
         class={classes.content}
     >
         {@render tooltipContent()}

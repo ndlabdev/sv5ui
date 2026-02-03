@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { TooltipSlots } from './tooltip.variants.js'
+import type { TooltipSlots, TooltipVariantProps } from './tooltip.variants.js'
 import type {
     TooltipRootPropsWithoutHTML,
     TooltipContentPropsWithoutHTML,
@@ -34,6 +34,7 @@ type ContentProps = Pick<
     | 'sticky'
     | 'hideWhenDetached'
     | 'onEscapeKeydown'
+    | 'forceMount'
 >
 
 export interface TooltipProps extends RootProps, ContentProps {
@@ -55,6 +56,12 @@ export interface TooltipProps extends RootProps, ContentProps {
      * @default false
      */
     arrow?: boolean | Pick<TooltipArrowPropsWithoutHTML, 'width' | 'height'>
+
+    /**
+     * Animate the tooltip on open and close.
+     * @default true
+     */
+    transition?: TooltipVariantProps['transition']
 
     /**
      * Render the tooltip in a portal.
