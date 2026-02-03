@@ -28,7 +28,8 @@
 		{ href: '/empty', label: 'Empty', icon: 'lucide:inbox' },
 		{ href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' },
 		{ href: '/drawer', label: 'Drawer', icon: 'lucide:panel-bottom' },
-		{ href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' }
+		{ href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' },
+		{ href: '/modal', label: 'Modal', icon: 'lucide:square-stack' }
 	]
 
 	const docItems = [
