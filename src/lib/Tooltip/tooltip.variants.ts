@@ -7,27 +7,36 @@ export const tooltipVariants = tv({
             'bg-inverse-surface text-inverse-on-surface',
             'shadow-sm rounded-md',
             'px-2.5 py-1.5 text-xs',
-            'select-none pointer-events-auto',
-            'data-[state=delayed-open]:animate-in data-[state=closed]:animate-out',
-            'data-[state=closed]:fade-out-0 data-[state=delayed-open]:fade-in-0',
-            'data-[state=closed]:zoom-out-95 data-[state=delayed-open]:zoom-in-95',
-            'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2',
-            'data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
+            'select-none pointer-events-auto'
         ],
-        arrow: 'fill-inverse-surface',
+        arrow: 'fill-inverse-surface text-inverse-surface',
         text: 'truncate',
         kbds: 'hidden lg:inline-flex items-center shrink-0 gap-0.5'
     },
     variants: {
         side: {
-            top: {},
-            right: {},
-            bottom: {},
-            left: {}
+            top: {
+                content: 'data-[state=delayed-open]:animate-[slide-in-from-bottom_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-top_100ms_ease-in_reverse]'
+            },
+            right: {
+                content: 'data-[state=delayed-open]:animate-[slide-in-from-left_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-right_100ms_ease-in_reverse]'
+            },
+            bottom: {
+                content: 'data-[state=delayed-open]:animate-[slide-in-from-top_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-bottom_100ms_ease-in_reverse]'
+            },
+            left: {
+                content: 'data-[state=delayed-open]:animate-[slide-in-from-right_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-left_100ms_ease-in_reverse]'
+            }
+        },
+        transition: {
+            true: {
+                content: 'data-[state=delayed-open]:animate-[fade-in_150ms_ease-out,zoom-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,zoom-out_100ms_ease-in]'
+            }
         }
     },
     defaultVariants: {
-        side: 'bottom'
+        side: 'bottom',
+        transition: true
     }
 })
 
