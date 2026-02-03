@@ -20,6 +20,7 @@ export * from './Drawer/index.js'
 export * from './Tooltip/index.js'
 export * from './Modal/index.js'
 export * from './Accordion/index.js'
+export * from './Slideover/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
