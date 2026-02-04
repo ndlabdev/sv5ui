@@ -4,13 +4,13 @@ export const popoverVariants = tv({
     slots: {
         content: [
             'z-50',
-            'bg-surface-container-low text-on-surface',
+            'bg-inverse-surface text-inverse-on-surface',
             'rounded-md',
-            '[--ui-border-color:var(--color-outline-variant)]',
-            '[filter:drop-shadow(0_4px_6px_rgb(0_0_0/0.07))_drop-shadow(0_2px_4px_rgb(0_0_0/0.06))_drop-shadow(0_0_1px_var(--ui-border-color))]',
+            '[--ui-border-color:rgb(255_255_255/0.1)]',
+            '[filter:drop-shadow(0_1px_2px_rgb(0_0_0/0.1))_drop-shadow(0_0_1px_var(--ui-border-color))]',
             'focus:outline-none pointer-events-auto'
         ],
-        arrow: 'fill-surface-container-low text-surface-container-low'
+        arrow: 'fill-inverse-surface text-inverse-surface'
     },
     variants: {
         side: {

@@ -25,8 +25,8 @@
                 {/snippet}
                 {#snippet content({ close })}
                     <div class="p-4 w-72">
-                        <p class="text-sm font-medium text-on-surface">Popover Content</p>
-                        <p class="mt-1 text-sm text-on-surface-variant">
+                        <p class="text-sm font-medium">Popover Content</p>
+                        <p class="mt-1 text-sm opacity-70">
                             This is a simple popover with some informational text.
                         </p>
                     </div>
@@ -191,7 +191,7 @@
         </p>
         <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
             <!-- User Profile Card -->
-            <Popover>
+            <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
                 {#snippet children({ open })}
                     <Button variant="soft" icon="lucide:user">Profile</Button>
                 {/snippet}
@@ -224,7 +224,7 @@
             </Popover>
 
             <!-- Notification Panel -->
-            <Popover>
+            <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
                 {#snippet children({ open })}
                     <Button variant="outline" icon="lucide:bell">Notifications</Button>
                 {/snippet}
@@ -283,7 +283,7 @@
                 {#snippet content({ close })}
                     <div class="p-4 w-72">
                         <div class="flex items-center justify-between">
-                            <p class="font-medium text-on-surface">Confirm Action</p>
+                            <p class="font-medium">Confirm Action</p>
                             <Button
                                 icon="lucide:x"
                                 square
@@ -292,7 +292,7 @@
                                 onclick={close}
                             />
                         </div>
-                        <p class="mt-2 text-sm text-on-surface-variant">
+                        <p class="mt-2 text-sm opacity-70">
                             Are you sure you want to proceed with this action?
                         </p>
                         <div class="mt-4 flex justify-end gap-2">
@@ -320,7 +320,7 @@
                 {/snippet}
                 {#snippet content({ close })}
                     <div class="p-4 w-64">
-                        <p class="text-sm text-on-surface">Controlled popover content</p>
+                        <p class="text-sm">Controlled popover content</p>
                     </div>
                 {/snippet}
             </Popover>
@@ -348,8 +348,8 @@
                 {/snippet}
                 {#snippet content({ close })}
                     <div class="p-4 w-72">
-                        <p class="text-sm font-medium text-on-surface">Cannot dismiss by clicking outside</p>
-                        <p class="mt-1 text-sm text-on-surface-variant">
+                        <p class="text-sm font-medium">Cannot dismiss by clicking outside</p>
+                        <p class="mt-1 text-sm opacity-70">
                             You must use the close button to dismiss this popover.
                         </p>
                         <div class="mt-3 flex justify-end">
@@ -463,7 +463,7 @@
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Share Menu</h3>
             <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Popover>
+                <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
                     {#snippet children({ open })}
                         <Button variant="outline" icon="lucide:share-2">Share</Button>
                     {/snippet}
@@ -483,7 +483,7 @@
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Color Picker</h3>
             <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Popover>
+                <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
                     {#snippet children({ open })}
                         <Button variant="outline" icon="lucide:palette">Pick Color</Button>
                     {/snippet}
@@ -509,7 +509,7 @@
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Filter Panel</h3>
             <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Popover>
+                <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
                     {#snippet children({ open })}
                         <Button variant="outline" icon="lucide:filter">Filters</Button>
                     {/snippet}
