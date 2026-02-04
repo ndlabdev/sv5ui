@@ -102,6 +102,12 @@ pnpm add sv5ui
 | [**Alert**](src/lib/Alert) | Notification banner with icon, actions, and dismissible support |
 | [**Progress**](src/lib/Progress) | Determinate/indeterminate progress bar with step mode and animations |
 
+### Navigation
+
+| Component | Description |
+|:----------|:------------|
+| [**Breadcrumb**](src/lib/Breadcrumb) | Hierarchical navigation trail with icons, custom separators, and snippet slots |
+
 ### Overlay
 
 | Component | Description |
