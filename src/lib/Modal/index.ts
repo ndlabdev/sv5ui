@@ -1,2 +1,2 @@
 export { default as Modal } from './Modal.svelte'
-export type { ModalProps, ModalCloseProps } from './modal.types.js'
+export type { ModalProps } from './modal.types.js'
