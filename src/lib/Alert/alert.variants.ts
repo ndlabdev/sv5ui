@@ -49,7 +49,8 @@ export const alertVariants = tv({
         {
             variant: 'solid',
             class: {
-                actions: '[&_button]:text-inherit [&_button]:border-current/30 [&_button]:hover:bg-current/10',
+                actions:
+                    '[&_button]:text-inherit [&_button]:border-current/30 [&_button]:hover:bg-current/10',
                 close: 'text-inherit hover:bg-current/10'
             }
         },

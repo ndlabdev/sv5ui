@@ -53,7 +53,9 @@
     const hasHeading = $derived(hasTitle || hasDescription)
     const hasHeader = $derived(!!headerSlot || hasHeading || showClose || !!closeSlot)
 
-    const variantSlots = $derived(modalVariants({ transition, fullscreen, overlay: showOverlay, scrollable }))
+    const variantSlots = $derived(
+        modalVariants({ transition, fullscreen, overlay: showOverlay, scrollable })
+    )
 
     const classes = $derived({
         overlay: variantSlots.overlay({ class: [config.slots.overlay, ui?.overlay] }),
@@ -61,14 +63,16 @@
         header: variantSlots.header({ class: [config.slots.header, ui?.header] }),
         wrapper: variantSlots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
         title: variantSlots.title({ class: [config.slots.title, ui?.title] }),
-        description: variantSlots.description({ class: [config.slots.description, ui?.description] }),
+        description: variantSlots.description({
+            class: [config.slots.description, ui?.description]
+        }),
         body: variantSlots.body({ class: [config.slots.body, ui?.body] }),
         footer: variantSlots.footer({ class: [config.slots.footer, ui?.footer] }),
         close: variantSlots.close({ class: [config.slots.close, ui?.close] })
     })
 
     const contentProps = $derived.by(() => {
-        const behavior = dismissible ? 'close' as const : 'ignore' as const
+        const behavior = dismissible ? ('close' as const) : ('ignore' as const)
         return {
             trapFocus,
             preventScroll,
@@ -98,15 +102,14 @@
 {/snippet}
 
 {#snippet modalContentInner()}
-    <Dialog.Content
-        {...contentProps}
-        class={[classes.content, !children ? className : undefined]}
-    >
+    <Dialog.Content {...contentProps} class={[classes.content, !children ? className : undefined]}>
         {#if contentSlot}
             {#if hasHeading}
                 <div class="sr-only">
                     {#if hasTitle}<Dialog.Title>{@render titleEl()}</Dialog.Title>{/if}
-                    {#if hasDescription}<Dialog.Description>{@render descriptionEl()}</Dialog.Description>{/if}
+                    {#if hasDescription}<Dialog.Description
+                            >{@render descriptionEl()}</Dialog.Description
+                        >{/if}
                 </div>
             {/if}
             {@render contentSlot()}
@@ -118,10 +121,14 @@
                     {:else}
                         <div class={classes.wrapper}>
                             {#if hasTitle}
-                                <Dialog.Title class={classes.title}>{@render titleEl()}</Dialog.Title>
+                                <Dialog.Title class={classes.title}
+                                    >{@render titleEl()}</Dialog.Title
+                                >
                             {/if}
                             {#if hasDescription}
-                                <Dialog.Description class={classes.description}>{@render descriptionEl()}</Dialog.Description>
+                                <Dialog.Description class={classes.description}
+                                    >{@render descriptionEl()}</Dialog.Description
+                                >
                             {/if}
                         </div>
 
@@ -129,7 +136,9 @@
                             <Dialog.Close>
                                 {#snippet child({ props })}
                                     {#if closeSlot}
-                                        <span {...props} class={classes.close}>{@render closeSlot()}</span>
+                                        <span {...props} class={classes.close}
+                                            >{@render closeSlot()}</span
+                                        >
                                     {:else}
                                         <Button
                                             {...props}

@@ -28,7 +28,9 @@
     }: Props = $props()
 
     const maxValue = $derived(Array.isArray(max) ? max.length - 1 : max)
-    const percent = $derived(value != null ? Math.round((Math.min(value, maxValue) / maxValue) * 100) : 0)
+    const percent = $derived(
+        value != null ? Math.round((Math.min(value, maxValue) / maxValue) * 100) : 0
+    )
     const isIndeterminate = $derived(value == null)
     const state = $derived(isIndeterminate ? 'indeterminate' : 'determinate')
 
@@ -36,10 +38,14 @@
         if (isIndeterminate) return ''
         const offset = 100 - percent
         if (orientation === 'horizontal') {
-            return inverted ? `transform: translateX(${offset}%);` : `transform: translateX(-${offset}%);`
+            return inverted
+                ? `transform: translateX(${offset}%);`
+                : `transform: translateX(-${offset}%);`
         }
         // Vertical: fill from bottom to top (positive Y = down)
-        return inverted ? `transform: translateY(-${offset}%);` : `transform: translateY(${offset}%);`
+        return inverted
+            ? `transform: translateY(-${offset}%);`
+            : `transform: translateY(${offset}%);`
     })
 
     const classes = $derived.by(() => {
@@ -80,7 +86,9 @@
     {#if Array.isArray(max)}
         <div class={classes.stepsBase}>
             {#each max as step, index (index)}
-                <span class={value != null && index <= value ? classes.stepActive : classes.stepOther}>
+                <span
+                    class={value != null && index <= value ? classes.stepActive : classes.stepOther}
+                >
                     {step}
                 </span>
             {/each}

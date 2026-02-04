@@ -6,7 +6,9 @@ let cachedIsMac: boolean | undefined
 
 const detectPlatform = () => {
     if (cachedIsMac === undefined) {
-        cachedIsMac = typeof navigator !== 'undefined' && /Macintosh|Mac OS|iPhone|iPad|iPod/i.test(navigator.userAgent)
+        cachedIsMac =
+            typeof navigator !== 'undefined' &&
+            /Macintosh|Mac OS|iPhone|iPad|iPod/i.test(navigator.userAgent)
     }
     return cachedIsMac
 }
@@ -51,7 +53,9 @@ export function normalizeKey(eventKey: string): string {
 
 const CAPTURABLE_MODIFIERS: Record<string, true> = { alt: true, meta: true }
 
-const MODIFIER_PROPS: ReadonlyArray<readonly [string, 'ctrlKey' | 'shiftKey' | 'altKey' | 'metaKey']> = [
+const MODIFIER_PROPS: ReadonlyArray<
+    readonly [string, 'ctrlKey' | 'shiftKey' | 'altKey' | 'metaKey']
+> = [
     ['ctrl', 'ctrlKey'],
     ['shift', 'shiftKey'],
     ['alt', 'altKey'],
@@ -120,8 +124,15 @@ interface ParsedBinding {
     callback: (event: KeyboardEvent) => void
 }
 
-export function parseShortcutBinding(shortcut: string): { modifiers: { ctrl: boolean; shift: boolean; alt: boolean; meta: boolean }; key: string } {
-    const parts = shortcut.toLowerCase().split('+').map((s) => s.trim()).filter(Boolean)
+export function parseShortcutBinding(shortcut: string): {
+    modifiers: { ctrl: boolean; shift: boolean; alt: boolean; meta: boolean }
+    key: string
+} {
+    const parts = shortcut
+        .toLowerCase()
+        .split('+')
+        .map((s) => s.trim())
+        .filter(Boolean)
     const modifiers = { ctrl: false, shift: false, alt: false, meta: false }
     let key = ''
 
@@ -144,7 +155,10 @@ export function parseShortcutBinding(shortcut: string): { modifiers: { ctrl: boo
 
 export function matchesShortcut(
     event: KeyboardEvent,
-    binding: { modifiers: { ctrl: boolean; shift: boolean; alt: boolean; meta: boolean }; key: string }
+    binding: {
+        modifiers: { ctrl: boolean; shift: boolean; alt: boolean; meta: boolean }
+        key: string
+    }
 ): boolean {
     if (normalizeKey(event.key) !== binding.key) return false
     if (event.ctrlKey !== binding.modifiers.ctrl) return false
@@ -261,7 +275,11 @@ export function useKbd(options: UseKbdOptions = {}): UseKbdReturn {
                 _pressedKeys.clear()
             }
         } else {
-            const clearOnly: KbdInstanceCallbacks = { keydown: () => {}, keyup: () => {}, clear: handleClear }
+            const clearOnly: KbdInstanceCallbacks = {
+                keydown: () => {},
+                keyup: () => {},
+                clear: handleClear
+            }
             target.addEventListener('keydown', handleKeyDown as EventListener)
             target.addEventListener('keyup', handleKeyUp as EventListener)
             kbdRegistry.register(clearOnly)

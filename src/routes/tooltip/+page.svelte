@@ -15,10 +15,10 @@
     <!-- Basic Usage -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Basic Usage</h2>
-        <p class="text-sm text-on-surface-variant">
-            The simplest tooltip with just text content.
-        </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <p class="text-sm text-on-surface-variant">The simplest tooltip with just text content.</p>
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="This is a tooltip">
                 {#snippet children({ open })}
                     <Button variant="outline">Hover me</Button>
@@ -45,7 +45,9 @@
         <p class="text-sm text-on-surface-variant">
             Control tooltip placement with the <code class="text-primary">side</code> prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Tooltip text="I appear on top" side="top">
                 {#snippet children({ open })}
                     <Button variant="soft">Top</Button>
@@ -78,7 +80,9 @@
         <p class="text-sm text-on-surface-variant">
             Control alignment with the <code class="text-primary">align</code> prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Tooltip text="Aligned to start" side="bottom" align="start">
                 {#snippet children({ open })}
                     <Button variant="outline">Start</Button>
@@ -102,10 +106,10 @@
     <!-- With Arrow -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">With Arrow</h2>
-        <p class="text-sm text-on-surface-variant">
-            Add an arrow pointing to the trigger element.
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <p class="text-sm text-on-surface-variant">Add an arrow pointing to the trigger element.</p>
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Tooltip text="With default arrow" arrow side="top">
                 {#snippet children({ open })}
                     <Button>Top Arrow</Button>
@@ -136,9 +140,13 @@
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">With Keyboard Shortcuts</h2>
         <p class="text-sm text-on-surface-variant">
-            Display keyboard shortcuts alongside text using the <code class="text-primary">kbds</code> prop.
+            Display keyboard shortcuts alongside text using the <code class="text-primary"
+                >kbds</code
+            > prop.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="Search" kbds={['meta', 'k']}>
                 {#snippet children({ open })}
                     <Button icon="lucide:search" variant="outline">Search</Button>
@@ -171,7 +179,9 @@
         <p class="text-sm text-on-surface-variant">
             Display multiple key combinations separated by dots.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="Open command palette" kbds={['meta', 'shift', 'p']}>
                 {#snippet children({ open })}
                     <Button>Command Palette</Button>
@@ -198,7 +208,9 @@
         <p class="text-sm text-on-surface-variant">
             Control how long to wait before showing the tooltip.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="Instant (0ms)" delayDuration={0}>
                 {#snippet children({ open })}
                     <Button variant="outline">No Delay</Button>
@@ -237,7 +249,9 @@
         <p class="text-sm text-on-surface-variant">
             Adjust distance from trigger with <code class="text-primary">sideOffset</code>.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Tooltip text="No offset" sideOffset={0} arrow>
                 {#snippet children({ open })}
                     <Button variant="soft">0px</Button>
@@ -270,7 +284,9 @@
         <p class="text-sm text-on-surface-variant">
             Control tooltip visibility programmatically with <code class="text-primary">open</code> binding.
         </p>
-        <div class="flex flex-wrap items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="Controlled tooltip" bind:open={controlledOpen}>
                 {#snippet children({ open })}
                     <Button variant={controlledOpen ? 'solid' : 'outline'}>
@@ -279,7 +295,7 @@
                 {/snippet}
             </Tooltip>
 
-            <Button variant="soft" onclick={() => controlledOpen = !controlledOpen}>
+            <Button variant="soft" onclick={() => (controlledOpen = !controlledOpen)}>
                 Toggle: {controlledOpen ? 'Hide' : 'Show'}
             </Button>
 
@@ -295,7 +311,9 @@
         <p class="text-sm text-on-surface-variant">
             Disable the tooltip while keeping the trigger functional.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="This won't show" disabled>
                 {#snippet children({ open })}
                     <Button>Tooltip Disabled</Button>
@@ -316,7 +334,9 @@
         <p class="text-sm text-on-surface-variant">
             Render tooltip inline instead of in a portal (useful for specific CSS contexts).
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="Rendered in portal (default)" portal>
                 {#snippet children({ open })}
                     <Button variant="outline">With Portal</Button>
@@ -337,7 +357,9 @@
         <p class="text-sm text-on-surface-variant">
             Use the <code class="text-primary">content</code> slot for rich tooltip content.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip>
                 {#snippet children({ open })}
                     <Button variant="soft" icon="lucide:user">User Info</Button>
@@ -383,16 +405,24 @@
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Hoverable Content</h2>
         <p class="text-sm text-on-surface-variant">
-            By default, users can hover over tooltip content. Disable with <code class="text-primary">disableHoverableContent</code>.
+            By default, users can hover over tooltip content. Disable with <code
+                class="text-primary">disableHoverableContent</code
+            >.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip text="You can hover over this tooltip" delayDuration={0}>
                 {#snippet children({ open })}
                     <Button variant="outline">Hoverable (default)</Button>
                 {/snippet}
             </Tooltip>
 
-            <Tooltip text="This closes immediately when you leave trigger" disableHoverableContent delayDuration={0}>
+            <Tooltip
+                text="This closes immediately when you leave trigger"
+                disableHoverableContent
+                delayDuration={0}
+            >
                 {#snippet children({ open })}
                     <Button variant="outline">Not Hoverable</Button>
                 {/snippet}
@@ -406,7 +436,9 @@
         <p class="text-sm text-on-surface-variant">
             Customize individual tooltip parts with the <code class="text-primary">ui</code> prop.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Tooltip
                 text="Custom styled tooltip"
                 ui={{
@@ -459,14 +491,14 @@
     <!-- Real World Examples -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Real World Examples</h2>
-        <p class="text-sm text-on-surface-variant">
-            Common tooltip use cases in applications.
-        </p>
+        <p class="text-sm text-on-surface-variant">Common tooltip use cases in applications.</p>
 
         <!-- Toolbar -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Editor Toolbar</h3>
-            <div class="flex items-center gap-1 rounded-lg border border-outline-variant bg-surface-container-low p-2">
+            <div
+                class="flex items-center gap-1 rounded-lg border border-outline-variant bg-surface-container-low p-2"
+            >
                 <Tooltip text="Bold" kbds={['meta', 'b']}>
                     {#snippet children({ open })}
                         <Button icon="lucide:bold" square variant="ghost" size="sm" />
@@ -515,7 +547,9 @@
         <!-- Social Actions -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Social Actions</h3>
-            <div class="flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-low p-4">
+            <div
+                class="flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+            >
                 <Tooltip text="Like this post">
                     {#snippet children({ open })}
                         <Button icon="lucide:heart" variant="ghost" size="sm">128</Button>
@@ -542,7 +576,9 @@
         <!-- Status Indicators -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Status Indicators</h3>
-            <div class="flex items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-4">
+            <div
+                class="flex items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+            >
                 <Tooltip text="Server is healthy and responding">
                     {#snippet children({ open })}
                         <span class="flex items-center gap-2">
@@ -575,11 +611,16 @@
         <!-- Truncated Text -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Truncated Content</h3>
-            <div class="flex flex-col gap-2 rounded-lg border border-outline-variant bg-surface-container-low p-4">
-                <Tooltip text="This is the full title of a very long document that would normally be truncated in the UI">
+            <div
+                class="flex flex-col gap-2 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+            >
+                <Tooltip
+                    text="This is the full title of a very long document that would normally be truncated in the UI"
+                >
                     {#snippet children({ open })}
                         <p class="w-64 truncate text-sm">
-                            This is the full title of a very long document that would normally be truncated in the UI
+                            This is the full title of a very long document that would normally be
+                            truncated in the UI
                         </p>
                     {/snippet}
                 </Tooltip>

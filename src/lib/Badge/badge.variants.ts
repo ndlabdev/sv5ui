@@ -193,32 +193,44 @@ export const badgeVariants = tv({
         {
             variant: 'subtle',
             color: 'primary',
-            class: { base: 'bg-primary-container text-on-primary-container ring ring-inset ring-primary/25' }
+            class: {
+                base: 'bg-primary-container text-on-primary-container ring ring-inset ring-primary/25'
+            }
         },
         {
             variant: 'subtle',
             color: 'secondary',
-            class: { base: 'bg-secondary-container text-on-secondary-container ring ring-inset ring-secondary/25' }
+            class: {
+                base: 'bg-secondary-container text-on-secondary-container ring ring-inset ring-secondary/25'
+            }
         },
         {
             variant: 'subtle',
             color: 'tertiary',
-            class: { base: 'bg-tertiary-container text-on-tertiary-container ring ring-inset ring-tertiary/25' }
+            class: {
+                base: 'bg-tertiary-container text-on-tertiary-container ring ring-inset ring-tertiary/25'
+            }
         },
         {
             variant: 'subtle',
             color: 'success',
-            class: { base: 'bg-success-container text-on-success-container ring ring-inset ring-success/25' }
+            class: {
+                base: 'bg-success-container text-on-success-container ring ring-inset ring-success/25'
+            }
         },
         {
             variant: 'subtle',
             color: 'warning',
-            class: { base: 'bg-warning-container text-on-warning-container ring ring-inset ring-warning/25' }
+            class: {
+                base: 'bg-warning-container text-on-warning-container ring ring-inset ring-warning/25'
+            }
         },
         {
             variant: 'subtle',
             color: 'error',
-            class: { base: 'bg-error-container text-on-error-container ring ring-inset ring-error/25' }
+            class: {
+                base: 'bg-error-container text-on-error-container ring ring-inset ring-error/25'
+            }
         },
         {
             variant: 'subtle',
@@ -228,7 +240,9 @@ export const badgeVariants = tv({
         {
             variant: 'subtle',
             color: 'surface',
-            class: { base: 'bg-surface-container-highest text-on-surface ring ring-inset ring-outline-variant' }
+            class: {
+                base: 'bg-surface-container-highest text-on-surface ring ring-inset ring-outline-variant'
+            }
         },
 
         // ========== SQUARE SIZE ADJUSTMENTS ==========

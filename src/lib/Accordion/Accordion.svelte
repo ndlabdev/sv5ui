@@ -33,20 +33,35 @@
     }: Props = $props()
 
     const variantSlots = $derived(accordionVariants({ disabled }))
-    const rootClass = $derived(variantSlots.root({ class: [config.slots.root, ui?.root, className] }))
+    const rootClass = $derived(
+        variantSlots.root({ class: [config.slots.root, ui?.root, className] })
+    )
 
     const singleValue = $derived(typeof value === 'string' ? value : undefined)
     const multipleValue = $derived(Array.isArray(value) ? value : undefined)
 
     function getItemClasses(item: AccordionItem) {
         return {
-            item: variantSlots.item({ class: [config.slots.item, ui?.item, item.ui?.item, item.class] }),
-            header: variantSlots.header({ class: [config.slots.header, ui?.header, item.ui?.header] }),
-            trigger: variantSlots.trigger({ class: [config.slots.trigger, ui?.trigger, item.ui?.trigger], disabled: item.disabled }),
-            content: variantSlots.content({ class: [config.slots.content, ui?.content, item.ui?.content] }),
+            item: variantSlots.item({
+                class: [config.slots.item, ui?.item, item.ui?.item, item.class]
+            }),
+            header: variantSlots.header({
+                class: [config.slots.header, ui?.header, item.ui?.header]
+            }),
+            trigger: variantSlots.trigger({
+                class: [config.slots.trigger, ui?.trigger, item.ui?.trigger],
+                disabled: item.disabled
+            }),
+            content: variantSlots.content({
+                class: [config.slots.content, ui?.content, item.ui?.content]
+            }),
             body: variantSlots.body({ class: [config.slots.body, ui?.body, item.ui?.body] }),
-            leadingIcon: variantSlots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon, item.ui?.leadingIcon] }),
-            trailingIcon: variantSlots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon, item.ui?.trailingIcon] }),
+            leadingIcon: variantSlots.leadingIcon({
+                class: [config.slots.leadingIcon, ui?.leadingIcon, item.ui?.leadingIcon]
+            }),
+            trailingIcon: variantSlots.trailingIcon({
+                class: [config.slots.trailingIcon, ui?.trailingIcon, item.ui?.trailingIcon]
+            }),
             label: variantSlots.label({ class: [config.slots.label, ui?.label, item.ui?.label] })
         }
     }
@@ -111,7 +126,11 @@
                                     {:else}
                                         <div class={cls.body}>
                                             {#if bodySlot}
-                                                {@render bodySlot({ item, index, open: isContentOpen })}
+                                                {@render bodySlot({
+                                                    item,
+                                                    index,
+                                                    open: isContentOpen
+                                                })}
                                             {:else}
                                                 {item.content}
                                             {/if}

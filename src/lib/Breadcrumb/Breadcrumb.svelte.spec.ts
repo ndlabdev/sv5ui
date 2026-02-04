@@ -49,11 +49,7 @@ describe('Breadcrumb', () => {
 
         it('should render item without href as span', async () => {
             render(Breadcrumb, {
-                items: [
-                    { label: 'Home', href: '/' },
-                    { label: 'No Link' },
-                    { label: 'Current' }
-                ]
+                items: [{ label: 'Home', href: '/' }, { label: 'No Link' }, { label: 'Current' }]
             })
             const link = page.getByRole('link', { name: 'No Link' })
             await expect.element(link).not.toBeInTheDocument()
@@ -196,10 +192,7 @@ describe('Breadcrumb', () => {
 
         it('should apply per-item custom class', async () => {
             const { container } = render(Breadcrumb, {
-                items: [
-                    { label: 'Home', href: '/', class: 'custom-home' },
-                    { label: 'Current' }
-                ]
+                items: [{ label: 'Home', href: '/', class: 'custom-home' }, { label: 'Current' }]
             })
             const link = container.querySelector('a')
             expect(link?.className).toMatch(/custom-home/)

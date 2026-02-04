@@ -259,7 +259,12 @@ describe('Kbd', () => {
         })
 
         it('should merge custom class with variant classes', () => {
-            const { container } = render(Kbd, { value: 'K', class: 'my-kbd', color: 'error', variant: 'solid' })
+            const { container } = render(Kbd, {
+                value: 'K',
+                class: 'my-kbd',
+                color: 'error',
+                variant: 'solid'
+            })
             const root = getRoot(container)
             expect(root.className).toContain('my-kbd')
             expect(root.className).toContain('bg-error')

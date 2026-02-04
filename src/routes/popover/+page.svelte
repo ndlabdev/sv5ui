@@ -8,23 +8,24 @@
     <header>
         <h1 class="text-3xl font-bold text-on-surface">Popover</h1>
         <p class="mt-2 text-on-surface-variant">
-            Display rich content in a floating panel triggered by click. Built on bits-ui Popover primitive.
+            Display rich content in a floating panel triggered by click. Built on bits-ui Popover
+            primitive.
         </p>
     </header>
 
     <!-- Basic Usage -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Basic Usage</h2>
-        <p class="text-sm text-on-surface-variant">
-            A simple popover with custom content.
-        </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <p class="text-sm text-on-surface-variant">A simple popover with custom content.</p>
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Popover>
                 {#snippet children({ open })}
                     <Button variant="outline">Click me</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-72">
+                    <div class="w-72 p-4">
                         <p class="text-sm font-medium">Popover Content</p>
                         <p class="mt-1 text-sm opacity-70">
                             This is a simple popover with some informational text.
@@ -41,7 +42,9 @@
         <p class="text-sm text-on-surface-variant">
             Control popover placement with the <code class="text-primary">side</code> prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Popover side="top">
                 {#snippet children({ open })}
                     <Button variant="soft">Top</Button>
@@ -94,13 +97,15 @@
         <p class="text-sm text-on-surface-variant">
             Control alignment with the <code class="text-primary">align</code> prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Popover side="bottom" align="start">
                 {#snippet children({ open })}
                     <Button variant="outline">Start</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-3 w-48">
+                    <div class="w-48 p-3">
                         <p class="text-sm">Aligned to start</p>
                     </div>
                 {/snippet}
@@ -111,7 +116,7 @@
                     <Button variant="outline">Center</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-3 w-48">
+                    <div class="w-48 p-3">
                         <p class="text-sm">Aligned to center</p>
                     </div>
                 {/snippet}
@@ -122,7 +127,7 @@
                     <Button variant="outline">End</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-3 w-48">
+                    <div class="w-48 p-3">
                         <p class="text-sm">Aligned to end</p>
                     </div>
                 {/snippet}
@@ -133,10 +138,10 @@
     <!-- With Arrow -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">With Arrow</h2>
-        <p class="text-sm text-on-surface-variant">
-            Add an arrow pointing to the trigger element.
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12">
+        <p class="text-sm text-on-surface-variant">Add an arrow pointing to the trigger element.</p>
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
+        >
             <Popover arrow side="top">
                 {#snippet children({ open })}
                     <Button>Top Arrow</Button>
@@ -189,9 +194,16 @@
         <p class="text-sm text-on-surface-variant">
             Popovers can contain rich, interactive content.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <!-- User Profile Card -->
-            <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
+            <Popover
+                ui={{
+                    content:
+                        'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
+                }}
+            >
                 {#snippet children({ open })}
                     <Button variant="soft" icon="lucide:user">Profile</Button>
                 {/snippet}
@@ -199,7 +211,9 @@
                     <div class="w-72">
                         <div class="p-4">
                             <div class="flex items-center gap-3">
-                                <div class="flex size-10 items-center justify-center rounded-full bg-primary text-on-primary">
+                                <div
+                                    class="flex size-10 items-center justify-center rounded-full bg-primary text-on-primary"
+                                >
                                     <Icon name="lucide:user" size="20" />
                                 </div>
                                 <div>
@@ -216,15 +230,31 @@
                         </div>
                         <Separator />
                         <div class="p-2">
-                            <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:settings">Settings</Button>
-                            <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:log-out" color="error">Sign out</Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="w-full justify-start"
+                                icon="lucide:settings">Settings</Button
+                            >
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="w-full justify-start"
+                                icon="lucide:log-out"
+                                color="error">Sign out</Button
+                            >
                         </div>
                     </div>
                 {/snippet}
             </Popover>
 
             <!-- Notification Panel -->
-            <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
+            <Popover
+                ui={{
+                    content:
+                        'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
+                }}
+            >
                 {#snippet children({ open })}
                     <Button variant="outline" icon="lucide:bell">Notifications</Button>
                 {/snippet}
@@ -236,7 +266,9 @@
                         </div>
                         <div class="divide-y divide-outline-variant">
                             <div class="flex gap-3 p-4">
-                                <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <div
+                                    class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+                                >
                                     <Icon name="lucide:message-circle" size="16" />
                                 </div>
                                 <div>
@@ -245,7 +277,9 @@
                                 </div>
                             </div>
                             <div class="flex gap-3 p-4">
-                                <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
+                                <div
+                                    class="flex size-8 shrink-0 items-center justify-center rounded-full bg-success/10 text-success"
+                                >
                                     <Icon name="lucide:user-plus" size="16" />
                                 </div>
                                 <div>
@@ -254,7 +288,9 @@
                                 </div>
                             </div>
                             <div class="flex gap-3 p-4">
-                                <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-warning/10 text-warning">
+                                <div
+                                    class="flex size-8 shrink-0 items-center justify-center rounded-full bg-warning/10 text-warning"
+                                >
                                     <Icon name="lucide:star" size="16" />
                                 </div>
                                 <div>
@@ -273,15 +309,18 @@
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">With Close Action</h2>
         <p class="text-sm text-on-surface-variant">
-            The <code class="text-primary">content</code> slot exposes a <code class="text-primary">close</code> function to programmatically dismiss the popover.
+            The <code class="text-primary">content</code> slot exposes a
+            <code class="text-primary">close</code> function to programmatically dismiss the popover.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Popover>
                 {#snippet children({ open })}
                     <Button variant="outline">Open with close button</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-72">
+                    <div class="w-72 p-4">
                         <div class="flex items-center justify-between">
                             <p class="font-medium">Confirm Action</p>
                             <Button
@@ -311,7 +350,9 @@
         <p class="text-sm text-on-surface-variant">
             Control popover visibility programmatically with <code class="text-primary">open</code> binding.
         </p>
-        <div class="flex flex-wrap items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Popover bind:open={controlledOpen}>
                 {#snippet children({ open })}
                     <Button variant={controlledOpen ? 'solid' : 'outline'}>
@@ -319,13 +360,13 @@
                     </Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-64">
+                    <div class="w-64 p-4">
                         <p class="text-sm">Controlled popover content</p>
                     </div>
                 {/snippet}
             </Popover>
 
-            <Button variant="soft" onclick={() => controlledOpen = !controlledOpen}>
+            <Button variant="soft" onclick={() => (controlledOpen = !controlledOpen)}>
                 Toggle: {controlledOpen ? 'Close' : 'Open'}
             </Button>
 
@@ -339,15 +380,18 @@
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Non-dismissible</h2>
         <p class="text-sm text-on-surface-variant">
-            Prevent dismissing by clicking outside or pressing Escape. Only the close function can dismiss.
+            Prevent dismissing by clicking outside or pressing Escape. Only the close function can
+            dismiss.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Popover dismissible={false}>
                 {#snippet children({ open })}
                     <Button variant="outline">Non-dismissible</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-72">
+                    <div class="w-72 p-4">
                         <p class="text-sm font-medium">Cannot dismiss by clicking outside</p>
                         <p class="mt-1 text-sm opacity-70">
                             You must use the close button to dismiss this popover.
@@ -364,10 +408,10 @@
     <!-- Without Portal -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Without Portal</h2>
-        <p class="text-sm text-on-surface-variant">
-            Render popover inline instead of in a portal.
-        </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <p class="text-sm text-on-surface-variant">Render popover inline instead of in a portal.</p>
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Popover portal>
                 {#snippet children({ open })}
                     <Button variant="outline">With Portal</Button>
@@ -398,7 +442,9 @@
         <p class="text-sm text-on-surface-variant">
             Customize individual popover parts with the <code class="text-primary">ui</code> prop.
         </p>
-        <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
+        <div
+            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+        >
             <Popover
                 ui={{
                     content: 'bg-primary text-on-primary [--ui-border-color:var(--color-primary)]',
@@ -410,7 +456,7 @@
                     <Button>Primary Style</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-64">
+                    <div class="w-64 p-4">
                         <p class="text-sm font-medium">Custom styled popover</p>
                         <p class="mt-1 text-sm opacity-80">With primary background color.</p>
                     </div>
@@ -428,7 +474,7 @@
                     <Button color="error" variant="soft">Error Style</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-64">
+                    <div class="w-64 p-4">
                         <p class="text-sm font-medium">Error popover</p>
                         <p class="mt-1 text-sm opacity-80">Something went wrong.</p>
                     </div>
@@ -444,7 +490,7 @@
                     <Button variant="outline">Custom Rounding</Button>
                 {/snippet}
                 {#snippet content({ close })}
-                    <div class="p-4 w-64">
+                    <div class="w-64 p-4">
                         <p class="text-sm">Extra rounded with larger shadow.</p>
                     </div>
                 {/snippet}
@@ -455,24 +501,53 @@
     <!-- Real World Examples -->
     <section class="space-y-4">
         <h2 class="text-xl font-semibold text-on-surface">Real World Examples</h2>
-        <p class="text-sm text-on-surface-variant">
-            Common popover use cases in applications.
-        </p>
+        <p class="text-sm text-on-surface-variant">Common popover use cases in applications.</p>
 
         <!-- Share Menu -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Share Menu</h3>
-            <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
+            <div
+                class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+            >
+                <Popover
+                    ui={{
+                        content:
+                            'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
+                    }}
+                >
                     {#snippet children({ open })}
                         <Button variant="outline" icon="lucide:share-2">Share</Button>
                     {/snippet}
                     {#snippet content({ close })}
                         <div class="w-56 p-2">
-                            <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:link" onclick={close}>Copy link</Button>
-                            <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:twitter" onclick={close}>Twitter</Button>
-                            <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:facebook" onclick={close}>Facebook</Button>
-                            <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:mail" onclick={close}>Email</Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="w-full justify-start"
+                                icon="lucide:link"
+                                onclick={close}>Copy link</Button
+                            >
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="w-full justify-start"
+                                icon="lucide:twitter"
+                                onclick={close}>Twitter</Button
+                            >
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="w-full justify-start"
+                                icon="lucide:facebook"
+                                onclick={close}>Facebook</Button
+                            >
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                class="w-full justify-start"
+                                icon="lucide:mail"
+                                onclick={close}>Email</Button
+                            >
                         </div>
                     {/snippet}
                 </Popover>
@@ -482,19 +557,28 @@
         <!-- Color Picker -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Color Picker</h3>
-            <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
+            <div
+                class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+            >
+                <Popover
+                    ui={{
+                        content:
+                            'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
+                    }}
+                >
                     {#snippet children({ open })}
                         <Button variant="outline" icon="lucide:palette">Pick Color</Button>
                     {/snippet}
                     {#snippet content({ close })}
-                        <div class="p-4 w-56">
+                        <div class="w-56 p-4">
                             <p class="mb-3 text-sm font-medium text-on-surface">Choose a color</p>
                             <div class="grid grid-cols-5 gap-2">
                                 {#each ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-teal-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-gray-500'] as color}
                                     <button
-                                        class="size-8 rounded-full {color} hover:ring-2 hover:ring-offset-2 hover:ring-outline transition-all"
-                                        aria-label="Select {color.replace('bg-', '').replace('-500', '')} color"
+                                        class="size-8 rounded-full {color} transition-all hover:ring-2 hover:ring-outline hover:ring-offset-2"
+                                        aria-label="Select {color
+                                            .replace('bg-', '')
+                                            .replace('-500', '')} color"
                                         onclick={close}
                                     ></button>
                                 {/each}
@@ -508,8 +592,15 @@
         <!-- Filter Panel -->
         <div class="space-y-2">
             <h3 class="text-lg font-medium text-on-surface">Filter Panel</h3>
-            <div class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Popover ui={{ content: 'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]' }}>
+            <div
+                class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
+            >
+                <Popover
+                    ui={{
+                        content:
+                            'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
+                    }}
+                >
                     {#snippet children({ open })}
                         <Button variant="outline" icon="lucide:filter">Filters</Button>
                     {/snippet}
@@ -519,7 +610,7 @@
                                 <p class="font-medium text-on-surface">Filter Results</p>
                             </div>
                             <Separator />
-                            <div class="p-4 space-y-3">
+                            <div class="space-y-3 p-4">
                                 <div>
                                     <p class="text-sm font-medium text-on-surface">Status</p>
                                     <div class="mt-1 flex gap-2">
@@ -538,7 +629,7 @@
                                 </div>
                             </div>
                             <Separator />
-                            <div class="p-3 flex justify-end gap-2">
+                            <div class="flex justify-end gap-2 p-3">
                                 <Button variant="ghost" size="sm" onclick={close}>Reset</Button>
                                 <Button size="sm" onclick={close}>Apply</Button>
                             </div>

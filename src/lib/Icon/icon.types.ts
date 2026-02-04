@@ -1,6 +1,9 @@
 import type { IconProps as IconifyProps } from '@iconify/svelte'
 
-export interface IconProps extends Omit<IconifyProps, 'icon' | 'width' | 'height' | 'rotate' | 'flip' | 'class'> {
+export interface IconProps extends Omit<
+    IconifyProps,
+    'icon' | 'width' | 'height' | 'rotate' | 'flip' | 'class'
+> {
     /** Additional CSS classes */
     class?: string
 

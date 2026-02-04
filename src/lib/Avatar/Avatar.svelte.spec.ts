@@ -106,7 +106,10 @@ describe('Avatar', () => {
         })
 
         it('should still render fallback alongside img', async () => {
-            const { container } = render(Avatar, { src: 'https://i.pravatar.cc/64', alt: 'John Doe' })
+            const { container } = render(Avatar, {
+                src: 'https://i.pravatar.cc/64',
+                alt: 'John Doe'
+            })
             const fallback = getByData(container, 'data-avatar-fallback')
             await expect.element(fallback).toBeInTheDocument()
             await expect.element(fallback).toHaveTextContent('JD')
@@ -188,13 +191,20 @@ describe('Avatar', () => {
         })
 
         it('should apply ui.fallback class', async () => {
-            const { container } = render(Avatar, { alt: 'User', ui: { fallback: 'custom-fallback' } })
+            const { container } = render(Avatar, {
+                alt: 'User',
+                ui: { fallback: 'custom-fallback' }
+            })
             const fallback = getByData(container, 'data-avatar-fallback')
             await expect.element(fallback).toHaveClass(/custom-fallback/)
         })
 
         it('should apply ui.image class', async () => {
-            render(Avatar, { src: 'https://i.pravatar.cc/64', alt: 'User', ui: { image: 'custom-img' } })
+            render(Avatar, {
+                src: 'https://i.pravatar.cc/64',
+                alt: 'User',
+                ui: { image: 'custom-img' }
+            })
             const img = page.getByRole('img', { name: 'User' })
             await expect.element(img).toHaveClass(/custom-img/)
         })

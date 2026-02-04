@@ -69,7 +69,7 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const contents = getContents()
                 const openContents = Array.from(contents).filter(
-                    c => c.getAttribute('data-state') === 'open'
+                    (c) => c.getAttribute('data-state') === 'open'
                 )
                 expect(openContents.length).toBe(1)
             })
@@ -85,7 +85,7 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const contents = getContents()
                 const openContents = Array.from(contents).filter(
-                    c => c.getAttribute('data-state') === 'open'
+                    (c) => c.getAttribute('data-state') === 'open'
                 )
                 expect(openContents.length).toBe(0)
             })
@@ -107,7 +107,7 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const contents = getContents()
                 const openContents = Array.from(contents).filter(
-                    c => c.getAttribute('data-state') === 'open'
+                    (c) => c.getAttribute('data-state') === 'open'
                 )
                 expect(openContents.length).toBe(2)
             })
@@ -123,7 +123,7 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const contents = getContents()
                 const openContents = Array.from(contents).filter(
-                    c => c.getAttribute('data-state') === 'open'
+                    (c) => c.getAttribute('data-state') === 'open'
                 )
                 expect(openContents.length).toBe(1)
             })
@@ -137,8 +137,11 @@ describe('Accordion', () => {
             render(Accordion, { type: 'single', items: sampleItems, disabled: true })
             await vi.waitFor(() => {
                 const triggers = getTriggers()
-                triggers.forEach(trigger => {
-                    expect(trigger.hasAttribute('disabled') || trigger.getAttribute('data-disabled') !== null).toBe(true)
+                triggers.forEach((trigger) => {
+                    expect(
+                        trigger.hasAttribute('disabled') ||
+                            trigger.getAttribute('data-disabled') !== null
+                    ).toBe(true)
                 })
             })
         })
@@ -153,7 +156,10 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const triggers = getTriggers()
                 const disabledTrigger = triggers[1]
-                expect(disabledTrigger.hasAttribute('disabled') || disabledTrigger.getAttribute('data-disabled') !== null).toBe(true)
+                expect(
+                    disabledTrigger.hasAttribute('disabled') ||
+                        disabledTrigger.getAttribute('data-disabled') !== null
+                ).toBe(true)
             })
         })
 
@@ -175,7 +181,7 @@ describe('Accordion', () => {
             render(Accordion, { type: 'single', items: sampleItems })
             await vi.waitFor(() => {
                 const triggers = getTriggers()
-                triggers.forEach(trigger => {
+                triggers.forEach((trigger) => {
                     const icon = trigger.querySelector('svg')
                     expect(icon).not.toBeNull()
                 })
@@ -194,9 +200,7 @@ describe('Accordion', () => {
         })
 
         it('should render leading icon when provided', async () => {
-            const itemsWithIcon = [
-                { label: 'Item 1', content: 'Content 1', icon: 'lucide:home' }
-            ]
+            const itemsWithIcon = [{ label: 'Item 1', content: 'Content 1', icon: 'lucide:home' }]
             render(Accordion, { type: 'single', items: itemsWithIcon })
             await vi.waitFor(() => {
                 const triggers = getTriggers()
@@ -276,7 +280,7 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const contents = getContents()
                 const openContent = Array.from(contents).find(
-                    c => c.getAttribute('data-state') === 'open'
+                    (c) => c.getAttribute('data-state') === 'open'
                 ) as HTMLElement
                 expect(openContent).not.toBeNull()
                 expect(openContent.className).toContain('overflow-hidden')
@@ -318,7 +322,7 @@ describe('Accordion', () => {
             })
             await vi.waitFor(() => {
                 const items = getItems()
-                items.forEach(item => {
+                items.forEach((item) => {
                     expect((item as HTMLElement).className).toContain('custom-item')
                 })
             })
@@ -332,7 +336,7 @@ describe('Accordion', () => {
             })
             await vi.waitFor(() => {
                 const triggers = getTriggers()
-                triggers.forEach(trigger => {
+                triggers.forEach((trigger) => {
                     expect((trigger as HTMLElement).className).toContain('custom-trigger')
                 })
             })
@@ -400,7 +404,12 @@ describe('Accordion', () => {
         it('should render multiple mode with icons and custom values', async () => {
             const items = [
                 { label: 'Home', content: 'Home content', icon: 'lucide:home', value: 'home' },
-                { label: 'Settings', content: 'Settings content', icon: 'lucide:settings', value: 'settings' }
+                {
+                    label: 'Settings',
+                    content: 'Settings content',
+                    icon: 'lucide:settings',
+                    value: 'settings'
+                }
             ]
             render(Accordion, { type: 'multiple', items, value: ['home', 'settings'] })
             await expect.element(page.getByText('Home content')).toBeVisible()
@@ -452,7 +461,7 @@ describe('Accordion', () => {
             await vi.waitFor(() => {
                 const contents = getContents()
                 const openContents = Array.from(contents).filter(
-                    c => c.getAttribute('data-state') === 'open'
+                    (c) => c.getAttribute('data-state') === 'open'
                 )
                 expect(openContents.length).toBe(2)
             })

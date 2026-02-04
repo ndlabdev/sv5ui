@@ -43,20 +43,18 @@ pnpm add sv5ui
 ```css
 /* app.css */
 @import 'sv5ui/theme.css';
-@source "../../node_modules/sv5ui/dist";
+@source '../../node_modules/sv5ui/dist';
 ```
 
 **2. Use components**
 
 ```svelte
 <script>
-  import { Button, Avatar, Badge, Tooltip } from 'sv5ui'
+    import { Button, Avatar, Badge, Tooltip } from 'sv5ui'
 </script>
 
 <Tooltip text="Edit profile">
-  <Button variant="soft" color="primary" leadingIcon="lucide:edit">
-    Edit
-  </Button>
+    <Button variant="soft" color="primary" leadingIcon="lucide:edit">Edit</Button>
 </Tooltip>
 
 <Avatar src="/photo.jpg" alt="Jane Doe" size="lg" />
@@ -67,57 +65,57 @@ pnpm add sv5ui
 
 ### General
 
-| Component | Description |
-|:----------|:------------|
+| Component                    | Description                                                                |
+| :--------------------------- | :------------------------------------------------------------------------- |
 | [**Button**](src/lib/Button) | Versatile button with 6 variants, loading state, icons, and avatar support |
-| [**Link**](src/lib/Link) | Smart anchor with automatic active-state detection based on current route |
-| [**Icon**](src/lib/Icon) | Iconify wrapper — render any of 200,000+ icons by name |
-| [**Kbd**](src/lib/Kbd) | Keyboard shortcut display with OS-aware symbol mapping |
+| [**Link**](src/lib/Link)     | Smart anchor with automatic active-state detection based on current route  |
+| [**Icon**](src/lib/Icon)     | Iconify wrapper — render any of 200,000+ icons by name                     |
+| [**Kbd**](src/lib/Kbd)       | Keyboard shortcut display with OS-aware symbol mapping                     |
 
 ### Layout
 
-| Component | Description |
-|:----------|:------------|
-| [**Card**](src/lib/Card) | Content container with header, body, and footer slots |
-| [**Container**](src/lib/Container) | Responsive max-width wrapper for page content |
+| Component                          | Description                                                      |
+| :--------------------------------- | :--------------------------------------------------------------- |
+| [**Card**](src/lib/Card)           | Content container with header, body, and footer slots            |
+| [**Container**](src/lib/Container) | Responsive max-width wrapper for page content                    |
 | [**Separator**](src/lib/Separator) | Horizontal/vertical divider with optional label, icon, or avatar |
 
 ### Data Display
 
-| Component | Description |
-|:----------|:------------|
-| [**Avatar**](src/lib/Avatar) | Profile image with auto-generated initials fallback |
-| [**AvatarGroup**](src/lib/AvatarGroup) | Stacked avatars with overflow count |
-| [**Badge**](src/lib/Badge) | Status indicators and tags in 4 variants and 8 colors |
-| [**Chip**](src/lib/Chip) | Notification dot indicator with configurable positioning |
-| [**User**](src/lib/User) | User profile display combining avatar, name, and description |
-| [**Timeline**](src/lib/Timeline) | Step/sequence visualization with completed, active, and pending states |
-| [**Skeleton**](src/lib/Skeleton) | Animated loading placeholder |
-| [**Empty**](src/lib/Empty) | Empty state with icon, description, and action slots |
+| Component                              | Description                                                            |
+| :------------------------------------- | :--------------------------------------------------------------------- |
+| [**Avatar**](src/lib/Avatar)           | Profile image with auto-generated initials fallback                    |
+| [**AvatarGroup**](src/lib/AvatarGroup) | Stacked avatars with overflow count                                    |
+| [**Badge**](src/lib/Badge)             | Status indicators and tags in 4 variants and 8 colors                  |
+| [**Chip**](src/lib/Chip)               | Notification dot indicator with configurable positioning               |
+| [**User**](src/lib/User)               | User profile display combining avatar, name, and description           |
+| [**Timeline**](src/lib/Timeline)       | Step/sequence visualization with completed, active, and pending states |
+| [**Skeleton**](src/lib/Skeleton)       | Animated loading placeholder                                           |
+| [**Empty**](src/lib/Empty)             | Empty state with icon, description, and action slots                   |
 
 ### Feedback
 
-| Component | Description |
-|:----------|:------------|
-| [**Alert**](src/lib/Alert) | Notification banner with icon, actions, and dismissible support |
+| Component                        | Description                                                          |
+| :------------------------------- | :------------------------------------------------------------------- |
+| [**Alert**](src/lib/Alert)       | Notification banner with icon, actions, and dismissible support      |
 | [**Progress**](src/lib/Progress) | Determinate/indeterminate progress bar with step mode and animations |
 
 ### Navigation
 
-| Component | Description |
-|:----------|:------------|
+| Component                            | Description                                                                    |
+| :----------------------------------- | :----------------------------------------------------------------------------- |
 | [**Breadcrumb**](src/lib/Breadcrumb) | Hierarchical navigation trail with icons, custom separators, and snippet slots |
 
 ### Overlay
 
-| Component | Description |
-|:----------|:------------|
-| [**Modal**](src/lib/Modal) | Accessible dialog with overlay, focus trap, and scroll lock |
-| [**Slideover**](src/lib/Slideover) | Side panel sliding from any edge with inset mode |
-| [**Drawer**](src/lib/Drawer) | Draggable bottom/side sheet with snap points |
-| [**Tooltip**](src/lib/Tooltip) | Hover tooltip with arrow, keyboard shortcut display, and portal rendering |
-| [**Popover**](src/lib/Popover) | Floating interactive content panel with focus management |
-| [**Accordion**](src/lib/Accordion) | Expandable sections with single or multiple open modes |
+| Component                          | Description                                                               |
+| :--------------------------------- | :------------------------------------------------------------------------ |
+| [**Modal**](src/lib/Modal)         | Accessible dialog with overlay, focus trap, and scroll lock               |
+| [**Slideover**](src/lib/Slideover) | Side panel sliding from any edge with inset mode                          |
+| [**Drawer**](src/lib/Drawer)       | Draggable bottom/side sheet with snap points                              |
+| [**Tooltip**](src/lib/Tooltip)     | Hover tooltip with arrow, keyboard shortcut display, and portal rendering |
+| [**Popover**](src/lib/Popover)     | Floating interactive content panel with focus management                  |
+| [**Accordion**](src/lib/Accordion) | Expandable sections with single or multiple open modes                    |
 
 ## Theming
 
@@ -146,8 +144,8 @@ Override any token with CSS variables:
 
 ```css
 :root {
-  --color-primary: oklch(0.55 0.25 270);
-  --color-secondary: oklch(0.45 0.15 240);
+    --color-primary: oklch(0.55 0.25 270);
+    --color-secondary: oklch(0.45 0.15 240);
 }
 ```
 
@@ -158,9 +156,7 @@ Override any token with CSS variables:
 Override slot classes directly on any component:
 
 ```svelte
-<Button ui={{ base: 'rounded-full shadow-lg', label: 'font-bold uppercase' }}>
-  Custom
-</Button>
+<Button ui={{ base: 'rounded-full shadow-lg', label: 'font-bold uppercase' }}>Custom</Button>
 ```
 
 ### Global — `defineConfig`
@@ -171,18 +167,18 @@ Set library-wide defaults for variants, slots, and icons:
 import { defineConfig } from 'sv5ui'
 
 defineConfig({
-  button: {
-    defaultVariants: { variant: 'outline', size: 'lg' },
-    slots: { base: 'shadow-md' }
-  },
-  avatar: {
-    defaultVariants: { size: 'lg' },
-    slots: { root: 'ring-2 ring-primary' }
-  },
-  icons: {
-    loading: 'lucide:loader',
-    close: 'lucide:x'
-  }
+    button: {
+        defaultVariants: { variant: 'outline', size: 'lg' },
+        slots: { base: 'shadow-md' }
+    },
+    avatar: {
+        defaultVariants: { size: 'lg' },
+        slots: { root: 'ring-2 ring-primary' }
+    },
+    icons: {
+        loading: 'lucide:loader',
+        close: 'lucide:x'
+    }
 })
 ```
 
@@ -202,13 +198,13 @@ pnpm format           # Format code
 
 ## Tech Stack
 
-| Layer | Technology |
-|:------|:-----------|
-| Framework | [Svelte 5](https://svelte.dev) + [SvelteKit](https://svelte.dev/docs/kit) |
-| Styling | [Tailwind CSS 4](https://tailwindcss.com) + [Tailwind Variants](https://www.tailwind-variants.org/) |
-| Primitives | [Bits UI](https://bits-ui.com) · [Vaul Svelte](https://vaul-svelte.com) |
-| Icons | [Iconify](https://iconify.design) (200,000+ icons) |
-| Testing | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev) |
+| Layer      | Technology                                                                                          |
+| :--------- | :-------------------------------------------------------------------------------------------------- |
+| Framework  | [Svelte 5](https://svelte.dev) + [SvelteKit](https://svelte.dev/docs/kit)                           |
+| Styling    | [Tailwind CSS 4](https://tailwindcss.com) + [Tailwind Variants](https://www.tailwind-variants.org/) |
+| Primitives | [Bits UI](https://bits-ui.com) · [Vaul Svelte](https://vaul-svelte.com)                             |
+| Icons      | [Iconify](https://iconify.design) (200,000+ icons)                                                  |
+| Testing    | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev)                                 |
 
 ## License
 

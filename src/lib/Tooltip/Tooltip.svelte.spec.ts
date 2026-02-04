@@ -272,7 +272,12 @@ describe('Tooltip', () => {
         })
 
         it('should accept ui.arrow prop', async () => {
-            render(Tooltip, { open: true, text: 'Test', arrow: true, ui: { arrow: 'custom-arrow' } })
+            render(Tooltip, {
+                open: true,
+                text: 'Test',
+                arrow: true,
+                ui: { arrow: 'custom-arrow' }
+            })
             await vi.waitFor(() => {
                 const arrow = getArrow()
                 expect(arrow).not.toBeNull()
@@ -280,7 +285,12 @@ describe('Tooltip', () => {
         })
 
         it('should apply ui.kbds class', async () => {
-            render(Tooltip, { open: true, text: 'Test', kbds: ['meta'], ui: { kbds: 'custom-kbds' } })
+            render(Tooltip, {
+                open: true,
+                text: 'Test',
+                kbds: ['meta'],
+                ui: { kbds: 'custom-kbds' }
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()

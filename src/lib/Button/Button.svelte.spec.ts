@@ -101,7 +101,15 @@ describe('Button', () => {
     // ==================== COLORS ====================
 
     describe('colors', () => {
-        const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
+        const colors = [
+            'primary',
+            'secondary',
+            'tertiary',
+            'success',
+            'warning',
+            'error',
+            'info'
+        ] as const
 
         for (const color of colors) {
             it(`should render with color="${color}"`, async () => {

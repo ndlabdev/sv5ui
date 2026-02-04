@@ -54,7 +54,11 @@
             {#if content}
                 {@render content()}
             {:else if avatar}
-                <Avatar {...avatar} size={avatar.size ?? classes.avatarSize} class={classes.avatar} />
+                <Avatar
+                    {...avatar}
+                    size={avatar.size ?? classes.avatarSize}
+                    class={classes.avatar}
+                />
             {:else if icon}
                 <Icon name={icon} class={classes.icon} />
             {:else if label}

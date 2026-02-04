@@ -42,10 +42,26 @@ export const chipVariants = tv({
         }
     },
     compoundVariants: [
-        { position: 'top-right', inset: false, class: { base: '-translate-y-1/2 translate-x-1/2' } },
-        { position: 'bottom-right', inset: false, class: { base: 'translate-y-1/2 translate-x-1/2' } },
-        { position: 'top-left', inset: false, class: { base: '-translate-y-1/2 -translate-x-1/2' } },
-        { position: 'bottom-left', inset: false, class: { base: 'translate-y-1/2 -translate-x-1/2' } }
+        {
+            position: 'top-right',
+            inset: false,
+            class: { base: '-translate-y-1/2 translate-x-1/2' }
+        },
+        {
+            position: 'bottom-right',
+            inset: false,
+            class: { base: 'translate-y-1/2 translate-x-1/2' }
+        },
+        {
+            position: 'top-left',
+            inset: false,
+            class: { base: '-translate-y-1/2 -translate-x-1/2' }
+        },
+        {
+            position: 'bottom-left',
+            inset: false,
+            class: { base: 'translate-y-1/2 -translate-x-1/2' }
+        }
     ],
     defaultVariants: {
         size: 'md',

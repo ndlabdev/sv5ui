@@ -10,13 +10,7 @@
 
     const config = getComponentConfig('skeleton', skeletonDefaults)
 
-    let {
-        as = 'div',
-        ui,
-        class: className,
-        children,
-        ...restProps
-    }: Props = $props()
+    let { as = 'div', ui, class: className, children, ...restProps }: Props = $props()
 
     const classes = $derived.by(() => {
         const slots = skeletonVariants()

@@ -130,10 +130,7 @@
     {#if children}
         <Tooltip.Trigger>
             {#snippet child({ props })}
-                <span
-                    {...props}
-                    class={className as string}
-                >
+                <span {...props} class={className as string}>
                     {@render children({ open })}
                 </span>
             {/snippet}

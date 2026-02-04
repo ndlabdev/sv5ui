@@ -103,7 +103,15 @@ describe('Alert', () => {
     // ==================== COLORS ====================
 
     describe('colors', () => {
-        const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
+        const colors = [
+            'primary',
+            'secondary',
+            'tertiary',
+            'success',
+            'warning',
+            'error',
+            'info'
+        ] as const
 
         for (const color of colors) {
             it(`should apply ${color} color classes`, async () => {
@@ -196,7 +204,9 @@ describe('Alert', () => {
         it('should call onClose when close button is clicked', async () => {
             const onClose = vi.fn()
             const { container } = render(Alert, { title: 'Test', close: true, onClose })
-            const closeBtn = page.elementLocator(container.querySelector('[aria-label="Close alert"]')!)
+            const closeBtn = page.elementLocator(
+                container.querySelector('[aria-label="Close alert"]')!
+            )
             await closeBtn.click()
             expect(onClose).toHaveBeenCalledOnce()
         })

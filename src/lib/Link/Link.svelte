@@ -20,7 +20,11 @@
         }
     }
 
-    function isQueryMatch(linkQuery: URLSearchParams, currentQuery: URLSearchParams, mode: boolean | 'partial'): boolean {
+    function isQueryMatch(
+        linkQuery: URLSearchParams,
+        currentQuery: URLSearchParams,
+        mode: boolean | 'partial'
+    ): boolean {
         if (mode === false) return true
         if (mode === 'partial') {
             for (const [key, value] of linkQuery) {
@@ -37,9 +41,7 @@
         const link = linkPath.replace(/\/$/, '') || '/'
         const current = currentPath.replace(/\/$/, '') || '/'
 
-        return link === '/'
-            ? current === '/'
-            : current === link || current.startsWith(link + '/')
+        return link === '/' ? current === '/' : current === link || current.startsWith(link + '/')
     }
 </script>
 
@@ -71,7 +73,8 @@
     }: Props = $props()
 
     const isExternal = $derived(
-        external ?? (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'))
+        external ??
+            (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'))
     )
 
     const resolvedTarget = $derived(target ?? (isExternal ? '_blank' : undefined))

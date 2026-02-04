@@ -1,9 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type {
-    BaseAccordionRootPropsWithoutHTML,
-    AccordionContentPropsWithoutHTML
-} from 'bits-ui'
+import type { BaseAccordionRootPropsWithoutHTML, AccordionContentPropsWithoutHTML } from 'bits-ui'
 import type { AccordionSlots } from './accordion.variants.js'
 
 // ============================================================================
@@ -74,7 +71,14 @@ export interface AccordionItem {
     ui?: Partial<
         Pick<
             Record<AccordionSlots, ClassNameValue>,
-            'item' | 'header' | 'trigger' | 'leadingIcon' | 'label' | 'trailingIcon' | 'content' | 'body'
+            | 'item'
+            | 'header'
+            | 'trigger'
+            | 'leadingIcon'
+            | 'label'
+            | 'trailingIcon'
+            | 'content'
+            | 'body'
         >
     >
 }
@@ -119,7 +123,8 @@ export interface AccordionSlotProps {
  * @see https://bits-ui.com/docs/components/accordion
  */
 export interface AccordionProps
-    extends Omit<BaseAccordionRootPropsWithoutHTML, 'loop'>,
+    extends
+        Omit<BaseAccordionRootPropsWithoutHTML, 'loop'>,
         Pick<AccordionContentPropsWithoutHTML, 'forceMount'> {
     // -------------------------------------------------------------------------
     // Content

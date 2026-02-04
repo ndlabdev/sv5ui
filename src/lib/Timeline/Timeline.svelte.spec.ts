@@ -5,9 +5,16 @@ import Timeline from './Timeline.svelte'
 describe('Timeline', () => {
     // Helpers
     const getRoot = (container: Element) => container.firstElementChild as HTMLElement
-    const getItems = (container: Element) => getRoot(container).querySelectorAll('[data-state]') as NodeListOf<HTMLElement>
-    const getIndicators = (container: Element) => getRoot(container).querySelectorAll('[class*="inline-flex"][class*="rounded-full"]') as NodeListOf<HTMLElement>
-    const getSeparators = (container: Element) => getRoot(container).querySelectorAll('[class*="flex-1"][class*="rounded-full"]') as NodeListOf<HTMLElement>
+    const getItems = (container: Element) =>
+        getRoot(container).querySelectorAll('[data-state]') as NodeListOf<HTMLElement>
+    const getIndicators = (container: Element) =>
+        getRoot(container).querySelectorAll(
+            '[class*="inline-flex"][class*="rounded-full"]'
+        ) as NodeListOf<HTMLElement>
+    const getSeparators = (container: Element) =>
+        getRoot(container).querySelectorAll(
+            '[class*="flex-1"][class*="rounded-full"]'
+        ) as NodeListOf<HTMLElement>
 
     const basicItems = [
         { value: 1, title: 'Step 1' },
@@ -75,9 +82,7 @@ describe('Timeline', () => {
         })
 
         it('should render item descriptions', () => {
-            const items = [
-                { value: 1, title: 'Step', description: 'First step description' }
-            ]
+            const items = [{ value: 1, title: 'Step', description: 'First step description' }]
             const { container } = render(Timeline, { items })
             expect(container.textContent).toContain('First step description')
         })
@@ -187,25 +192,41 @@ describe('Timeline', () => {
         })
 
         it('should apply secondary color', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, color: 'secondary' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                color: 'secondary'
+            })
             const indicators = getIndicators(container)
             expect(indicators[0].className).toContain('group-data-[state=completed]:bg-secondary')
         })
 
         it('should apply tertiary color', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, color: 'tertiary' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                color: 'tertiary'
+            })
             const indicators = getIndicators(container)
             expect(indicators[0].className).toContain('group-data-[state=completed]:bg-tertiary')
         })
 
         it('should apply success color', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, color: 'success' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                color: 'success'
+            })
             const indicators = getIndicators(container)
             expect(indicators[0].className).toContain('group-data-[state=completed]:bg-success')
         })
 
         it('should apply warning color', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, color: 'warning' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                color: 'warning'
+            })
             const indicators = getIndicators(container)
             expect(indicators[0].className).toContain('group-data-[state=completed]:bg-warning')
         })
@@ -223,9 +244,15 @@ describe('Timeline', () => {
         })
 
         it('should apply surface color', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, color: 'surface' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                color: 'surface'
+            })
             const indicators = getIndicators(container)
-            expect(indicators[0].className).toContain('group-data-[state=completed]:bg-inverse-surface')
+            expect(indicators[0].className).toContain(
+                'group-data-[state=completed]:bg-inverse-surface'
+            )
         })
     })
 
@@ -310,7 +337,11 @@ describe('Timeline', () => {
         })
 
         it('should apply horizontal separator height', () => {
-            const { container } = render(Timeline, { items: basicItems, orientation: 'horizontal', value: 1 })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                orientation: 'horizontal',
+                value: 1
+            })
             const separators = getSeparators(container)
             if (separators.length > 0) {
                 expect(separators[0].className).toContain('h-0.5')
@@ -339,7 +370,10 @@ describe('Timeline', () => {
     describe('avatars', () => {
         it('should render with avatars without crashing', () => {
             const items = [
-                { avatar: { src: 'https://example.com/avatar.jpg', alt: 'User' }, title: 'User action' }
+                {
+                    avatar: { src: 'https://example.com/avatar.jpg', alt: 'User' },
+                    title: 'User action'
+                }
             ]
             const { container } = render(Timeline, { items })
             expect(getRoot(container)).not.toBeNull()
@@ -347,9 +381,7 @@ describe('Timeline', () => {
         })
 
         it('should render avatar without src (fallback)', () => {
-            const items = [
-                { avatar: { alt: 'JD' }, title: 'John Doe' }
-            ]
+            const items = [{ avatar: { alt: 'JD' }, title: 'John Doe' }]
             const { container } = render(Timeline, { items })
             expect(getRoot(container)).not.toBeNull()
             expect(container.textContent).toContain('John Doe')
@@ -365,7 +397,11 @@ describe('Timeline', () => {
         })
 
         it('should merge custom class with variant classes', () => {
-            const { container } = render(Timeline, { items: basicItems, class: 'my-timeline', orientation: 'horizontal' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                class: 'my-timeline',
+                orientation: 'horizontal'
+            })
             const root = getRoot(container)
             expect(root.className).toContain('my-timeline')
             expect(root.className).toContain('flex-row')
@@ -390,24 +426,38 @@ describe('Timeline', () => {
 
     describe('ui slot overrides', () => {
         it('should apply ui.root class', () => {
-            const { container } = render(Timeline, { items: basicItems, ui: { root: 'custom-root' } })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                ui: { root: 'custom-root' }
+            })
             expect(getRoot(container).className).toContain('custom-root')
         })
 
         it('should apply ui.item class', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, ui: { item: 'custom-item' } })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                ui: { item: 'custom-item' }
+            })
             const items = getItems(container)
             expect(items[0].className).toContain('custom-item')
         })
 
         it('should apply ui.indicator class', () => {
-            const { container } = render(Timeline, { items: basicItems, ui: { indicator: 'custom-indicator' } })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                ui: { indicator: 'custom-indicator' }
+            })
             const indicators = getIndicators(container)
             expect(indicators[0].className).toContain('custom-indicator')
         })
 
         it('should apply ui.separator class', () => {
-            const { container } = render(Timeline, { items: basicItems, value: 1, ui: { separator: 'custom-separator' } })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                value: 1,
+                ui: { separator: 'custom-separator' }
+            })
             const separators = getSeparators(container)
             if (separators.length > 0) {
                 expect(separators[0].className).toContain('custom-separator')
@@ -415,7 +465,10 @@ describe('Timeline', () => {
         })
 
         it('should apply ui.title class', () => {
-            const { container } = render(Timeline, { items: basicItems, ui: { title: 'custom-title' } })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                ui: { title: 'custom-title' }
+            })
             const titles = container.querySelectorAll('.custom-title')
             expect(titles.length).toBeGreaterThan(0)
         })
@@ -437,14 +490,21 @@ describe('Timeline', () => {
 
     describe('html attributes', () => {
         it('should pass through HTML attributes', () => {
-            const { container } = render(Timeline, { items: basicItems, id: 'my-timeline', title: 'Timeline' })
+            const { container } = render(Timeline, {
+                items: basicItems,
+                id: 'my-timeline',
+                title: 'Timeline'
+            })
             const root = getRoot(container)
             expect(root.getAttribute('id')).toBe('my-timeline')
             expect(root.getAttribute('title')).toBe('Timeline')
         })
 
         it('should apply data attributes', () => {
-            const { container } = render(Timeline, { items: basicItems, 'data-testid': 'timeline-1' } as any)
+            const { container } = render(Timeline, {
+                items: basicItems,
+                'data-testid': 'timeline-1'
+            } as any)
             expect(getRoot(container).getAttribute('data-testid')).toBe('timeline-1')
         })
     })

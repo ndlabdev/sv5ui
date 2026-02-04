@@ -1,21 +1,13 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { ModalSlots, ModalVariantProps } from './modal.variants.js'
-import type {
-    DialogRootPropsWithoutHTML,
-    DialogContentPropsWithoutHTML
-} from 'bits-ui'
+import type { DialogRootPropsWithoutHTML, DialogContentPropsWithoutHTML } from 'bits-ui'
 import type { ButtonVariantProps } from '../Button/button.variants.js'
 
 /**
  * Props inherited from bits-ui's Dialog root.
  */
-type RootProps = Pick<
-    DialogRootPropsWithoutHTML,
-    | 'open'
-    | 'onOpenChange'
-    | 'onOpenChangeComplete'
->
+type RootProps = Pick<DialogRootPropsWithoutHTML, 'open' | 'onOpenChange' | 'onOpenChangeComplete'>
 
 /**
  * Props inherited from bits-ui's Dialog content.

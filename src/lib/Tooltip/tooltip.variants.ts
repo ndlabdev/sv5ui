@@ -16,21 +16,26 @@ export const tooltipVariants = tv({
     variants: {
         side: {
             top: {
-                content: 'data-[state=delayed-open]:animate-[slide-in-from-bottom_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-top_100ms_ease-in_reverse]'
+                content:
+                    'data-[state=delayed-open]:animate-[slide-in-from-bottom_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-top_100ms_ease-in_reverse]'
             },
             right: {
-                content: 'data-[state=delayed-open]:animate-[slide-in-from-left_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-right_100ms_ease-in_reverse]'
+                content:
+                    'data-[state=delayed-open]:animate-[slide-in-from-left_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-right_100ms_ease-in_reverse]'
             },
             bottom: {
-                content: 'data-[state=delayed-open]:animate-[slide-in-from-top_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-bottom_100ms_ease-in_reverse]'
+                content:
+                    'data-[state=delayed-open]:animate-[slide-in-from-top_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-bottom_100ms_ease-in_reverse]'
             },
             left: {
-                content: 'data-[state=delayed-open]:animate-[slide-in-from-right_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-left_100ms_ease-in_reverse]'
+                content:
+                    'data-[state=delayed-open]:animate-[slide-in-from-right_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-left_100ms_ease-in_reverse]'
             }
         },
         transition: {
             true: {
-                content: 'data-[state=delayed-open]:animate-[fade-in_150ms_ease-out,zoom-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,zoom-out_100ms_ease-in]'
+                content:
+                    'data-[state=delayed-open]:animate-[fade-in_150ms_ease-out,zoom-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,zoom-out_100ms_ease-in]'
             }
         }
     },
