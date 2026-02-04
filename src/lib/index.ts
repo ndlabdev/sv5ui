@@ -21,6 +21,7 @@ export * from './Tooltip/index.js'
 export * from './Modal/index.js'
 export * from './Accordion/index.js'
 export * from './Slideover/index.js'
+export * from './Popover/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'

@@ -36,13 +36,9 @@ type ContentProps = Pick<
  * Props for customizing the close button appearance.
  */
 export interface SlideoverCloseProps {
-    /** Button color scheme. */
     color?: NonNullable<ButtonVariantProps['color']>
-    /** Button visual style. */
     variant?: NonNullable<ButtonVariantProps['variant']>
-    /** Button size. */
     size?: NonNullable<ButtonVariantProps['size']>
-    /** Icon displayed inside the close button. Supports any Iconify icon name. */
     icon?: string
 }
 

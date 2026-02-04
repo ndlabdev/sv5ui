@@ -43,7 +43,6 @@ export const slideoverVariants = tv({
         }
     },
     compoundVariants: [
-        // Transition animations per side
         {
             transition: true,
             side: 'top',
@@ -72,7 +71,6 @@ export const slideoverVariants = tv({
                 content: 'data-[state=open]:animate-[slide-in-full-left_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-left_150ms_ease-in,fade-out_150ms_ease-in]'
             }
         },
-        // Inset mode with rounded corners and margins
         {
             inset: true,
             side: 'top',
@@ -101,7 +99,6 @@ export const slideoverVariants = tv({
                 content: 'left-4 inset-y-4 rounded-xl shadow-lg ring ring-outline-variant'
             }
         },
-        // Non-inset mode with edge styling
         {
             inset: false,
             side: 'top',
@@ -141,7 +138,6 @@ export const slideoverVariants = tv({
 
 export type SlideoverVariantProps = VariantProps<typeof slideoverVariants>
 export type SlideoverSlots = keyof ReturnType<typeof slideoverVariants>
-export type SlideoverSide = NonNullable<SlideoverVariantProps['side']>
 
 export const slideoverDefaults = {
     defaultVariants: slideoverVariants.defaultVariants,

@@ -1,76 +1,142 @@
-# SV5UI
+<p align="center">
+  <img src="https://img.shields.io/badge/sv5ui-Svelte_5_UI-ff3e00?style=for-the-badge&logo=svelte&logoColor=white" alt="SV5UI" />
+</p>
 
-A modern, fully-typed Svelte 5 UI component library built with Tailwind CSS 4.
+<h1 align="center">SV5UI</h1>
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![npm version](https://img.shields.io/npm/v/sv5ui.svg)](https://www.npmjs.com/package/sv5ui)
+<p align="center">
+  A modern, fully-typed UI component library for Svelte 5.<br/>
+  Built with Tailwind CSS 4, OKLCH color tokens, and accessible headless primitives.
+</p>
 
-## Features
+<p align="center">
+  <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/v/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm version" /></a>
+  <a href="https://github.com/ndlabdev/sv5ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="license" /></a>
+  <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/dm/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="downloads" /></a>
+</p>
 
-- **Svelte 5** - Built with runes, snippets, and the latest Svelte 5 features
-- **Tailwind CSS 4** - Utility-first styling with [Tailwind Variants](https://www.tailwind-variants.org/) for type-safe composable variants
-- **OKLCH Colors** - Semantic color tokens with light/dark mode support
-- **Fully Typed** - Complete TypeScript support with strict mode
-- **Accessible** - Built on [Bits UI](https://bits-ui.com) headless primitives
-- **Customizable** - Global config system to override default variants and slot styles
+---
+
+## Highlights
+
+- **Svelte 5** — Built with runes, snippets, and the latest reactivity model
+- **Tailwind CSS 4** — Utility-first styling with [Tailwind Variants](https://www.tailwind-variants.org/) for type-safe, composable variants
+- **Fully Typed** — Strict TypeScript with exported prop types for every component
+- **Accessible** — Built on [Bits UI](https://bits-ui.com) and [Vaul Svelte](https://vaul-svelte.com) headless primitives
+- **200,000+ Icons** — First-class [Iconify](https://iconify.design) integration
+- **Customizable** — Global config system + per-instance slot overrides
 
 ## Installation
 
 ```bash
 npm install sv5ui
+# or
+pnpm add sv5ui
 ```
 
-Peer dependencies: `svelte >= 5.0.0`, `tailwindcss >= 4.0.0`
+**Peer dependencies:** `svelte >= 5.0.0`, `tailwindcss >= 4.0.0`
 
 ## Quick Start
 
+**1. Import the theme**
+
 ```css
-/* layout.css */
+/* app.css */
 @import 'sv5ui/theme.css';
 @source "../../node_modules/sv5ui/dist";
 ```
 
+**2. Use components**
+
 ```svelte
 <script>
-  import { Button, Alert, Avatar, Badge } from 'sv5ui'
+  import { Button, Avatar, Badge, Tooltip } from 'sv5ui'
 </script>
 
-<Button variant="solid" color="primary">Click me</Button>
-<Alert title="Heads up!" description="Something happened." color="info" variant="soft" />
-<Avatar src="/photo.jpg" alt="John Doe" size="lg" />
-<Badge label="New" color="success" />
+<Tooltip text="Edit profile">
+  <Button variant="soft" color="primary" leadingIcon="lucide:edit">
+    Edit
+  </Button>
+</Tooltip>
+
+<Avatar src="/photo.jpg" alt="Jane Doe" size="lg" />
+<Badge label="Online" color="success" variant="soft" />
 ```
 
 ## Components
 
-| Component | Description |
-|-----------|-------------|
-| **Alert** | Notification banners with actions and close support |
-| **Avatar** | User avatar with image fallback and auto-generated initials |
-| **AvatarGroup** | Grouped avatars with overflow count |
-| **Badge** | Status indicators and tags |
-| **Button** | Interactive button with loading, icon, and block modes |
-| **Card** | Content container with header/body/footer slots |
-| **Chip** | Compact notification indicators with positioning |
-| **Container** | Responsive layout wrapper with max-width constraints |
-| **Icon** | Iconify wrapper with 200,000+ icons |
-| **Kbd** | Keyboard key display with automatic symbol mapping |
-| **Link** | Smart navigation with active state detection |
-| **Progress** | Determinate/indeterminate progress bars with step mode |
-| **Separator** | Dividers with optional label, icon, or avatar content |
-| **Timeline** | Sequence/step visualization with states |
+### General
 
-> Browse the interactive docs by running `pnpm dev` and opening [localhost:5173](http://localhost:5173).
+| Component | Description |
+|:----------|:------------|
+| [**Button**](src/lib/Button) | Versatile button with 6 variants, loading state, icons, and avatar support |
+| [**Link**](src/lib/Link) | Smart anchor with automatic active-state detection based on current route |
+| [**Icon**](src/lib/Icon) | Iconify wrapper — render any of 200,000+ icons by name |
+| [**Kbd**](src/lib/Kbd) | Keyboard shortcut display with OS-aware symbol mapping |
+
+### Layout
+
+| Component | Description |
+|:----------|:------------|
+| [**Card**](src/lib/Card) | Content container with header, body, and footer slots |
+| [**Container**](src/lib/Container) | Responsive max-width wrapper for page content |
+| [**Separator**](src/lib/Separator) | Horizontal/vertical divider with optional label, icon, or avatar |
+
+### Data Display
+
+| Component | Description |
+|:----------|:------------|
+| [**Avatar**](src/lib/Avatar) | Profile image with auto-generated initials fallback |
+| [**AvatarGroup**](src/lib/AvatarGroup) | Stacked avatars with overflow count |
+| [**Badge**](src/lib/Badge) | Status indicators and tags in 4 variants and 8 colors |
+| [**Chip**](src/lib/Chip) | Notification dot indicator with configurable positioning |
+| [**User**](src/lib/User) | User profile display combining avatar, name, and description |
+| [**Timeline**](src/lib/Timeline) | Step/sequence visualization with completed, active, and pending states |
+| [**Skeleton**](src/lib/Skeleton) | Animated loading placeholder |
+| [**Empty**](src/lib/Empty) | Empty state with icon, description, and action slots |
+
+### Feedback
+
+| Component | Description |
+|:----------|:------------|
+| [**Alert**](src/lib/Alert) | Notification banner with icon, actions, and dismissible support |
+| [**Progress**](src/lib/Progress) | Determinate/indeterminate progress bar with step mode and animations |
+
+### Overlay
+
+| Component | Description |
+|:----------|:------------|
+| [**Modal**](src/lib/Modal) | Accessible dialog with overlay, focus trap, and scroll lock |
+| [**Slideover**](src/lib/Slideover) | Side panel sliding from any edge with inset mode |
+| [**Drawer**](src/lib/Drawer) | Draggable bottom/side sheet with snap points |
+| [**Tooltip**](src/lib/Tooltip) | Hover tooltip with arrow, keyboard shortcut display, and portal rendering |
+| [**Popover**](src/lib/Popover) | Floating interactive content panel with focus management |
+| [**Accordion**](src/lib/Accordion) | Expandable sections with single or multiple open modes |
 
 ## Theming
 
-SV5UI uses OKLCH color space with semantic tokens. Light and dark modes work automatically.
+SV5UI uses **OKLCH color space** with semantic tokens. Light and dark modes work out of the box.
 
-**Available color tokens:** `primary`, `secondary`, `tertiary`, `success`, `warning`, `error`, `info`, `surface`
+### Color Tokens
 
-**Dark mode** via `.dark` class or `prefers-color-scheme`, managed through [mode-watcher](https://github.com/svecosystem/mode-watcher).
+Each color provides a set of related tokens for surfaces, text, and containers:
 
-**Custom colors** by overriding CSS variables:
+```
+--color-{name}                  Main color
+--color-on-{name}               Contrast text on main color
+--color-{name}-container        Lighter background variant
+--color-on-{name}-container     Text on container background
+```
+
+**Available colors:** `primary` · `secondary` · `tertiary` · `success` · `warning` · `error` · `info` · `surface`
+
+### Dark Mode
+
+Supported via `.dark` class on `<html>` or `prefers-color-scheme` media query, managed with [mode-watcher](https://github.com/svecosystem/mode-watcher).
+
+### Custom Colors
+
+Override any token with CSS variables:
 
 ```css
 :root {
@@ -81,19 +147,19 @@ SV5UI uses OKLCH color space with semantic tokens. Light and dark modes work aut
 
 ## Customization
 
-### Per-instance overrides
+### Per-instance — `ui` prop
 
-Override slot styles on any component via the `ui` prop:
+Override slot classes directly on any component:
 
 ```svelte
-<Button ui={{ base: 'rounded-full', label: 'font-bold uppercase' }}>
+<Button ui={{ base: 'rounded-full shadow-lg', label: 'font-bold uppercase' }}>
   Custom
 </Button>
 ```
 
-### Global defaults
+### Global — `defineConfig`
 
-Use `defineConfig` to set library-wide defaults:
+Set library-wide defaults for variants, slots, and icons:
 
 ```typescript
 import { defineConfig } from 'sv5ui'
@@ -103,22 +169,41 @@ defineConfig({
     defaultVariants: { variant: 'outline', size: 'lg' },
     slots: { base: 'shadow-md' }
   },
-  icons: { loading: 'svg-spinners:ring-resize' }
+  avatar: {
+    defaultVariants: { size: 'lg' },
+    slots: { root: 'ring-2 ring-primary' }
+  },
+  icons: {
+    loading: 'lucide:loader',
+    close: 'lucide:x'
+  }
 })
 ```
 
 ## Development
 
 ```bash
-pnpm install      # Install dependencies
-pnpm dev          # Start dev server
-pnpm test         # Run tests
-pnpm check        # Type check
-pnpm prepack      # Build library
-pnpm lint         # Lint
-pnpm format       # Format
+pnpm install          # Install dependencies
+pnpm dev              # Dev server at localhost:5173
+pnpm test             # Run unit tests
+pnpm check            # TypeScript check
+pnpm prepack          # Build library package
+pnpm lint             # Lint
+pnpm format           # Format code
 ```
+
+> Run `pnpm dev` and open [localhost:5173](http://localhost:5173) to browse the interactive component demos.
+
+## Tech Stack
+
+| Layer | Technology |
+|:------|:-----------|
+| Framework | [Svelte 5](https://svelte.dev) + [SvelteKit](https://svelte.dev/docs/kit) |
+| Styling | [Tailwind CSS 4](https://tailwindcss.com) + [Tailwind Variants](https://www.tailwind-variants.org/) |
+| Primitives | [Bits UI](https://bits-ui.com) · [Vaul Svelte](https://vaul-svelte.com) |
+| Icons | [Iconify](https://iconify.design) (200,000+ icons) |
+| Testing | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev) |
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) &copy; [ndlabdev](https://github.com/ndlabdev)
