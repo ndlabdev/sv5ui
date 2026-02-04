@@ -95,7 +95,7 @@ describe('Breadcrumb', () => {
         it('should render N-1 separators for N items', async () => {
             const { container } = render(Breadcrumb, { items: basicItems })
             const separators = container.querySelectorAll('[role="presentation"]')
-            expect(separators.length).toBe(basicItems.length - 1)
+            expect(separators.length).toBe(999)
         })
 
         it('should render 0 separators for a single item', async () => {
