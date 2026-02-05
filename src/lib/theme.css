@@ -8,6 +8,7 @@
  */
 
 @import 'tailwindcss';
+@source '.';
 
 /* ============================================
  * DARK MODE CONFIGURATION
