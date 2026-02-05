@@ -41,9 +41,8 @@ pnpm add sv5ui
 **1. Import the theme**
 
 ```css
-/* app.css */
+/* layout.css */
 @import 'sv5ui/theme.css';
-@source '../../node_modules/sv5ui/dist';
 ```
 
 **2. Use components**
