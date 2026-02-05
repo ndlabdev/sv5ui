@@ -28,7 +28,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-end gap-4 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <div class="flex flex-col items-center gap-2">
                     <Avatar src="https://i.pravatar.cc/150?img=5" alt="User" {size} />
                     <span class="text-xs text-on-surface-variant">{size}</span>

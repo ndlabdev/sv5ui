@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
-import Kbd from './Kbd.svelte'
+import Kbd, { type Props } from './Kbd.svelte'
 
 describe('Kbd', () => {
     // Helpers
@@ -282,7 +282,9 @@ describe('Kbd', () => {
         })
 
         it('should apply data attributes', () => {
-            const { container } = render(Kbd, { value: 'K', 'data-testid': 'kbd-1' } as any)
+            const { container } = render(Kbd, { value: 'K', 'data-testid': 'kbd-1' } as Props & {
+                'data-testid': string
+            })
             expect(getRoot(container).getAttribute('data-testid')).toBe('kbd-1')
         })
     })

@@ -29,9 +29,9 @@
 
     const maxValue = $derived(Array.isArray(max) ? max.length - 1 : max)
     const percent = $derived(
-        value != null ? Math.round((Math.min(value, maxValue) / maxValue) * 100) : 0
+        value !== null ? Math.round((Math.min(value, maxValue) / maxValue) * 100) : 0
     )
-    const isIndeterminate = $derived(value == null)
+    const isIndeterminate = $derived(value === null)
     const state = $derived(isIndeterminate ? 'indeterminate' : 'determinate')
 
     const indicatorStyle = $derived.by(() => {
@@ -87,7 +87,9 @@
         <div class={classes.stepsBase}>
             {#each max as step, index (index)}
                 <span
-                    class={value != null && index <= value ? classes.stepActive : classes.stepOther}
+                    class={value !== null && index <= value
+                        ? classes.stepActive
+                        : classes.stepOther}
                 >
                     {step}
                 </span>

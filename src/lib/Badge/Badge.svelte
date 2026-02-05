@@ -63,7 +63,7 @@
     {#if icon}
         <Icon name={icon} class={classes.leadingIcon} />
     {:else if !isIconOnly}
-        {#if label != null}
+        {#if label !== null}
             <span class={classes.label}>{label}</span>
         {:else if children}
             <span class={classes.label}>{@render children()}</span>

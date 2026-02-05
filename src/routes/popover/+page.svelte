@@ -21,10 +21,8 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Popover>
-                {#snippet children({ open })}
-                    <Button variant="outline">Click me</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">Click me</Button>
+                {#snippet content()}
                     <div class="w-72 p-4">
                         <p class="text-sm font-medium">Popover Content</p>
                         <p class="mt-1 text-sm opacity-70">
@@ -46,10 +44,8 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Popover side="top">
-                {#snippet children({ open })}
-                    <Button variant="soft">Top</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft">Top</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Popover on top</p>
                     </div>
@@ -57,10 +53,8 @@
             </Popover>
 
             <Popover side="right">
-                {#snippet children({ open })}
-                    <Button variant="soft">Right</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft">Right</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Popover on right</p>
                     </div>
@@ -68,10 +62,8 @@
             </Popover>
 
             <Popover side="bottom">
-                {#snippet children({ open })}
-                    <Button variant="soft">Bottom</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft">Bottom</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Popover on bottom</p>
                     </div>
@@ -79,10 +71,8 @@
             </Popover>
 
             <Popover side="left">
-                {#snippet children({ open })}
-                    <Button variant="soft">Left</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft">Left</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Popover on left</p>
                     </div>
@@ -101,10 +91,8 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Popover side="bottom" align="start">
-                {#snippet children({ open })}
-                    <Button variant="outline">Start</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">Start</Button>
+                {#snippet content()}
                     <div class="w-48 p-3">
                         <p class="text-sm">Aligned to start</p>
                     </div>
@@ -112,10 +100,8 @@
             </Popover>
 
             <Popover side="bottom" align="center">
-                {#snippet children({ open })}
-                    <Button variant="outline">Center</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">Center</Button>
+                {#snippet content()}
                     <div class="w-48 p-3">
                         <p class="text-sm">Aligned to center</p>
                     </div>
@@ -123,10 +109,8 @@
             </Popover>
 
             <Popover side="bottom" align="end">
-                {#snippet children({ open })}
-                    <Button variant="outline">End</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">End</Button>
+                {#snippet content()}
                     <div class="w-48 p-3">
                         <p class="text-sm">Aligned to end</p>
                     </div>
@@ -143,10 +127,8 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Popover arrow side="top">
-                {#snippet children({ open })}
-                    <Button>Top Arrow</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button>Top Arrow</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Content with arrow</p>
                     </div>
@@ -154,10 +136,8 @@
             </Popover>
 
             <Popover arrow side="right">
-                {#snippet children({ open })}
-                    <Button>Right Arrow</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button>Right Arrow</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Content with arrow</p>
                     </div>
@@ -165,10 +145,8 @@
             </Popover>
 
             <Popover arrow side="bottom">
-                {#snippet children({ open })}
-                    <Button variant="soft">Bottom Arrow</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft">Bottom Arrow</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Content with arrow</p>
                     </div>
@@ -176,10 +154,8 @@
             </Popover>
 
             <Popover arrow side="left">
-                {#snippet children({ open })}
-                    <Button variant="soft">Left Arrow</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft">Left Arrow</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Content with arrow</p>
                     </div>
@@ -204,10 +180,8 @@
                         'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
                 }}
             >
-                {#snippet children({ open })}
-                    <Button variant="soft" icon="lucide:user">Profile</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="soft" icon="lucide:user">Profile</Button>
+                {#snippet content()}
                     <div class="w-72">
                         <div class="p-4">
                             <div class="flex items-center gap-3">
@@ -255,10 +229,8 @@
                         'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
                 }}
             >
-                {#snippet children({ open })}
-                    <Button variant="outline" icon="lucide:bell">Notifications</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline" icon="lucide:bell">Notifications</Button>
+                {#snippet content()}
                     <div class="w-80">
                         <div class="flex items-center justify-between p-4 pb-2">
                             <p class="font-medium text-on-surface">Notifications</p>
@@ -316,9 +288,7 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Popover>
-                {#snippet children({ open })}
-                    <Button variant="outline">Open with close button</Button>
-                {/snippet}
+                <Button variant="outline">Open with close button</Button>
                 {#snippet content({ close })}
                     <div class="w-72 p-4">
                         <div class="flex items-center justify-between">
@@ -354,12 +324,10 @@
             class="flex flex-wrap items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Popover bind:open={controlledOpen}>
-                {#snippet children({ open })}
-                    <Button variant={controlledOpen ? 'solid' : 'outline'}>
-                        {controlledOpen ? 'Popover is open' : 'Click to open'}
-                    </Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant={controlledOpen ? 'solid' : 'outline'}>
+                    {controlledOpen ? 'Popover is open' : 'Click to open'}
+                </Button>
+                {#snippet content()}
                     <div class="w-64 p-4">
                         <p class="text-sm">Controlled popover content</p>
                     </div>
@@ -387,9 +355,7 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Popover dismissible={false}>
-                {#snippet children({ open })}
-                    <Button variant="outline">Non-dismissible</Button>
-                {/snippet}
+                <Button variant="outline">Non-dismissible</Button>
                 {#snippet content({ close })}
                     <div class="w-72 p-4">
                         <p class="text-sm font-medium">Cannot dismiss by clicking outside</p>
@@ -413,10 +379,8 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Popover portal>
-                {#snippet children({ open })}
-                    <Button variant="outline">With Portal</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">With Portal</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Rendered in portal (default)</p>
                     </div>
@@ -424,10 +388,8 @@
             </Popover>
 
             <Popover portal={false}>
-                {#snippet children({ open })}
-                    <Button variant="outline">Without Portal</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">Without Portal</Button>
+                {#snippet content()}
                     <div class="p-3">
                         <p class="text-sm">Rendered inline</p>
                     </div>
@@ -452,10 +414,8 @@
                 }}
                 arrow
             >
-                {#snippet children({ open })}
-                    <Button>Primary Style</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button>Primary Style</Button>
+                {#snippet content()}
                     <div class="w-64 p-4">
                         <p class="text-sm font-medium">Custom styled popover</p>
                         <p class="mt-1 text-sm opacity-80">With primary background color.</p>
@@ -470,10 +430,8 @@
                 }}
                 arrow
             >
-                {#snippet children({ open })}
-                    <Button color="error" variant="soft">Error Style</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button color="error" variant="soft">Error Style</Button>
+                {#snippet content()}
                     <div class="w-64 p-4">
                         <p class="text-sm font-medium">Error popover</p>
                         <p class="mt-1 text-sm opacity-80">Something went wrong.</p>
@@ -486,10 +444,8 @@
                     content: 'rounded-xl shadow-2xl'
                 }}
             >
-                {#snippet children({ open })}
-                    <Button variant="outline">Custom Rounding</Button>
-                {/snippet}
-                {#snippet content({ close })}
+                <Button variant="outline">Custom Rounding</Button>
+                {#snippet content()}
                     <div class="w-64 p-4">
                         <p class="text-sm">Extra rounded with larger shadow.</p>
                     </div>
@@ -515,9 +471,7 @@
                             'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
                     }}
                 >
-                    {#snippet children({ open })}
-                        <Button variant="outline" icon="lucide:share-2">Share</Button>
-                    {/snippet}
+                    <Button variant="outline" icon="lucide:share-2">Share</Button>
                     {#snippet content({ close })}
                         <div class="w-56 p-2">
                             <Button
@@ -566,14 +520,12 @@
                             'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
                     }}
                 >
-                    {#snippet children({ open })}
-                        <Button variant="outline" icon="lucide:palette">Pick Color</Button>
-                    {/snippet}
+                    <Button variant="outline" icon="lucide:palette">Pick Color</Button>
                     {#snippet content({ close })}
                         <div class="w-56 p-4">
                             <p class="mb-3 text-sm font-medium text-on-surface">Choose a color</p>
                             <div class="grid grid-cols-5 gap-2">
-                                {#each ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-teal-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-gray-500'] as color}
+                                {#each ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-teal-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-gray-500'] as color (color)}
                                     <button
                                         class="size-8 rounded-full {color} transition-all hover:ring-2 hover:ring-outline hover:ring-offset-2"
                                         aria-label="Select {color
@@ -601,9 +553,7 @@
                             'bg-surface-container-low text-on-surface [--ui-border-color:var(--color-outline-variant)]'
                     }}
                 >
-                    {#snippet children({ open })}
-                        <Button variant="outline" icon="lucide:filter">Filters</Button>
-                    {/snippet}
+                    <Button variant="outline" icon="lucide:filter">Filters</Button>
                     {#snippet content({ close })}
                         <div class="w-72">
                             <div class="p-4">

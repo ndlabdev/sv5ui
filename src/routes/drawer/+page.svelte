@@ -94,7 +94,7 @@
             > prop to open from any edge.
         </p>
         <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each directions as dir}
+            {#each directions as dir (dir)}
                 <Drawer
                     bind:open={directionOpen[dir]}
                     direction={dir}
@@ -143,7 +143,7 @@
                     <Button label="Close" variant="outline" onclick={() => (insetOpen = false)} />
                 {/snippet}
             </Drawer>
-            {#each directions as dir}
+            {#each directions as dir (dir)}
                 <Drawer
                     bind:open={insetDirectionOpen[dir]}
                     inset
@@ -211,7 +211,7 @@
                         Useful when the drawer contains scrollable or interactive content.
                     </p>
                     <div class="mt-3 space-y-2">
-                        {#each Array(5) as _, i (i)}
+                        {#each Array.from({ length: 5 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">
                                     Scrollable item {i + 1}
@@ -409,7 +409,7 @@
                         <p class="text-on-surface-variant">
                             Scroll this list, then try dragging the drawer immediately:
                         </p>
-                        {#each Array(20) as _, i (i)}
+                        {#each Array.from({ length: 20 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">
                                     Scrollable item {i + 1}
@@ -451,7 +451,7 @@
                             Drag between 25%, 50%, and 100% heights. Overlay fades from the 2nd snap
                             point.
                         </p>
-                        {#each Array(12) as _, i (i)}
+                        {#each Array.from({ length: 12 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">Item {i + 1}</p>
                             </div>
@@ -495,7 +495,7 @@
                                 onclick={() => (activeSnap = 1)}
                             />
                         </div>
-                        {#each Array(10) as _, i (i)}
+                        {#each Array.from({ length: 10 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">Item {i + 1}</p>
                             </div>
@@ -522,7 +522,7 @@
                             >, fast swipes won't skip snap points. Each point must be visited in
                             order.
                         </p>
-                        {#each Array(15) as _, i (i)}
+                        {#each Array.from({ length: 15 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">Item {i + 1}</p>
                             </div>
@@ -736,7 +736,7 @@
                         Open/close the drawer to see callback logs...
                     </p>
                 {/if}
-                {#each callbackLog as log}
+                {#each callbackLog as log, i (i)}
                     <p class="font-mono text-xs text-on-surface-variant">{log}</p>
                 {/each}
             </div>
@@ -771,7 +771,7 @@
         <p class="text-sm text-on-surface-variant">
             By default the drawer renders in a portal (appended to body). Set
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >portal={'{'}false{'}'}</code
+                >portal=&#123;false&#125;</code
             >
             to render inline.
         </p>
@@ -917,7 +917,7 @@
                     />
                     {#snippet body()}
                         <div class="space-y-4">
-                            {#each [{ icon: 'lucide:user', label: 'Account', desc: 'Manage your profile' }, { icon: 'lucide:bell', label: 'Notifications', desc: 'Push, email, SMS' }, { icon: 'lucide:shield', label: 'Privacy', desc: 'Data and permissions' }, { icon: 'lucide:palette', label: 'Appearance', desc: 'Theme and display' }, { icon: 'lucide:globe', label: 'Language', desc: 'English (US)' }] as item}
+                            {#each [{ icon: 'lucide:user', label: 'Account', desc: 'Manage your profile' }, { icon: 'lucide:bell', label: 'Notifications', desc: 'Push, email, SMS' }, { icon: 'lucide:shield', label: 'Privacy', desc: 'Data and permissions' }, { icon: 'lucide:palette', label: 'Appearance', desc: 'Theme and display' }, { icon: 'lucide:globe', label: 'Language', desc: 'English (US)' }] as item (item.label)}
                                 <button
                                     class="flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors hover:bg-surface-container"
                                 >
@@ -976,7 +976,7 @@
                     {/snippet}
                     {#snippet body()}
                         <div class="space-y-3">
-                            {#each [{ title: 'New message', desc: 'John sent you a message', time: '2m ago', unread: true }, { title: 'Build completed', desc: 'Pipeline #482 passed', time: '15m ago', unread: true }, { title: 'Review requested', desc: 'PR #31 needs review', time: '1h ago', unread: true }, { title: 'Deploy finished', desc: 'v2.4.0 deployed to prod', time: '3h ago', unread: false }, { title: 'Comment added', desc: 'Alice commented on issue', time: '5h ago', unread: false }] as n}
+                            {#each [{ title: 'New message', desc: 'John sent you a message', time: '2m ago', unread: true }, { title: 'Build completed', desc: 'Pipeline #482 passed', time: '15m ago', unread: true }, { title: 'Review requested', desc: 'PR #31 needs review', time: '1h ago', unread: true }, { title: 'Deploy finished', desc: 'v2.4.0 deployed to prod', time: '3h ago', unread: false }, { title: 'Comment added', desc: 'Alice commented on issue', time: '5h ago', unread: false }] as n (n.title)}
                                 <div
                                     class="flex gap-3 rounded-lg p-2 {n.unread
                                         ? 'bg-primary/5'
@@ -1031,7 +1031,7 @@
                             <div>
                                 <p class="mb-2 text-sm font-medium text-on-surface">Category</p>
                                 <div class="flex flex-wrap gap-2">
-                                    {#each ['All', 'Electronics', 'Clothing', 'Books', 'Home'] as cat}
+                                    {#each ['All', 'Electronics', 'Clothing', 'Books', 'Home'] as cat (cat)}
                                         <Button
                                             size="xs"
                                             variant={cat === 'All' ? 'solid' : 'outline'}
@@ -1045,7 +1045,7 @@
                             <div>
                                 <p class="mb-2 text-sm font-medium text-on-surface">Price Range</p>
                                 <div class="flex flex-wrap gap-2">
-                                    {#each ['Under $25', '$25-$50', '$50-$100', '$100+'] as price}
+                                    {#each ['Under $25', '$25-$50', '$50-$100', '$100+'] as price (price)}
                                         <Button
                                             size="xs"
                                             variant="outline"
@@ -1059,7 +1059,7 @@
                             <div>
                                 <p class="mb-2 text-sm font-medium text-on-surface">Rating</p>
                                 <div class="flex flex-wrap gap-2">
-                                    {#each ['4+', '3+', '2+', 'Any'] as r}
+                                    {#each ['4+', '3+', '2+', 'Any'] as r (r)}
                                         <Button
                                             size="xs"
                                             variant="outline"

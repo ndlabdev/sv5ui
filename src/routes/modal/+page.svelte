@@ -126,7 +126,7 @@
                             The entire overlay area is scrollable. The modal scrolls within the
                             viewport.
                         </p>
-                        {#each Array(20) as _, i (i)}
+                        {#each Array.from({ length: 20 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">
                                     Scrollable item {i + 1}
@@ -154,7 +154,7 @@
                 <Button variant="outline" label="Scrollable + Fullscreen" />
                 {#snippet body()}
                     <div class="space-y-3">
-                        {#each Array(30) as _, i (i)}
+                        {#each Array.from({ length: 30 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
                                 <p class="text-sm text-on-surface-variant">Item {i + 1}</p>
                             </div>
@@ -178,7 +178,7 @@
         <p class="text-sm text-on-surface-variant">
             Animations are enabled by default. Set
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >transition={'{'}false{'}'}</code
+                >transition=&#123;false&#125;</code
             >
             to disable.
         </p>
@@ -212,7 +212,7 @@
         <p class="text-sm text-on-surface-variant">
             Hide the close button with <code
                 class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >close={'{'}false{'}'}</code
+                >close=&#123;false&#125;</code
             >.
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
@@ -246,7 +246,7 @@
         <p class="text-sm text-on-surface-variant">
             Hide the overlay with <code
                 class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >overlay={'{'}false{'}'}</code
+                >overlay=&#123;false&#125;</code
             >.
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
@@ -278,7 +278,7 @@
         <h2 class="text-lg font-semibold">Non-Dismissible</h2>
         <p class="text-sm text-on-surface-variant">
             Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >dismissible={'{'}false{'}'}</code
+                >dismissible=&#123;false&#125;</code
             >
             to prevent closing by clicking outside or pressing Escape.
         </p>
@@ -450,7 +450,7 @@
                         Open/close the modal to see callback logs...
                     </p>
                 {/if}
-                {#each callbackLog as log}
+                {#each callbackLog as log, i (i)}
                     <p class="font-mono text-xs text-on-surface-variant">{log}</p>
                 {/each}
             </div>
@@ -484,7 +484,7 @@
         <p class="text-sm text-on-surface-variant">
             Set
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >portal={'{'}false{'}'}</code
+                >portal=&#123;false&#125;</code
             >
             to render inline instead of being portalled to the body.
         </p>
@@ -771,7 +771,7 @@
                     />
                     {#snippet body()}
                         <div class="space-y-4 text-sm text-on-surface-variant">
-                            {#each Array(15) as _, i (i)}
+                            {#each Array.from({ length: 15 }, (_, i) => i) as i (i)}
                                 <div>
                                     <h4 class="mb-1 font-medium text-on-surface">
                                         Section {i + 1}

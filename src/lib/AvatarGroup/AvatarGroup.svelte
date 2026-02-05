@@ -55,7 +55,7 @@
         {#if overflowCount > 0}
             <Avatar text={`+${overflowCount}`} />
         {/if}
-        {#each visibleAvatars as avatar}
+        {#each visibleAvatars as avatar, index (avatar.src ?? index)}
             <Avatar {...avatar} />
         {/each}
     {:else if children}

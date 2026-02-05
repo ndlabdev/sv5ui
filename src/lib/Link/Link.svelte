@@ -106,6 +106,7 @@
     const ariaCurrent = $derived(isActive && exact ? ('page' as const) : undefined)
 </script>
 
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
     href={disabled ? undefined : href}
     class={baseClass}
@@ -116,5 +117,6 @@
     tabindex={disabled ? -1 : undefined}
     {...restProps}
 >
+    <!-- eslint-enable svelte/no-navigation-without-resolve -->
     {@render children?.()}
 </a>

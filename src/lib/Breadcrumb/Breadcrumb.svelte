@@ -49,7 +49,7 @@
 
 <svelte:element this={as} aria-label={as === 'nav' ? 'Breadcrumb' : undefined} class={classes.root}>
     <ol class={classes.list}>
-        {#each items as item, index}
+        {#each items as item, index (item.label ?? index)}
             {@const active = index === items.length - 1}
             {@const disabled = item.disabled ?? false}
             {@const itemClasses = getLinkClasses(active, disabled, item.class)}

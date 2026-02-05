@@ -64,7 +64,7 @@
             Shows different symbols based on platform: Mac shows ⌘⌃⌥, others show Ctrl/Alt.
         </p>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
-            {#each modifierKeys as key}
+            {#each modifierKeys as key (key)}
                 <Kbd value={key} />
             {/each}
         </div>
@@ -74,7 +74,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Special Keys</h2>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
-            {#each specialKeys as key}
+            {#each specialKeys as key (key)}
                 <Kbd value={key} />
             {/each}
         </div>
@@ -84,7 +84,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Arrow Keys</h2>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
-            {#each arrowKeys as key}
+            {#each arrowKeys as key (key)}
                 <Kbd value={key} />
             {/each}
         </div>
@@ -94,10 +94,10 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Variants</h2>
         <div class="space-y-3 rounded-lg bg-surface-container-high p-4">
-            {#each variants as variant}
+            {#each variants as variant (variant)}
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="w-16 text-sm text-on-surface-variant">{variant}</span>
-                    {#each colors as color}
+                    {#each colors as color (color)}
                         <Kbd value="K" {variant} {color} />
                     {/each}
                 </div>
@@ -109,7 +109,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <div class="flex items-center gap-1">
                     <span class="text-sm text-on-surface-variant">{size}:</span>
                     <Kbd value="K" {size} />
@@ -122,7 +122,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Colors</h2>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <Kbd value={color.charAt(0).toUpperCase()} {color} />
             {/each}
         </div>
@@ -138,7 +138,7 @@
                         <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Variant</th
                         >
-                        {#each colors as color}
+                        {#each colors as color (color)}
                             <th
                                 class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</th
@@ -147,12 +147,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each variants as variant}
+                    {#each variants as variant (variant)}
                         <tr class="border-b border-outline-variant/50">
                             <td class="px-3 py-3 text-sm font-medium text-on-surface-variant"
                                 >{variant}</td
                             >
-                            {#each colors as color}
+                            {#each colors as color (color)}
                                 <td class="px-3 py-3 text-center">
                                     <Kbd value="K" {variant} {color} />
                                 </td>
@@ -347,7 +347,7 @@
             {#if shortcutLog.length > 0}
                 <div class="space-y-1 rounded-md bg-surface-container p-3">
                     <p class="text-xs font-medium text-on-surface-variant">Recent shortcuts:</p>
-                    {#each shortcutLog as entry}
+                    {#each shortcutLog as entry, i (i)}
                         <p class="font-mono text-xs text-on-surface">{entry}</p>
                     {/each}
                 </div>
@@ -368,7 +368,7 @@
         </p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
             <div class="flex flex-wrap gap-2">
-                {#each ['shift', 'ctrl', 'alt', 'meta'] as key}
+                {#each ['shift', 'ctrl', 'alt', 'meta'] as key (key)}
                     <div
                         class="rounded-lg border px-3 py-2 text-sm transition-colors {kbd.isPressed(
                             key

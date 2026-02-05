@@ -61,7 +61,7 @@
                     >
                         <Icon name="lucide:menu" size="20" />
                     </button>
-                    <a href="/" class="text-xl font-bold text-primary">SV5UI</a>
+                    <Link href="/" raw class="text-xl font-bold text-primary">SV5UI</Link>
                     <span class="hidden text-sm text-on-surface-variant sm:inline"
                         >Svelte 5 UI Components</span
                     >
@@ -105,7 +105,7 @@
                         Components
                     </p>
                     <div class="flex flex-col gap-0.5">
-                        {#each navItems as item}
+                        {#each navItems as item (item.href)}
                             <Link
                                 href={item.href}
                                 raw
@@ -127,7 +127,7 @@
                         Guides
                     </p>
                     <div class="flex flex-col gap-0.5">
-                        {#each docItems as item}
+                        {#each docItems as item (item.href)}
                             <Link
                                 href={item.href}
                                 raw

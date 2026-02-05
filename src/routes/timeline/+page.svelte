@@ -159,7 +159,7 @@
                 <div class="space-y-2">
                     <label class="text-sm font-medium">Color</label>
                     <div class="flex flex-wrap gap-1">
-                        {#each colors as color}
+                        {#each colors as color (color)}
                             <button
                                 class="rounded px-2 py-1 text-xs capitalize transition-colors"
                                 class:bg-primary={playgroundColor === color}
@@ -176,7 +176,7 @@
                 <div class="space-y-2">
                     <label class="text-sm font-medium">Size</label>
                     <div class="flex flex-wrap gap-1">
-                        {#each sizes as size}
+                        {#each sizes as size (size)}
                             <button
                                 class="rounded px-2 py-1 text-xs transition-colors"
                                 class:bg-primary={playgroundSize === size}
@@ -326,7 +326,7 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold">Colors</h2>
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <div class="rounded-lg bg-surface-container-high p-3">
                     <p class="mb-2 text-xs font-medium text-on-surface-variant capitalize">
                         {color}
@@ -354,7 +354,7 @@
                 class="flex gap-6 rounded-lg bg-surface-container-high p-4"
                 style="min-width: max-content;"
             >
-                {#each sizes as size}
+                {#each sizes as size (size)}
                     <div class="flex flex-col items-center gap-2">
                         <span class="text-xs font-medium text-on-surface-variant">{size}</span>
                         <Timeline

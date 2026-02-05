@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, Icon, Card } from '$lib/index.js'
+    import { Button, Icon, Card, Link } from '$lib/index.js'
 </script>
 
 <div class="space-y-8">
@@ -95,9 +95,10 @@
     <div class="space-y-4">
         <h2 class="text-xl font-semibold">Components</h2>
         <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {#each [{ name: 'Icon', desc: 'Iconify-powered icon component', href: '/icon', icon: 'lucide:shapes' }, { name: 'Avatar', desc: 'User profile images with fallbacks', href: '/avatar', icon: 'lucide:circle-user' }, { name: 'Avatar Group', desc: 'Stacked overlapping avatars', href: '/avatar-group', icon: 'lucide:users' }, { name: 'Alert', desc: 'Callout and notification component', href: '/alert', icon: 'lucide:bell' }, { name: 'Card', desc: 'Content container with slots', href: '/card', icon: 'lucide:square' }, { name: 'Link', desc: 'Navigation with active detection', href: '/link', icon: 'lucide:link' }, { name: 'Button', desc: 'Versatile button with variants', href: '/button', icon: 'lucide:mouse-pointer-click' }] as item}
-                <a
+            {#each [{ name: 'Icon', desc: 'Iconify-powered icon component', href: '/icon', icon: 'lucide:shapes' }, { name: 'Avatar', desc: 'User profile images with fallbacks', href: '/avatar', icon: 'lucide:circle-user' }, { name: 'Avatar Group', desc: 'Stacked overlapping avatars', href: '/avatar-group', icon: 'lucide:users' }, { name: 'Alert', desc: 'Callout and notification component', href: '/alert', icon: 'lucide:bell' }, { name: 'Card', desc: 'Content container with slots', href: '/card', icon: 'lucide:square' }, { name: 'Link', desc: 'Navigation with active detection', href: '/link', icon: 'lucide:link' }, { name: 'Button', desc: 'Versatile button with variants', href: '/button', icon: 'lucide:mouse-pointer-click' }] as item (item.href)}
+                <Link
                     href={item.href}
+                    raw
                     class="group flex items-center gap-3 rounded-lg border border-outline-variant p-4 transition-colors hover:bg-surface-container-high"
                 >
                     <Icon name={item.icon} size="24" class="text-primary" />
@@ -105,7 +106,7 @@
                         <p class="font-medium group-hover:text-primary">{item.name}</p>
                         <p class="text-sm text-on-surface-variant">{item.desc}</p>
                     </div>
-                </a>
+                </Link>
             {/each}
         </div>
     </div>

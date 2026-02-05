@@ -34,7 +34,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <div class="flex items-center gap-4">
                     <span class="w-10 text-sm text-on-surface-variant">{size}</span>
                     <User
@@ -158,7 +158,7 @@
                 <div
                     class="max-w-sm space-y-1 rounded-lg border border-outline-variant bg-surface-container p-2"
                 >
-                    {#each [{ name: 'Alice Johnson', desc: 'Admin', u: 'alice' }, { name: 'Bob Williams', desc: 'Editor', u: 'bob' }, { name: 'Carol Davis', desc: 'Viewer', u: 'carol' }] as item}
+                    {#each [{ name: 'Alice Johnson', desc: 'Admin', u: 'alice' }, { name: 'Bob Williams', desc: 'Editor', u: 'bob' }, { name: 'Carol Davis', desc: 'Viewer', u: 'carol' }] as item (item.u)}
                         <User
                             name={item.name}
                             description={item.desc}

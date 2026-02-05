@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Tooltip, Button, Badge, Icon, Kbd } from '$lib/index.js'
+    import { Tooltip, Button, Badge, Icon } from '$lib/index.js'
 
     let controlledOpen = $state(false)
 </script>
@@ -20,21 +20,15 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="This is a tooltip">
-                {#snippet children({ open })}
-                    <Button variant="outline">Hover me</Button>
-                {/snippet}
+                <Button variant="outline">Hover me</Button>
             </Tooltip>
 
             <Tooltip text="Tooltip for icon button">
-                {#snippet children({ open })}
-                    <Button icon="lucide:settings" square variant="ghost" />
-                {/snippet}
+                <Button icon="lucide:settings" square variant="ghost" />
             </Tooltip>
 
             <Tooltip text="Information tooltip">
-                {#snippet children({ open })}
-                    <Badge label="Hover for info" color="info" />
-                {/snippet}
+                <Badge label="Hover for info" color="info" />
             </Tooltip>
         </div>
     </section>
@@ -49,27 +43,19 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Tooltip text="I appear on top" side="top">
-                {#snippet children({ open })}
-                    <Button variant="soft">Top</Button>
-                {/snippet}
+                <Button variant="soft">Top</Button>
             </Tooltip>
 
             <Tooltip text="I appear on the right" side="right">
-                {#snippet children({ open })}
-                    <Button variant="soft">Right</Button>
-                {/snippet}
+                <Button variant="soft">Right</Button>
             </Tooltip>
 
             <Tooltip text="I appear on the bottom" side="bottom">
-                {#snippet children({ open })}
-                    <Button variant="soft">Bottom</Button>
-                {/snippet}
+                <Button variant="soft">Bottom</Button>
             </Tooltip>
 
             <Tooltip text="I appear on the left" side="left">
-                {#snippet children({ open })}
-                    <Button variant="soft">Left</Button>
-                {/snippet}
+                <Button variant="soft">Left</Button>
             </Tooltip>
         </div>
     </section>
@@ -84,21 +70,15 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Tooltip text="Aligned to start" side="bottom" align="start">
-                {#snippet children({ open })}
-                    <Button variant="outline">Start</Button>
-                {/snippet}
+                <Button variant="outline">Start</Button>
             </Tooltip>
 
             <Tooltip text="Aligned to center" side="bottom" align="center">
-                {#snippet children({ open })}
-                    <Button variant="outline">Center</Button>
-                {/snippet}
+                <Button variant="outline">Center</Button>
             </Tooltip>
 
             <Tooltip text="Aligned to end" side="bottom" align="end">
-                {#snippet children({ open })}
-                    <Button variant="outline">End</Button>
-                {/snippet}
+                <Button variant="outline">End</Button>
             </Tooltip>
         </div>
     </section>
@@ -111,27 +91,19 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Tooltip text="With default arrow" arrow side="top">
-                {#snippet children({ open })}
-                    <Button>Top Arrow</Button>
-                {/snippet}
+                <Button>Top Arrow</Button>
             </Tooltip>
 
             <Tooltip text="Custom arrow size" arrow={{ width: 12, height: 6 }} side="right">
-                {#snippet children({ open })}
-                    <Button>Large Arrow</Button>
-                {/snippet}
+                <Button>Large Arrow</Button>
             </Tooltip>
 
             <Tooltip text="Bottom with arrow" arrow side="bottom">
-                {#snippet children({ open })}
-                    <Button variant="soft">Bottom Arrow</Button>
-                {/snippet}
+                <Button variant="soft">Bottom Arrow</Button>
             </Tooltip>
 
             <Tooltip text="Left with arrow" arrow side="left">
-                {#snippet children({ open })}
-                    <Button variant="soft">Left Arrow</Button>
-                {/snippet}
+                <Button variant="soft">Left Arrow</Button>
             </Tooltip>
         </div>
     </section>
@@ -148,27 +120,19 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="Search" kbds={['meta', 'k']}>
-                {#snippet children({ open })}
-                    <Button icon="lucide:search" variant="outline">Search</Button>
-                {/snippet}
+                <Button icon="lucide:search" variant="outline">Search</Button>
             </Tooltip>
 
             <Tooltip text="Save changes" kbds={['meta', 's']}>
-                {#snippet children({ open })}
-                    <Button icon="lucide:save" variant="soft">Save</Button>
-                {/snippet}
+                <Button icon="lucide:save" variant="soft">Save</Button>
             </Tooltip>
 
             <Tooltip text="Undo action" kbds={['meta', 'z']}>
-                {#snippet children({ open })}
-                    <Button icon="lucide:undo" variant="ghost">Undo</Button>
-                {/snippet}
+                <Button icon="lucide:undo" variant="ghost">Undo</Button>
             </Tooltip>
 
             <Tooltip text="Copy selection" kbds={['meta', 'c']}>
-                {#snippet children({ open })}
-                    <Button icon="lucide:copy" variant="outline">Copy</Button>
-                {/snippet}
+                <Button icon="lucide:copy" variant="outline">Copy</Button>
             </Tooltip>
         </div>
     </section>
@@ -183,21 +147,15 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="Open command palette" kbds={['meta', 'shift', 'p']}>
-                {#snippet children({ open })}
-                    <Button>Command Palette</Button>
-                {/snippet}
+                <Button>Command Palette</Button>
             </Tooltip>
 
             <Tooltip text="Quick switch" kbds={['alt', 'tab']}>
-                {#snippet children({ open })}
-                    <Button variant="soft">Quick Switch</Button>
-                {/snippet}
+                <Button variant="soft">Quick Switch</Button>
             </Tooltip>
 
             <Tooltip text="Force refresh" kbds={['meta', 'shift', 'r']}>
-                {#snippet children({ open })}
-                    <Button icon="lucide:refresh-cw" variant="outline">Hard Refresh</Button>
-                {/snippet}
+                <Button icon="lucide:refresh-cw" variant="outline">Hard Refresh</Button>
             </Tooltip>
         </div>
     </section>
@@ -212,33 +170,23 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="Instant (0ms)" delayDuration={0}>
-                {#snippet children({ open })}
-                    <Button variant="outline">No Delay</Button>
-                {/snippet}
+                <Button variant="outline">No Delay</Button>
             </Tooltip>
 
             <Tooltip text="Fast (100ms)" delayDuration={100}>
-                {#snippet children({ open })}
-                    <Button variant="outline">100ms</Button>
-                {/snippet}
+                <Button variant="outline">100ms</Button>
             </Tooltip>
 
             <Tooltip text="Default (200ms)" delayDuration={200}>
-                {#snippet children({ open })}
-                    <Button variant="outline">200ms (default)</Button>
-                {/snippet}
+                <Button variant="outline">200ms (default)</Button>
             </Tooltip>
 
             <Tooltip text="Slow (500ms)" delayDuration={500}>
-                {#snippet children({ open })}
-                    <Button variant="outline">500ms</Button>
-                {/snippet}
+                <Button variant="outline">500ms</Button>
             </Tooltip>
 
             <Tooltip text="Very slow (1000ms)" delayDuration={1000}>
-                {#snippet children({ open })}
-                    <Button variant="outline">1 second</Button>
-                {/snippet}
+                <Button variant="outline">1 second</Button>
             </Tooltip>
         </div>
     </section>
@@ -253,27 +201,19 @@
             class="flex flex-wrap items-center justify-center gap-8 rounded-lg border border-outline-variant bg-surface-container-low p-12"
         >
             <Tooltip text="No offset" sideOffset={0} arrow>
-                {#snippet children({ open })}
-                    <Button variant="soft">0px</Button>
-                {/snippet}
+                <Button variant="soft">0px</Button>
             </Tooltip>
 
             <Tooltip text="Default offset" sideOffset={8} arrow>
-                {#snippet children({ open })}
-                    <Button variant="soft">8px (default)</Button>
-                {/snippet}
+                <Button variant="soft">8px (default)</Button>
             </Tooltip>
 
             <Tooltip text="Large offset" sideOffset={16} arrow>
-                {#snippet children({ open })}
-                    <Button variant="soft">16px</Button>
-                {/snippet}
+                <Button variant="soft">16px</Button>
             </Tooltip>
 
             <Tooltip text="Extra large offset" sideOffset={24} arrow>
-                {#snippet children({ open })}
-                    <Button variant="soft">24px</Button>
-                {/snippet}
+                <Button variant="soft">24px</Button>
             </Tooltip>
         </div>
     </section>
@@ -288,11 +228,9 @@
             class="flex flex-wrap items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="Controlled tooltip" bind:open={controlledOpen}>
-                {#snippet children({ open })}
-                    <Button variant={controlledOpen ? 'solid' : 'outline'}>
-                        {controlledOpen ? 'Tooltip is open' : 'Hover or click toggle'}
-                    </Button>
-                {/snippet}
+                <Button variant={controlledOpen ? 'solid' : 'outline'}>
+                    {controlledOpen ? 'Tooltip is open' : 'Hover or click toggle'}
+                </Button>
             </Tooltip>
 
             <Button variant="soft" onclick={() => (controlledOpen = !controlledOpen)}>
@@ -315,15 +253,11 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="This won't show" disabled>
-                {#snippet children({ open })}
-                    <Button>Tooltip Disabled</Button>
-                {/snippet}
+                <Button>Tooltip Disabled</Button>
             </Tooltip>
 
             <Tooltip text="This will show">
-                {#snippet children({ open })}
-                    <Button variant="soft">Tooltip Enabled</Button>
-                {/snippet}
+                <Button variant="soft">Tooltip Enabled</Button>
             </Tooltip>
         </div>
     </section>
@@ -338,15 +272,11 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="Rendered in portal (default)" portal>
-                {#snippet children({ open })}
-                    <Button variant="outline">With Portal</Button>
-                {/snippet}
+                <Button variant="outline">With Portal</Button>
             </Tooltip>
 
             <Tooltip text="Rendered inline" portal={false}>
-                {#snippet children({ open })}
-                    <Button variant="outline">Without Portal</Button>
-                {/snippet}
+                <Button variant="outline">Without Portal</Button>
             </Tooltip>
         </div>
     </section>
@@ -361,9 +291,7 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip>
-                {#snippet children({ open })}
-                    <Button variant="soft" icon="lucide:user">User Info</Button>
-                {/snippet}
+                <Button variant="soft" icon="lucide:user">User Info</Button>
                 {#snippet content()}
                     <div class="flex items-center gap-2">
                         <Icon name="lucide:user-circle" size="16" />
@@ -374,9 +302,7 @@
             </Tooltip>
 
             <Tooltip arrow>
-                {#snippet children({ open })}
-                    <Button variant="soft" icon="lucide:info">Details</Button>
-                {/snippet}
+                <Button variant="soft" icon="lucide:info">Details</Button>
                 {#snippet content()}
                     <div class="flex flex-col gap-1">
                         <span class="font-medium">Server Status</span>
@@ -386,9 +312,7 @@
             </Tooltip>
 
             <Tooltip>
-                {#snippet children({ open })}
-                    <Button icon="lucide:palette" variant="outline">Colors</Button>
-                {/snippet}
+                <Button icon="lucide:palette" variant="outline">Colors</Button>
                 {#snippet content()}
                     <div class="flex gap-1">
                         <span class="size-4 rounded-full bg-red-500"></span>
@@ -413,9 +337,7 @@
             class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
         >
             <Tooltip text="You can hover over this tooltip" delayDuration={0}>
-                {#snippet children({ open })}
-                    <Button variant="outline">Hoverable (default)</Button>
-                {/snippet}
+                <Button variant="outline">Hoverable (default)</Button>
             </Tooltip>
 
             <Tooltip
@@ -423,9 +345,7 @@
                 disableHoverableContent
                 delayDuration={0}
             >
-                {#snippet children({ open })}
-                    <Button variant="outline">Not Hoverable</Button>
-                {/snippet}
+                <Button variant="outline">Not Hoverable</Button>
             </Tooltip>
         </div>
     </section>
@@ -445,9 +365,7 @@
                     content: 'bg-primary text-on-primary rounded-full px-4'
                 }}
             >
-                {#snippet children({ open })}
-                    <Button>Primary Style</Button>
-                {/snippet}
+                <Button>Primary Style</Button>
             </Tooltip>
 
             <Tooltip
@@ -457,9 +375,7 @@
                 }}
                 arrow
             >
-                {#snippet children({ open })}
-                    <Button color="error" variant="soft">Error Style</Button>
-                {/snippet}
+                <Button color="error" variant="soft">Error Style</Button>
             </Tooltip>
 
             <Tooltip
@@ -470,9 +386,7 @@
                 }}
                 arrow
             >
-                {#snippet children({ open })}
-                    <Button color="success" variant="soft">Success Style</Button>
-                {/snippet}
+                <Button color="success" variant="soft">Success Style</Button>
             </Tooltip>
 
             <Tooltip
@@ -481,9 +395,7 @@
                     content: 'text-sm px-4 py-2'
                 }}
             >
-                {#snippet children({ open })}
-                    <Button variant="outline">Large Size</Button>
-                {/snippet}
+                <Button variant="outline">Large Size</Button>
             </Tooltip>
         </div>
     </section>
@@ -500,46 +412,30 @@
                 class="flex items-center gap-1 rounded-lg border border-outline-variant bg-surface-container-low p-2"
             >
                 <Tooltip text="Bold" kbds={['meta', 'b']}>
-                    {#snippet children({ open })}
-                        <Button icon="lucide:bold" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:bold" square variant="ghost" size="sm" />
                 </Tooltip>
                 <Tooltip text="Italic" kbds={['meta', 'i']}>
-                    {#snippet children({ open })}
-                        <Button icon="lucide:italic" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:italic" square variant="ghost" size="sm" />
                 </Tooltip>
                 <Tooltip text="Underline" kbds={['meta', 'u']}>
-                    {#snippet children({ open })}
-                        <Button icon="lucide:underline" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:underline" square variant="ghost" size="sm" />
                 </Tooltip>
                 <div class="mx-1 h-6 w-px bg-outline-variant"></div>
                 <Tooltip text="Align Left">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:align-left" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:align-left" square variant="ghost" size="sm" />
                 </Tooltip>
                 <Tooltip text="Align Center">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:align-center" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:align-center" square variant="ghost" size="sm" />
                 </Tooltip>
                 <Tooltip text="Align Right">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:align-right" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:align-right" square variant="ghost" size="sm" />
                 </Tooltip>
                 <div class="mx-1 h-6 w-px bg-outline-variant"></div>
                 <Tooltip text="Insert Link" kbds={['meta', 'k']}>
-                    {#snippet children({ open })}
-                        <Button icon="lucide:link" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:link" square variant="ghost" size="sm" />
                 </Tooltip>
                 <Tooltip text="Insert Image">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:image" square variant="ghost" size="sm" />
-                    {/snippet}
+                    <Button icon="lucide:image" square variant="ghost" size="sm" />
                 </Tooltip>
             </div>
         </div>
@@ -551,24 +447,16 @@
                 class="flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-low p-4"
             >
                 <Tooltip text="Like this post">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:heart" variant="ghost" size="sm">128</Button>
-                    {/snippet}
+                    <Button icon="lucide:heart" variant="ghost" size="sm">128</Button>
                 </Tooltip>
                 <Tooltip text="Leave a comment">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:message-circle" variant="ghost" size="sm">24</Button>
-                    {/snippet}
+                    <Button icon="lucide:message-circle" variant="ghost" size="sm">24</Button>
                 </Tooltip>
                 <Tooltip text="Share this post">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:share-2" variant="ghost" size="sm">Share</Button>
-                    {/snippet}
+                    <Button icon="lucide:share-2" variant="ghost" size="sm">Share</Button>
                 </Tooltip>
                 <Tooltip text="Save to bookmarks">
-                    {#snippet children({ open })}
-                        <Button icon="lucide:bookmark" variant="ghost" size="sm" square />
-                    {/snippet}
+                    <Button icon="lucide:bookmark" variant="ghost" size="sm" square />
                 </Tooltip>
             </div>
         </div>
@@ -580,30 +468,24 @@
                 class="flex items-center gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
             >
                 <Tooltip text="Server is healthy and responding">
-                    {#snippet children({ open })}
-                        <span class="flex items-center gap-2">
-                            <span class="size-3 rounded-full bg-success"></span>
-                            <span class="text-sm">API Server</span>
-                        </span>
-                    {/snippet}
+                    <span class="flex items-center gap-2">
+                        <span class="size-3 rounded-full bg-success"></span>
+                        <span class="text-sm">API Server</span>
+                    </span>
                 </Tooltip>
 
                 <Tooltip text="High CPU usage detected">
-                    {#snippet children({ open })}
-                        <span class="flex items-center gap-2">
-                            <span class="size-3 rounded-full bg-warning"></span>
-                            <span class="text-sm">Worker Node</span>
-                        </span>
-                    {/snippet}
+                    <span class="flex items-center gap-2">
+                        <span class="size-3 rounded-full bg-warning"></span>
+                        <span class="text-sm">Worker Node</span>
+                    </span>
                 </Tooltip>
 
                 <Tooltip text="Service unavailable - investigating">
-                    {#snippet children({ open })}
-                        <span class="flex items-center gap-2">
-                            <span class="size-3 rounded-full bg-error"></span>
-                            <span class="text-sm">Database</span>
-                        </span>
-                    {/snippet}
+                    <span class="flex items-center gap-2">
+                        <span class="size-3 rounded-full bg-error"></span>
+                        <span class="text-sm">Database</span>
+                    </span>
                 </Tooltip>
             </div>
         </div>
@@ -617,20 +499,16 @@
                 <Tooltip
                     text="This is the full title of a very long document that would normally be truncated in the UI"
                 >
-                    {#snippet children({ open })}
-                        <p class="w-64 truncate text-sm">
-                            This is the full title of a very long document that would normally be
-                            truncated in the UI
-                        </p>
-                    {/snippet}
+                    <p class="w-64 truncate text-sm">
+                        This is the full title of a very long document that would normally be
+                        truncated in the UI
+                    </p>
                 </Tooltip>
 
                 <Tooltip text="user@example.com, admin@company.org, support@helpdesk.io">
-                    {#snippet children({ open })}
-                        <p class="w-48 truncate text-sm text-on-surface-variant">
-                            user@example.com, admin@company.org, support@helpdesk.io
-                        </p>
-                    {/snippet}
+                    <p class="w-48 truncate text-sm text-on-surface-variant">
+                        user@example.com, admin@company.org, support@helpdesk.io
+                    </p>
                 </Tooltip>
             </div>
         </div>

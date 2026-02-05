@@ -29,7 +29,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-end gap-4 rounded-lg bg-surface-container-high p-4">
-            {#each [16, 20, 24, 32, 48] as size}
+            {#each [16, 20, 24, 32, 48] as size (size)}
                 <div class="flex flex-col items-center gap-1">
                     <Icon name="lucide:rocket" {size} />
                     <span class="text-xs text-on-surface-variant">{size}px</span>
@@ -87,7 +87,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Different Icon Sets</h2>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
-            {#each [{ name: 'lucide:github', label: 'Lucide' }, { name: 'mdi:github', label: 'MDI' }, { name: 'ph:github-logo', label: 'Phosphor' }, { name: 'tabler:brand-github', label: 'Tabler' }, { name: 'heroicons:code-bracket', label: 'Heroicons' }] as icon}
+            {#each [{ name: 'lucide:github', label: 'Lucide' }, { name: 'mdi:github', label: 'MDI' }, { name: 'ph:github-logo', label: 'Phosphor' }, { name: 'tabler:brand-github', label: 'Tabler' }, { name: 'heroicons:code-bracket', label: 'Heroicons' }] as icon (icon.name)}
                 <div class="flex flex-col items-center gap-1">
                     <Icon name={icon.name} size="24" />
                     <span class="text-xs text-on-surface-variant">{icon.label}</span>

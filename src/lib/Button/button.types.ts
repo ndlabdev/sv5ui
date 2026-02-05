@@ -55,12 +55,6 @@ export type ButtonProps = Button.RootProps & {
     square?: boolean
 
     /**
-     * Truncates overflowing text with an ellipsis.
-     * @default false
-     */
-    truncate?: boolean
-
-    /**
      * Renders the button in icon-only mode without a label.
      * Supports any valid Iconify icon name.
      */

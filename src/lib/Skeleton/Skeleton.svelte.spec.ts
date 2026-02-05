@@ -196,7 +196,7 @@ describe('Skeleton', () => {
         it('should allow aria attributes', async () => {
             const { container } = render(Skeleton, {
                 'aria-label': 'Loading content'
-            } as any)
+            } as Record<string, unknown>)
             const root = page.elementLocator(container.firstElementChild!)
             await expect.element(root).toHaveAttribute('aria-label', 'Loading content')
         })
@@ -204,7 +204,7 @@ describe('Skeleton', () => {
         it('should allow role attribute', async () => {
             const { container } = render(Skeleton, {
                 role: 'status'
-            } as any)
+            } as Record<string, unknown>)
             const root = page.elementLocator(container.firstElementChild!)
             await expect.element(root).toHaveAttribute('role', 'status')
         })

@@ -1,5 +1,20 @@
 <script lang="ts">
-    import { Alert } from '$lib/index.js'
+    import { Alert, type AlertProps } from '$lib/index.js'
+
+    type Color = NonNullable<AlertProps['color']>
+    type Variant = NonNullable<AlertProps['variant']>
+
+    const colors: Color[] = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ]
+    const variants: Variant[] = ['solid', 'outline', 'soft', 'subtle']
 </script>
 
 <div class="space-y-8">
@@ -187,7 +202,7 @@
                         <th class="px-2 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Variant</th
                         >
-                        {#each ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as color}
+                        {#each colors as color (color)}
                             <th
                                 class="px-2 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</th
@@ -196,13 +211,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each ['solid', 'outline', 'soft', 'subtle'] as variant}
+                    {#each variants as variant (variant)}
                         <tr class="border-b border-outline-variant/50">
                             <td
                                 class="px-2 py-3 text-sm font-medium text-on-surface-variant capitalize"
                                 >{variant}</td
                             >
-                            {#each ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as color}
+                            {#each colors as color (color)}
                                 <td class="px-2 py-3">
                                     <Alert {variant} {color} title={color} class="min-w-48" />
                                 </td>

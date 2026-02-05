@@ -441,7 +441,7 @@
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Custom leading</p>
                 <Accordion type="single" items={slotItems}>
-                    {#snippet leading({ item, open })}
+                    {#snippet leading({ open })}
                         <div
                             class="flex size-8 items-center justify-center rounded-full {open
                                 ? 'bg-primary text-on-primary'
@@ -525,7 +525,7 @@
         <div class="rounded-lg bg-surface-container-high p-4">
             <p class="mb-3 text-sm font-medium">Custom content (full control)</p>
             <Accordion type="single" items={slotItems}>
-                {#snippet content({ item, open })}
+                {#snippet content({ item })}
                     <div class="rounded-lg bg-surface-container p-4">
                         <div class="flex items-center gap-3">
                             <div
@@ -896,7 +896,7 @@
                     {:else if item.value === 'activity'}
                         <!-- Activity Timeline UI -->
                         <div class="space-y-3">
-                            {#each [{ time: '2 min ago', text: 'Updated profile picture', icon: 'lucide:image', color: 'text-primary' }, { time: '1 hour ago', text: 'Completed task #123', icon: 'lucide:check-circle', color: 'text-success' }, { time: '3 hours ago', text: 'Added new comment', icon: 'lucide:message-circle', color: 'text-info' }] as activity}
+                            {#each [{ time: '2 min ago', text: 'Updated profile picture', icon: 'lucide:image', color: 'text-primary' }, { time: '1 hour ago', text: 'Completed task #123', icon: 'lucide:check-circle', color: 'text-success' }, { time: '3 hours ago', text: 'Added new comment', icon: 'lucide:message-circle', color: 'text-info' }] as activity (activity.text)}
                                 <div class="flex items-center gap-3">
                                     <div
                                         class="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-container"
@@ -1011,7 +1011,7 @@
                     {:else if item.value === 'gallery'}
                         <!-- Image Gallery UI -->
                         <div class="grid grid-cols-3 gap-2">
-                            {#each Array(6) as _, i}
+                            {#each Array.from({ length: 6 }, (_, i) => i) as i (i)}
                                 <div
                                     class="flex aspect-square items-center justify-center rounded-lg bg-linear-to-br from-primary/20 to-secondary/20"
                                 >

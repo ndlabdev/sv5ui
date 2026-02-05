@@ -43,7 +43,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Colors</h2>
         <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <Chip {color}>
                     <div class="size-10 rounded-lg bg-surface-container-highest"></div>
                 </Chip>
@@ -55,7 +55,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <div class="flex flex-col items-center gap-2">
                     <Chip {size} color="primary">
                         <div class="size-12 rounded-lg bg-surface-container-highest"></div>
@@ -70,7 +70,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Positions</h2>
         <div class="flex flex-wrap items-center gap-8 rounded-lg bg-surface-container-high p-4">
-            {#each positions as position}
+            {#each positions as position (position)}
                 <div class="flex flex-col items-center gap-2">
                     <Chip {position} color="error">
                         <div class="size-12 rounded-lg bg-surface-container-highest"></div>
@@ -124,7 +124,7 @@
             Render chip without positioning, useful for inline indicators.
         </p>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <Chip {color} standalone size="md" />
             {/each}
         </div>
@@ -169,7 +169,7 @@
                         <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Color</th
                         >
-                        {#each positions as position}
+                        {#each positions as position (position)}
                             <th
                                 class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant"
                                 >{position}</th
@@ -178,13 +178,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each colors as color}
+                    {#each colors as color (color)}
                         <tr class="border-b border-outline-variant/50">
                             <td
                                 class="px-3 py-3 text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</td
                             >
-                            {#each positions as position}
+                            {#each positions as position (position)}
                                 <td class="px-3 py-3">
                                     <div class="flex justify-center">
                                         <Chip {color} {position}>

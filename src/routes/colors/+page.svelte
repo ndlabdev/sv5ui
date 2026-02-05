@@ -22,7 +22,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Theme Colors</h2>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <div class="overflow-hidden rounded-lg border border-outline-variant">
                     <div class="bg-{color} text-on-{color} p-4 font-medium capitalize">{color}</div>
                     <div class="bg-{color}-container text-on-{color}-container p-4 text-sm">

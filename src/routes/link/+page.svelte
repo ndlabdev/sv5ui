@@ -25,7 +25,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Colors</h2>
         <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <Link href="/link" {color}>{color}</Link>
             {/each}
         </div>
@@ -67,7 +67,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Disabled</h2>
         <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <Link href="/link" {color} disabled>{color}</Link>
             {/each}
         </div>
@@ -243,7 +243,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each colors as color}
+                    {#each colors as color (color)}
                         <tr class="border-b border-outline-variant/50">
                             <td
                                 class="px-3 py-3 text-sm font-medium text-on-surface-variant capitalize"

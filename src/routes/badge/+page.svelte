@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Badge, Icon } from '$lib/index.js'
+    import { Badge } from '$lib/index.js'
 
     const colors = [
         'primary',
@@ -38,10 +38,10 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Variants</h2>
         <div class="space-y-3 rounded-lg bg-surface-container-high p-4">
-            {#each variants as variant}
+            {#each variants as variant (variant)}
                 <div class="flex flex-wrap items-center gap-2">
                     <span class="w-16 text-sm text-on-surface-variant">{variant}</span>
-                    {#each colors as color}
+                    {#each colors as color (color)}
                         <Badge label={color} {variant} {color} />
                     {/each}
                 </div>
@@ -53,7 +53,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <Badge label={size} {size} />
             {/each}
         </div>
@@ -117,7 +117,7 @@
                         <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Variant</th
                         >
-                        {#each colors as color}
+                        {#each colors as color (color)}
                             <th
                                 class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</th
@@ -126,12 +126,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each variants as variant}
+                    {#each variants as variant (variant)}
                         <tr class="border-b border-outline-variant/50">
                             <td class="px-3 py-3 text-sm font-medium text-on-surface-variant"
                                 >{variant}</td
                             >
-                            {#each colors as color}
+                            {#each colors as color (color)}
                                 <td class="px-3 py-3 text-center">
                                     <Badge label={color} {variant} {color} />
                                 </td>

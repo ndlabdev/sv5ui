@@ -1,5 +1,24 @@
 <script lang="ts">
     import { Alert } from '$lib/index.js'
+
+    const layoutCode =
+        '// src/routes/+layout.svelte\n' +
+        '<script>\n' +
+        "    import 'sv5ui/theme.css'          // Theme with dark mode support\n" +
+        "    import { ModeWatcher } from 'sv5ui' // Dark mode handler\n" +
+        '<' +
+        '/script>\n\n' +
+        '<ModeWatcher />\n' +
+        '<slot />'
+
+    const usageCode =
+        '<script>\n' +
+        "    import { Button, Icon, toggleMode } from 'sv5ui'\n" +
+        '<' +
+        '/script>\n\n' +
+        '<Button label="Click me" />\n' +
+        '<Button variant="outline" color="error" label="Delete" />\n' +
+        '<Button icon="lucide:moon" onclick={toggleMode} square />'
 </script>
 
 <div class="space-y-8">
@@ -25,8 +44,7 @@
             Import theme CSS and ModeWatcher in your root layout:
         </p>
         <div class="rounded-lg bg-surface-container-highest p-4">
-            <pre class="overflow-x-auto text-sm"><code class="text-on-surface"
-                    >{"// src/routes/+layout.svelte\n<script>\n    import 'sv5ui/theme.css'          // Theme with dark mode support\n    import { ModeWatcher } from 'sv5ui' // Dark mode handler\n<\/script>\n\n<ModeWatcher \/>\n<slot \/>"}</code
+            <pre class="overflow-x-auto text-sm"><code class="text-on-surface">{layoutCode}</code
                 ></pre>
         </div>
     </section>
@@ -35,8 +53,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Step 3: Use Components</h2>
         <div class="rounded-lg bg-surface-container-highest p-4">
-            <pre class="overflow-x-auto text-sm"><code class="text-on-surface"
-                    >{'<script>\n    import { Button, Icon, toggleMode } from \'sv5ui\'\n<\/script>\n\n<Button label="Click me" \/>\n<Button variant="outline" color="error" label="Delete" \/>\n<Button icon="lucide:moon" onclick={toggleMode} square \/>'}</code
+            <pre class="overflow-x-auto text-sm"><code class="text-on-surface">{usageCode}</code
                 ></pre>
         </div>
     </section>

@@ -220,7 +220,7 @@
         <p class="text-sm text-on-surface-variant">
             Animations are enabled by default. Set
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >transition={'{'}false{'}'}</code
+                >transition=&#123;false&#125;</code
             >
             to disable.
         </p>
@@ -254,7 +254,7 @@
         <p class="text-sm text-on-surface-variant">
             Hide the close button with <code
                 class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >close={'{'}false{'}'}</code
+                >close=&#123;false&#125;</code
             >.
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
@@ -288,7 +288,7 @@
         <p class="text-sm text-on-surface-variant">
             Hide the overlay with <code
                 class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >overlay={'{'}false{'}'}</code
+                >overlay=&#123;false&#125;</code
             >.
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
@@ -321,7 +321,7 @@
         <h2 class="text-lg font-semibold">Non-Dismissible</h2>
         <p class="text-sm text-on-surface-variant">
             Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >dismissible={'{'}false{'}'}</code
+                >dismissible=&#123;false&#125;</code
             >
             to prevent closing by clicking outside or pressing Escape.
         </p>
@@ -493,7 +493,7 @@
                         Open/close the slideover to see callback logs...
                     </p>
                 {/if}
-                {#each callbackLog as log}
+                {#each callbackLog as log, i (i)}
                     <p class="font-mono text-xs text-on-surface-variant">{log}</p>
                 {/each}
             </div>
@@ -527,7 +527,7 @@
         <p class="text-sm text-on-surface-variant">
             Set
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >portal={'{'}false{'}'}</code
+                >portal=&#123;false&#125;</code
             >
             to render inline instead of being portalled to the body.
         </p>
@@ -666,7 +666,7 @@
                             <div>
                                 <h4 class="mb-3 text-sm font-medium text-on-surface">Category</h4>
                                 <div class="space-y-2">
-                                    {#each ['Electronics', 'Clothing', 'Home & Garden', 'Sports'] as category}
+                                    {#each ['Electronics', 'Clothing', 'Home & Garden', 'Sports'] as category (category)}
                                         <label class="flex items-center gap-2">
                                             <input
                                                 type="checkbox"
@@ -699,7 +699,7 @@
                             <div>
                                 <h4 class="mb-3 text-sm font-medium text-on-surface">Rating</h4>
                                 <div class="space-y-2">
-                                    {#each [4, 3, 2, 1] as stars}
+                                    {#each [4, 3, 2, 1] as stars (stars)}
                                         <label class="flex items-center gap-2">
                                             <input
                                                 type="radio"
@@ -834,7 +834,7 @@
                     />
                     {#snippet body()}
                         <div class="space-y-4">
-                            {#each [{ name: 'Wireless Headphones', price: '$199.99', qty: 1 }, { name: 'USB-C Cable', price: '$19.99', qty: 2 }, { name: 'Phone Case', price: '$29.99', qty: 1 }] as item}
+                            {#each [{ name: 'Wireless Headphones', price: '$199.99', qty: 1 }, { name: 'USB-C Cable', price: '$19.99', qty: 2 }, { name: 'Phone Case', price: '$29.99', qty: 1 }] as item (item.name)}
                                 <div
                                     class="flex items-center gap-3 rounded-lg bg-surface-container p-3"
                                 >
@@ -900,7 +900,7 @@
                     />
                     {#snippet body()}
                         <div class="space-y-3">
-                            {#each [{ icon: 'lucide:package', title: 'Order shipped', desc: 'Your order #1234 has been shipped', time: '2m ago', color: 'text-info' }, { icon: 'lucide:user-plus', title: 'New follower', desc: 'John Doe started following you', time: '1h ago', color: 'text-primary' }, { icon: 'lucide:message-circle', title: 'New comment', desc: 'Sarah commented on your post', time: '3h ago', color: 'text-success' }, { icon: 'lucide:heart', title: 'Post liked', desc: 'Your post received 100 likes', time: '5h ago', color: 'text-error' }, { icon: 'lucide:calendar', title: 'Event reminder', desc: 'Team meeting in 30 minutes', time: '1d ago', color: 'text-warning' }] as notif}
+                            {#each [{ icon: 'lucide:package', title: 'Order shipped', desc: 'Your order #1234 has been shipped', time: '2m ago', color: 'text-info' }, { icon: 'lucide:user-plus', title: 'New follower', desc: 'John Doe started following you', time: '1h ago', color: 'text-primary' }, { icon: 'lucide:message-circle', title: 'New comment', desc: 'Sarah commented on your post', time: '3h ago', color: 'text-success' }, { icon: 'lucide:heart', title: 'Post liked', desc: 'Your post received 100 likes', time: '5h ago', color: 'text-error' }, { icon: 'lucide:calendar', title: 'Event reminder', desc: 'Team meeting in 30 minutes', time: '1d ago', color: 'text-warning' }] as notif (notif.title)}
                                 <div class="flex gap-3 rounded-lg bg-surface-container p-3">
                                     <div
                                         class={`flex size-10 shrink-0 items-center justify-center rounded-full bg-surface-container-highest ${notif.color}`}

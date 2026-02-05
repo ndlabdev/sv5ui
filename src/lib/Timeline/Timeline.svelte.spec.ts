@@ -504,7 +504,7 @@ describe('Timeline', () => {
             const { container } = render(Timeline, {
                 items: basicItems,
                 'data-testid': 'timeline-1'
-            } as any)
+            } as Record<string, unknown>)
             expect(getRoot(container).getAttribute('data-testid')).toBe('timeline-1')
         })
     })

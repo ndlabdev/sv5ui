@@ -34,7 +34,7 @@
                         <th class="px-2 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Variant</th
                         >
-                        {#each colors as color}
+                        {#each colors as color (color)}
                             <th
                                 class="px-2 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</th
@@ -43,13 +43,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each variants as variant}
+                    {#each variants as variant (variant)}
                         <tr class="border-b border-outline-variant/50">
                             <td
                                 class="px-2 py-3 text-sm font-medium text-on-surface-variant capitalize"
                                 >{variant}</td
                             >
-                            {#each colors as color}
+                            {#each colors as color (color)}
                                 <td class="px-2 py-3 text-center">
                                     <Button {variant} {color} label="Button" />
                                 </td>
@@ -65,7 +65,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-end gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <Button variant="solid" color="primary" {size} label={size.toUpperCase()} />
             {/each}
         </div>
@@ -97,7 +97,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Icon Only (Square)</h2>
         <div class="flex flex-wrap items-end gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <Button variant="solid" color="primary" {size} icon="lucide:plus" square />
             {/each}
             <span class="mx-2 text-on-surface-variant">|</span>
@@ -195,7 +195,7 @@
 
         <!-- Avatar sizes across button sizes -->
         <div class="flex flex-wrap items-end gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <Button
                     variant="soft"
                     color="primary"

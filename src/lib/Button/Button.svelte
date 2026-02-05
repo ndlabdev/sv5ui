@@ -27,7 +27,6 @@
         disabled = false,
         block = false,
         square = false,
-        truncate = false,
         icon,
         leadingIcon,
         trailingIcon,

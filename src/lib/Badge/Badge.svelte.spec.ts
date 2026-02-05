@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
-import Badge from './Badge.svelte'
+import Badge, { type Props } from './Badge.svelte'
 
 describe('Badge', () => {
     // Helpers
@@ -344,7 +344,10 @@ describe('Badge', () => {
         })
 
         it('should apply data attributes', () => {
-            const { container } = render(Badge, { label: 'Test', 'data-testid': 'badge-1' } as any)
+            const { container } = render(Badge, {
+                label: 'Test',
+                'data-testid': 'badge-1'
+            } as Props & { 'data-testid': string })
             expect(getRoot(container).getAttribute('data-testid')).toBe('badge-1')
         })
     })

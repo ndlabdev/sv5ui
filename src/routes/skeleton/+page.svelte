@@ -104,7 +104,7 @@
         <h2 class="text-lg font-semibold">Loading List</h2>
         <Card>
             <div class="space-y-4">
-                {#each Array(4) as _, i (i)}
+                {#each Array.from({ length: 4 }, (_, i) => i) as i (i)}
                     <div
                         class="flex items-center gap-3 border-b border-outline-variant pb-4 last:border-0 last:pb-0"
                     >
@@ -155,7 +155,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Loading Dashboard Widgets</h2>
         <div class="grid gap-4 md:grid-cols-3">
-            {#each Array(3) as _, i (i)}
+            {#each Array.from({ length: 3 }, (_, i) => i) as i (i)}
                 <Card>
                     <div class="space-y-3">
                         <div class="flex items-center justify-between">

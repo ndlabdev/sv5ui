@@ -67,7 +67,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Colors</h2>
         <div class="space-y-3 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <div class="flex items-center gap-3">
                     <span class="w-20 text-sm text-on-surface-variant capitalize">{color}</span>
                     <Progress {color} value={70} class="flex-1" />
@@ -80,7 +80,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <div class="flex items-center gap-3">
                     <span class="w-12 text-sm text-on-surface-variant">{size}</span>
                     <Progress {size} value={60} class="flex-1" />
@@ -122,7 +122,7 @@
             Different animation styles for the indeterminate state.
         </p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each animations as animation}
+            {#each animations as animation (animation)}
                 <div class="flex items-center gap-3">
                     <span class="w-32 text-sm text-on-surface-variant">{animation}</span>
                     <Progress {animation} class="flex-1" />
@@ -153,7 +153,7 @@
                 </div>
                 <span class="text-xs text-on-surface-variant">loading</span>
             </div>
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <div class="flex flex-col items-center gap-2">
                     <div class="h-32">
                         <Progress value={60} orientation="vertical" {size} />
@@ -258,7 +258,7 @@
                         <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Color</th
                         >
-                        {#each sizes as size}
+                        {#each sizes as size (size)}
                             <th
                                 class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant"
                                 >{size}</th
@@ -267,13 +267,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each colors as color}
+                    {#each colors as color (color)}
                         <tr class="border-b border-outline-variant/50">
                             <td
                                 class="px-3 py-3 text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</td
                             >
-                            {#each sizes as size}
+                            {#each sizes as size (size)}
                                 <td class="px-3 py-3">
                                     <Progress {color} {size} value={65} />
                                 </td>

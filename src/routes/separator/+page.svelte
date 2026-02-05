@@ -37,7 +37,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Colors</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color}
+            {#each colors as color (color)}
                 <Separator {color} label={color} />
             {/each}
         </div>
@@ -47,7 +47,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size}
+            {#each sizes as size (size)}
                 <Separator {size} color="primary" label={size} />
             {/each}
         </div>
@@ -57,7 +57,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Types</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each types as type}
+            {#each types as type (type)}
                 <Separator {type} size="sm" color="primary" label={type} />
             {/each}
         </div>
@@ -148,7 +148,7 @@
                         <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
                             >Color</th
                         >
-                        {#each sizes as size}
+                        {#each sizes as size (size)}
                             <th
                                 class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
                                 >{size}</th
@@ -157,13 +157,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each colors as color}
+                    {#each colors as color (color)}
                         <tr class="border-b border-outline-variant/50">
                             <td
                                 class="px-3 py-3 text-sm font-medium text-on-surface-variant capitalize"
                                 >{color}</td
                             >
-                            {#each sizes as size}
+                            {#each sizes as size (size)}
                                 <td class="px-3 py-3">
                                     <div class="w-24">
                                         <Separator {color} {size} />

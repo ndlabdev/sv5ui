@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Breadcrumb, Icon } from '$lib/index.js'
+    import { Breadcrumb, Icon, Link } from '$lib/index.js'
 </script>
 
 <div class="space-y-12">
@@ -180,15 +180,16 @@
                             {crumb.label}
                         </span>
                     {:else}
-                        <a
-                            href={crumb.href}
+                        <Link
+                            href={crumb.href as string}
+                            raw
                             class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-on-surface-variant transition-colors hover:bg-surface-container-high"
                         >
                             {#if crumb.icon}
                                 <Icon name={crumb.icon} size="14" />
                             {/if}
                             {crumb.label}
-                        </a>
+                        </Link>
                     {/if}
                 {/snippet}
             </Breadcrumb>

@@ -97,7 +97,7 @@
             onRelease,
             onClose
         }
-        if (snapPoints && fadeFromIndex != null) {
+        if (snapPoints && fadeFromIndex !== null) {
             return { ...base, snapPoints, fadeFromIndex }
         }
         if (snapPoints) {
