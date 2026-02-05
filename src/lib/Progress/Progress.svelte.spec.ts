@@ -5,8 +5,10 @@ import Progress from './Progress.svelte'
 describe('Progress', () => {
     // Helpers
     const getRoot = (container: Element) => container.firstElementChild as HTMLElement
-    const getBase = (container: Element) => getRoot(container).querySelector('[class*="overflow-hidden"]') as HTMLElement
-    const getIndicator = (container: Element) => getBase(container)?.firstElementChild as HTMLElement
+    const getBase = (container: Element) =>
+        getRoot(container).querySelector('[class*="overflow-hidden"]') as HTMLElement
+    const getIndicator = (container: Element) =>
+        getBase(container)?.firstElementChild as HTMLElement
 
     // ==================== RENDERING ====================
 
@@ -160,7 +162,11 @@ describe('Progress', () => {
         })
 
         it('should apply width for vertical sizes', () => {
-            const { container } = render(Progress, { value: 50, orientation: 'vertical', size: 'md' })
+            const { container } = render(Progress, {
+                value: 50,
+                orientation: 'vertical',
+                size: 'md'
+            })
             expect(getBase(container).className).toContain('w-2')
         })
 
@@ -181,7 +187,11 @@ describe('Progress', () => {
         })
 
         it('should invert vertical direction', () => {
-            const { container } = render(Progress, { value: 75, orientation: 'vertical', inverted: true })
+            const { container } = render(Progress, {
+                value: 75,
+                orientation: 'vertical',
+                inverted: true
+            })
             const indicator = getIndicator(container)
             expect(indicator.style.transform).toContain('translateY(-25%)')
         })
@@ -220,7 +230,10 @@ describe('Progress', () => {
 
     describe('steps', () => {
         it('should render steps when max is array', () => {
-            const { container } = render(Progress, { value: 1, max: ['Step 1', 'Step 2', 'Step 3'] })
+            const { container } = render(Progress, {
+                value: 1,
+                max: ['Step 1', 'Step 2', 'Step 3']
+            })
             expect(container.textContent).toContain('Step 1')
             expect(container.textContent).toContain('Step 2')
             expect(container.textContent).toContain('Step 3')
@@ -299,12 +312,19 @@ describe('Progress', () => {
         })
 
         it('should apply ui.indicator class', () => {
-            const { container } = render(Progress, { value: 50, ui: { indicator: 'custom-indicator' } })
+            const { container } = render(Progress, {
+                value: 50,
+                ui: { indicator: 'custom-indicator' }
+            })
             expect(getIndicator(container).className).toContain('custom-indicator')
         })
 
         it('should apply ui.status class', () => {
-            const { container } = render(Progress, { value: 50, status: true, ui: { status: 'custom-status' } })
+            const { container } = render(Progress, {
+                value: 50,
+                status: true,
+                ui: { status: 'custom-status' }
+            })
             expect(container.querySelector('.custom-status')).not.toBeNull()
         })
     })

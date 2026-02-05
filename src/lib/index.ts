@@ -22,8 +22,8 @@ export * from './Modal/index.js'
 export * from './Accordion/index.js'
 export * from './Slideover/index.js'
 export * from './Popover/index.js'
+export * from './Breadcrumb/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
 export type { UIConfig } from './config.js'
-

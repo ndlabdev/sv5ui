@@ -62,7 +62,9 @@
         container: variantSlots.container({ class: [config.slots.container, ui?.container] }),
         header: variantSlots.header({ class: [config.slots.header, ui?.header] }),
         title: variantSlots.title({ class: [config.slots.title, ui?.title] }),
-        description: variantSlots.description({ class: [config.slots.description, ui?.description] }),
+        description: variantSlots.description({
+            class: [config.slots.description, ui?.description]
+        }),
         body: variantSlots.body({ class: [config.slots.body, ui?.body] }),
         footer: variantSlots.footer({ class: [config.slots.footer, ui?.footer] })
     })
@@ -95,7 +97,7 @@
             onRelease,
             onClose
         }
-        if (snapPoints && fadeFromIndex != null) {
+        if (snapPoints && fadeFromIndex !== null) {
             return { ...base, snapPoints, fadeFromIndex }
         }
         if (snapPoints) {

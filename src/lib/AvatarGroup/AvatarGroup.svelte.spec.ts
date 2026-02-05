@@ -68,7 +68,7 @@ describe('AvatarGroup', () => {
         it('should show overflow indicator with correct count', async () => {
             const { container } = render(AvatarGroup, { avatars, max: 2 })
             const fallbacks = container.querySelectorAll('[data-avatar-fallback]')
-            const overflowEl = Array.from(fallbacks).find(el => el.textContent?.startsWith('+'))
+            const overflowEl = Array.from(fallbacks).find((el) => el.textContent?.startsWith('+'))
             expect(overflowEl).not.toBeNull()
             expect(overflowEl!.textContent).toBe('+3')
         })
@@ -76,7 +76,7 @@ describe('AvatarGroup', () => {
         it('should not show overflow when max >= avatars count', async () => {
             const { container } = render(AvatarGroup, { avatars, max: 5 })
             const fallbacks = container.querySelectorAll('[data-avatar-fallback]')
-            const overflowEl = Array.from(fallbacks).find(el => el.textContent?.startsWith('+'))
+            const overflowEl = Array.from(fallbacks).find((el) => el.textContent?.startsWith('+'))
             expect(overflowEl).toBeUndefined()
         })
 

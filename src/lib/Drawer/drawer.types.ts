@@ -1,10 +1,7 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { DrawerSlots } from './drawer.variants.js'
-import type {
-    DrawerDirection,
-    DrawerRootPropsWithoutHTML
-} from 'vaul-svelte'
+import type { DrawerDirection, DrawerRootPropsWithoutHTML } from 'vaul-svelte'
 
 /**
  * Props inherited from vaul-svelte's DrawerRootPropsWithoutHTML.

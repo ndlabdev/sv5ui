@@ -47,7 +47,9 @@
         }
     })
 
-    const activeIndex = $derived(value !== undefined ? items.findIndex((item) => item.value === value) : -1)
+    const activeIndex = $derived(
+        value !== undefined ? items.findIndex((item) => item.value === value) : -1
+    )
 
     function getState(index: number): TimelineItemState {
         if (activeIndex === -1) return 'pending'
@@ -66,7 +68,7 @@
                 {:else}
                     <div class={classes.indicator}>
                         {#if item.avatar}
-                            <Avatar {...item.avatar} size={size} />
+                            <Avatar {...item.avatar} {size} />
                         {:else if item.icon}
                             <Icon name={item.icon} />
                         {/if}

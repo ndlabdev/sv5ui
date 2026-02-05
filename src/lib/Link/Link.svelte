@@ -20,7 +20,11 @@
         }
     }
 
-    function isQueryMatch(linkQuery: URLSearchParams, currentQuery: URLSearchParams, mode: boolean | 'partial'): boolean {
+    function isQueryMatch(
+        linkQuery: URLSearchParams,
+        currentQuery: URLSearchParams,
+        mode: boolean | 'partial'
+    ): boolean {
         if (mode === false) return true
         if (mode === 'partial') {
             for (const [key, value] of linkQuery) {
@@ -37,9 +41,7 @@
         const link = linkPath.replace(/\/$/, '') || '/'
         const current = currentPath.replace(/\/$/, '') || '/'
 
-        return link === '/'
-            ? current === '/'
-            : current === link || current.startsWith(link + '/')
+        return link === '/' ? current === '/' : current === link || current.startsWith(link + '/')
     }
 </script>
 
@@ -71,7 +73,8 @@
     }: Props = $props()
 
     const isExternal = $derived(
-        external ?? (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'))
+        external ??
+            (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'))
     )
 
     const resolvedTarget = $derived(target ?? (isExternal ? '_blank' : undefined))
@@ -103,6 +106,7 @@
     const ariaCurrent = $derived(isActive && exact ? ('page' as const) : undefined)
 </script>
 
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a
     href={disabled ? undefined : href}
     class={baseClass}
@@ -113,5 +117,6 @@
     tabindex={disabled ? -1 : undefined}
     {...restProps}
 >
+    <!-- eslint-enable svelte/no-navigation-without-resolve -->
     {@render children?.()}
 </a>

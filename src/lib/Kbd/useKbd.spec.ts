@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { isMac, resolveKey, resolveShortcut, formatShortcut, kbdKeysMap, kbdKeysPlatformMap, parseShortcutBinding, matchesShortcut, normalizeKey } from './useKbd.svelte.js'
+import {
+    isMac,
+    resolveKey,
+    resolveShortcut,
+    formatShortcut,
+    kbdKeysMap,
+    kbdKeysPlatformMap,
+    parseShortcutBinding,
+    matchesShortcut,
+    normalizeKey
+} from './useKbd.svelte.js'
 
 describe('Kbd utilities', () => {
     describe('resolveKey', () => {
@@ -159,8 +169,23 @@ describe('Kbd utilities', () => {
     })
 
     describe('matchesShortcut', () => {
-        const createKeyboardEvent = (key: string, modifiers: Partial<{ ctrlKey: boolean; shiftKey: boolean; altKey: boolean; metaKey: boolean }> = {}) =>
-            ({ key, ctrlKey: false, shiftKey: false, altKey: false, metaKey: false, ...modifiers }) as KeyboardEvent
+        const createKeyboardEvent = (
+            key: string,
+            modifiers: Partial<{
+                ctrlKey: boolean
+                shiftKey: boolean
+                altKey: boolean
+                metaKey: boolean
+            }> = {}
+        ) =>
+            ({
+                key,
+                ctrlKey: false,
+                shiftKey: false,
+                altKey: false,
+                metaKey: false,
+                ...modifiers
+            }) as KeyboardEvent
 
         it('should match a simple key', () => {
             const binding = parseShortcutBinding('escape')
@@ -179,17 +204,29 @@ describe('Kbd utilities', () => {
 
         it('should not match with extra modifiers (strict)', () => {
             const binding = parseShortcutBinding('ctrl+k')
-            expect(matchesShortcut(createKeyboardEvent('k', { ctrlKey: true, shiftKey: true }), binding)).toBe(false)
+            expect(
+                matchesShortcut(
+                    createKeyboardEvent('k', { ctrlKey: true, shiftKey: true }),
+                    binding
+                )
+            ).toBe(false)
         })
 
         it('should not match wrong key', () => {
             const binding = parseShortcutBinding('ctrl+k')
-            expect(matchesShortcut(createKeyboardEvent('j', { ctrlKey: true }), binding)).toBe(false)
+            expect(matchesShortcut(createKeyboardEvent('j', { ctrlKey: true }), binding)).toBe(
+                false
+            )
         })
 
         it('should match complex modifier combos', () => {
             const binding = parseShortcutBinding('ctrl+shift+alt+k')
-            expect(matchesShortcut(createKeyboardEvent('k', { ctrlKey: true, shiftKey: true, altKey: true }), binding)).toBe(true)
+            expect(
+                matchesShortcut(
+                    createKeyboardEvent('k', { ctrlKey: true, shiftKey: true, altKey: true }),
+                    binding
+                )
+            ).toBe(true)
         })
 
         it('should match meta key', () => {

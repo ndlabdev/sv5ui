@@ -7,12 +7,7 @@ import type {
     PopoverArrowPropsWithoutHTML
 } from 'bits-ui'
 
-type RootProps = Pick<
-    PopoverRootPropsWithoutHTML,
-    | 'open'
-    | 'onOpenChange'
-    | 'onOpenChangeComplete'
->
+type RootProps = Pick<PopoverRootPropsWithoutHTML, 'open' | 'onOpenChange' | 'onOpenChangeComplete'>
 
 type ContentProps = Pick<
     PopoverContentPropsWithoutHTML,

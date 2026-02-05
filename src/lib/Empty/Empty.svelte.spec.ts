@@ -159,7 +159,15 @@ describe('Empty', () => {
     // ==================== COLORS ====================
 
     describe('colors', () => {
-        const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
+        const colors = [
+            'primary',
+            'secondary',
+            'tertiary',
+            'success',
+            'warning',
+            'error',
+            'info'
+        ] as const
 
         for (const color of colors) {
             it(`should apply ${color} color classes`, async () => {
@@ -240,10 +248,7 @@ describe('Empty', () => {
         it('should render action buttons', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                actions: [
-                    { label: 'Action 1' },
-                    { label: 'Action 2' }
-                ]
+                actions: [{ label: 'Action 1' }, { label: 'Action 2' }]
             })
             expect(container.textContent).toContain('Action 1')
             expect(container.textContent).toContain('Action 2')
@@ -252,11 +257,7 @@ describe('Empty', () => {
         it('should render correct number of action buttons', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                actions: [
-                    { label: 'A' },
-                    { label: 'B' },
-                    { label: 'C' }
-                ]
+                actions: [{ label: 'A' }, { label: 'B' }, { label: 'C' }]
             })
             const buttons = container.querySelectorAll('button')
             expect(buttons.length).toBe(3)
@@ -390,9 +391,7 @@ describe('Empty', () => {
                 icon: 'lucide:inbox',
                 title: 'No messages',
                 description: 'You have no messages yet.',
-                actions: [
-                    { label: 'New Message', leadingIcon: 'lucide:plus' }
-                ]
+                actions: [{ label: 'New Message', leadingIcon: 'lucide:plus' }]
             })
 
             expect(container.textContent).toContain('No messages')
@@ -435,9 +434,7 @@ describe('Empty', () => {
                 avatar: { alt: 'User' },
                 title: 'No notifications',
                 description: 'All caught up!',
-                actions: [
-                    { label: 'Settings' }
-                ]
+                actions: [{ label: 'Settings' }]
             })
 
             const avatar = container.querySelector('[data-avatar-root]')

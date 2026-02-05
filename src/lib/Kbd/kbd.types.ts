@@ -10,7 +10,9 @@ export interface UseKbdOptions {
      * @example { 'ctrl+k': () => openSearch(), 'escape': () => close() }
      * @example () => mode === 'edit' ? editShortcuts : viewShortcuts
      */
-    shortcuts?: Record<string, KeyboardShortcutCallback> | (() => Record<string, KeyboardShortcutCallback>)
+    shortcuts?:
+        | Record<string, KeyboardShortcutCallback>
+        | (() => Record<string, KeyboardShortcutCallback>)
 
     /**
      * Target element to attach listeners to. Supports getter for reactivity.

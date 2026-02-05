@@ -4,7 +4,8 @@ import Separator from './Separator.svelte'
 
 describe('Separator', () => {
     // Helper to get border element
-    const getBorder = (container: Element) => container.firstElementChild?.firstElementChild as HTMLElement
+    const getBorder = (container: Element) =>
+        container.firstElementChild?.firstElementChild as HTMLElement
 
     // ==================== RENDERING ====================
 
@@ -197,7 +198,10 @@ describe('Separator', () => {
         })
 
         it('should apply ui.label class', () => {
-            const { container } = render(Separator, { label: 'Test', ui: { label: 'custom-label' } })
+            const { container } = render(Separator, {
+                label: 'Test',
+                ui: { label: 'custom-label' }
+            })
             expect(container.querySelector('.custom-label')).not.toBeNull()
         })
     })

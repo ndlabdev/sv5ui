@@ -41,25 +41,77 @@ export const kbdVariants = tv({
         { color: 'warning', variant: 'outline', class: 'ring-warning/50 text-warning' },
         { color: 'error', variant: 'outline', class: 'ring-error/50 text-error' },
         { color: 'info', variant: 'outline', class: 'ring-info/50 text-info' },
-        { color: 'surface', variant: 'outline', class: 'ring-outline-variant text-on-surface-variant' },
+        {
+            color: 'surface',
+            variant: 'outline',
+            class: 'ring-outline-variant text-on-surface-variant'
+        },
 
         // Soft variants
-        { color: 'primary', variant: 'soft', class: 'bg-primary-container text-on-primary-container' },
-        { color: 'secondary', variant: 'soft', class: 'bg-secondary-container text-on-secondary-container' },
-        { color: 'success', variant: 'soft', class: 'bg-success-container text-on-success-container' },
-        { color: 'warning', variant: 'soft', class: 'bg-warning-container text-on-warning-container' },
+        {
+            color: 'primary',
+            variant: 'soft',
+            class: 'bg-primary-container text-on-primary-container'
+        },
+        {
+            color: 'secondary',
+            variant: 'soft',
+            class: 'bg-secondary-container text-on-secondary-container'
+        },
+        {
+            color: 'success',
+            variant: 'soft',
+            class: 'bg-success-container text-on-success-container'
+        },
+        {
+            color: 'warning',
+            variant: 'soft',
+            class: 'bg-warning-container text-on-warning-container'
+        },
         { color: 'error', variant: 'soft', class: 'bg-error-container text-on-error-container' },
         { color: 'info', variant: 'soft', class: 'bg-info-container text-on-info-container' },
-        { color: 'surface', variant: 'soft', class: 'bg-surface-container-highest text-on-surface' },
+        {
+            color: 'surface',
+            variant: 'soft',
+            class: 'bg-surface-container-highest text-on-surface'
+        },
 
         // Subtle variants
-        { color: 'primary', variant: 'subtle', class: 'ring-primary/25 bg-primary-container text-on-primary-container' },
-        { color: 'secondary', variant: 'subtle', class: 'ring-secondary/25 bg-secondary-container text-on-secondary-container' },
-        { color: 'success', variant: 'subtle', class: 'ring-success/25 bg-success-container text-on-success-container' },
-        { color: 'warning', variant: 'subtle', class: 'ring-warning/25 bg-warning-container text-on-warning-container' },
-        { color: 'error', variant: 'subtle', class: 'ring-error/25 bg-error-container text-on-error-container' },
-        { color: 'info', variant: 'subtle', class: 'ring-info/25 bg-info-container text-on-info-container' },
-        { color: 'surface', variant: 'subtle', class: 'ring-outline-variant bg-surface-container-highest text-on-surface' }
+        {
+            color: 'primary',
+            variant: 'subtle',
+            class: 'ring-primary/25 bg-primary-container text-on-primary-container'
+        },
+        {
+            color: 'secondary',
+            variant: 'subtle',
+            class: 'ring-secondary/25 bg-secondary-container text-on-secondary-container'
+        },
+        {
+            color: 'success',
+            variant: 'subtle',
+            class: 'ring-success/25 bg-success-container text-on-success-container'
+        },
+        {
+            color: 'warning',
+            variant: 'subtle',
+            class: 'ring-warning/25 bg-warning-container text-on-warning-container'
+        },
+        {
+            color: 'error',
+            variant: 'subtle',
+            class: 'ring-error/25 bg-error-container text-on-error-container'
+        },
+        {
+            color: 'info',
+            variant: 'subtle',
+            class: 'ring-info/25 bg-info-container text-on-info-container'
+        },
+        {
+            color: 'surface',
+            variant: 'subtle',
+            class: 'ring-outline-variant bg-surface-container-highest text-on-surface'
+        }
     ],
     defaultVariants: {
         color: 'surface',

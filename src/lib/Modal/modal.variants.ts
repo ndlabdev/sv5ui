@@ -3,7 +3,8 @@ import { tv, type VariantProps } from 'tailwind-variants'
 export const modalVariants = tv({
     slots: {
         overlay: 'fixed inset-0 z-50',
-        content: 'z-50 bg-surface-container-low divide-y divide-outline-variant flex flex-col focus:outline-none',
+        content:
+            'z-50 bg-surface-container-low divide-y divide-outline-variant flex flex-col focus:outline-none',
         header: 'flex items-center gap-1.5 p-4 sm:px-6 min-h-16',
         wrapper: '',
         body: 'flex-1 p-4 sm:p-6',
@@ -15,8 +16,10 @@ export const modalVariants = tv({
     variants: {
         transition: {
             true: {
-                overlay: 'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
-                content: 'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)]'
+                overlay:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                content:
+                    'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)]'
             }
         },
         fullscreen: {
@@ -24,7 +27,8 @@ export const modalVariants = tv({
                 content: 'inset-0'
             },
             false: {
-                content: 'w-[calc(100vw-2rem)] max-w-lg rounded-lg shadow-lg ring ring-outline-variant'
+                content:
+                    'w-[calc(100vw-2rem)] max-w-lg rounded-lg shadow-lg ring ring-outline-variant'
             }
         },
         overlay: {
@@ -55,7 +59,8 @@ export const modalVariants = tv({
             scrollable: false,
             fullscreen: false,
             class: {
-                content: 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden'
+                content:
+                    'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden'
             }
         }
     ],

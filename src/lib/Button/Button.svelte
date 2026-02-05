@@ -27,7 +27,6 @@
         disabled = false,
         block = false,
         square = false,
-        truncate = false,
         icon,
         leadingIcon,
         trailingIcon,
@@ -45,10 +44,12 @@
     const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
 
     const leadingIconName = $derived(
-        loading && isLeading ? loadingIcon : (leadingIcon || (isLeading && !trailing ? icon : undefined))
+        loading && isLeading
+            ? loadingIcon
+            : leadingIcon || (isLeading && !trailing ? icon : undefined)
     )
     const trailingIconName = $derived(
-        loading && isTrailing ? loadingIcon : (trailingIcon || (trailing ? icon : undefined))
+        loading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
     )
 
     const classes = $derived.by(() => {
@@ -66,19 +67,18 @@
             base: slots.base({ class: [config.slots.base, className, ui?.base] }),
             label: slots.label({ class: [config.slots.label, ui?.label] }),
             leadingIcon: slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }),
-            trailingIcon: slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }),
-            leadingAvatar: slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }),
+            trailingIcon: slots.trailingIcon({
+                class: [config.slots.trailingIcon, ui?.trailingIcon]
+            }),
+            leadingAvatar: slots.leadingAvatar({
+                class: [config.slots.leadingAvatar, ui?.leadingAvatar]
+            }),
             leadingAvatarSize: slots.leadingAvatarSize() as AvatarSize
         }
     })
 </script>
 
-<Button.Root
-    bind:ref
-    class={classes.base}
-    disabled={disabled || loading}
-    {...restProps}
->
+<Button.Root bind:ref class={classes.base} disabled={disabled || loading} {...restProps}>
     {#if leadingSlot}
         {@render leadingSlot()}
     {:else if isLeading && leadingIconName}

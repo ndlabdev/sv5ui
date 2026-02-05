@@ -117,49 +117,62 @@ export const progressVariants = tv({
             orientation: 'horizontal',
             animation: 'carousel',
             class: {
-                indicator: 'data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]'
+                indicator:
+                    'data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'vertical',
             animation: 'carousel',
             class: {
-                indicator: 'data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]'
+                indicator:
+                    'data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'horizontal',
             animation: 'carousel-inverse',
             class: {
-                indicator: 'data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]'
+                indicator:
+                    'data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'vertical',
             animation: 'carousel-inverse',
             class: {
-                indicator: 'data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]'
+                indicator:
+                    'data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'horizontal',
             animation: 'swing',
             class: {
                 indicator: 'data-[state=indeterminate]:animate-[swing_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'vertical',
             animation: 'swing',
             class: {
-                indicator: 'data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]'
+                indicator:
+                    'data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'horizontal',
             animation: 'elastic',
             class: {
                 indicator: 'data-[state=indeterminate]:animate-[elastic_2s_ease-in-out_infinite]'
             }
-        }, {
+        },
+        {
             orientation: 'vertical',
             animation: 'elastic',
             class: {
-                indicator: 'data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]'
+                indicator:
+                    'data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]'
             }
         },
         {
@@ -169,14 +182,15 @@ export const progressVariants = tv({
                 step: 'text-start',
                 status: 'flex-row-reverse'
             }
-        }, {
+        },
+        {
             inverted: true,
             orientation: 'vertical',
             class: {
                 steps: 'items-start',
                 status: 'flex-col-reverse'
             }
-        } 
+        }
     ],
     defaultVariants: {
         animation: 'carousel',

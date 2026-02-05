@@ -52,7 +52,12 @@ describe('Drawer', () => {
         })
 
         it('should render description text', async () => {
-            render(Drawer, { open: true, title: 'Title', description: 'My Description', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Title',
+                description: 'My Description',
+                modal: false
+            })
             await expect.element(page.getByText('My Description')).toBeVisible()
         })
 
@@ -67,9 +72,12 @@ describe('Drawer', () => {
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
-                const titleEl = content!.querySelector('[data-vaul-drawer-title]') as HTMLElement
-                    ?? content!.querySelector('h2') as HTMLElement
-                    ?? Array.from(content!.querySelectorAll('*')).find(el => el.textContent?.trim() === 'Styled Title') as HTMLElement
+                const titleEl =
+                    (content!.querySelector('[data-vaul-drawer-title]') as HTMLElement) ??
+                    (content!.querySelector('h2') as HTMLElement) ??
+                    (Array.from(content!.querySelectorAll('*')).find(
+                        (el) => el.textContent?.trim() === 'Styled Title'
+                    ) as HTMLElement)
                 expect(titleEl).not.toBeNull()
             })
         })
@@ -138,7 +146,13 @@ describe('Drawer', () => {
         })
 
         it('should apply bottom inset positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: true, direction: 'bottom', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: true,
+                direction: 'bottom',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -148,7 +162,13 @@ describe('Drawer', () => {
         })
 
         it('should apply top inset positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: true, direction: 'top', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: true,
+                direction: 'top',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -158,7 +178,13 @@ describe('Drawer', () => {
         })
 
         it('should apply right inset positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: true, direction: 'right', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: true,
+                direction: 'right',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -168,7 +194,13 @@ describe('Drawer', () => {
         })
 
         it('should apply left inset positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: true, direction: 'left', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: true,
+                direction: 'left',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -274,7 +306,9 @@ describe('Drawer', () => {
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
-                const container = content!.querySelector('div[class*="flex"][class*="flex-col"]') as HTMLElement
+                const container = content!.querySelector(
+                    'div[class*="flex"][class*="flex-col"]'
+                ) as HTMLElement
                 expect(container).not.toBeNull()
             })
         })
@@ -354,7 +388,13 @@ describe('Drawer', () => {
         })
 
         it('should apply non-inset bottom positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: false, direction: 'bottom', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: false,
+                direction: 'bottom',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -365,7 +405,13 @@ describe('Drawer', () => {
         })
 
         it('should apply non-inset right positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: false, direction: 'right', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: false,
+                direction: 'right',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -376,7 +422,13 @@ describe('Drawer', () => {
         })
 
         it('should apply non-inset left positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: false, direction: 'left', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: false,
+                direction: 'left',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -387,7 +439,13 @@ describe('Drawer', () => {
         })
 
         it('should apply non-inset top positioning', async () => {
-            render(Drawer, { open: true, title: 'Test', inset: false, direction: 'top', modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                inset: false,
+                direction: 'top',
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -411,7 +469,12 @@ describe('Drawer', () => {
         })
 
         it('should apply ui.content class', async () => {
-            render(Drawer, { open: true, title: 'Test', ui: { content: 'custom-content' }, modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                ui: { content: 'custom-content' },
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -420,7 +483,12 @@ describe('Drawer', () => {
         })
 
         it('should apply ui.container class', async () => {
-            render(Drawer, { open: true, title: 'Test', ui: { container: 'custom-container' }, modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                ui: { container: 'custom-container' },
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -430,7 +498,12 @@ describe('Drawer', () => {
         })
 
         it('should apply ui.header class', async () => {
-            render(Drawer, { open: true, title: 'Test', ui: { header: 'custom-header' }, modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test',
+                ui: { header: 'custom-header' },
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()
@@ -440,7 +513,12 @@ describe('Drawer', () => {
         })
 
         it('should apply ui.title class', async () => {
-            render(Drawer, { open: true, title: 'Test Title', ui: { title: 'custom-title' }, modal: false })
+            render(Drawer, {
+                open: true,
+                title: 'Test Title',
+                ui: { title: 'custom-title' },
+                modal: false
+            })
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content).not.toBeNull()

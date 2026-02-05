@@ -111,11 +111,17 @@ function deepMerge<T extends Record<string, unknown>>(target: T, source: DeepPar
  * This enables proper tree-shaking: unused components are excluded from the bundle.
  * @internal
  */
-export function getComponentConfig<T extends Record<string, unknown>>(component: string, defaults: T): T {
+export function getComponentConfig<T extends Record<string, unknown>>(
+    component: string,
+    defaults: T
+): T {
     if (!(component in cachedConfigs)) {
         const userConfig = globalConfig[component]
         cachedConfigs[component] = userConfig
-            ? deepMerge(defaults as Record<string, unknown>, userConfig as DeepPartial<Record<string, unknown>>) as T
+            ? (deepMerge(
+                  defaults as Record<string, unknown>,
+                  userConfig as DeepPartial<Record<string, unknown>>
+              ) as T)
             : defaults
     }
     return cachedConfigs[component] as T

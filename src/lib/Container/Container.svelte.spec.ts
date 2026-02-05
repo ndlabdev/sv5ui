@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
-import Container from './Container.svelte'
+import Container, { type Props } from './Container.svelte'
 
 describe('Container', () => {
     // Helpers
@@ -145,12 +145,16 @@ describe('Container', () => {
         })
 
         it('should pass through aria attributes', () => {
-            const { container } = render(Container, { 'aria-label': 'Main content' } as any)
+            const { container } = render(Container, { 'aria-label': 'Main content' } as Props & {
+                'aria-label': string
+            })
             expect(getRoot(container).getAttribute('aria-label')).toBe('Main content')
         })
 
         it('should pass through data attributes', () => {
-            const { container } = render(Container, { 'data-testid': 'container-1' } as any)
+            const { container } = render(Container, { 'data-testid': 'container-1' } as Props & {
+                'data-testid': string
+            })
             expect(getRoot(container).getAttribute('data-testid')).toBe('container-1')
         })
     })
@@ -190,7 +194,7 @@ describe('Container', () => {
                 class: 'sticky top-0',
                 ui: { root: 'max-w-5xl' },
                 'aria-label': 'Main navigation'
-            } as any)
+            } as Props & { 'aria-label': string })
             const root = getRoot(container)
             expect(root.tagName).toBe('NAV')
             expect(root.getAttribute('id')).toBe('main-nav')

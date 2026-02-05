@@ -5,7 +5,8 @@ export const timelineVariants = tv({
         root: 'flex gap-1.5',
         item: 'group relative flex flex-1 gap-3',
         container: 'relative flex items-center gap-1.5',
-        indicator: 'inline-flex items-center justify-center shrink-0 rounded-full bg-surface-container-highest text-on-surface-variant',
+        indicator:
+            'inline-flex items-center justify-center shrink-0 rounded-full bg-surface-container-highest text-on-surface-variant',
         separator: 'flex-1 rounded-full bg-surface-container-highest',
         wrapper: 'w-full',
         date: 'text-on-surface-variant text-xs',
@@ -27,28 +28,36 @@ export const timelineVariants = tv({
         },
         color: {
             primary: {
-                indicator: 'group-data-[state=completed]:bg-primary group-data-[state=completed]:text-on-primary group-data-[state=active]:bg-primary group-data-[state=active]:text-on-primary'
+                indicator:
+                    'group-data-[state=completed]:bg-primary group-data-[state=completed]:text-on-primary group-data-[state=active]:bg-primary group-data-[state=active]:text-on-primary'
             },
             secondary: {
-                indicator: 'group-data-[state=completed]:bg-secondary group-data-[state=completed]:text-on-secondary group-data-[state=active]:bg-secondary group-data-[state=active]:text-on-secondary'
+                indicator:
+                    'group-data-[state=completed]:bg-secondary group-data-[state=completed]:text-on-secondary group-data-[state=active]:bg-secondary group-data-[state=active]:text-on-secondary'
             },
             tertiary: {
-                indicator: 'group-data-[state=completed]:bg-tertiary group-data-[state=completed]:text-on-tertiary group-data-[state=active]:bg-tertiary group-data-[state=active]:text-on-tertiary'
+                indicator:
+                    'group-data-[state=completed]:bg-tertiary group-data-[state=completed]:text-on-tertiary group-data-[state=active]:bg-tertiary group-data-[state=active]:text-on-tertiary'
             },
             success: {
-                indicator: 'group-data-[state=completed]:bg-success group-data-[state=completed]:text-on-success group-data-[state=active]:bg-success group-data-[state=active]:text-on-success'
+                indicator:
+                    'group-data-[state=completed]:bg-success group-data-[state=completed]:text-on-success group-data-[state=active]:bg-success group-data-[state=active]:text-on-success'
             },
             warning: {
-                indicator: 'group-data-[state=completed]:bg-warning group-data-[state=completed]:text-on-warning group-data-[state=active]:bg-warning group-data-[state=active]:text-on-warning'
+                indicator:
+                    'group-data-[state=completed]:bg-warning group-data-[state=completed]:text-on-warning group-data-[state=active]:bg-warning group-data-[state=active]:text-on-warning'
             },
             error: {
-                indicator: 'group-data-[state=completed]:bg-error group-data-[state=completed]:text-on-error group-data-[state=active]:bg-error group-data-[state=active]:text-on-error'
+                indicator:
+                    'group-data-[state=completed]:bg-error group-data-[state=completed]:text-on-error group-data-[state=active]:bg-error group-data-[state=active]:text-on-error'
             },
             info: {
-                indicator: 'group-data-[state=completed]:bg-info group-data-[state=completed]:text-on-info group-data-[state=active]:bg-info group-data-[state=active]:text-on-info'
+                indicator:
+                    'group-data-[state=completed]:bg-info group-data-[state=completed]:text-on-info group-data-[state=active]:bg-info group-data-[state=active]:text-on-info'
             },
             surface: {
-                indicator: 'group-data-[state=completed]:bg-inverse-surface group-data-[state=completed]:text-inverse-on-surface group-data-[state=active]:bg-inverse-surface group-data-[state=active]:text-inverse-on-surface'
+                indicator:
+                    'group-data-[state=completed]:bg-inverse-surface group-data-[state=completed]:text-inverse-on-surface group-data-[state=active]:bg-inverse-surface group-data-[state=active]:text-inverse-on-surface'
             }
         },
         size: {
@@ -72,24 +81,111 @@ export const timelineVariants = tv({
         { orientation: 'horizontal', reverse: true, class: { root: 'flex-row-reverse' } },
 
         // Color + separator styling (reverse=false: completed gets color)
-        { color: 'primary', reverse: false, class: { separator: 'group-data-[state=completed]:bg-primary' } },
-        { color: 'secondary', reverse: false, class: { separator: 'group-data-[state=completed]:bg-secondary' } },
-        { color: 'tertiary', reverse: false, class: { separator: 'group-data-[state=completed]:bg-tertiary' } },
-        { color: 'success', reverse: false, class: { separator: 'group-data-[state=completed]:bg-success' } },
-        { color: 'warning', reverse: false, class: { separator: 'group-data-[state=completed]:bg-warning' } },
-        { color: 'error', reverse: false, class: { separator: 'group-data-[state=completed]:bg-error' } },
-        { color: 'info', reverse: false, class: { separator: 'group-data-[state=completed]:bg-info' } },
-        { color: 'surface', reverse: false, class: { separator: 'group-data-[state=completed]:bg-inverse-surface' } },
+        {
+            color: 'primary',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-primary' }
+        },
+        {
+            color: 'secondary',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-secondary' }
+        },
+        {
+            color: 'tertiary',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-tertiary' }
+        },
+        {
+            color: 'success',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-success' }
+        },
+        {
+            color: 'warning',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-warning' }
+        },
+        {
+            color: 'error',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-error' }
+        },
+        {
+            color: 'info',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-info' }
+        },
+        {
+            color: 'surface',
+            reverse: false,
+            class: { separator: 'group-data-[state=completed]:bg-inverse-surface' }
+        },
 
         // Color + separator styling (reverse=true: active AND completed get color)
-        { color: 'primary', reverse: true, class: { separator: 'group-data-[state=active]:bg-primary group-data-[state=completed]:bg-primary' } },
-        { color: 'secondary', reverse: true, class: { separator: 'group-data-[state=active]:bg-secondary group-data-[state=completed]:bg-secondary' } },
-        { color: 'tertiary', reverse: true, class: { separator: 'group-data-[state=active]:bg-tertiary group-data-[state=completed]:bg-tertiary' } },
-        { color: 'success', reverse: true, class: { separator: 'group-data-[state=active]:bg-success group-data-[state=completed]:bg-success' } },
-        { color: 'warning', reverse: true, class: { separator: 'group-data-[state=active]:bg-warning group-data-[state=completed]:bg-warning' } },
-        { color: 'error', reverse: true, class: { separator: 'group-data-[state=active]:bg-error group-data-[state=completed]:bg-error' } },
-        { color: 'info', reverse: true, class: { separator: 'group-data-[state=active]:bg-info group-data-[state=completed]:bg-info' } },
-        { color: 'surface', reverse: true, class: { separator: 'group-data-[state=active]:bg-inverse-surface group-data-[state=completed]:bg-inverse-surface' } },
+        {
+            color: 'primary',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-primary group-data-[state=completed]:bg-primary'
+            }
+        },
+        {
+            color: 'secondary',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-secondary group-data-[state=completed]:bg-secondary'
+            }
+        },
+        {
+            color: 'tertiary',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-tertiary group-data-[state=completed]:bg-tertiary'
+            }
+        },
+        {
+            color: 'success',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-success group-data-[state=completed]:bg-success'
+            }
+        },
+        {
+            color: 'warning',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-warning group-data-[state=completed]:bg-warning'
+            }
+        },
+        {
+            color: 'error',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-error group-data-[state=completed]:bg-error'
+            }
+        },
+        {
+            color: 'info',
+            reverse: true,
+            class: {
+                separator: 'group-data-[state=active]:bg-info group-data-[state=completed]:bg-info'
+            }
+        },
+        {
+            color: 'surface',
+            reverse: true,
+            class: {
+                separator:
+                    'group-data-[state=active]:bg-inverse-surface group-data-[state=completed]:bg-inverse-surface'
+            }
+        },
 
         // Horizontal + size
         { orientation: 'horizontal', size: '3xs', class: { wrapper: 'pe-4.5' } },

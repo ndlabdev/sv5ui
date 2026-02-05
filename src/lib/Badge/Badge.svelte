@@ -40,8 +40,12 @@
             base: slots.base({ class: [config.slots.base, className, ui?.base] }),
             label: slots.label({ class: [config.slots.label, ui?.label] }),
             leadingIcon: slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }),
-            trailingIcon: slots.trailingIcon({ class: [config.slots.trailingIcon, ui?.trailingIcon] }),
-            leadingAvatar: slots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] }),
+            trailingIcon: slots.trailingIcon({
+                class: [config.slots.trailingIcon, ui?.trailingIcon]
+            }),
+            leadingAvatar: slots.leadingAvatar({
+                class: [config.slots.leadingAvatar, ui?.leadingAvatar]
+            }),
             leadingAvatarSize: slots.leadingAvatarSize() as AvatarSize
         }
     })
@@ -59,7 +63,7 @@
     {#if icon}
         <Icon name={icon} class={classes.leadingIcon} />
     {:else if !isIconOnly}
-        {#if label != null}
+        {#if label !== null}
             <span class={classes.label}>{label}</span>
         {:else if children}
             <span class={classes.label}>{@render children()}</span>

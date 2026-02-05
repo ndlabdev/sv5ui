@@ -19,13 +19,11 @@ defineConfig({
     //     defaultVariants: { variant: 'outline', color: 'secondary' },
     //     slots: { base: 'shadow-md', label: 'font-bold' }
     // },
-
     // Example: customize avatar
     // avatar: {
     //     defaultVariants: { size: 'lg' },
     //     slots: { root: 'ring-2 ring-primary' }
     // },
-
     // Example: customize icons
     // icons: { loading: 'svg-spinners:ring-resize' }
 })

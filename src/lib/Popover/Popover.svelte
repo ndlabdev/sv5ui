@@ -56,7 +56,7 @@
         return { width: 12, height: 6 }
     })
 
-    const dismissBehavior = $derived(dismissible ? 'close' as const : 'ignore' as const)
+    const dismissBehavior = $derived(dismissible ? ('close' as const) : ('ignore' as const))
 
     function close() {
         open = false
@@ -108,10 +108,7 @@
     {#if children}
         <Popover.Trigger>
             {#snippet child({ props })}
-                <span
-                    {...props}
-                    class={className as string}
-                >
+                <span {...props} class={className as string}>
                     {@render children({ open })}
                 </span>
             {/snippet}

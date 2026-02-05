@@ -3,7 +3,8 @@ import { tv, type VariantProps } from 'tailwind-variants'
 export const drawerVariants = tv({
     slots: {
         overlay: 'fixed inset-0 z-50 bg-on-surface/50',
-        content: 'fixed z-50 bg-surface-container-low ring ring-outline-variant flex focus:outline-none',
+        content:
+            'fixed z-50 bg-surface-container-low ring ring-outline-variant flex focus:outline-none',
         handle: 'shrink-0 rounded-full bg-on-surface-variant/40 transition-opacity',
         container: 'w-full flex flex-col gap-4 p-4 overflow-y-auto',
         header: '',
@@ -33,7 +34,8 @@ export const drawerVariants = tv({
         },
         inset: {
             true: {
-                content: 'rounded-lg after:hidden overflow-hidden [--initial-transform:calc(100%+1.5rem)]'
+                content:
+                    'rounded-lg after:hidden overflow-hidden [--initial-transform:calc(100%+1.5rem)]'
             }
         },
         snapPoints: {

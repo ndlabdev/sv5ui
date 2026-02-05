@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
-import Badge from './Badge.svelte'
+import Badge, { type Props } from './Badge.svelte'
 
 describe('Badge', () => {
     // Helpers
@@ -131,19 +131,31 @@ describe('Badge', () => {
 
     describe('color x variant', () => {
         it('should apply outline + surface', () => {
-            const { container } = render(Badge, { label: 'Test', variant: 'outline', color: 'surface' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                variant: 'outline',
+                color: 'surface'
+            })
             expect(getRoot(container).className).toContain('text-on-surface-variant')
             expect(getRoot(container).className).toContain('ring-outline-variant')
         })
 
         it('should apply soft + surface', () => {
-            const { container } = render(Badge, { label: 'Test', variant: 'soft', color: 'surface' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                variant: 'soft',
+                color: 'surface'
+            })
             expect(getRoot(container).className).toContain('bg-surface-container-highest')
             expect(getRoot(container).className).toContain('text-on-surface')
         })
 
         it('should apply subtle + surface', () => {
-            const { container } = render(Badge, { label: 'Test', variant: 'subtle', color: 'surface' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                variant: 'subtle',
+                color: 'surface'
+            })
             expect(getRoot(container).className).toContain('bg-surface-container-highest')
             expect(getRoot(container).className).toContain('ring-outline-variant')
         })
@@ -155,13 +167,21 @@ describe('Badge', () => {
         })
 
         it('should apply outline + success', () => {
-            const { container } = render(Badge, { label: 'Test', variant: 'outline', color: 'success' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                variant: 'outline',
+                color: 'success'
+            })
             expect(getRoot(container).className).toContain('text-success')
             expect(getRoot(container).className).toContain('ring-success/50')
         })
 
         it('should apply subtle + tertiary', () => {
-            const { container } = render(Badge, { label: 'Test', variant: 'subtle', color: 'tertiary' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                variant: 'subtle',
+                color: 'tertiary'
+            })
             expect(getRoot(container).className).toContain('bg-tertiary-container')
             expect(getRoot(container).className).toContain('ring-tertiary/25')
         })
@@ -245,7 +265,11 @@ describe('Badge', () => {
         })
 
         it('should render with both leading and trailing icons', () => {
-            const { container } = render(Badge, { label: 'Test', leadingIcon: 'lucide:star', trailingIcon: 'lucide:x' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                leadingIcon: 'lucide:star',
+                trailingIcon: 'lucide:x'
+            })
             expect(container.textContent).toContain('Test')
             expect(getRoot(container)).not.toBeNull()
         })
@@ -260,7 +284,11 @@ describe('Badge', () => {
         })
 
         it('should merge custom class with variant classes', () => {
-            const { container } = render(Badge, { label: 'Test', class: 'my-badge', color: 'error' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                class: 'my-badge',
+                color: 'error'
+            })
             const root = getRoot(container)
             expect(root.className).toContain('my-badge')
             expect(root.className).toContain('bg-error')
@@ -281,13 +309,21 @@ describe('Badge', () => {
         })
 
         it('should accept ui.leadingIcon without crashing', () => {
-            const { container } = render(Badge, { label: 'Test', leadingIcon: 'lucide:star', ui: { leadingIcon: 'custom-icon' } })
+            const { container } = render(Badge, {
+                label: 'Test',
+                leadingIcon: 'lucide:star',
+                ui: { leadingIcon: 'custom-icon' }
+            })
             expect(getRoot(container)).not.toBeNull()
             expect(container.textContent).toContain('Test')
         })
 
         it('should accept ui.trailingIcon without crashing', () => {
-            const { container } = render(Badge, { label: 'Test', trailingIcon: 'lucide:x', ui: { trailingIcon: 'custom-trailing' } })
+            const { container } = render(Badge, {
+                label: 'Test',
+                trailingIcon: 'lucide:x',
+                ui: { trailingIcon: 'custom-trailing' }
+            })
             expect(getRoot(container)).not.toBeNull()
             expect(container.textContent).toContain('Test')
         })
@@ -297,14 +333,21 @@ describe('Badge', () => {
 
     describe('html attributes', () => {
         it('should pass through HTML attributes', () => {
-            const { container } = render(Badge, { label: 'Test', id: 'my-badge', title: 'Badge tooltip' })
+            const { container } = render(Badge, {
+                label: 'Test',
+                id: 'my-badge',
+                title: 'Badge tooltip'
+            })
             const root = getRoot(container)
             expect(root.getAttribute('id')).toBe('my-badge')
             expect(root.getAttribute('title')).toBe('Badge tooltip')
         })
 
         it('should apply data attributes', () => {
-            const { container } = render(Badge, { label: 'Test', 'data-testid': 'badge-1' } as any)
+            const { container } = render(Badge, {
+                label: 'Test',
+                'data-testid': 'badge-1'
+            } as Props & { 'data-testid': string })
             expect(getRoot(container).getAttribute('data-testid')).toBe('badge-1')
         })
     })

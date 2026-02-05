@@ -45,7 +45,15 @@ describe('Link', () => {
     // ==================== COLORS ====================
 
     describe('colors', () => {
-        const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
+        const colors = [
+            'primary',
+            'secondary',
+            'tertiary',
+            'success',
+            'warning',
+            'error',
+            'info'
+        ] as const
 
         for (const color of colors) {
             it(`should apply ${color} color when active`, async () => {
@@ -196,13 +204,17 @@ describe('Link', () => {
         })
 
         it('should allow overriding target', async () => {
-            const { container } = render(Link, { props: { href: '/about', active: false, target: '_blank' } })
+            const { container } = render(Link, {
+                props: { href: '/about', active: false, target: '_blank' }
+            })
             const el = page.elementLocator(container.firstElementChild!)
             await expect.element(el).toHaveAttribute('target', '_blank')
         })
 
         it('should set rel when target is _blank for internal links', async () => {
-            const { container } = render(Link, { props: { href: '/about', active: false, target: '_blank' } })
+            const { container } = render(Link, {
+                props: { href: '/about', active: false, target: '_blank' }
+            })
             const el = page.elementLocator(container.firstElementChild!)
             await expect.element(el).toHaveAttribute('rel', 'noopener noreferrer')
         })
