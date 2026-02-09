@@ -408,37 +408,37 @@ describe('DropdownMenu', () => {
             })
         })
 
-        it('should accept closeOnSelect false on action items', async () => {
+        it('should keep menu open when closeOnSelect is false', async () => {
             const items: DropdownMenuItem[] = [
                 { label: 'Stay Open', closeOnSelect: false, onSelect: vi.fn() }
             ]
             render(DropdownMenu, { open: true, items })
+            await page.getByText('Stay Open').click()
             await vi.waitFor(() => {
-                expect(getItems().length).toBe(1)
                 expect(getContent()).not.toBeNull()
             })
         })
 
-        it('should accept closeOnSelect false on checkbox items', async () => {
+        it('should keep menu open for checkbox items with closeOnSelect false', async () => {
             const items: DropdownMenuItem[] = [
                 { type: 'checkbox', label: 'Check Me', checked: false, closeOnSelect: false }
             ]
             render(DropdownMenu, { open: true, items })
+            await page.getByText('Check Me').click()
             await vi.waitFor(() => {
-                expect(getCheckboxItems().length).toBe(1)
                 expect(getContent()).not.toBeNull()
             })
         })
 
-        it('should accept closeOnSelect false on radio items', async () => {
+        it('should keep menu open for radio items with closeOnSelect false', async () => {
             const items: DropdownMenuItem[] = [
                 { type: 'radio', label: 'Option 1', value: 'opt1', closeOnSelect: false },
                 { type: 'radio', label: 'Option 2', value: 'opt2', closeOnSelect: false }
             ]
             const radioGroups: DropdownMenuRadioGroup[] = [{ name: 'options', value: 'opt1' }]
             render(DropdownMenu, { open: true, items, radioGroups })
+            await page.getByText('Option 2').click()
             await vi.waitFor(() => {
-                expect(getRadioItems().length).toBe(2)
                 expect(getContent()).not.toBeNull()
             })
         })
