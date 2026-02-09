@@ -406,6 +406,7 @@ describe('DropdownMenu', () => {
                 expect(item).not.toBeNull()
             })
         })
+    })
     // ==================== COLORED ITEMS ====================
 
     describe('colored items', () => {
