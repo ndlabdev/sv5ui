@@ -33,7 +33,8 @@
         { href: '/accordion', label: 'Accordion', icon: 'lucide:chevrons-down-up' },
         { href: '/slideover', label: 'Slideover', icon: 'lucide:panel-right' },
         { href: '/popover', label: 'Popover', icon: 'lucide:message-circle' },
-        { href: '/breadcrumb', label: 'Breadcrumb', icon: 'lucide:chevrons-right' }
+        { href: '/breadcrumb', label: 'Breadcrumb', icon: 'lucide:chevrons-right' },
+        { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' }
     ]
 
     const docItems = [
