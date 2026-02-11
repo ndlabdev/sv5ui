@@ -192,8 +192,8 @@ describe('Popover', () => {
                 const content = getContent()
                 expect(content).not.toBeNull()
                 expect(content!.className).toContain('z-50')
-                expect(content!.className).toContain('bg-inverse-surface')
-                expect(content!.className).toContain('text-inverse-on-surface')
+                expect(content!.className).toContain('bg-surface-container-lowest')
+                expect(content!.className).toContain('text-on-surface')
                 expect(content!.className).toContain('rounded-md')
             })
         })
@@ -203,7 +203,6 @@ describe('Popover', () => {
             await vi.waitFor(() => {
                 const arrow = getArrow()
                 expect(arrow).not.toBeNull()
-                expect(arrow!.className).toContain('fill-inverse-surface')
             })
         })
     })

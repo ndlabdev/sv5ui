@@ -97,9 +97,7 @@
         >
             <div class="space-y-2">
                 <p class="text-xs font-medium text-on-surface-variant">Single Date</p>
-                <Popover
-                    bind:open={datePickerOpen}
-                >
+                <Popover bind:open={datePickerOpen}>
                     <Button variant="outline" color="surface" class="w-56 justify-start">
                         <span class="flex items-center gap-2">
                             <Icon name="lucide:calendar" class="size-4" />
@@ -113,17 +111,18 @@
                         </span>
                     </Button>
                     {#snippet content({ close })}
-                        <Calendar bind:value={datePickerValue} class="p-2" onValueChange={() => close()} />
+                        <Calendar
+                            bind:value={datePickerValue}
+                            class="p-2"
+                            onValueChange={() => close()}
+                        />
                     {/snippet}
                 </Popover>
             </div>
 
             <div class="space-y-2">
                 <p class="text-xs font-medium text-on-surface-variant">Date Range</p>
-                <Popover
-                    arrow
-                    bind:open={rangeDatePickerOpen}
-                >
+                <Popover arrow bind:open={rangeDatePickerOpen}>
                     <Button variant="outline" color="surface" class="w-72 justify-start">
                         <span class="flex items-center gap-2">
                             <Icon name="lucide:calendar" class="size-4" />
@@ -137,7 +136,12 @@
                         </span>
                     </Button>
                     {#snippet content()}
-                        <Calendar range bind:value={rangeDatePickerValue} class="p-2" numberOfMonths={2} />
+                        <Calendar
+                            range
+                            bind:value={rangeDatePickerValue}
+                            class="p-2"
+                            numberOfMonths={2}
+                        />
                     {/snippet}
                 </Popover>
             </div>
