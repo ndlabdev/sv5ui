@@ -23,6 +23,7 @@ export * from './Accordion/index.js'
 export * from './Slideover/index.js'
 export * from './Popover/index.js'
 export * from './Breadcrumb/index.js'
+export * from './Calendar/index.js'
 export * from './DropdownMenu/index.js'
 
 // Configuration
