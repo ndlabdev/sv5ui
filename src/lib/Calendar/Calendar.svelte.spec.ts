@@ -425,7 +425,8 @@ describe('Calendar', () => {
                 const days = getDays()
                 days.forEach((day) => {
                     const dayNum = parseInt(day.textContent?.trim() || '0')
-                    if (dayNum > 0 && dayNum < 10) {
+                    const isOutsideMonth = day.hasAttribute('data-outside-month')
+                    if (dayNum > 0 && dayNum < 10 && !isOutsideMonth) {
                         expect(day.getAttribute('data-disabled')).not.toBeNull()
                     }
                 })
@@ -439,7 +440,8 @@ describe('Calendar', () => {
                 const days = getDays()
                 days.forEach((day) => {
                     const dayNum = parseInt(day.textContent?.trim() || '0')
-                    if (dayNum > 20) {
+                    const isOutsideMonth = day.hasAttribute('data-outside-month')
+                    if (dayNum > 20 && !isOutsideMonth) {
                         expect(day.getAttribute('data-disabled')).not.toBeNull()
                     }
                 })

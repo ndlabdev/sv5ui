@@ -3,12 +3,5 @@ export type {
     CalendarProps,
     CalendarSingleProps,
     CalendarMultipleProps,
-    CalendarRangeProps,
-    CalendarValue,
-    CalendarSingleValue,
-    CalendarMultipleValue,
-    CalendarRangeValue,
-    CalendarHeadingSlotProps,
-    CalendarDaySlotProps,
-    CalendarWeekdaySlotProps
+    CalendarRangeProps
 } from './calendar.types.js'

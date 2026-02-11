@@ -121,6 +121,7 @@
             <div class="space-y-2">
                 <p class="text-xs font-medium text-on-surface-variant">Date Range</p>
                 <Popover
+                    arrow
                     bind:open={rangeDatePickerOpen}
                 >
                     <Button variant="outline" color="surface" class="w-72 justify-start">
@@ -136,7 +137,7 @@
                         </span>
                     </Button>
                     {#snippet content()}
-                        <Calendar range bind:value={rangeDatePickerValue} numberOfMonths={2} />
+                        <Calendar range bind:value={rangeDatePickerValue} class="p-2" numberOfMonths={2} />
                     {/snippet}
                 </Popover>
             </div>

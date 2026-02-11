@@ -20,27 +20,18 @@
     const config = getComponentConfig('calendar', calendarDefaults)
 
     let {
-        // Value props
         value = $bindable(),
         onValueChange,
         placeholder = $bindable(),
         onPlaceholderChange,
-
-        // Range-specific props
         range = false,
-
-        // Navigation icons
         prevMonthIcon = 'lucide:chevron-left',
         nextMonthIcon = 'lucide:chevron-right',
         prevYearIcon = 'lucide:chevrons-left',
         nextYearIcon = 'lucide:chevrons-right',
-
-        // Controls
         monthControls = true,
-        yearControls = false,
+        yearControls = true,
         weekNumbers = false,
-
-        // Calendar props
         preventDeselect = false,
         minValue,
         maxValue,
@@ -50,30 +41,27 @@
         weekdayFormat = 'short',
         isDateDisabled,
         isDateUnavailable,
-        fixedWeeks = false,
+        fixedWeeks = true,
         numberOfMonths = 1,
         calendarLabel,
         locale = 'en',
         readonly = false,
         disableDaysOutsideMonth = false,
-
-        // Styling
         color = config.defaultVariants.color ?? 'primary',
         size = config.defaultVariants.size ?? 'md',
         variant = config.defaultVariants.variant ?? 'solid',
         ui,
         class: className,
-
-        // Snippets
         heading: headingSlot,
         day: daySlot,
-        weekday: weekdaySlot,
-
-        // Spread remaining props (initialFocus, type, minDays, maxDays, etc.)
+        weekDay: weekDaySlot,
         ...restProps
     }: Props = $props()
 
-    // Compute variant classes
+    // Only Cell and Day differ between Calendar & RangeCalendar
+    const CalCell = $derived(range ? RangeCalendar.Cell : Calendar.Cell)
+    const CalDay = $derived(range ? RangeCalendar.Day : Calendar.Day)
+
     const variantSlots = $derived(calendarVariants({ color, size, variant, weekNumbers }))
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className, ui?.root] }),
@@ -101,12 +89,10 @@
         cellWeek: variantSlots.cellWeek({ class: [config.slots.cellWeek, ui?.cellWeek] })
     })
 
-    // Year navigation helper
-    function paginateYear(date: DateValue, years: number): DateValue {
-        return date.add({ years })
+    function paginateYear(date: DateValue, sign: -1 | 1): DateValue {
+        return sign === -1 ? date.subtract({ years: 1 }) : date.add({ years: 1 })
     }
 
-    // Common calendar props
     const commonProps = $derived({
         placeholder,
         onPlaceholderChange: (val: DateValue) => {
@@ -132,80 +118,74 @@
 </script>
 
 {#snippet calendarContent(months: Month<DateValue>[], weekdays: string[])}
-    {#each months as month, monthIndex (monthIndex)}
-        <div>
-            <Calendar.Header class={classes.header}>
-                {#if headingSlot}
-                    {@render headingSlot({
-                        headingValue: month.value
-                            .toDate('UTC')
-                            .toLocaleDateString(locale, { month: 'long', year: 'numeric' }),
-                        prevMonth: () => {},
-                        nextMonth: () => {},
-                        prevYear: () => {
-                            if (placeholder) placeholder = paginateYear(placeholder, -1)
-                        },
-                        nextYear: () => {
-                            if (placeholder) placeholder = paginateYear(placeholder, 1)
-                        }
-                    })}
-                {:else}
-                    <div class="flex items-center gap-1">
-                        {#if yearControls}
-                            <button
-                                type="button"
-                                class={classes.navButton}
-                                onclick={() => {
-                                    if (placeholder) placeholder = paginateYear(placeholder, -1)
-                                }}
-                                aria-label="Previous year"
-                            >
-                                <Icon name={prevYearIcon} class={classes.navButtonIcon} />
-                            </button>
-                        {/if}
-                        {#if monthControls}
-                            <Calendar.PrevButton class={classes.navButton}>
-                                <Icon name={prevMonthIcon} class={classes.navButtonIcon} />
-                            </Calendar.PrevButton>
-                        {/if}
-                    </div>
+    <Calendar.Header class={classes.header}>
+        <div class="flex items-center gap-1">
+            {#if yearControls}
+                <button
+                    type="button"
+                    class={classes.navButton}
+                    onclick={() => {
+                        if (placeholder) placeholder = paginateYear(placeholder, -1)
+                    }}
+                    aria-label="Previous year"
+                >
+                    <Icon name={prevYearIcon} class={classes.navButtonIcon} />
+                </button>
+            {/if}
+            {#if monthControls}
+                <Calendar.PrevButton class={classes.navButton}>
+                    <Icon name={prevMonthIcon} class={classes.navButtonIcon} />
+                </Calendar.PrevButton>
+            {/if}
+        </div>
 
-                    <Calendar.Heading class={classes.heading} />
+        <Calendar.Heading class={classes.heading}>
+            {#snippet child({ props, headingValue })}
+                <div {...props}>
+                    {#if headingSlot}
+                        {@render headingSlot({ value: headingValue })}
+                    {:else}
+                        {headingValue}
+                    {/if}
+                </div>
+            {/snippet}
+        </Calendar.Heading>
 
-                    <div class="flex items-center gap-1">
-                        {#if monthControls}
-                            <Calendar.NextButton class={classes.navButton}>
-                                <Icon name={nextMonthIcon} class={classes.navButtonIcon} />
-                            </Calendar.NextButton>
-                        {/if}
-                        {#if yearControls}
-                            <button
-                                type="button"
-                                class={classes.navButton}
-                                onclick={() => {
-                                    if (placeholder) placeholder = paginateYear(placeholder, 1)
-                                }}
-                                aria-label="Next year"
-                            >
-                                <Icon name={nextYearIcon} class={classes.navButtonIcon} />
-                            </button>
-                        {/if}
-                    </div>
-                {/if}
-            </Calendar.Header>
+        <div class="flex items-center gap-1">
+            {#if monthControls}
+                <Calendar.NextButton class={classes.navButton}>
+                    <Icon name={nextMonthIcon} class={classes.navButtonIcon} />
+                </Calendar.NextButton>
+            {/if}
+            {#if yearControls}
+                <button
+                    type="button"
+                    class={classes.navButton}
+                    onclick={() => {
+                        if (placeholder) placeholder = paginateYear(placeholder, 1)
+                    }}
+                    aria-label="Next year"
+                >
+                    <Icon name={nextYearIcon} class={classes.navButtonIcon} />
+                </button>
+            {/if}
+        </div>
+    </Calendar.Header>
 
+    <div class={classes.body}>
+        {#each months as month (month.value.toString())}
             <Calendar.Grid class={classes.grid}>
                 <Calendar.GridHead>
                     <Calendar.GridRow class={classes.gridWeekDaysRow}>
                         {#if weekNumbers}
                             <Calendar.HeadCell class={classes.headCellWeek}>#</Calendar.HeadCell>
                         {/if}
-                        {#each weekdays as wd (wd)}
+                        {#each weekdays as day (day)}
                             <Calendar.HeadCell class={classes.headCell}>
-                                {#if weekdaySlot}
-                                    {@render weekdaySlot({ weekday: wd })}
+                                {#if weekDaySlot}
+                                    {@render weekDaySlot({ day })}
                                 {:else}
-                                    {wd}
+                                    {day}
                                 {/if}
                             </Calendar.HeadCell>
                         {/each}
@@ -216,175 +196,33 @@
                     {#each month.weeks as week, weekIndex (weekIndex)}
                         <Calendar.GridRow class={classes.gridRow}>
                             {#if weekNumbers}
-                                <td class={classes.cellWeek}>
-                                    {weekIndex + 1}
-                                </td>
+                                <td class={classes.cellWeek}>{weekIndex + 1}</td>
                             {/if}
                             {#each week as date (date.toString())}
-                                <Calendar.Cell {date} month={month.value} class={classes.cell}>
-                                    <Calendar.Day class={classes.cellTrigger}>
-                                        {#snippet child({
-                                            props,
-                                            selected,
-                                            disabled: dayDisabled,
-                                            unavailable
-                                        })}
-                                            {#if daySlot}
-                                                <span {...props}>
-                                                    {@render daySlot({
-                                                        date,
-                                                        day: date.day.toString(),
-                                                        selected,
-                                                        disabled: dayDisabled,
-                                                        unavailable
-                                                    })}
-                                                </span>
-                                            {:else}
-                                                <span {...props}>
+                                <CalCell {date} month={month.value} class={classes.cell}>
+                                    <CalDay class={classes.cellTrigger}>
+                                        {#snippet child({ props })}
+                                            <span {...props}>
+                                                {#if daySlot}
+                                                    {@render daySlot({ day: date })}
+                                                {:else}
                                                     {date.day}
-                                                </span>
-                                            {/if}
+                                                {/if}
+                                            </span>
                                         {/snippet}
-                                    </Calendar.Day>
-                                </Calendar.Cell>
+                                    </CalDay>
+                                </CalCell>
                             {/each}
                         </Calendar.GridRow>
                     {/each}
                 </Calendar.GridBody>
             </Calendar.Grid>
-        </div>
-    {/each}
-{/snippet}
-
-{#snippet rangeCalendarContent(months: Month<DateValue>[], weekdays: string[])}
-    {#each months as month, monthIndex (monthIndex)}
-        <div>
-            <RangeCalendar.Header class={classes.header}>
-                {#if headingSlot}
-                    {@render headingSlot({
-                        headingValue: month.value
-                            .toDate('UTC')
-                            .toLocaleDateString(locale, { month: 'long', year: 'numeric' }),
-                        prevMonth: () => {},
-                        nextMonth: () => {},
-                        prevYear: () => {
-                            if (placeholder) placeholder = paginateYear(placeholder, -1)
-                        },
-                        nextYear: () => {
-                            if (placeholder) placeholder = paginateYear(placeholder, 1)
-                        }
-                    })}
-                {:else}
-                    <div class="flex items-center gap-1">
-                        {#if yearControls}
-                            <button
-                                type="button"
-                                class={classes.navButton}
-                                onclick={() => {
-                                    if (placeholder) placeholder = paginateYear(placeholder, -1)
-                                }}
-                                aria-label="Previous year"
-                            >
-                                <Icon name={prevYearIcon} class={classes.navButtonIcon} />
-                            </button>
-                        {/if}
-                        {#if monthControls}
-                            <RangeCalendar.PrevButton class={classes.navButton}>
-                                <Icon name={prevMonthIcon} class={classes.navButtonIcon} />
-                            </RangeCalendar.PrevButton>
-                        {/if}
-                    </div>
-
-                    <RangeCalendar.Heading class={classes.heading} />
-
-                    <div class="flex items-center gap-1">
-                        {#if monthControls}
-                            <RangeCalendar.NextButton class={classes.navButton}>
-                                <Icon name={nextMonthIcon} class={classes.navButtonIcon} />
-                            </RangeCalendar.NextButton>
-                        {/if}
-                        {#if yearControls}
-                            <button
-                                type="button"
-                                class={classes.navButton}
-                                onclick={() => {
-                                    if (placeholder) placeholder = paginateYear(placeholder, 1)
-                                }}
-                                aria-label="Next year"
-                            >
-                                <Icon name={nextYearIcon} class={classes.navButtonIcon} />
-                            </button>
-                        {/if}
-                    </div>
-                {/if}
-            </RangeCalendar.Header>
-
-            <RangeCalendar.Grid class={classes.grid}>
-                <RangeCalendar.GridHead>
-                    <RangeCalendar.GridRow class={classes.gridWeekDaysRow}>
-                        {#if weekNumbers}
-                            <RangeCalendar.HeadCell class={classes.headCellWeek}
-                                >#</RangeCalendar.HeadCell
-                            >
-                        {/if}
-                        {#each weekdays as wd (wd)}
-                            <RangeCalendar.HeadCell class={classes.headCell}>
-                                {#if weekdaySlot}
-                                    {@render weekdaySlot({ weekday: wd })}
-                                {:else}
-                                    {wd}
-                                {/if}
-                            </RangeCalendar.HeadCell>
-                        {/each}
-                    </RangeCalendar.GridRow>
-                </RangeCalendar.GridHead>
-
-                <RangeCalendar.GridBody class={classes.gridBody}>
-                    {#each month.weeks as week, weekIndex (weekIndex)}
-                        <RangeCalendar.GridRow class={classes.gridRow}>
-                            {#if weekNumbers}
-                                <td class={classes.cellWeek}>
-                                    {weekIndex + 1}
-                                </td>
-                            {/if}
-                            {#each week as date (date.toString())}
-                                <RangeCalendar.Cell {date} month={month.value} class={classes.cell}>
-                                    <RangeCalendar.Day class={classes.cellTrigger}>
-                                        {#snippet child({
-                                            props,
-                                            selected,
-                                            disabled: dayDisabled,
-                                            unavailable
-                                        })}
-                                            {#if daySlot}
-                                                <span {...props}>
-                                                    {@render daySlot({
-                                                        date,
-                                                        day: date.day.toString(),
-                                                        selected,
-                                                        disabled: dayDisabled,
-                                                        unavailable
-                                                    })}
-                                                </span>
-                                            {:else}
-                                                <span {...props}>
-                                                    {date.day}
-                                                </span>
-                                            {/if}
-                                        {/snippet}
-                                    </RangeCalendar.Day>
-                                </RangeCalendar.Cell>
-                            {/each}
-                        </RangeCalendar.GridRow>
-                    {/each}
-                </RangeCalendar.GridBody>
-            </RangeCalendar.Grid>
-        </div>
-    {/each}
+        {/each}
+    </div>
 {/snippet}
 
 {#if range}
-    {@const rangeProps = restProps as Omit<
+    {@const rp = restProps as Omit<
         CalendarRangeProps,
         | keyof typeof commonProps
         | 'range'
@@ -397,7 +235,7 @@
         | 'ui'
         | 'heading'
         | 'day'
-        | 'weekday'
+        | 'weekDay'
         | 'prevMonthIcon'
         | 'nextMonthIcon'
         | 'prevYearIcon'
@@ -410,17 +248,15 @@
         bind:value={value as CalendarRangeProps['value']}
         onValueChange={onValueChange as CalendarRangeProps['onValueChange']}
         {...commonProps}
-        minDays={rangeProps.minDays}
-        maxDays={rangeProps.maxDays}
-        onStartValueChange={rangeProps.onStartValueChange}
-        onEndValueChange={rangeProps.onEndValueChange}
-        excludeDisabled={rangeProps.excludeDisabled}
+        minDays={rp.minDays}
+        maxDays={rp.maxDays}
+        onStartValueChange={rp.onStartValueChange}
+        onEndValueChange={rp.onEndValueChange}
+        excludeDisabled={rp.excludeDisabled}
         class={classes.root}
     >
         {#snippet children({ months, weekdays })}
-            <div class={classes.body}>
-                {@render rangeCalendarContent(months, weekdays)}
-            </div>
+            {@render calendarContent(months, weekdays)}
         {/snippet}
     </RangeCalendar.Root>
 {:else}
@@ -436,9 +272,7 @@
             class={classes.root}
         >
             {#snippet children({ months, weekdays })}
-                <div class={classes.body}>
-                    {@render calendarContent(months, weekdays)}
-                </div>
+                {@render calendarContent(months, weekdays)}
             {/snippet}
         </Calendar.Root>
     {:else}
@@ -451,9 +285,7 @@
             class={classes.root}
         >
             {#snippet children({ months, weekdays })}
-                <div class={classes.body}>
-                    {@render calendarContent(months, weekdays)}
-                </div>
+                {@render calendarContent(months, weekdays)}
             {/snippet}
         </Calendar.Root>
     {/if}
