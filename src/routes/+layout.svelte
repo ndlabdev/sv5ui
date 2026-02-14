@@ -35,7 +35,8 @@
         { href: '/popover', label: 'Popover', icon: 'lucide:message-circle' },
         { href: '/breadcrumb', label: 'Breadcrumb', icon: 'lucide:chevrons-right' },
         { href: '/calendar', label: 'Calendar', icon: 'lucide:calendar' },
-        { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' }
+        { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' },
+        { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' }
     ]
 
     const docItems = [
