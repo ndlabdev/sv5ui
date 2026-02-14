@@ -86,7 +86,6 @@
     // for every action item with the same color in a single render cycle
     type ColorKey = NonNullable<ContextMenuVariantProps['color']>
 
-    // eslint-disable-next-line svelte/require-svelte-collections -- intentionally non-reactive cache
     const getColorVariant = $derived.by(() => {
         const cache: Partial<Record<ColorKey, ReturnType<typeof contextMenuVariants>>> = {}
         return (color: ColorKey) => {

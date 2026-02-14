@@ -2,10 +2,7 @@ import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { ContextMenuSlots, ContextMenuVariantProps } from './context-menu.variants.js'
 import type { KbdProps } from '../Kbd/kbd.types.js'
-import type {
-    ContextMenuRootPropsWithoutHTML,
-    ContextMenuContentPropsWithoutHTML
-} from 'bits-ui'
+import type { ContextMenuRootPropsWithoutHTML, ContextMenuContentPropsWithoutHTML } from 'bits-ui'
 
 // ============================================================================
 // Item Types
