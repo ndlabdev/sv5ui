@@ -36,7 +36,8 @@
         { href: '/breadcrumb', label: 'Breadcrumb', icon: 'lucide:chevrons-right' },
         { href: '/calendar', label: 'Calendar', icon: 'lucide:calendar' },
         { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' },
-        { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' }
+        { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' },
+        { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' }
     ]
 
     const docItems = [
