@@ -25,6 +25,7 @@ export * from './Popover/index.js'
 export * from './Breadcrumb/index.js'
 export * from './Calendar/index.js'
 export * from './DropdownMenu/index.js'
+export * from './Tabs/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
