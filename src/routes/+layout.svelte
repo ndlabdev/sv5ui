@@ -37,7 +37,8 @@
         { href: '/calendar', label: 'Calendar', icon: 'lucide:calendar' },
         { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' },
         { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' },
-        { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' }
+        { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' },
+        { href: '/pagination', label: 'Pagination', icon: 'lucide:chevrons-left-right-ellipsis' }
     ]
 
     const docItems = [
