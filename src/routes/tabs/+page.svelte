@@ -420,10 +420,7 @@
                 <p class="mb-2 text-xs font-medium">
                     <code class="rounded bg-surface-container-highest px-1.5 py-0.5">ui.list</code>
                 </p>
-                <Tabs
-                    items={basicItems}
-                    ui={{ list: 'bg-surface-container-highest rounded-xl' }}
-                />
+                <Tabs items={basicItems} ui={{ list: 'bg-surface-container-highest rounded-xl' }} />
             </div>
 
             <!-- ui.indicator -->
@@ -459,8 +456,7 @@
             <!-- ui.label -->
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-2 text-xs font-medium">
-                    <code class="rounded bg-surface-container-highest px-1.5 py-0.5">ui.label</code
-                    >
+                    <code class="rounded bg-surface-container-highest px-1.5 py-0.5">ui.label</code>
                 </p>
                 <Tabs items={basicItems} ui={{ label: 'italic underline' }} />
             </div>
