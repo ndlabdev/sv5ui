@@ -15,7 +15,7 @@ export const contextMenuVariants = tv({
         separator: '-mx-1 my-1 h-px bg-outline-variant',
         label: 'px-2 py-1.5 text-xs font-semibold text-on-surface-variant',
         item: [
-            'relative flex items-center gap-2 w-full rounded-sm px-2 cursor-pointer select-none',
+            'group relative flex items-center gap-2 w-full rounded-sm px-2 cursor-pointer select-none',
             'focus:outline-none',
             'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
             'data-[highlighted]:bg-surface-container-highest'
@@ -114,56 +114,56 @@ export const contextMenuVariants = tv({
             color: 'error',
             class: {
                 item: 'text-error data-[highlighted]:bg-error-container data-[highlighted]:text-on-error-container',
-                itemIcon: 'text-error'
+                itemIcon: 'text-error group-data-[highlighted]:text-on-error-container'
             }
         },
         {
             color: 'success',
             class: {
                 item: 'text-success data-[highlighted]:bg-success-container data-[highlighted]:text-on-success-container',
-                itemIcon: 'text-success'
+                itemIcon: 'text-success group-data-[highlighted]:text-on-success-container'
             }
         },
         {
             color: 'warning',
             class: {
                 item: 'text-warning data-[highlighted]:bg-warning-container data-[highlighted]:text-on-warning-container',
-                itemIcon: 'text-warning'
+                itemIcon: 'text-warning group-data-[highlighted]:text-on-warning-container'
             }
         },
         {
             color: 'info',
             class: {
                 item: 'text-info data-[highlighted]:bg-info-container data-[highlighted]:text-on-info-container',
-                itemIcon: 'text-info'
+                itemIcon: 'text-info group-data-[highlighted]:text-on-info-container'
             }
         },
         {
             color: 'primary',
             class: {
                 item: 'text-primary data-[highlighted]:bg-primary-container data-[highlighted]:text-on-primary-container',
-                itemIcon: 'text-primary'
+                itemIcon: 'text-primary group-data-[highlighted]:text-on-primary-container'
             }
         },
         {
             color: 'secondary',
             class: {
                 item: 'text-secondary data-[highlighted]:bg-secondary-container data-[highlighted]:text-on-secondary-container',
-                itemIcon: 'text-secondary'
+                itemIcon: 'text-secondary group-data-[highlighted]:text-on-secondary-container'
             }
         },
         {
             color: 'tertiary',
             class: {
                 item: 'text-tertiary data-[highlighted]:bg-tertiary-container data-[highlighted]:text-on-tertiary-container',
-                itemIcon: 'text-tertiary'
+                itemIcon: 'text-tertiary group-data-[highlighted]:text-on-tertiary-container'
             }
         },
         {
             color: 'surface',
             class: {
                 item: 'text-on-surface-variant data-[highlighted]:bg-surface-container-highest data-[highlighted]:text-on-surface',
-                itemIcon: 'text-on-surface-variant'
+                itemIcon: 'text-on-surface-variant group-data-[highlighted]:text-on-surface'
             }
         }
     ],
