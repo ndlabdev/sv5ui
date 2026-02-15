@@ -104,17 +104,28 @@ pnpm add sv5ui
 | Component                            | Description                                                                    |
 | :----------------------------------- | :----------------------------------------------------------------------------- |
 | [**Breadcrumb**](src/lib/Breadcrumb) | Hierarchical navigation trail with icons, custom separators, and snippet slots |
+| [**Tabs**](src/lib/Tabs)             | Tabbed interface with content panels and configurable orientation               |
+| [**Pagination**](src/lib/Pagination) | Page navigation with first/prev/next/last controls and ellipsis                |
 
 ### Overlay
 
-| Component                          | Description                                                               |
-| :--------------------------------- | :------------------------------------------------------------------------ |
-| [**Modal**](src/lib/Modal)         | Accessible dialog with overlay, focus trap, and scroll lock               |
-| [**Slideover**](src/lib/Slideover) | Side panel sliding from any edge with inset mode                          |
-| [**Drawer**](src/lib/Drawer)       | Draggable bottom/side sheet with snap points                              |
-| [**Tooltip**](src/lib/Tooltip)     | Hover tooltip with arrow, keyboard shortcut display, and portal rendering |
-| [**Popover**](src/lib/Popover)     | Floating interactive content panel with focus management                  |
-| [**Accordion**](src/lib/Accordion) | Expandable sections with single or multiple open modes                    |
+| Component                              | Description                                                               |
+| :------------------------------------- | :------------------------------------------------------------------------ |
+| [**Modal**](src/lib/Modal)             | Accessible dialog with overlay, focus trap, and scroll lock               |
+| [**Slideover**](src/lib/Slideover)     | Side panel sliding from any edge with inset mode                          |
+| [**Drawer**](src/lib/Drawer)           | Draggable bottom/side sheet with snap points                              |
+| [**Tooltip**](src/lib/Tooltip)         | Hover tooltip with arrow, keyboard shortcut display, and portal rendering |
+| [**Popover**](src/lib/Popover)         | Floating interactive content panel with focus management                  |
+| [**Accordion**](src/lib/Accordion)     | Expandable sections with single or multiple open modes                    |
+| [**DropdownMenu**](src/lib/DropdownMenu) | Triggered floating menu with items, groups, separators, and sub-menus   |
+| [**ContextMenu**](src/lib/ContextMenu) | Right-click context menu with items, colors, and keyboard navigation      |
+
+### Form
+
+| Component                            | Description                                                                       |
+| :----------------------------------- | :-------------------------------------------------------------------------------- |
+| [**Calendar**](src/lib/Calendar)     | Date picker calendar with single, multiple, and range selection modes              |
+| [**FieldGroup**](src/lib/FieldGroup) | Groups buttons and inputs with seamless borders and shared size/orientation context |
 
 ## Theming
 
