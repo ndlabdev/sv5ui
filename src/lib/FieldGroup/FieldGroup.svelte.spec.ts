@@ -47,7 +47,9 @@ describe('FieldGroup', () => {
 
         it('should render multiple children', () => {
             const { container } = render(FieldGroup, {
-                children: snippet('<div><button>A</button><button>B</button><button>C</button></div>')
+                children: snippet(
+                    '<div><button>A</button><button>B</button><button>C</button></div>'
+                )
             })
             const buttons = container.querySelectorAll('button')
             expect(buttons.length).toBe(3)
@@ -227,7 +229,9 @@ describe('FieldGroup', () => {
         it('should render horizontal group with children and correct structure', () => {
             const { container } = render(FieldGroup, {
                 orientation: 'horizontal',
-                children: snippet('<div><button>A</button><button>B</button><button>C</button></div>')
+                children: snippet(
+                    '<div><button>A</button><button>B</button><button>C</button></div>'
+                )
             })
             const root = getRoot(container)
             const buttons = container.querySelectorAll('button')
