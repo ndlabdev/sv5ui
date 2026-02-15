@@ -39,7 +39,8 @@
         { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' },
         { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' },
         { href: '/pagination', label: 'Pagination', icon: 'lucide:chevrons-left-right-ellipsis' },
-        { href: '/field-group', label: 'Field Group', icon: 'lucide:group' }
+        { href: '/field-group', label: 'Field Group', icon: 'lucide:group' },
+        { href: '/form-field', label: 'Form Field', icon: 'lucide:text-cursor-input' }
     ]
 
     const docItems = [
