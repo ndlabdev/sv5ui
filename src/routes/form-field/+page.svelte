@@ -37,8 +37,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Required</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">required</code> prop to
-            add an asterisk indicator to the label.
+            Use the <code class="rounded bg-surface-container-highest px-1">required</code> prop to add
+            an asterisk indicator to the label.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm">
@@ -53,15 +53,12 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Description</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">description</code> prop
-            to add a description below the label.
+            Use the <code class="rounded bg-surface-container-highest px-1">description</code> prop to
+            add a description below the label.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm">
-                <FormField
-                    label="Email"
-                    description="We'll use this to send you notifications."
-                >
+                <FormField label="Email" description="We'll use this to send you notifications.">
                     <input type="email" placeholder="Enter your email" class={inputClass} />
                 </FormField>
             </div>
@@ -72,8 +69,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Hint</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">hint</code> prop to add
-            a hint text next to the label.
+            Use the <code class="rounded bg-surface-container-highest px-1">hint</code> prop to add a
+            hint text next to the label.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm">
@@ -88,17 +85,13 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Help</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">help</code> prop to add
-            help text below the form control.
+            Use the <code class="rounded bg-surface-container-highest px-1">help</code> prop to add help
+            text below the form control.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm">
                 <FormField label="Password" help="Must be at least 8 characters.">
-                    <input
-                        type="password"
-                        placeholder="Enter your password"
-                        class={inputClass}
-                    />
+                    <input type="password" placeholder="Enter your password" class={inputClass} />
                 </FormField>
             </div>
         </div>
@@ -108,8 +101,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Error</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">error</code> prop to
-            display an error message. It replaces the help text when present.
+            Use the <code class="rounded bg-surface-container-highest px-1">error</code> prop to display
+            an error message. It replaces the help text when present.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm space-y-4">
@@ -140,8 +133,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Size</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">size</code> prop to
-            control the size of the label and text.
+            Use the <code class="rounded bg-surface-container-highest px-1">size</code> prop to control
+            the size of the label and text.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full space-y-4">
@@ -154,11 +147,7 @@
                             {size}
                             required
                         >
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                class={inputClass}
-                            />
+                            <input type="email" placeholder="Enter your email" class={inputClass} />
                         </FormField>
                     </div>
                 {/each}
@@ -170,30 +159,30 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Orientation</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">orientation</code> prop
-            to change the layout direction.
+            Use the <code class="rounded bg-surface-container-highest px-1">orientation</code> prop to
+            change the layout direction.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full space-y-6">
                 <div class="max-w-sm">
                     <p class="mb-2 text-xs text-on-surface-variant">vertical (default)</p>
-                    <FormField label="Email" description="Your primary email." orientation="vertical">
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            class={inputClass}
-                        />
+                    <FormField
+                        label="Email"
+                        description="Your primary email."
+                        orientation="vertical"
+                    >
+                        <input type="email" placeholder="Enter your email" class={inputClass} />
                     </FormField>
                 </div>
 
                 <div class="max-w-lg">
                     <p class="mb-2 text-xs text-on-surface-variant">horizontal</p>
-                    <FormField label="Email" description="Your primary email." orientation="horizontal">
-                        <input
-                            type="email"
-                            placeholder="Enter your email"
-                            class={inputClass}
-                        />
+                    <FormField
+                        label="Email"
+                        description="Your primary email."
+                        orientation="horizontal"
+                    >
+                        <input type="email" placeholder="Enter your email" class={inputClass} />
                     </FormField>
                 </div>
             </div>
@@ -203,9 +192,7 @@
     <!-- Full Example -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Full Example</h2>
-        <p class="text-sm text-on-surface-variant">
-            A complete example with all props combined.
-        </p>
+        <p class="text-sm text-on-surface-variant">A complete example with all props combined.</p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm space-y-4">
                 <FormField
@@ -224,10 +211,7 @@
                     hint="Optional"
                     help="Max 280 characters."
                 >
-                    <textarea
-                        placeholder="Write something..."
-                        rows="3"
-                        class={inputClass}
+                    <textarea placeholder="Write something..." rows="3" class={inputClass}
                     ></textarea>
                 </FormField>
             </div>
