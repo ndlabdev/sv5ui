@@ -29,6 +29,7 @@ export * from './ContextMenu/index.js'
 export * from './Tabs/index.js'
 export * from './Pagination/index.js'
 export * from './FieldGroup/index.js'
+export * from './FormField/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
