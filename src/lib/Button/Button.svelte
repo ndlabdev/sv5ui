@@ -8,9 +8,12 @@
     import { Button } from 'bits-ui'
     import { buttonVariants, buttonDefaults } from './button.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
+    import { getContext } from 'svelte'
+    import { fieldGroupVariant } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
+    import type { FieldGroupVariantProps } from '../FieldGroup/field-group.variants.js'
 
     const config = getComponentConfig('button', buttonDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -20,7 +23,7 @@
         ui,
         color = config.defaultVariants.color,
         variant = config.defaultVariants.variant,
-        size = config.defaultVariants.size,
+        size,
         label,
         loading = false,
         loadingIcon = icons.loading,
@@ -39,6 +42,21 @@
         ...restProps
     }: Props = $props()
 
+    const fieldGroupContext = getContext<
+        | {
+              orientation: NonNullable<FieldGroupVariantProps['orientation']>
+              size: NonNullable<FieldGroupVariantProps['size']>
+          }
+        | undefined
+    >('fieldGroup')
+
+    const resolvedSize = $derived(size ?? fieldGroupContext?.size ?? config.defaultVariants.size)
+    const fieldGroupClass = $derived(
+        fieldGroupContext
+            ? fieldGroupVariant.fieldGroup[fieldGroupContext.orientation ?? 'horizontal']
+            : undefined
+    )
+
     const isIconOnly = $derived(square || (!label && !children))
     const isLeading = $derived((!!icon && !trailing) || (loading && !trailing) || !!leadingIcon)
     const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
@@ -56,7 +74,7 @@
         const slots = buttonVariants({
             variant,
             color,
-            size,
+            size: resolvedSize,
             block,
             square: isIconOnly,
             loading,
@@ -64,7 +82,7 @@
             trailing: isTrailing
         })
         return {
-            base: slots.base({ class: [config.slots.base, className, ui?.base] }),
+            base: slots.base({ class: [config.slots.base, fieldGroupClass, className, ui?.base] }),
             label: slots.label({ class: [config.slots.label, ui?.label] }),
             leadingIcon: slots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] }),
             trailingIcon: slots.trailingIcon({
