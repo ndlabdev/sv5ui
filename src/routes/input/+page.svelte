@@ -45,7 +45,11 @@
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm space-y-3">
-                <Input bind:value={bindValue} leadingIcon="lucide:pencil" placeholder="Type something..." />
+                <Input
+                    bind:value={bindValue}
+                    leadingIcon="lucide:pencil"
+                    placeholder="Type something..."
+                />
                 <p class="text-sm text-on-surface-variant">
                     Value: <span class="font-mono text-on-surface">{bindValue || '(empty)'}</span>
                 </p>
