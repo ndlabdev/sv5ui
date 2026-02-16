@@ -124,8 +124,10 @@ pnpm add sv5ui
 
 | Component                            | Description                                                                         |
 | :----------------------------------- | :---------------------------------------------------------------------------------- |
-| [**Calendar**](src/lib/Calendar)     | Date picker calendar with single, multiple, and range selection modes               |
+| [**Input**](src/lib/Input)           | Text input with 5 variants, icons, avatar, loading state, and FormField integration |
+| [**FormField**](src/lib/FormField)   | Form control wrapper providing label, description, hint, help, and error handling   |
 | [**FieldGroup**](src/lib/FieldGroup) | Groups buttons and inputs with seamless borders and shared size/orientation context |
+| [**Calendar**](src/lib/Calendar)     | Date picker calendar with single, multiple, and range selection modes               |
 
 ## Theming
 

@@ -977,31 +977,31 @@
                         <!-- Form UI -->
                         <div class="space-y-3">
                             <div class="grid gap-3 sm:grid-cols-2">
-                                <div>
-                                    <label class="mb-1 block text-xs font-medium">Name</label>
+                                <label class="block">
+                                    <span class="mb-1 block text-xs font-medium">Name</span>
                                     <input
                                         type="text"
                                         placeholder="Your name"
                                         class="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm focus:border-primary focus:outline-none"
                                     />
-                                </div>
-                                <div>
-                                    <label class="mb-1 block text-xs font-medium">Email</label>
+                                </label>
+                                <label class="block">
+                                    <span class="mb-1 block text-xs font-medium">Email</span>
                                     <input
                                         type="email"
                                         placeholder="your@email.com"
                                         class="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm focus:border-primary focus:outline-none"
                                     />
-                                </div>
+                                </label>
                             </div>
-                            <div>
-                                <label class="mb-1 block text-xs font-medium">Message</label>
+                            <label class="block">
+                                <span class="mb-1 block text-xs font-medium">Message</span>
                                 <textarea
                                     placeholder="Your message..."
                                     rows="3"
                                     class="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 text-sm focus:border-primary focus:outline-none"
                                 ></textarea>
-                            </div>
+                            </label>
                             <Button
                                 variant="solid"
                                 label="Send Message"

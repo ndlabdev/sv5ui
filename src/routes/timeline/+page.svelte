@@ -229,14 +229,16 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-sm font-medium">Active Step: {playgroundValue}</label>
-                    <input
-                        type="range"
-                        min="1"
-                        max="4"
-                        bind:value={playgroundValue}
-                        class="w-full accent-primary"
-                    />
+                    <label class="text-sm font-medium">
+                        Active Step: {playgroundValue}
+                        <input
+                            type="range"
+                            min="1"
+                            max="4"
+                            bind:value={playgroundValue}
+                            class="w-full accent-primary"
+                        />
+                    </label>
                 </div>
             </div>
         </div>

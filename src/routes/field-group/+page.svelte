@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, FieldGroup } from '$lib/index.js'
+    import { Button, Input, FieldGroup } from '$lib/index.js'
 
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 </script>
@@ -139,6 +139,70 @@
                 <Button leadingIcon="lucide:settings" label="Settings" variant="soft" />
                 <Button leadingIcon="lucide:user" label="Profile" variant="soft" />
             </FieldGroup>
+        </div>
+    </section>
+
+    <!-- With Input -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">With Input</h2>
+        <p class="text-sm text-on-surface-variant">
+            Combine <code class="rounded bg-surface-container-highest px-1">Input</code> and
+            <code class="rounded bg-surface-container-highest px-1">Button</code> in a FieldGroup.
+        </p>
+        <div class="flex flex-wrap items-start gap-6 rounded-lg bg-surface-container-high p-4">
+            <FieldGroup>
+                <Input leadingIcon="lucide:search" placeholder="Search..." />
+                <Button label="Search" />
+            </FieldGroup>
+
+            <FieldGroup>
+                <Input placeholder="Enter email" type="email" />
+                <Button label="Subscribe" variant="solid" color="primary" />
+            </FieldGroup>
+        </div>
+    </section>
+
+    <!-- With Input (Vertical) -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">With Input (Vertical)</h2>
+        <div class="flex flex-wrap items-start gap-6 rounded-lg bg-surface-container-high p-4">
+            <div class="w-72">
+                <FieldGroup orientation="vertical">
+                    <Input placeholder="First name" />
+                    <Input placeholder="Last name" />
+                    <Input placeholder="Email" type="email" />
+                </FieldGroup>
+            </div>
+
+            <div class="w-72">
+                <FieldGroup orientation="vertical">
+                    <Input leadingIcon="lucide:user" placeholder="Username" />
+                    <Input leadingIcon="lucide:lock" placeholder="Password" type="password" />
+                    <Button label="Sign in" block />
+                </FieldGroup>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mixed Sizes -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Input + Button Sizes</h2>
+        <p class="text-sm text-on-surface-variant">
+            FieldGroup propagates the <code class="rounded bg-surface-container-highest px-1"
+                >size</code
+            >
+            prop to all children.
+        </p>
+        <div class="flex flex-wrap items-end gap-6 rounded-lg bg-surface-container-high p-4">
+            {#each sizes as size (size)}
+                <div class="flex flex-col items-center gap-2">
+                    <FieldGroup {size}>
+                        <Input placeholder="Search..." />
+                        <Button icon="lucide:search" />
+                    </FieldGroup>
+                    <span class="text-xs text-on-surface-variant">{size}</span>
+                </div>
+            {/each}
         </div>
     </section>
 </div>
