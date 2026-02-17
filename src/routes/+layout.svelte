@@ -41,7 +41,8 @@
         { href: '/pagination', label: 'Pagination', icon: 'lucide:chevrons-left-right-ellipsis' },
         { href: '/field-group', label: 'Field Group', icon: 'lucide:group' },
         { href: '/form-field', label: 'Form Field', icon: 'lucide:text-cursor-input' },
-        { href: '/input', label: 'Input', icon: 'lucide:text-cursor' }
+        { href: '/input', label: 'Input', icon: 'lucide:text-cursor' },
+        { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' }
     ]
 
     const docItems = [
