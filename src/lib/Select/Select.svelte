@@ -125,11 +125,7 @@
     const displayIcon = $derived(selectedItem?.icon ?? leadingIcon ?? icon)
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
     const leadingIconName = $derived(
-        loading && isLeading
-            ? loadingIcon
-            : !displayAvatar
-              ? displayIcon
-              : undefined
+        loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
     )
 
     // ---- bits-ui items for typeahead ----
@@ -372,10 +368,7 @@
             </span>
         {:else}
             <span class={trailingClass}>
-                <Icon
-                    name={trailingIconName}
-                    class="{trailingIconBaseClass} {trailingIconClass}"
-                />
+                <Icon name={trailingIconName} class="{trailingIconBaseClass} {trailingIconClass}" />
             </span>
         {/if}
     </div>

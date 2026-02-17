@@ -2,10 +2,7 @@ import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { SelectVariantProps, SelectSlots } from './select.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
-import type {
-    SelectRootPropsWithoutHTML,
-    SelectContentPropsWithoutHTML
-} from 'bits-ui'
+import type { SelectRootPropsWithoutHTML, SelectContentPropsWithoutHTML } from 'bits-ui'
 
 // ============================================================================
 // Item Types

@@ -152,12 +152,7 @@
                             >
                             {#each colors as color (color)}
                                 <td class="px-3 py-2">
-                                    <Select
-                                        {variant}
-                                        {color}
-                                        items={fruits}
-                                        placeholder={color}
-                                    />
+                                    <Select {variant} {color} items={fruits} placeholder={color} />
                                 </td>
                             {/each}
                         </tr>
@@ -187,8 +182,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Icons</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1">leadingIcon</code> to add an
-            icon before the value.
+            Use <code class="rounded bg-surface-container-highest px-1">leadingIcon</code> to add an icon
+            before the value.
         </p>
         <div class="flex flex-wrap gap-4 rounded-lg bg-surface-container-high p-4">
             <div class="w-64">
@@ -203,9 +198,7 @@
     <!-- Items with Icons -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Items with Icons</h2>
-        <p class="text-sm text-on-surface-variant">
-            Each item can have its own icon.
-        </p>
+        <p class="text-sm text-on-surface-variant">Each item can have its own icon.</p>
         <div class="flex flex-wrap gap-4 rounded-lg bg-surface-container-high p-4">
             <div class="w-64">
                 <Select items={iconItems} placeholder="Choose a page..." />
@@ -262,9 +255,7 @@
     <!-- Disabled Items -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Disabled Items</h2>
-        <p class="text-sm text-on-surface-variant">
-            Individual items can be disabled.
-        </p>
+        <p class="text-sm text-on-surface-variant">Individual items can be disabled.</p>
         <div class="flex flex-wrap gap-4 rounded-lg bg-surface-container-high p-4">
             <div class="w-64">
                 <Select items={disabledItems} placeholder="Select status..." />
@@ -303,8 +294,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Highlight</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">highlight</code> prop to
-            emphasize the ring color.
+            Use the <code class="rounded bg-surface-container-highest px-1">highlight</code> prop to emphasize
+            the ring color.
         </p>
         <div class="flex flex-wrap gap-4 rounded-lg bg-surface-container-high p-4">
             {#each colors as color (color)}
@@ -319,16 +310,13 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">FormField Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1">FormField</code>,
-            the Select automatically inherits size, error state, and accessibility attributes.
+            When used inside a <code class="rounded bg-surface-container-highest px-1"
+                >FormField</code
+            >, the Select automatically inherits size, error state, and accessibility attributes.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
             <div class="w-full max-w-sm space-y-4">
-                <FormField
-                    label="Country"
-                    description="Select your country of residence."
-                    required
-                >
+                <FormField label="Country" description="Select your country of residence." required>
                     <Select
                         leadingIcon="lucide:globe"
                         items={[
@@ -410,7 +398,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">FieldGroup Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1">FieldGroup</code
+            When used inside a <code class="rounded bg-surface-container-highest px-1"
+                >FieldGroup</code
             >, selects are visually connected.
         </p>
         <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
