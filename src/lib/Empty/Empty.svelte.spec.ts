@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import Empty from './Empty.svelte'
 
+const AVATAR_SRC =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+
 describe('Empty', () => {
     // ==================== RENDERING ====================
 
@@ -101,7 +104,7 @@ describe('Empty', () => {
         it('should render avatar with src', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                avatar: { src: 'https://i.pravatar.cc/150', alt: 'User Avatar' }
+                avatar: { src: AVATAR_SRC, alt: 'User Avatar' }
             })
             const avatar = container.querySelector('[data-avatar-root]')
             expect(avatar).not.toBeNull()
