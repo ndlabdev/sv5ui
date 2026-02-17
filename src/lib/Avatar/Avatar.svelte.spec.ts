@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import Avatar from './Avatar.svelte'
 
+const AVATAR_SRC =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+
 /** Helper: get a locator for a data-attribute element inside the render container */
 function getByData(container: HTMLElement, attr: string) {
     const el = container.querySelector(`[${attr}]`)
@@ -81,25 +84,25 @@ describe('Avatar', () => {
 
     describe('image', () => {
         it('should render img element when src is provided', async () => {
-            render(Avatar, { src: 'https://i.pravatar.cc/64', alt: 'User photo' })
+            render(Avatar, { src: AVATAR_SRC, alt: 'User photo' })
             const img = page.getByRole('img', { name: 'User photo' })
             await expect.element(img).toBeInTheDocument()
         })
 
         it('should set alt attribute on img', async () => {
-            render(Avatar, { src: 'https://i.pravatar.cc/64', alt: 'Profile pic' })
+            render(Avatar, { src: AVATAR_SRC, alt: 'Profile pic' })
             const img = page.getByRole('img', { name: 'Profile pic' })
             await expect.element(img).toHaveAttribute('alt', 'Profile pic')
         })
 
         it('should set empty alt when alt is not provided', async () => {
-            const { container } = render(Avatar, { src: 'https://i.pravatar.cc/64' })
+            const { container } = render(Avatar, { src: AVATAR_SRC })
             const img = page.elementLocator(container.querySelector('img')!)
             await expect.element(img).toHaveAttribute('alt', '')
         })
 
         it('should set width and height based on size', async () => {
-            render(Avatar, { src: 'https://i.pravatar.cc/64', alt: 'User', size: 'lg' })
+            render(Avatar, { src: AVATAR_SRC, alt: 'User', size: 'lg' })
             const img = page.getByRole('img', { name: 'User' })
             await expect.element(img).toHaveAttribute('width', '36')
             await expect.element(img).toHaveAttribute('height', '36')
@@ -107,7 +110,7 @@ describe('Avatar', () => {
 
         it('should still render fallback alongside img', async () => {
             const { container } = render(Avatar, {
-                src: 'https://i.pravatar.cc/64',
+                src: AVATAR_SRC,
                 alt: 'John Doe'
             })
             const fallback = getByData(container, 'data-avatar-fallback')
@@ -163,7 +166,7 @@ describe('Avatar', () => {
 
         for (const { size, px } of sizePxMap) {
             it(`should set img width/height to ${px}px for size="${size}"`, async () => {
-                render(Avatar, { src: 'https://i.pravatar.cc/64', alt: 'User', size })
+                render(Avatar, { src: AVATAR_SRC, alt: 'User', size })
                 const img = page.getByRole('img', { name: 'User' })
                 await expect.element(img).toHaveAttribute('width', px)
                 await expect.element(img).toHaveAttribute('height', px)
@@ -201,7 +204,7 @@ describe('Avatar', () => {
 
         it('should apply ui.image class', async () => {
             render(Avatar, {
-                src: 'https://i.pravatar.cc/64',
+                src: AVATAR_SRC,
                 alt: 'User',
                 ui: { image: 'custom-img' }
             })

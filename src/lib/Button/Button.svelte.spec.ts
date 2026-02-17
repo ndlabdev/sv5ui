@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import Button from './Button.svelte'
 
+const AVATAR_SRC =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+
 describe('Button', () => {
     // ==================== RENDERING ====================
 
@@ -245,7 +248,7 @@ describe('Button', () => {
         it('should render avatar with src as img element', async () => {
             render(Button, {
                 label: 'Photo',
-                avatar: { src: 'https://i.pravatar.cc/64', alt: 'User avatar' }
+                avatar: { src: AVATAR_SRC, alt: 'User avatar' }
             })
             const btn = page.getByRole('button', { name: 'Photo' })
             await expect.element(btn).toBeInTheDocument()

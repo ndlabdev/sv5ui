@@ -3,12 +3,15 @@ import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import AvatarGroup from './AvatarGroup.svelte'
 
+const avatarSrc = (id: number) =>
+    `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect fill="%23${String(id).padStart(6, '0')}"/></svg>`
+
 const avatars = [
-    { src: 'https://i.pravatar.cc/150?img=1', alt: 'User 1' },
-    { src: 'https://i.pravatar.cc/150?img=2', alt: 'User 2' },
-    { src: 'https://i.pravatar.cc/150?img=3', alt: 'User 3' },
-    { src: 'https://i.pravatar.cc/150?img=4', alt: 'User 4' },
-    { src: 'https://i.pravatar.cc/150?img=5', alt: 'User 5' }
+    { src: avatarSrc(1), alt: 'User 1' },
+    { src: avatarSrc(2), alt: 'User 2' },
+    { src: avatarSrc(3), alt: 'User 3' },
+    { src: avatarSrc(4), alt: 'User 4' },
+    { src: avatarSrc(5), alt: 'User 5' }
 ]
 
 describe('AvatarGroup', () => {
