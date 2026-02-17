@@ -32,6 +32,7 @@ export * from './FieldGroup/index.js'
 export * from './FormField/index.js'
 export * from './Input/index.js'
 export * from './Select/index.js'
+export * from './Switch/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
