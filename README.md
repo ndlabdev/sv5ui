@@ -125,6 +125,7 @@ pnpm add sv5ui
 | Component                            | Description                                                                                             |
 | :----------------------------------- | :------------------------------------------------------------------------------------------------------ |
 | [**Input**](src/lib/Input)           | Text input with 5 variants, icons, avatar, loading state, and FormField integration                     |
+| [**Textarea**](src/lib/Textarea)     | Multi-line text input with 5 variants, icons, autoresize with maxrows, and FormField integration        |
 | [**Select**](src/lib/Select)         | Dropdown select with 5 variants, icons, avatars, groups, descriptions, and FormField support            |
 | [**Switch**](src/lib/Switch)         | Toggle switch with 8 colors, 5 sizes, checked/unchecked icons, loading state, and FormField integration |
 | [**FormField**](src/lib/FormField)   | Form control wrapper providing label, description, hint, help, and error handling                       |

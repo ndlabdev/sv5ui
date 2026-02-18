@@ -31,6 +31,7 @@ export * from './Pagination/index.js'
 export * from './FieldGroup/index.js'
 export * from './FormField/index.js'
 export * from './Input/index.js'
+export * from './Textarea/index.js'
 export * from './Select/index.js'
 export * from './Switch/index.js'
 
