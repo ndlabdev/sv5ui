@@ -200,9 +200,7 @@ describe('Select', () => {
             await vi.waitFor(() => {
                 const svg = root.querySelector('svg')
                 expect(svg).not.toBeNull()
-                expect(svg!.getAttribute('class') || '').toMatch(
-                    /animate-spin/
-                )
+                expect(svg!.getAttribute('class') || '').toMatch(/animate-spin/)
             })
         })
 
@@ -216,9 +214,7 @@ describe('Select', () => {
             await vi.waitFor(() => {
                 const svg = root.querySelector('span:first-child svg')
                 expect(svg).not.toBeNull()
-                expect(svg!.getAttribute('class') || '').toMatch(
-                    /animate-spin/
-                )
+                expect(svg!.getAttribute('class') || '').toMatch(/animate-spin/)
             })
         })
     })
