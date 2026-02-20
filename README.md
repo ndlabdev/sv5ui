@@ -128,6 +128,8 @@ pnpm add sv5ui
 | [**Textarea**](src/lib/Textarea)     | Multi-line text input with 5 variants, icons, autoresize with maxrows, and FormField integration        |
 | [**Select**](src/lib/Select)         | Dropdown select with 5 variants, icons, avatars, groups, descriptions, and FormField support            |
 | [**Switch**](src/lib/Switch)         | Toggle switch with 8 colors, 5 sizes, checked/unchecked icons, loading state, and FormField integration |
+| [**Checkbox**](src/lib/Checkbox)     | Checkbox with 8 colors, 5 sizes, indeterminate state, custom icons, and FormField integration           |
+| [**RadioGroup**](src/lib/RadioGroup) | Radio group for single-selection with items API, legend, orientation, and FormField integration         |
 | [**FormField**](src/lib/FormField)   | Form control wrapper providing label, description, hint, help, and error handling                       |
 | [**FieldGroup**](src/lib/FieldGroup) | Groups buttons and inputs with seamless borders and shared size/orientation context                     |
 | [**Calendar**](src/lib/Calendar)     | Date picker calendar with single, multiple, and range selection modes                                   |
