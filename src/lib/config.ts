@@ -29,7 +29,9 @@ export const iconsDefaults = {
     chevronDown: 'lucide:chevron-down',
     chevronRight: 'lucide:chevron-right',
     close: 'lucide:x',
-    check: 'lucide:check'
+    check: 'lucide:check',
+    light: 'lucide:sun',
+    dark: 'lucide:moon'
 }
 
 // ==================== TYPES ====================

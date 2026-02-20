@@ -36,6 +36,7 @@ export * from './Select/index.js'
 export * from './Switch/index.js'
 export * from './Checkbox/index.js'
 export * from './RadioGroup/index.js'
+export * from './ThemeModeButton/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
