@@ -44,7 +44,8 @@
         { href: '/input', label: 'Input', icon: 'lucide:text-cursor' },
         { href: '/textarea', label: 'Textarea', icon: 'lucide:text' },
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
-        { href: '/switch', label: 'Switch', icon: 'lucide:toggle-left' }
+        { href: '/switch', label: 'Switch', icon: 'lucide:toggle-left' },
+        { href: '/checkbox', label: 'Checkbox', icon: 'lucide:square-check' }
     ]
 
     const docItems = [

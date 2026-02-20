@@ -55,17 +55,17 @@ export const textareaVariants = tv({
                 trailingIcon: 'size-5'
             },
             lg: {
-                base: 'px-4 py-2.5 text-sm rounded-md',
-                leading: 'ps-4 inset-y-2',
+                base: 'px-3 py-2.5 text-sm rounded-md',
+                leading: 'ps-3 inset-y-2',
                 leadingIcon: 'size-5',
-                trailing: 'pe-4 inset-y-2',
+                trailing: 'pe-3 inset-y-2',
                 trailingIcon: 'size-5'
             },
             xl: {
-                base: 'px-5 py-3 text-base rounded-lg',
-                leading: 'ps-5 inset-y-2',
+                base: 'px-3 py-3 text-base rounded-lg',
+                leading: 'ps-3 inset-y-2',
                 leadingIcon: 'size-6',
-                trailing: 'pe-5 inset-y-2',
+                trailing: 'pe-3 inset-y-2',
                 trailingIcon: 'size-6'
             }
         },
