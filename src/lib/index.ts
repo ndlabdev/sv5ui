@@ -35,6 +35,7 @@ export * from './Textarea/index.js'
 export * from './Select/index.js'
 export * from './Switch/index.js'
 export * from './Checkbox/index.js'
+export * from './RadioGroup/index.js'
 
 // Configuration
 export { defineConfig } from './config.js'
