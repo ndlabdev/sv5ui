@@ -64,12 +64,13 @@ pnpm add sv5ui
 
 ### General
 
-| Component                    | Description                                                                |
-| :--------------------------- | :------------------------------------------------------------------------- |
-| [**Button**](src/lib/Button) | Versatile button with 6 variants, loading state, icons, and avatar support |
-| [**Link**](src/lib/Link)     | Smart anchor with automatic active-state detection based on current route  |
-| [**Icon**](src/lib/Icon)     | Iconify wrapper — render any of 200,000+ icons by name                     |
-| [**Kbd**](src/lib/Kbd)       | Keyboard shortcut display with OS-aware symbol mapping                     |
+| Component                                      | Description                                                                        |
+| :--------------------------------------------- | :--------------------------------------------------------------------------------- |
+| [**Button**](src/lib/Button)                   | Versatile button with 6 variants, loading state, icons, and avatar support         |
+| [**Link**](src/lib/Link)                       | Smart anchor with automatic active-state detection based on current route          |
+| [**Icon**](src/lib/Icon)                       | Iconify wrapper — render any of 200,000+ icons by name                             |
+| [**Kbd**](src/lib/Kbd)                         | Keyboard shortcut display with OS-aware symbol mapping                             |
+| [**ThemeModeButton**](src/lib/ThemeModeButton) | Light/dark mode toggle button with customizable icons and mode-watcher integration |
 
 ### Layout
 
