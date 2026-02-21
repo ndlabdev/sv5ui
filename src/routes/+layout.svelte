@@ -46,7 +46,8 @@
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
         { href: '/switch', label: 'Switch', icon: 'lucide:toggle-left' },
         { href: '/checkbox', label: 'Checkbox', icon: 'lucide:square-check' },
-        { href: '/radio-group', label: 'Radio Group', icon: 'lucide:circle-dot-dashed' }
+        { href: '/radio-group', label: 'Radio Group', icon: 'lucide:circle-dot-dashed' },
+        { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' }
     ]
 
     const docItems = [
