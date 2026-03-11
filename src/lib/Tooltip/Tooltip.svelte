@@ -118,30 +118,32 @@
     </Tooltip.Content>
 {/snippet}
 
-<Tooltip.Root
-    bind:open
-    {onOpenChange}
-    {delayDuration}
-    {disableHoverableContent}
-    {disableCloseOnTriggerClick}
-    {ignoreNonKeyboardFocus}
-    disabled={disabled || !hasContent}
->
-    {#if children}
-        <Tooltip.Trigger>
-            {#snippet child({ props })}
-                <span {...props} class={className as string}>
-                    {@render children({ open })}
-                </span>
-            {/snippet}
-        </Tooltip.Trigger>
-    {/if}
+<Tooltip.Provider {delayDuration} {disableHoverableContent}>
+    <Tooltip.Root
+        bind:open
+        {onOpenChange}
+        {delayDuration}
+        {disableHoverableContent}
+        {disableCloseOnTriggerClick}
+        {ignoreNonKeyboardFocus}
+        disabled={disabled || !hasContent}
+    >
+        {#if children}
+            <Tooltip.Trigger>
+                {#snippet child({ props })}
+                    <span {...props} class={className as string}>
+                        {@render children({ open })}
+                    </span>
+                {/snippet}
+            </Tooltip.Trigger>
+        {/if}
 
-    {#if portal}
-        <Tooltip.Portal>
+        {#if portal}
+            <Tooltip.Portal>
+                {@render tooltipContentEl()}
+            </Tooltip.Portal>
+        {:else}
             {@render tooltipContentEl()}
-        </Tooltip.Portal>
-    {:else}
-        {@render tooltipContentEl()}
-    {/if}
-</Tooltip.Root>
+        {/if}
+    </Tooltip.Root>
+</Tooltip.Provider>
