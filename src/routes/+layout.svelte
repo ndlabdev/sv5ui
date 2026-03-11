@@ -1,7 +1,6 @@
 <script lang="ts">
     import { ModeWatcher } from 'mode-watcher'
     import { toggleMode, mode } from 'mode-watcher'
-    import { Tooltip } from 'bits-ui'
     import { Button, Icon, Link } from '$lib/index.js'
     import './layout.css'
     import '../sv5ui.config.js'
@@ -61,8 +60,7 @@
 
 <ModeWatcher />
 
-<Tooltip.Provider delayDuration={200}>
-    <div class="min-h-screen bg-surface text-on-surface">
+<div class="min-h-screen bg-surface text-on-surface">
         <!-- Header -->
         <header
             class="sticky top-0 z-50 border-b border-outline-variant bg-surface-container px-4 py-3 lg:px-6"
@@ -165,5 +163,4 @@
                 </div>
             </main>
         </div>
-    </div>
-</Tooltip.Provider>
+</div>
