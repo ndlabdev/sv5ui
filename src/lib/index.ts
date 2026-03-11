@@ -41,4 +41,3 @@ export * from './ThemeModeButton/index.js'
 // Configuration
 export { defineConfig } from './config.js'
 export type { UIConfig } from './config.js'
-
