@@ -42,6 +42,3 @@ export * from './ThemeModeButton/index.js'
 export { defineConfig } from './config.js'
 export type { UIConfig } from './config.js'
 
-// Version
-declare const __SV5UI_VERSION__: string
-export const VERSION = __SV5UI_VERSION__
