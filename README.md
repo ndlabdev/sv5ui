@@ -10,9 +10,15 @@
 </p>
 
 <p align="center">
+  <a href="https://sv5ui.vercel.app/docs"><strong>Documentation</strong></a> · <a href="https://sv5ui.vercel.app"><strong>Live Demo</strong></a>
+</p>
+
+<p align="center">
   <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/v/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm version" /></a>
   <a href="https://github.com/ndlabdev/sv5ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="license" /></a>
   <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/dm/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="downloads" /></a>
+  <a href="https://svelte.dev"><img src="https://img.shields.io/badge/svelte-5-ff3e00?style=flat-square&logo=svelte&logoColor=white" alt="Svelte 5" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/types-TypeScript-blue?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" /></a>
 </p>
 
 ---

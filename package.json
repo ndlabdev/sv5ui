@@ -8,7 +8,7 @@
         "type": "git",
         "url": "git+https://github.com/ndlabdev/sv5ui.git"
     },
-    "homepage": "https://github.com/ndlabdev/sv5ui#readme",
+    "homepage": "https://sv5ui.vercel.app",
     "bugs": {
         "url": "https://github.com/ndlabdev/sv5ui/issues"
     },
