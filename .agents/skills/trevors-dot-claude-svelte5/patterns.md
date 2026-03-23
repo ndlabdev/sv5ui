@@ -5,11 +5,11 @@
 ```svelte
 <!-- Button.svelte -->
 <script>
-  let { children, variant = 'default', ...rest } = $props();
+    let { children, variant = 'default', ...rest } = $props()
 </script>
 
 <button class="btn btn-{variant}" {...rest}>
-  {@render children()}
+    {@render children()}
 </button>
 ```
 
@@ -18,15 +18,15 @@
 ```svelte
 <!-- TextInput.svelte -->
 <script>
-  let { value = $bindable(''), oninput, ...rest } = $props();
+    let { value = $bindable(''), oninput, ...rest } = $props()
 </script>
 
 <input
-  bind:value
-  oninput={e => {
-    oninput?.(e);
-  }}
-  {...rest}
+    bind:value
+    oninput={(e) => {
+        oninput?.(e)
+    }}
+    {...rest}
 />
 
 <!-- Usage -->
@@ -87,18 +87,18 @@
 
 ```svelte
 <script>
-  let { children, onmount } = $props();
-  let element;
+    let { children, onmount } = $props()
+    let element
 
-  $effect(() => {
-    if (element && onmount) {
-      return onmount(element);  // return cleanup function
-    }
-  });
+    $effect(() => {
+        if (element && onmount) {
+            return onmount(element) // return cleanup function
+        }
+    })
 </script>
 
 <div bind:this={element}>
-  {@render children()}
+    {@render children()}
 </div>
 ```
 
@@ -107,25 +107,25 @@
 ```svelte
 <!-- Modal.svelte -->
 <script>
-  let { open, onclose, title, children, footer } = $props();
+    let { open, onclose, title, children, footer } = $props()
 </script>
 
 {#if open}
-  <div class="modal-backdrop" onclick={onclose}>
-    <div class="modal" onclick={e => e.stopPropagation()}>
-      <header>
-        {#if typeof title === 'string'}
-          <h2>{title}</h2>
-        {:else}
-          {@render title?.()}
-        {/if}
-      </header>
-      <main>{@render children()}</main>
-      {#if footer}
-        <footer>{@render footer()}</footer>
-      {/if}
+    <div class="modal-backdrop" onclick={onclose}>
+        <div class="modal" onclick={(e) => e.stopPropagation()}>
+            <header>
+                {#if typeof title === 'string'}
+                    <h2>{title}</h2>
+                {:else}
+                    {@render title?.()}
+                {/if}
+            </header>
+            <main>{@render children()}</main>
+            {#if footer}
+                <footer>{@render footer()}</footer>
+            {/if}
+        </div>
     </div>
-  </div>
 {/if}
 ```
 
@@ -133,25 +133,22 @@
 
 ```svelte
 <script>
-  let { items, selected = $bindable(null), onselect } = $props();
+    let { items, selected = $bindable(null), onselect } = $props()
 
-  function select(item) {
-    selected = item;
-    onselect?.(item);
-  }
+    function select(item) {
+        selected = item
+        onselect?.(item)
+    }
 </script>
 
 <ul>
-  {#each items as item (item.id)}
-    <li>
-      <button
-        class:selected={selected === item}
-        onclick={() => select(item)}
-      >
-        {item.name}
-      </button>
-    </li>
-  {/each}
+    {#each items as item (item.id)}
+        <li>
+            <button class:selected={selected === item} onclick={() => select(item)}>
+                {item.name}
+            </button>
+        </li>
+    {/each}
 </ul>
 ```
 
@@ -159,29 +156,29 @@
 
 ```svelte
 <script>
-  let { load } = $props();
+    let { load } = $props()
 
-  let data = $state(null);
-  let error = $state(null);
-  let loading = $state(true);
+    let data = $state(null)
+    let error = $state(null)
+    let loading = $state(true)
 
-  $effect(() => {
-    loading = true;
-    error = null;
+    $effect(() => {
+        loading = true
+        error = null
 
-    load()
-      .then(result => data = result)
-      .catch(e => error = e)
-      .finally(() => loading = false);
-  });
+        load()
+            .then((result) => (data = result))
+            .catch((e) => (error = e))
+            .finally(() => (loading = false))
+    })
 </script>
 
 {#if loading}
-  <p>Loading...</p>
+    <p>Loading...</p>
 {:else if error}
-  <p>Error: {error.message}</p>
+    <p>Error: {error.message}</p>
 {:else}
-  <slot {data} />
+    <slot {data} />
 {/if}
 ```
 
@@ -189,22 +186,22 @@
 
 ```svelte
 <script>
-  let { value = $bindable(''), delay = 300, onchange } = $props();
-  let internal = $state(value);
-  let timeout;
+    let { value = $bindable(''), delay = 300, onchange } = $props()
+    let internal = $state(value)
+    let timeout
 
-  $effect(() => {
-    internal = value;  // sync from parent
-  });
+    $effect(() => {
+        internal = value // sync from parent
+    })
 
-  function handleInput(e) {
-    internal = e.target.value;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      value = internal;
-      onchange?.(internal);
-    }, delay);
-  }
+    function handleInput(e) {
+        internal = e.target.value
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
+            value = internal
+            onchange?.(internal)
+        }, delay)
+    }
 </script>
 
 <input value={internal} oninput={handleInput} />

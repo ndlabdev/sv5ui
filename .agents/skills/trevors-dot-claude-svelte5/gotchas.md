@@ -6,15 +6,15 @@
 
 ```svelte
 <script>
-  let items = $state(['a', 'b']);
+    let items = $state(['a', 'b'])
 
-  // ✅ These all work (deep reactivity)
-  items.push('c');
-  items[0] = 'x';
-  items.splice(1, 1);
+    // ✅ These all work (deep reactivity)
+    items.push('c')
+    items[0] = 'x'
+    items.splice(1, 1)
 
-  // ✅ Reassignment also works
-  items = [...items, 'c'];
+    // ✅ Reassignment also works
+    items = [...items, 'c']
 </script>
 ```
 
@@ -22,14 +22,14 @@
 
 ```svelte
 <script>
-  let count = $state(0);
+    let count = $state(0)
 
-  // ✅ Correct
-  count = count + 1;
-  count++;
+    // ✅ Correct
+    count = count + 1
+    count++
 
-  // ❌ This does nothing (no mutation possible)
-  // Primitives have no methods to mutate
+    // ❌ This does nothing (no mutation possible)
+    // Primitives have no methods to mutate
 </script>
 ```
 
@@ -37,14 +37,14 @@
 
 ```svelte
 <script>
-  let count = $state(0);
-  let doubled = $derived(count * 2);
+    let count = $state(0)
+    let doubled = $derived(count * 2)
 
-  // ❌ Error: doubled is readonly
-  doubled = 10;
+    // ❌ Error: doubled is readonly
+    doubled = 10
 
-  // ✅ Change the source instead
-  count = 5;  // doubled becomes 10
+    // ✅ Change the source instead
+    count = 5 // doubled becomes 10
 </script>
 ```
 
@@ -54,14 +54,14 @@
 
 ```svelte
 <script>
-  let { count } = $props();
+    let { count } = $props()
 
-  // ❌ Error: cannot assign to prop
-  count = 5;
+    // ❌ Error: cannot assign to prop
+    count = 5
 
-  // ✅ Use $bindable for two-way binding
-  let { count = $bindable(0) } = $props();
-  count = 5;  // Now works
+    // ✅ Use $bindable for two-way binding
+    let { count = $bindable(0) } = $props()
+    count = 5 // Now works
 </script>
 ```
 
@@ -69,16 +69,16 @@
 
 ```svelte
 <script>
-  let { user } = $props();
+    let { user } = $props()
 
-  // ❌ Not reactive - name is a static copy
-  let { name } = user;
+    // ❌ Not reactive - name is a static copy
+    let { name } = user
 
-  // ✅ Access directly for reactivity
-  // In template: {user.name}
+    // ✅ Access directly for reactivity
+    // In template: {user.name}
 
-  // ✅ Or use $derived
-  let name = $derived(user.name);
+    // ✅ Or use $derived
+    let name = $derived(user.name)
 </script>
 ```
 
@@ -88,18 +88,18 @@
 
 ```svelte
 <script>
-  let el;
+    let el
 
-  // ❌ el is undefined on first run
-  $effect(() => {
-    console.log(el.offsetHeight);  // Error!
-  });
+    // ❌ el is undefined on first run
+    $effect(() => {
+        console.log(el.offsetHeight) // Error!
+    })
 
-  // ✅ Guard against undefined
-  $effect(() => {
-    if (!el) return;
-    console.log(el.offsetHeight);
-  });
+    // ✅ Guard against undefined
+    $effect(() => {
+        if (!el) return
+        console.log(el.offsetHeight)
+    })
 </script>
 
 <div bind:this={el}>Content</div>
@@ -109,24 +109,24 @@
 
 ```svelte
 <script>
-  let count = $state(0);
-  let other = $state(0);
+    let count = $state(0)
+    let other = $state(0)
 
-  // Runs when `count` changes (it's read inside)
-  $effect(() => {
-    console.log(count);
-  });
+    // Runs when `count` changes (it's read inside)
+    $effect(() => {
+        console.log(count)
+    })
 
-  // ❌ Won't track `other` - not read inside
-  $effect(() => {
-    console.log(count);
-    // `other` not tracked because not accessed
-  });
+    // ❌ Won't track `other` - not read inside
+    $effect(() => {
+        console.log(count)
+        // `other` not tracked because not accessed
+    })
 
-  // ✅ Access dependencies you want to track
-  $effect(() => {
-    console.log(count, other);
-  });
+    // ✅ Access dependencies you want to track
+    $effect(() => {
+        console.log(count, other)
+    })
 </script>
 ```
 
@@ -134,21 +134,21 @@
 
 ```svelte
 <script>
-  let count = $state(0);
+    let count = $state(0)
 
-  // ❌ Infinite loop: reads and writes same state
-  $effect(() => {
-    count = count + 1;
-  });
+    // ❌ Infinite loop: reads and writes same state
+    $effect(() => {
+        count = count + 1
+    })
 
-  // ✅ Use untrack for writes that shouldn't re-trigger
-  import { untrack } from 'svelte';
-  $effect(() => {
-    const current = count;
-    untrack(() => {
-      someOtherState = current;
-    });
-  });
+    // ✅ Use untrack for writes that shouldn't re-trigger
+    import { untrack } from 'svelte'
+    $effect(() => {
+        const current = count
+        untrack(() => {
+            someOtherState = current
+        })
+    })
 </script>
 ```
 
@@ -189,7 +189,7 @@
 
 ```svelte
 <script>
-  let { children } = $props();
+    let { children } = $props()
 </script>
 
 <!-- ❌ Old slot syntax -->
@@ -202,20 +202,20 @@
 ### Snippets Can Take Parameters
 
 ```svelte
-<!-- Parent -->
-<List {items}>
-  {#snippet item(data, index)}
-    <span>{index}: {data.name}</span>
-  {/snippet}
-</List>
-
 <!-- List.svelte -->
 <script>
-  let { items, item } = $props();
+    let { items, item } = $props()
 </script>
 
+<!-- Parent -->
+<List {items}>
+    {#snippet item(data, index)}
+        <span>{index}: {data.name}</span>
+    {/snippet}
+</List>
+
 {#each items as data, index}
-  {@render item(data, index)}
+    {@render item(data, index)}
 {/each}
 ```
 
@@ -225,12 +225,12 @@
 
 ```svelte
 <script>
-  let canvas;
+    let canvas
 
-  $effect(() => {
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-  });
+    $effect(() => {
+        if (!canvas) return
+        const ctx = canvas.getContext('2d')
+    })
 </script>
 
 <canvas bind:this={canvas}></canvas>
@@ -241,8 +241,9 @@
 ```svelte
 <!-- Child needs $bindable for parent to bind -->
 <script>
-  let { value = $bindable('') } = $props();
+    let { value = $bindable('') } = $props()
 </script>
+
 <input bind:value />
 
 <!-- Parent can then bind -->
