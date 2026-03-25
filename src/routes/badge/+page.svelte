@@ -62,6 +62,9 @@
     <!-- With Icons -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">With Icons</h2>
+        <p class="text-sm text-on-surface-variant">
+            Add leading or trailing icons alongside the label.
+        </p>
         <div class="flex flex-wrap gap-2 rounded-lg bg-surface-container-high p-4">
             <Badge label="Star" leadingIcon="lucide:star" color="warning" />
             <Badge label="Check" leadingIcon="lucide:check" color="success" />
@@ -77,19 +80,30 @@
 
     <!-- Icon Only -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Icon Only (Square)</h2>
+        <h2 class="text-lg font-semibold">Icon Only</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use the icon prop for square icon-only badges.
+        </p>
+        <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
+            {#each sizes as size (size)}
+                <Badge icon="lucide:star" color="warning" {size} />
+            {/each}
+        </div>
         <div class="flex flex-wrap gap-2 rounded-lg bg-surface-container-high p-4">
-            <Badge icon="lucide:star" color="warning" />
             <Badge icon="lucide:check" color="success" />
             <Badge icon="lucide:x" color="error" />
             <Badge icon="lucide:heart" color="error" variant="soft" />
             <Badge icon="lucide:bell" color="info" variant="outline" />
+            <Badge icon="lucide:lock" color="surface" variant="subtle" />
         </div>
     </section>
 
     <!-- With Avatar -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">With Avatar</h2>
+        <p class="text-sm text-on-surface-variant">
+            Display an avatar on the leading side of the badge.
+        </p>
         <div class="flex flex-wrap gap-2 rounded-lg bg-surface-container-high p-4">
             <Badge label="John" avatar={{ alt: 'John', src: 'https://i.pravatar.cc/32?u=1' }} />
             <Badge
@@ -107,39 +121,52 @@
         </div>
     </section>
 
-    <!-- Variants x Colors Matrix -->
+    <!-- Children Slot -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Variants x Colors</h2>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-outline-variant">
-                        <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
-                            >Variant</th
-                        >
-                        {#each colors as color (color)}
-                            <th
-                                class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
-                                >{color}</th
-                            >
-                        {/each}
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each variants as variant (variant)}
-                        <tr class="border-b border-outline-variant/50">
-                            <td class="px-3 py-3 text-sm font-medium text-on-surface-variant"
-                                >{variant}</td
-                            >
-                            {#each colors as color (color)}
-                                <td class="px-3 py-3 text-center">
-                                    <Badge label={color} {variant} {color} />
-                                </td>
-                            {/each}
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
+        <h2 class="text-lg font-semibold">Children Slot</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use the default snippet for custom content instead of the label prop.
+        </p>
+        <div class="flex flex-wrap gap-2 rounded-lg bg-surface-container-high p-4">
+            <Badge color="success" variant="soft">
+                <span class="flex items-center gap-1">
+                    <span class="size-1.5 rounded-full bg-success"></span>
+                    Online
+                </span>
+            </Badge>
+            <Badge color="error" variant="soft">
+                <span class="flex items-center gap-1">
+                    <span class="size-1.5 rounded-full bg-error"></span>
+                    Offline
+                </span>
+            </Badge>
+            <Badge color="warning" variant="outline">
+                <span class="font-mono">v2.0.0-beta</span>
+            </Badge>
+        </div>
+    </section>
+
+    <!-- Custom Leading/Trailing Slots -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Custom Slots</h2>
+        <p class="text-sm text-on-surface-variant">
+            Override leading and trailing content with custom snippets.
+        </p>
+        <div class="flex flex-wrap gap-2 rounded-lg bg-surface-container-high p-4">
+            <Badge label="Custom Leading" color="tertiary" variant="soft">
+                {#snippet leading()}
+                    <span class="size-2 rounded-full bg-tertiary"></span>
+                {/snippet}
+            </Badge>
+            <Badge label="Custom Trailing" color="info" variant="outline">
+                {#snippet trailing()}
+                    <span
+                        class="flex size-4 items-center justify-center rounded-full bg-info text-[8px] text-on-info"
+                    >
+                        3
+                    </span>
+                {/snippet}
+            </Badge>
         </div>
     </section>
 
@@ -149,13 +176,13 @@
         <div class="flex flex-wrap gap-2 rounded-lg bg-surface-container-high p-4">
             <Badge label="Rounded Full" ui={{ base: 'rounded-full px-3' }} />
             <Badge
-                label="Custom"
+                label="Gradient"
                 ui={{
                     base: 'bg-gradient-to-r from-primary to-tertiary text-on-primary rounded-full px-3'
                 }}
             />
             <Badge
-                label="Bold"
+                label="BOLD"
                 ui={{ label: 'font-bold uppercase tracking-wider' }}
                 color="error"
                 variant="outline"
@@ -220,6 +247,42 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Variants x Colors Matrix -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Variants x Colors</h2>
+        <div class="overflow-x-auto rounded-lg bg-surface-container-high p-4">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-outline-variant">
+                        <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
+                            >Variant</th
+                        >
+                        {#each colors as color (color)}
+                            <th
+                                class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
+                                >{color}</th
+                            >
+                        {/each}
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each variants as variant (variant)}
+                        <tr class="border-b border-outline-variant/50">
+                            <td class="px-3 py-3 text-sm font-medium text-on-surface-variant"
+                                >{variant}</td
+                            >
+                            {#each colors as color (color)}
+                                <td class="px-3 py-3 text-center">
+                                    <Badge label={color} {variant} {color} />
+                                </td>
+                            {/each}
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
         </div>
     </section>
 </div>

@@ -6,6 +6,11 @@ import type { AvatarProps } from '../Avatar/avatar.types.js'
 
 export type BadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, 'class'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * Sets the HTML element type to render.
      * @default 'span'
      */
@@ -79,6 +84,12 @@ export type BadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, 'class'> & {
      * Takes precedence over avatar and leadingIcon.
      */
     leading?: Snippet
+
+    /**
+     * Default content slot.
+     * Takes precedence over label when no label is provided.
+     */
+    children?: Snippet
 
     /**
      * Custom trailing content slot.

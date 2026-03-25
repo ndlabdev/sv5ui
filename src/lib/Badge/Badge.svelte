@@ -14,6 +14,7 @@
     const config = getComponentConfig('badge', badgeDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'span',
         ui,
         label,
@@ -51,7 +52,7 @@
     })
 </script>
 
-<svelte:element this={as} class={classes.base} {...restProps}>
+<svelte:element this={as} bind:this={ref} class={classes.base} {...restProps}>
     {#if leading}
         {@render leading()}
     {:else if avatar}
@@ -63,7 +64,7 @@
     {#if icon}
         <Icon name={icon} class={classes.leadingIcon} />
     {:else if !isIconOnly}
-        {#if label !== null}
+        {#if label != null}
             <span class={classes.label}>{label}</span>
         {:else if children}
             <span class={classes.label}>{@render children()}</span>
