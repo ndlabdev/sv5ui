@@ -7,22 +7,38 @@ describe('Link', () => {
     // ==================== RENDERING ====================
 
     describe('rendering', () => {
-        it('should render an anchor element', async () => {
+        it('should render an anchor element when href is provided', async () => {
             const { container } = render(Link, { href: '/', active: false })
             const el = container.querySelector('a')
             expect(el).not.toBeNull()
         })
 
-        it('should render as <a> tag', async () => {
+        it('should render as <a> tag when href is provided', async () => {
             const { container } = render(Link, { href: '/', active: false })
             expect(container.firstElementChild!.tagName).toBe('A')
+        })
+
+        it('should render as <button> tag when no href is provided', async () => {
+            const { container } = render(Link, { active: false })
+            expect(container.firstElementChild!.tagName).toBe('BUTTON')
+        })
+
+        it('should render button with type="button" by default', async () => {
+            const { container } = render(Link, { active: false })
+            const el = page.elementLocator(container.firstElementChild!)
+            await expect.element(el).toHaveAttribute('type', 'button')
+        })
+
+        it('should render button with custom type', async () => {
+            const { container } = render(Link, { type: 'submit', active: false })
+            const el = page.elementLocator(container.firstElementChild!)
+            await expect.element(el).toHaveAttribute('type', 'submit')
         })
 
         it('should apply base classes', async () => {
             const { container } = render(Link, { href: '/', active: false })
             const el = page.elementLocator(container.firstElementChild!)
-            await expect.element(el).toHaveClass(/inline-flex/)
-            await expect.element(el).toHaveClass(/items-center/)
+            await expect.element(el).toHaveClass(/focus-visible:outline-primary/)
         })
     })
 
@@ -42,55 +58,25 @@ describe('Link', () => {
         })
     })
 
-    // ==================== COLORS ====================
-
-    describe('colors', () => {
-        const colors = [
-            'primary',
-            'secondary',
-            'tertiary',
-            'success',
-            'warning',
-            'error',
-            'info'
-        ] as const
-
-        for (const color of colors) {
-            it(`should apply ${color} color when active`, async () => {
-                const { container } = render(Link, { href: '/', color, active: true })
-                const el = page.elementLocator(container.firstElementChild!)
-                await expect.element(el).toHaveClass(new RegExp(`text-${color}`))
-            })
-        }
-
-        for (const color of colors) {
-            it(`should apply ${color}/80 color when inactive`, async () => {
-                const { container } = render(Link, { href: '/', color, active: false })
-                const el = page.elementLocator(container.firstElementChild!)
-                await expect.element(el).toHaveClass(new RegExp(`text-${color}\\/80`))
-            })
-        }
-
-        it('should default to primary color', async () => {
-            const { container } = render(Link, { href: '/', active: true })
-            const el = page.elementLocator(container.firstElementChild!)
-            await expect.element(el).toHaveClass(/text-primary/)
-        })
-    })
-
     // ==================== ACTIVE STATE ====================
 
     describe('active state', () => {
         it('should apply active styles when active=true', async () => {
-            const { container } = render(Link, { href: '/', active: true, color: 'primary' })
+            const { container } = render(Link, { href: '/', active: true })
             const el = page.elementLocator(container.firstElementChild!)
             await expect.element(el).toHaveClass(/text-primary/)
         })
 
         it('should apply inactive styles when active=false', async () => {
-            const { container } = render(Link, { href: '/', active: false, color: 'primary' })
+            const { container } = render(Link, { href: '/', active: false })
             const el = page.elementLocator(container.firstElementChild!)
-            await expect.element(el).toHaveClass(/text-primary\/80/)
+            await expect.element(el).toHaveClass(/text-on-surface-variant/)
+        })
+
+        it('should apply active styles on button when active=true', async () => {
+            const { container } = render(Link, { active: true })
+            const el = page.elementLocator(container.firstElementChild!)
+            await expect.element(el).toHaveClass(/text-primary/)
         })
 
         it('should apply activeClass when active', async () => {
@@ -137,16 +123,29 @@ describe('Link', () => {
     // ==================== DISABLED ====================
 
     describe('disabled', () => {
-        it('should set aria-disabled="true" when disabled', async () => {
+        it('should set aria-disabled="true" when disabled (link)', async () => {
             const { container } = render(Link, { href: '/', disabled: true, active: false })
             const el = page.elementLocator(container.firstElementChild!)
             await expect.element(el).toHaveAttribute('aria-disabled', 'true')
         })
 
-        it('should set tabindex="-1" when disabled', async () => {
+        it('should set role="link" on disabled anchor', async () => {
+            const { container } = render(Link, { href: '/', disabled: true, active: false })
+            const el = page.elementLocator(container.firstElementChild!)
+            await expect.element(el).toHaveAttribute('role', 'link')
+        })
+
+        it('should set tabindex="-1" when disabled (link)', async () => {
             const { container } = render(Link, { href: '/', disabled: true, active: false })
             const el = page.elementLocator(container.firstElementChild!)
             await expect.element(el).toHaveAttribute('tabindex', '-1')
+        })
+
+        it('should use native disabled attribute on button', async () => {
+            const { container } = render(Link, { disabled: true, active: false })
+            const el = container.firstElementChild! as HTMLButtonElement
+            expect(el.tagName).toBe('BUTTON')
+            expect(el.disabled).toBe(true)
         })
 
         it('should apply disabled styling classes', async () => {
@@ -233,8 +232,8 @@ describe('Link', () => {
         it('should strip default variant classes in raw mode', async () => {
             const { container } = render(Link, { href: '/', raw: true, active: false })
             const el = container.firstElementChild!
-            expect(el.className).not.toMatch(/inline-flex/)
             expect(el.className).not.toMatch(/text-primary/)
+            expect(el.className).not.toMatch(/text-on-surface-variant/)
         })
 
         it('should still apply custom class in raw mode', async () => {
@@ -327,13 +326,12 @@ describe('Link', () => {
         it('should render active link with custom classes', async () => {
             const { container } = render(Link, {
                 href: '/',
-                color: 'success',
                 active: true,
                 activeClass: 'font-semibold',
                 class: 'underline'
             })
             const el = page.elementLocator(container.firstElementChild!)
-            await expect.element(el).toHaveClass(/text-success/)
+            await expect.element(el).toHaveClass(/text-primary/)
             await expect.element(el).toHaveClass(/font-semibold/)
             await expect.element(el).toHaveClass(/underline/)
         })
@@ -350,6 +348,19 @@ describe('Link', () => {
             // href should be removed when disabled
             const anchor = container.firstElementChild!
             expect(anchor.hasAttribute('href')).toBe(false)
+        })
+
+        it('should render button with active state and custom class', async () => {
+            const { container } = render(Link, {
+                active: true,
+                activeClass: 'font-bold',
+                class: 'px-4'
+            })
+            const el = page.elementLocator(container.firstElementChild!)
+            expect(container.firstElementChild!.tagName).toBe('BUTTON')
+            await expect.element(el).toHaveClass(/text-primary/)
+            await expect.element(el).toHaveClass(/font-bold/)
+            await expect.element(el).toHaveClass(/px-4/)
         })
     })
 })

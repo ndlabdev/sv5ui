@@ -1,18 +1,19 @@
-import type { HTMLAnchorAttributes } from 'svelte/elements'
-import type { LinkVariantProps, LinkSlots } from './link.variants.js'
+import type { Snippet } from 'svelte'
+import type { HTMLAttributes } from 'svelte/elements'
+import type { LinkSlots } from './link.variants.js'
 import type { ClassNameValue } from 'tailwind-merge'
 
-export type LinkProps = Omit<HTMLAnchorAttributes, 'class' | 'href'> & {
+export type LinkProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     /**
-     * The destination URL for the anchor element.
+     * Bindable reference to the root DOM element.
      */
-    href: string
+    ref?: HTMLElement | null
 
     /**
-     * Sets the color scheme applied to the link.
-     * @default 'primary'
+     * The destination URL for the anchor element.
+     * When omitted, renders as a `<button>` element.
      */
-    color?: NonNullable<LinkVariantProps['color']>
+    href?: string
 
     /**
      * Overrides the auto-detected active state.
@@ -70,6 +71,22 @@ export type LinkProps = Omit<HTMLAnchorAttributes, 'class' | 'href'> & {
     external?: boolean
 
     /**
+     * The button type attribute. Only applies when rendering as `<button>`.
+     * @default 'button'
+     */
+    type?: 'button' | 'submit' | 'reset'
+
+    /**
+     * The link target attribute. Only applies when rendering as `<a>`.
+     */
+    target?: string
+
+    /**
+     * The link rel attribute. Only applies when rendering as `<a>`.
+     */
+    rel?: string
+
+    /**
      * Additional CSS classes for the root element.
      */
     class?: ClassNameValue
@@ -78,4 +95,9 @@ export type LinkProps = Omit<HTMLAnchorAttributes, 'class' | 'href'> & {
      * Override styles for specific link slots.
      */
     ui?: Partial<Record<LinkSlots, ClassNameValue>>
+
+    /**
+     * Content rendered inside the link.
+     */
+    children?: Snippet
 }

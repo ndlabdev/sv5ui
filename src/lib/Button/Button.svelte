@@ -5,13 +5,13 @@
 </script>
 
 <script lang="ts">
-    import { Button } from 'bits-ui'
     import { buttonVariants, buttonDefaults } from './button.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import { getContext } from 'svelte'
     import { fieldGroupVariant } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
+    import Link from '../Link/Link.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import type { FieldGroupVariantProps } from '../FieldGroup/field-group.variants.js'
 
@@ -26,6 +26,7 @@
         size,
         label,
         loading = false,
+        loadingAuto = false,
         loadingIcon = icons.loading,
         disabled = false,
         block = false,
@@ -35,10 +36,20 @@
         trailingIcon,
         trailing = false,
         avatar,
+        href,
+        type,
+        external,
+        active,
+        exact = false,
+        activeColor,
+        activeVariant,
+        activeClass,
+        inactiveClass,
         leadingSlot,
         trailingSlot,
         children,
         class: className,
+        onclick,
         ...restProps
     }: Props = $props()
 
@@ -57,27 +68,34 @@
             : undefined
     )
 
+    let autoLoading = $state(false)
+    let pendingPromise: Promise<unknown> | null = null
+    const isLoading = $derived(loading || autoLoading)
+
     const isIconOnly = $derived(square || (!label && !children))
-    const isLeading = $derived((!!icon && !trailing) || (loading && !trailing) || !!leadingIcon)
-    const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
+    const isLeading = $derived((!!icon && !trailing) || (isLoading && !trailing) || !!leadingIcon)
+    const isTrailing = $derived((!!icon && trailing) || (isLoading && trailing) || !!trailingIcon)
 
     const leadingIconName = $derived(
-        loading && isLeading
+        isLoading && isLeading
             ? loadingIcon
             : leadingIcon || (isLeading && !trailing ? icon : undefined)
     )
     const trailingIconName = $derived(
-        loading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
+        isLoading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
     )
+
+    const resolvedColor = $derived(active && activeColor ? activeColor : color)
+    const resolvedVariant = $derived(active && activeVariant ? activeVariant : variant)
 
     const classes = $derived.by(() => {
         const slots = buttonVariants({
-            variant,
-            color,
+            variant: resolvedVariant,
+            color: resolvedColor,
             size: resolvedSize,
             block,
             square: isIconOnly,
-            loading,
+            loading: isLoading,
             leading: isLeading,
             trailing: isTrailing
         })
@@ -94,9 +112,48 @@
             leadingAvatarSize: slots.leadingAvatarSize() as AvatarSize
         }
     })
+
+    function handleClick(e: MouseEvent) {
+        if (disabled || isLoading) {
+            e.preventDefault()
+            e.stopPropagation()
+            return
+        }
+
+        if (typeof onclick === 'function') {
+            const result = (onclick as (e: MouseEvent) => unknown)(e)
+
+            if (loadingAuto && result instanceof Promise) {
+                autoLoading = true
+                pendingPromise = result
+                result.then(
+                    () => {
+                        if (pendingPromise === result) autoLoading = false
+                    },
+                    () => {
+                        if (pendingPromise === result) autoLoading = false
+                    }
+                )
+            }
+        }
+    }
 </script>
 
-<Button.Root bind:ref class={classes.base} disabled={disabled || loading} {...restProps}>
+<Link
+    {...restProps}
+    bind:ref
+    {href}
+    {type}
+    {external}
+    {active}
+    {exact}
+    {activeClass}
+    {inactiveClass}
+    raw
+    disabled={disabled || isLoading}
+    class={classes.base}
+    onclick={handleClick}
+>
     {#if leadingSlot}
         {@render leadingSlot()}
     {:else if isLeading && leadingIconName}
@@ -118,4 +175,4 @@
     {:else if isTrailing && trailingIconName}
         <Icon name={trailingIconName} class={classes.trailingIcon} />
     {/if}
-</Button.Root>
+</Link>
