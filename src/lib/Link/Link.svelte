@@ -57,6 +57,7 @@
     const config = getComponentConfig('link', linkDefaults)
 
     let {
+        ref = $bindable(null),
         href,
         type,
         active,
@@ -136,6 +137,7 @@
 {#if isLink}
     <!-- eslint-disable svelte/no-navigation-without-resolve -->
     <a
+        bind:this={ref}
         href={disabled ? undefined : href}
         class={baseClass}
         target={resolvedTarget}
@@ -152,6 +154,7 @@
     </a>
 {:else}
     <button
+        bind:this={ref}
         type={type ?? 'button'}
         class={baseClass}
         {disabled}

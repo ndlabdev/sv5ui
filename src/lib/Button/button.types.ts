@@ -1,10 +1,15 @@
 import type { Snippet } from 'svelte'
-import type { Button } from 'bits-ui'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { ButtonVariantProps, ButtonSlots } from './button.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
 
-export type ButtonProps = Button.RootProps & {
+export type ButtonProps = Omit<HTMLAttributes<HTMLElement>, 'class' | 'color'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * Controls the visual style of the button.
      * @default 'solid'
@@ -36,11 +41,23 @@ export type ButtonProps = Button.RootProps & {
     loading?: boolean
 
     /**
+     * Automatically shows loading state while the onclick handler's Promise is pending.
+     * @default false
+     */
+    loadingAuto?: boolean
+
+    /**
      * Icon displayed as the loading indicator.
      * Supports any valid Iconify icon name.
      * @default Uses `icons.loading` from app config
      */
     loadingIcon?: string
+
+    /**
+     * Disables the button and prevents interaction.
+     * @default false
+     */
+    disabled?: boolean
 
     /**
      * Stretches the button to fill the full width of its container.
@@ -85,6 +102,60 @@ export type ButtonProps = Button.RootProps & {
      */
     avatar?: AvatarProps
 
+    // ==================== LINK PROPS ====================
+
+    /**
+     * The destination URL. When provided, renders as an anchor element.
+     */
+    href?: string
+
+    /**
+     * The button type attribute. Only applies when rendering as `<button>`.
+     * @default 'button'
+     */
+    type?: 'button' | 'submit' | 'reset'
+
+    /**
+     * Treats the link as external, adding `rel="noopener noreferrer"` and `target="_blank"`.
+     * Auto-detected from the `href` when omitted.
+     */
+    external?: boolean
+
+    /**
+     * Overrides the auto-detected active state.
+     */
+    active?: boolean
+
+    /**
+     * Requires an exact pathname match for active state detection.
+     * @default false
+     */
+    exact?: boolean
+
+    /**
+     * Color scheme applied when the button is active.
+     * Falls back to the `color` prop when omitted.
+     */
+    activeColor?: NonNullable<ButtonVariantProps['color']>
+
+    /**
+     * Visual style applied when the button is active.
+     * Falls back to the `variant` prop when omitted.
+     */
+    activeVariant?: NonNullable<ButtonVariantProps['variant']>
+
+    /**
+     * Additional CSS class applied when the button link is active.
+     */
+    activeClass?: string
+
+    /**
+     * Additional CSS class applied when the button link is inactive.
+     */
+    inactiveClass?: string
+
+    // ==================== SLOTS & STYLING ====================
+
     /**
      * Custom content rendered before the label.
      * Takes precedence over `avatar` and `leadingIcon`.
@@ -96,6 +167,11 @@ export type ButtonProps = Button.RootProps & {
      * Takes precedence over `trailingIcon`.
      */
     trailingSlot?: Snippet
+
+    /**
+     * Custom content for the button label area.
+     */
+    children?: Snippet
 
     /**
      * Additional CSS classes for the root element.

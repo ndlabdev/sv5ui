@@ -1,10 +1,10 @@
 import type { Snippet } from 'svelte'
-import type { HTMLButtonAttributes } from 'svelte/elements'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { ButtonVariantProps } from '../Button/button.variants.js'
 import type { ThemeModeButtonSlots } from './theme-mode-button.variants.js'
 
-export type ThemeModeButtonProps = Omit<HTMLButtonAttributes, 'children'> & {
+export type ThemeModeButtonProps = Omit<HTMLAttributes<HTMLElement>, 'class' | 'children'> & {
     /**
      * Controls the visual style of the button.
      * @default 'ghost'
@@ -42,6 +42,12 @@ export type ThemeModeButtonProps = Omit<HTMLButtonAttributes, 'children'> & {
      * @default false
      */
     loading?: boolean
+
+    /**
+     * Disables the button and prevents interaction.
+     * @default false
+     */
+    disabled?: boolean
 
     /**
      * Forces equal width and height, ideal for icon-only buttons.

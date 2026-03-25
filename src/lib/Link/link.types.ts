@@ -1,12 +1,14 @@
 import type { Snippet } from 'svelte'
-import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { LinkSlots } from './link.variants.js'
 import type { ClassNameValue } from 'tailwind-merge'
 
-export type LinkProps = Omit<
-    HTMLAnchorAttributes & HTMLButtonAttributes,
-    'class' | 'href' | 'type' | 'disabled'
-> & {
+export type LinkProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * The destination URL for the anchor element.
      * When omitted, renders as a `<button>` element.
@@ -73,6 +75,16 @@ export type LinkProps = Omit<
      * @default 'button'
      */
     type?: 'button' | 'submit' | 'reset'
+
+    /**
+     * The link target attribute. Only applies when rendering as `<a>`.
+     */
+    target?: string
+
+    /**
+     * The link rel attribute. Only applies when rendering as `<a>`.
+     */
+    rel?: string
 
     /**
      * Additional CSS classes for the root element.
