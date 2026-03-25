@@ -5,8 +5,9 @@ export const progressVariants = tv({
         root: 'gap-2',
         base: 'relative overflow-hidden rounded-full bg-surface-container-highest',
         indicator: 'rounded-full size-full transition-transform duration-200 ease-out',
-        status: 'text-end transition-[width] duration-200 text-on-surface-variant',
-        steps: 'flex justify-between'
+        status: 'flex text-on-surface-variant transition-[width] duration-200',
+        steps: 'grid items-end',
+        step: 'truncate text-end row-start-1 col-start-1 transition-opacity'
     },
     variants: {
         animation: {
@@ -73,32 +74,53 @@ export const progressVariants = tv({
         },
         step: {
             active: {
-                steps: 'text-on-surface'
+                step: 'opacity-100'
             },
-            first: '',
+            first: {
+                step: 'opacity-100 text-on-surface-variant'
+            },
             other: {
-                steps: 'text-on-surface-variant'
+                step: 'opacity-0'
             },
-            last: ''
+            last: {
+                step: ''
+            }
         },
         orientation: {
             horizontal: {
-                root: 'flex flex-col',
-                base: 'w-full'
+                root: 'w-full flex flex-col',
+                base: 'w-full',
+                status: 'flex-row items-center justify-end min-w-fit'
             },
             vertical: {
-                root: 'flex flex-row-reverse h-full',
-                base: 'h-full'
+                root: 'h-full flex flex-row-reverse',
+                base: 'h-full',
+                status: 'flex-col justify-end min-h-fit'
             }
         },
         inverted: {
             true: {
-                root: 'flex-col-reverse',
-                status: 'text-start'
+                status: 'self-end'
             }
         }
     },
     compoundVariants: [
+        {
+            inverted: true,
+            orientation: 'horizontal',
+            class: {
+                step: 'text-start',
+                status: 'flex-row-reverse'
+            }
+        },
+        {
+            inverted: true,
+            orientation: 'vertical',
+            class: {
+                steps: 'items-start',
+                status: 'flex-col-reverse'
+            }
+        },
         { orientation: 'horizontal', size: '2xs', class: { base: 'h-px' } },
         { orientation: 'horizontal', size: 'xs', class: { base: 'h-0.5' } },
         { orientation: 'horizontal', size: 'sm', class: { base: 'h-1' } },
@@ -173,22 +195,6 @@ export const progressVariants = tv({
             class: {
                 indicator:
                     'data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]'
-            }
-        },
-        {
-            inverted: true,
-            orientation: 'horizontal',
-            class: {
-                step: 'text-start',
-                status: 'flex-row-reverse'
-            }
-        },
-        {
-            inverted: true,
-            orientation: 'vertical',
-            class: {
-                steps: 'items-start',
-                status: 'flex-col-reverse'
             }
         }
     ],

@@ -93,7 +93,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">With Status</h2>
         <p class="text-sm text-on-surface-variant">
-            Display percentage text above the progress bar.
+            Display percentage text alongside the progress bar.
         </p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
             <Progress value={33} status />
@@ -106,7 +106,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Indeterminate</h2>
         <p class="text-sm text-on-surface-variant">
-            When value is null or undefined, the progress shows an animated indeterminate state.
+            When value is null, the progress shows an animated indeterminate state.
         </p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
             <Progress value={null} />
@@ -133,7 +133,7 @@
 
     <!-- Vertical -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Vertical Orientation</h2>
+        <h2 class="text-lg font-semibold">Vertical</h2>
         <div class="flex flex-wrap gap-8 rounded-lg bg-surface-container-high p-4">
             <div class="flex flex-col items-center gap-2">
                 <div class="h-32">
@@ -200,9 +200,9 @@
 
     <!-- Steps -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Step-based Progress</h2>
+        <h2 class="text-lg font-semibold">Steps</h2>
         <p class="text-sm text-on-surface-variant">
-            Use an array of strings as max to display labeled steps.
+            Pass an array of strings as max to display labeled steps with overlay transitions.
         </p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
             <Progress value={stepValue} max={steps} />
@@ -227,6 +227,13 @@
                     Next
                 </Button>
             </div>
+
+            <Progress value={0} max={['Account', 'Profile', 'Review', 'Done']} color="tertiary" />
+            <Progress
+                value={3}
+                max={['Account', 'Profile', 'Review', 'Done']}
+                color="success"
+            />
         </div>
     </section>
 
@@ -248,40 +255,26 @@
         </div>
     </section>
 
-    <!-- Colors x Sizes Matrix -->
+    <!-- Custom Step Slot -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Colors x Sizes</h2>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-outline-variant">
-                        <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
-                            >Color</th
+        <h2 class="text-lg font-semibold">Custom Step Slot</h2>
+        <p class="text-sm text-on-surface-variant">
+            Customize individual step labels with a snippet.
+        </p>
+        <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+            <Progress value={1} max={['Draft', 'Review', 'Approved', 'Published']}>
+                {#snippet stepSlot({ step, index })}
+                    <span class="flex items-center gap-1">
+                        <span
+                            class="inline-flex size-5 items-center justify-center rounded-full text-xs
+                            {index <= 1 ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface-variant'}"
                         >
-                        {#each sizes as size (size)}
-                            <th
-                                class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant"
-                                >{size}</th
-                            >
-                        {/each}
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each colors as color (color)}
-                        <tr class="border-b border-outline-variant/50">
-                            <td
-                                class="px-3 py-3 text-sm font-medium text-on-surface-variant capitalize"
-                                >{color}</td
-                            >
-                            {#each sizes as size (size)}
-                                <td class="px-3 py-3">
-                                    <Progress {color} {size} value={65} />
-                                </td>
-                            {/each}
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
+                            {index + 1}
+                        </span>
+                        {step}
+                    </span>
+                {/snippet}
+            </Progress>
         </div>
     </section>
 
@@ -376,6 +369,43 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Colors x Sizes Matrix -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Colors x Sizes</h2>
+        <div class="overflow-x-auto rounded-lg bg-surface-container-high p-4">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-outline-variant">
+                        <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
+                            >Color</th
+                        >
+                        {#each sizes as size (size)}
+                            <th
+                                class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant"
+                                >{size}</th
+                            >
+                        {/each}
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each colors as color (color)}
+                        <tr class="border-b border-outline-variant/50">
+                            <td
+                                class="px-3 py-3 text-sm font-medium text-on-surface-variant capitalize"
+                                >{color}</td
+                            >
+                            {#each sizes as size (size)}
+                                <td class="px-3 py-3">
+                                    <Progress {color} {size} value={65} />
+                                </td>
+                            {/each}
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
         </div>
     </section>
 </div>

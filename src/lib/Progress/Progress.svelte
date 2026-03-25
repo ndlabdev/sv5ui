@@ -24,29 +24,50 @@
         ui,
         class: className,
         statusSlot,
+        stepSlot,
         ...restProps
     }: Props = $props()
 
-    const maxValue = $derived(Array.isArray(max) ? max.length - 1 : max)
-    const percent = $derived(
-        value !== null ? Math.round((Math.min(value, maxValue) / maxValue) * 100) : 0
-    )
     const isIndeterminate = $derived(value === null)
-    const state = $derived(isIndeterminate ? 'indeterminate' : 'determinate')
+    const hasSteps = $derived(Array.isArray(max))
+
+    const realMax = $derived.by(() => {
+        if (isIndeterminate || !max) return undefined
+        if (Array.isArray(max)) return max.length - 1
+        return Number(max)
+    })
+
+    const percent = $derived.by(() => {
+        if (isIndeterminate) return undefined
+        if (value! < 0) return 0
+        if (value! > (realMax ?? 100)) return 100
+        return Math.round((value! / (realMax ?? 100)) * 100)
+    })
 
     const indicatorStyle = $derived.by(() => {
-        if (isIndeterminate) return ''
+        if (percent === undefined) return ''
         const offset = 100 - percent
-        if (orientation === 'horizontal') {
-            return inverted
-                ? `transform: translateX(${offset}%);`
-                : `transform: translateX(-${offset}%);`
+        if (orientation === 'vertical') {
+            return `transform: translateY(${inverted ? '' : '-'}${offset}%);`
         }
-        // Vertical: fill from bottom to top (positive Y = down)
-        return inverted
-            ? `transform: translateY(-${offset}%);`
-            : `transform: translateY(${offset}%);`
+        return `transform: translateX(${inverted ? '' : '-'}${offset}%);`
     })
+
+    const statusStyle = $derived.by(() => {
+        const val = `${Math.max(percent ?? 0, 0)}%`
+        return orientation === 'vertical' ? `height: ${val};` : `width: ${val};`
+    })
+
+    function stepVariant(index: number): 'active' | 'first' | 'last' | 'other' {
+        const isActive = index === Number(value)
+        const isFirst = index === 0
+        const isLast = index === realMax
+
+        if (isActive && !isFirst) return 'active'
+        if (isFirst && isActive) return 'first'
+        if (isLast && isActive) return 'last'
+        return 'other'
+    }
 
     const classes = $derived.by(() => {
         const slots = progressVariants({ animation, color, size, orientation, inverted })
@@ -55,24 +76,25 @@
             base: slots.base({ class: [config.slots.base, ui?.base] }),
             indicator: slots.indicator({ class: [config.slots.indicator, ui?.indicator] }),
             status: slots.status({ class: [config.slots.status, ui?.status] }),
-            stepsBase: slots.steps({ class: [config.slots.steps, ui?.steps] }),
-            stepActive: progressVariants({ size, step: 'active' }).steps(),
-            stepOther: progressVariants({ size, step: 'other' }).steps()
+            steps: slots.steps({ class: [config.slots.steps, ui?.steps] })
         }
     })
+
+    const state = $derived(isIndeterminate ? 'indeterminate' : 'determinate')
 </script>
 
 <Progress.Root
     bind:ref
     value={value ?? undefined}
-    max={maxValue}
+    max={realMax}
     class={classes.root}
+    data-orientation={orientation}
     {...restProps}
 >
-    {#if status && !Array.isArray(max)}
-        <div class={classes.status} style={isIndeterminate ? '' : `width: ${percent}%;`}>
+    {#if !isIndeterminate && status}
+        <div class={classes.status} style={statusStyle}>
             {#if statusSlot}
-                {@render statusSlot({ percent })}
+                {@render statusSlot({ percent: percent ?? 0 })}
             {:else}
                 {percent}%
             {/if}
@@ -83,16 +105,17 @@
         <div class={classes.indicator} data-state={state} style={indicatorStyle}></div>
     </div>
 
-    {#if Array.isArray(max)}
-        <div class={classes.stepsBase}>
+    {#if hasSteps && Array.isArray(max)}
+        <div class={classes.steps}>
             {#each max as step, index (index)}
-                <span
-                    class={value !== null && index <= value
-                        ? classes.stepActive
-                        : classes.stepOther}
-                >
-                    {step}
-                </span>
+                {@const stepClass = progressVariants({ size, orientation, inverted, step: stepVariant(index) }).step({ class: [config.slots.step, ui?.step] })}
+                <div class={stepClass}>
+                    {#if stepSlot}
+                        {@render stepSlot({ step, index })}
+                    {:else}
+                        {step}
+                    {/if}
+                </div>
             {/each}
         </div>
     {/if}

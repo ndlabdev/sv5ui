@@ -55,7 +55,7 @@ export type ProgressProps = Omit<Progress.RootProps, 'max'> & {
 
     /**
      * Override styles for specific progress slots.
-     * Available slots: root, base, indicator, status, steps.
+     * Available slots: root, base, indicator, status, steps, step.
      */
     ui?: Partial<Record<ProgressSlots, ClassNameValue>>
 
@@ -69,4 +69,10 @@ export type ProgressProps = Omit<Progress.RootProps, 'max'> & {
      * Takes precedence over the default status display.
      */
     statusSlot?: Snippet<[{ percent: number }]>
+
+    /**
+     * Custom content rendered for each step label.
+     * Takes precedence over the default step text.
+     */
+    stepSlot?: Snippet<[{ step: string; index: number }]>
 }
