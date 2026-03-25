@@ -339,6 +339,113 @@ describe('Button', () => {
         })
     })
 
+    // ==================== LINK RENDERING ====================
+
+    describe('link rendering', () => {
+        it('should render as anchor when href is provided', async () => {
+            render(Button, { label: 'Go', href: '/about' })
+            const link = page.getByRole('link', { name: 'Go' })
+            await expect.element(link).toBeInTheDocument()
+            await expect.element(link).toHaveAttribute('href', '/about')
+        })
+
+        it('should render as button when no href', async () => {
+            render(Button, { label: 'Click' })
+            const btn = page.getByRole('button', { name: 'Click' })
+            await expect.element(btn).toBeInTheDocument()
+        })
+
+        it('should add external attributes for external links', async () => {
+            render(Button, { label: 'External', href: 'https://example.com' })
+            const link = page.getByRole('link', { name: 'External' })
+            await expect.element(link).toHaveAttribute('target', '_blank')
+            await expect.element(link).toHaveAttribute('rel', 'noopener noreferrer')
+        })
+
+        it('should render with type="submit" when no href', async () => {
+            render(Button, { label: 'Submit', type: 'submit' })
+            const btn = page.getByRole('button', { name: 'Submit' })
+            await expect.element(btn).toHaveAttribute('type', 'submit')
+        })
+
+        it('should disable anchor link when disabled', async () => {
+            render(Button, { label: 'Disabled Link', href: '/about', disabled: true })
+            const link = page.getByRole('link', { name: 'Disabled Link' })
+            await expect.element(link).toHaveAttribute('aria-disabled', 'true')
+            await expect.element(link).not.toHaveAttribute('href')
+        })
+    })
+
+    // ==================== LOADING AUTO ====================
+
+    describe('loadingAuto', () => {
+        it('should show loading state while onclick Promise is pending', async () => {
+            let resolvePromise: () => void
+            const onclick = vi.fn(
+                () =>
+                    new Promise<void>((resolve) => {
+                        resolvePromise = resolve
+                    })
+            )
+            render(Button, { label: 'Auto', loadingAuto: true, onclick })
+            const btn = page.getByRole('button', { name: 'Auto' })
+            await btn.click()
+            expect(onclick).toHaveBeenCalledOnce()
+            // After click, button should be disabled (loading)
+            await expect.element(btn).toBeDisabled()
+            // Resolve the promise
+            resolvePromise!()
+            // After resolve, button should be enabled again
+            await expect.element(btn).toBeEnabled()
+        })
+
+        it('should not auto-load when loadingAuto is false', async () => {
+            const onclick = vi.fn(() => new Promise<void>(() => {}))
+            render(Button, { label: 'No Auto', onclick })
+            const btn = page.getByRole('button', { name: 'No Auto' })
+            await btn.click()
+            await expect.element(btn).toBeEnabled()
+        })
+    })
+
+    // ==================== ACTIVE COLOR/VARIANT ====================
+
+    describe('active color and variant', () => {
+        it('should apply activeColor when active', async () => {
+            render(Button, {
+                label: 'Active',
+                active: true,
+                color: 'primary',
+                activeColor: 'error'
+            })
+            const btn = page.getByRole('button', { name: 'Active' })
+            await expect.element(btn).toHaveClass(/bg-error/)
+        })
+
+        it('should apply activeVariant when active', async () => {
+            render(Button, {
+                label: 'Active',
+                active: true,
+                variant: 'solid',
+                activeVariant: 'outline'
+            })
+            const btn = page.getByRole('button', { name: 'Active' })
+            await expect.element(btn).toHaveClass(/ring-primary/)
+        })
+
+        it('should use default color/variant when not active', async () => {
+            render(Button, {
+                label: 'Inactive',
+                active: false,
+                color: 'primary',
+                activeColor: 'error'
+            })
+            const btn = page.getByRole('button', { name: 'Inactive' })
+            await expect.element(btn).toHaveClass(/bg-primary/)
+            await expect.element(btn).not.toHaveClass(/bg-error/)
+        })
+    })
+
     // ==================== COMBINED PROPS ====================
 
     describe('combined props', () => {
@@ -365,6 +472,18 @@ describe('Button', () => {
             const btn = page.getByRole('button', { name: 'Saving' })
             await expect.element(btn).toBeDisabled()
             await expect.element(btn).toHaveTextContent('Saving')
+        })
+
+        it('should render as link with variant and color', async () => {
+            render(Button, {
+                label: 'Link Button',
+                href: '/dashboard',
+                variant: 'outline',
+                color: 'success'
+            })
+            const link = page.getByRole('link', { name: 'Link Button' })
+            await expect.element(link).toHaveAttribute('href', '/dashboard')
+            await expect.element(link).toHaveClass(/ring-success/)
         })
     })
 })
