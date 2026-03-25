@@ -28,11 +28,15 @@
         if (mode === false) return true
         if (mode === 'partial') {
             for (const [key, value] of linkQuery) {
-                if (currentQuery.get(key) !== value) return false
+                if (!currentQuery.getAll(key).includes(value)) return false
             }
             return true
         }
-        return linkQuery.toString() === currentQuery.toString()
+
+        // Exact: check size first (O(1) bail-out), then compare sorted strings
+        if (linkQuery.size !== currentQuery.size) return false
+        const sorted = (p: URLSearchParams) => new URLSearchParams([...p].sort()).toString()
+        return sorted(linkQuery) === sorted(currentQuery)
     }
 
     function isPathnameMatch(linkPath: string, currentPath: string, exactMatch: boolean): boolean {
@@ -54,7 +58,7 @@
 
     let {
         href,
-        color = config.defaultVariants.color,
+        type,
         active,
         exact = false,
         exactQuery = false,
@@ -69,25 +73,36 @@
         ui,
         target,
         rel,
+        onclick,
         ...restProps
     }: Props = $props()
 
+    const isLink = $derived(!!href)
+
     const isExternal = $derived(
-        external ??
-            (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'))
+        isLink &&
+            (external ??
+                (href!.startsWith('http://') ||
+                    href!.startsWith('https://') ||
+                    href!.startsWith('//')))
     )
 
-    const resolvedTarget = $derived(target ?? (isExternal ? '_blank' : undefined))
+    const resolvedTarget = $derived(
+        isLink ? (target ?? (isExternal ? '_blank' : undefined)) : undefined
+    )
 
     const resolvedRel = $derived(
-        rel ?? (isExternal || resolvedTarget === '_blank' ? 'noopener noreferrer' : undefined)
+        isLink
+            ? (rel ??
+                  (isExternal || resolvedTarget === '_blank' ? 'noopener noreferrer' : undefined))
+            : undefined
     )
 
     const isActive = $derived.by(() => {
         if (active !== undefined) return active
-        if (!page.url || isExternal) return false
+        if (!isLink || !page.url || isExternal) return false
 
-        const link = parseUrl(href, page.url)
+        const link = parseUrl(href!, page.url)
 
         if (exactHash && link.hash !== page.url.hash) return false
         if (!isQueryMatch(link.query, page.url.searchParams, exactQuery)) return false
@@ -99,24 +114,51 @@
         const stateClass = isActive ? activeClass : inactiveClass
         if (raw) return [className, stateClass].filter(Boolean).join(' ')
 
-        const slots = linkVariants({ color, active: isActive, disabled, raw })
+        const slots = linkVariants({ active: isActive, disabled, raw })
         return slots.base({ class: [config.slots.base, stateClass, className, ui?.base] })
     })
 
     const ariaCurrent = $derived(isActive && exact ? ('page' as const) : undefined)
+
+    function handleClick(e: MouseEvent) {
+        if (disabled) {
+            e.preventDefault()
+            e.stopPropagation()
+            return
+        }
+
+        if (typeof onclick === 'function') {
+            ;(onclick as (e: MouseEvent) => void)(e)
+        }
+    }
 </script>
 
-<!-- eslint-disable svelte/no-navigation-without-resolve -->
-<a
-    href={disabled ? undefined : href}
-    class={baseClass}
-    target={resolvedTarget}
-    rel={resolvedRel}
-    aria-disabled={disabled ? 'true' : undefined}
-    aria-current={ariaCurrent}
-    tabindex={disabled ? -1 : undefined}
-    {...restProps}
->
-    <!-- eslint-enable svelte/no-navigation-without-resolve -->
-    {@render children?.()}
-</a>
+{#if isLink}
+    <!-- eslint-disable svelte/no-navigation-without-resolve -->
+    <a
+        href={disabled ? undefined : href}
+        class={baseClass}
+        target={resolvedTarget}
+        rel={resolvedRel}
+        role={disabled ? 'link' : undefined}
+        aria-disabled={disabled ? 'true' : undefined}
+        aria-current={ariaCurrent}
+        tabindex={disabled ? -1 : undefined}
+        onclick={handleClick}
+        {...restProps}
+    >
+        <!-- eslint-enable svelte/no-navigation-without-resolve -->
+        {@render children?.()}
+    </a>
+{:else}
+    <button
+        type={type ?? 'button'}
+        class={baseClass}
+        {disabled}
+        aria-current={ariaCurrent}
+        onclick={handleClick}
+        {...restProps}
+    >
+        {@render children?.()}
+    </button>
+{/if}
