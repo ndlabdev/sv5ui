@@ -59,6 +59,25 @@ describe('Alert', () => {
             const wrapper = container.querySelector('.flex-1')
             expect(wrapper).toBeNull()
         })
+
+        it('should add mt-1 to description when title is present', async () => {
+            const { container } = render(Alert, {
+                title: 'Title',
+                description: 'Description'
+            })
+            const wrapper = container.querySelector('.flex-1')!
+            const desc = wrapper.children[1]!
+            const descLocator = page.elementLocator(desc)
+            await expect.element(descLocator).toHaveClass(/mt-1/)
+        })
+
+        it('should not add mt-1 to description when no title', async () => {
+            const { container } = render(Alert, { description: 'Description only' })
+            const wrapper = container.querySelector('.flex-1')!
+            const desc = wrapper.children[0]!
+            const descLocator = page.elementLocator(desc)
+            await expect.element(descLocator).not.toHaveClass(/mt-1/)
+        })
     })
 
     // ==================== VARIANTS ====================
@@ -142,6 +161,30 @@ describe('Alert', () => {
             const root = page.elementLocator(container.firstElementChild!)
             await expect.element(root).toHaveClass(/items-start/)
         })
+
+        it('should render actions inside wrapper when vertical', async () => {
+            const { container } = render(Alert, {
+                title: 'Test',
+                orientation: 'vertical',
+                actions: [{ label: 'Action' }]
+            })
+            const wrapper = container.querySelector('.flex-1')!
+            expect(wrapper).not.toBeNull()
+            const actionsInWrapper = wrapper.querySelector('button')
+            expect(actionsInWrapper).not.toBeNull()
+        })
+
+        it('should render actions outside wrapper when horizontal', async () => {
+            const { container } = render(Alert, {
+                title: 'Test',
+                orientation: 'horizontal',
+                actions: [{ label: 'Action' }]
+            })
+            const wrapper = container.querySelector('.flex-1')!
+            expect(wrapper).not.toBeNull()
+            const actionsInWrapper = wrapper.querySelector('button')
+            expect(actionsInWrapper).toBeNull()
+        })
     })
 
     // ==================== ICON ====================
@@ -218,6 +261,15 @@ describe('Alert', () => {
             })
             const closeBtn = container.querySelector('[aria-label="Dismiss"]')
             expect(closeBtn).not.toBeNull()
+        })
+
+        it('should hide alert when close button is clicked', async () => {
+            const { container } = render(Alert, { title: 'Test', close: true })
+            const closeBtn = page.elementLocator(
+                container.querySelector('[aria-label="Close alert"]')!
+            )
+            await closeBtn.click()
+            expect(container.firstElementChild).toBeNull()
         })
     })
 

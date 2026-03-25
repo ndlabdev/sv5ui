@@ -39,8 +39,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Size</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">size</code> prop to control
-            dimensions. Available sizes:
+            Use the <code class="rounded bg-surface-container-highest px-1">size</code> prop to
+            control dimensions. Available sizes:
             <code class="rounded bg-surface-container-highest px-1">3xs</code>
             to <code class="rounded bg-surface-container-highest px-1">3xl</code>.
         </p>
@@ -123,8 +123,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Chip</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">chip</code> prop to add a
-            status indicator. Pass
+            Use the <code class="rounded bg-surface-container-highest px-1">chip</code> prop to add
+            a status indicator. Pass
             <code class="rounded bg-surface-container-highest px-1">true</code> for default or an object
             to customize.
         </p>
@@ -218,8 +218,8 @@
 
         <p class="text-xs font-medium text-on-surface-variant uppercase">Max</p>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1">max</code> to limit visible
-            avatars. Excess is shown as a "+N" indicator.
+            Use <code class="rounded bg-surface-container-highest px-1">max</code> to limit visible avatars.
+            Excess is shown as a "+N" indicator.
         </p>
         <div class="flex flex-col gap-4 rounded-lg bg-surface-container-high p-4">
             <div class="flex flex-col gap-1">
@@ -241,10 +241,7 @@
             {#each ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as s (s)}
                 <div class="flex flex-col gap-1">
                     <span class="text-xs text-on-surface-variant">{s}</span>
-                    <AvatarGroup
-                        avatars={groupAvatars.slice(0, 4)}
-                        size={s as 'md'}
-                    />
+                    <AvatarGroup avatars={groupAvatars.slice(0, 4)} size={s as 'md'} />
                 </div>
             {/each}
         </div>
@@ -286,9 +283,21 @@
         <div class="rounded-lg bg-surface-container-high p-4">
             <AvatarGroup
                 avatars={[
-                    { src: 'https://i.pravatar.cc/150?img=40', alt: 'Online', chip: { color: 'success' } },
-                    { src: 'https://i.pravatar.cc/150?img=41', alt: 'Away', chip: { color: 'warning' } },
-                    { src: 'https://i.pravatar.cc/150?img=42', alt: 'Offline', chip: { color: 'error' } },
+                    {
+                        src: 'https://i.pravatar.cc/150?img=40',
+                        alt: 'Online',
+                        chip: { color: 'success' }
+                    },
+                    {
+                        src: 'https://i.pravatar.cc/150?img=41',
+                        alt: 'Away',
+                        chip: { color: 'warning' }
+                    },
+                    {
+                        src: 'https://i.pravatar.cc/150?img=42',
+                        alt: 'Offline',
+                        chip: { color: 'error' }
+                    },
                     { src: 'https://i.pravatar.cc/150?img=43', alt: 'User 4' },
                     { src: 'https://i.pravatar.cc/150?img=44', alt: 'User 5' }
                 ]}
@@ -345,7 +354,9 @@
         <h2 class="text-lg font-semibold">Examples</h2>
 
         <div class="space-y-2 rounded-lg bg-surface-container-high p-4">
-            <p class="text-xs font-medium text-on-surface-variant uppercase">User list with status</p>
+            <p class="text-xs font-medium text-on-surface-variant uppercase">
+                User list with status
+            </p>
             <div class="flex flex-col gap-3">
                 {#each [{ name: 'Alice Johnson', color: 'success' as const, img: 1 }, { name: 'Bob Williams', color: 'error' as const, img: 2 }, { name: 'Carol Davis', color: 'warning' as const, img: 3 }] as user (user.name)}
                     <div class="flex items-center gap-3">

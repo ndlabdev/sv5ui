@@ -57,7 +57,11 @@
     )
 
     const chipProps = $derived(
-        chip === true ? { inset: true as const } : chip ? { inset: true as const, ...chip } : undefined
+        chip === true
+            ? { inset: true as const }
+            : chip
+              ? { inset: true as const, ...chip }
+              : undefined
     )
 
     const classes = $derived.by(() => {
