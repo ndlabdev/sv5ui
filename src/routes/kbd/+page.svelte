@@ -34,15 +34,24 @@
     })
 
     const modifierKeys = ['meta', 'ctrl', 'alt', 'shift'] as const
-    const specialKeys = ['enter', 'escape', 'tab', 'backspace', 'delete', 'space'] as const
+    const specialKeys = [
+        'enter',
+        'escape',
+        'tab',
+        'backspace',
+        'delete',
+        'space',
+        'capslock'
+    ] as const
     const arrowKeys = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright'] as const
+    const navKeys = ['pageup', 'pagedown', 'home', 'end'] as const
 </script>
 
 <div class="space-y-8">
     <div class="space-y-2">
         <h1 class="text-2xl font-bold">Kbd</h1>
         <p class="text-on-surface-variant">
-            Keyboard key indicator for displaying keyboard shortcuts and key combinations.
+            Keyboard key indicator for displaying shortcuts and key combinations.
         </p>
     </div>
 
@@ -59,9 +68,9 @@
 
     <!-- Modifier Keys -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Modifier Keys (Platform Aware)</h2>
+        <h2 class="text-lg font-semibold">Modifier Keys</h2>
         <p class="text-sm text-on-surface-variant">
-            Shows different symbols based on platform: Mac shows ⌘⌃⌥, others show Ctrl/Alt.
+            Platform-aware: Mac shows symbols, others show text labels.
         </p>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
             {#each modifierKeys as key (key)}
@@ -80,12 +89,29 @@
         </div>
     </section>
 
-    <!-- Arrow Keys -->
+    <!-- Arrow & Navigation Keys -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Arrow Keys</h2>
+        <h2 class="text-lg font-semibold">Arrow & Navigation Keys</h2>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
             {#each arrowKeys as key (key)}
                 <Kbd value={key} />
+            {/each}
+            <span class="mx-1 text-on-surface-variant">|</span>
+            {#each navKeys as key (key)}
+                <Kbd value={key} />
+            {/each}
+        </div>
+    </section>
+
+    <!-- Sizes -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Sizes</h2>
+        <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
+            {#each sizes as size (size)}
+                <div class="flex items-center gap-1">
+                    <span class="text-sm text-on-surface-variant">{size}:</span>
+                    <Kbd value="K" {size} />
+                </div>
             {/each}
         </div>
     </section>
@@ -105,62 +131,19 @@
         </div>
     </section>
 
-    <!-- Sizes -->
+    <!-- Children Slot -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Sizes</h2>
-        <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
-            {#each sizes as size (size)}
-                <div class="flex items-center gap-1">
-                    <span class="text-sm text-on-surface-variant">{size}:</span>
-                    <Kbd value="K" {size} />
-                </div>
-            {/each}
-        </div>
-    </section>
-
-    <!-- Colors -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Colors</h2>
+        <h2 class="text-lg font-semibold">Children Slot</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use the default snippet for custom key labels.
+        </p>
         <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
-            {#each colors as color (color)}
-                <Kbd value={color.charAt(0).toUpperCase()} {color} />
-            {/each}
-        </div>
-    </section>
-
-    <!-- Variants x Colors Matrix -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Variants x Colors</h2>
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-outline-variant">
-                        <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
-                            >Variant</th
-                        >
-                        {#each colors as color (color)}
-                            <th
-                                class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
-                                >{color}</th
-                            >
-                        {/each}
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each variants as variant (variant)}
-                        <tr class="border-b border-outline-variant/50">
-                            <td class="px-3 py-3 text-sm font-medium text-on-surface-variant"
-                                >{variant}</td
-                            >
-                            {#each colors as color (color)}
-                                <td class="px-3 py-3 text-center">
-                                    <Kbd value="K" {variant} {color} />
-                                </td>
-                            {/each}
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
+            <Kbd>F1</Kbd>
+            <Kbd>F12</Kbd>
+            <Kbd>PgUp</Kbd>
+            <Kbd>PgDn</Kbd>
+            <Kbd>Ins</Kbd>
+            <Kbd>Fn</Kbd>
         </div>
     </section>
 
@@ -168,56 +151,36 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Keyboard Shortcuts</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            <div class="flex items-center justify-between">
-                <span class="text-sm">Copy</span>
-                <div class="flex items-center gap-1">
-                    <Kbd value="meta" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="C" />
+            {#each [
+                { label: 'Copy', keys: ['meta', 'C'] },
+                { label: 'Paste', keys: ['meta', 'V'] },
+                { label: 'Save', keys: ['meta', 'S'] },
+                { label: 'Search', keys: ['meta', 'K'] },
+                { label: 'Undo', keys: ['meta', 'Z'] },
+                { label: 'Redo', keys: ['meta', 'shift', 'Z'] }
+            ] as shortcut (shortcut.label)}
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">{shortcut.label}</span>
+                    <div class="flex items-center gap-1">
+                        {#each shortcut.keys as key, i (i)}
+                            {#if i > 0}
+                                <span class="text-on-surface-variant">+</span>
+                            {/if}
+                            <Kbd value={key} />
+                        {/each}
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-sm">Paste</span>
-                <div class="flex items-center gap-1">
-                    <Kbd value="meta" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="V" />
-                </div>
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-sm">Save</span>
-                <div class="flex items-center gap-1">
-                    <Kbd value="meta" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="S" />
-                </div>
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-sm">Search</span>
-                <div class="flex items-center gap-1">
-                    <Kbd value="meta" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="K" />
-                </div>
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-sm">Undo</span>
-                <div class="flex items-center gap-1">
-                    <Kbd value="meta" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="Z" />
-                </div>
-            </div>
-            <div class="flex items-center justify-between">
-                <span class="text-sm">Redo</span>
-                <div class="flex items-center gap-1">
-                    <Kbd value="meta" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="shift" />
-                    <span class="text-on-surface-variant">+</span>
-                    <Kbd value="Z" />
-                </div>
-            </div>
+            {/each}
+        </div>
+    </section>
+
+    <!-- UI Slot Overrides -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">UI Slot Overrides</h2>
+        <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
+            <Kbd value="K" ui={{ base: 'rounded-md' }} />
+            <Kbd value="meta" ui={{ base: 'rounded-full px-2' }} />
+            <Kbd value="Enter" ui={{ base: 'rounded-lg px-2 shadow-sm' }} variant="soft" />
         </div>
     </section>
 
@@ -243,33 +206,22 @@
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Menu Item with Shortcut</p>
                 <div class="max-w-xs rounded-lg border border-outline-variant bg-surface-container">
-                    <div
-                        class="flex items-center justify-between px-3 py-2 hover:bg-surface-container-high"
-                    >
-                        <span class="text-sm">New File</span>
-                        <div class="flex items-center gap-0.5">
-                            <Kbd value="meta" size="sm" variant="soft" />
-                            <Kbd value="N" size="sm" variant="soft" />
+                    {#each [
+                        { label: 'New File', keys: ['meta', 'N'] },
+                        { label: 'Open File', keys: ['meta', 'O'] },
+                        { label: 'Save', keys: ['meta', 'S'] }
+                    ] as item (item.label)}
+                        <div
+                            class="flex items-center justify-between px-3 py-2 hover:bg-surface-container-high"
+                        >
+                            <span class="text-sm">{item.label}</span>
+                            <div class="flex items-center gap-0.5">
+                                {#each item.keys as key (key)}
+                                    <Kbd value={key} size="sm" variant="soft" />
+                                {/each}
+                            </div>
                         </div>
-                    </div>
-                    <div
-                        class="flex items-center justify-between px-3 py-2 hover:bg-surface-container-high"
-                    >
-                        <span class="text-sm">Open File</span>
-                        <div class="flex items-center gap-0.5">
-                            <Kbd value="meta" size="sm" variant="soft" />
-                            <Kbd value="O" size="sm" variant="soft" />
-                        </div>
-                    </div>
-                    <div
-                        class="flex items-center justify-between px-3 py-2 hover:bg-surface-container-high"
-                    >
-                        <span class="text-sm">Save</span>
-                        <div class="flex items-center gap-0.5">
-                            <Kbd value="meta" size="sm" variant="soft" />
-                            <Kbd value="S" size="sm" variant="soft" />
-                        </div>
-                    </div>
+                    {/each}
                 </div>
             </div>
 
@@ -300,20 +252,7 @@
         </div>
     </section>
 
-    <!-- Custom Content -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Custom Content</h2>
-        <div class="flex flex-wrap items-center gap-2 rounded-lg bg-surface-container-high p-4">
-            <Kbd>F1</Kbd>
-            <Kbd>F12</Kbd>
-            <Kbd>PgUp</Kbd>
-            <Kbd>PgDn</Kbd>
-            <Kbd>Home</Kbd>
-            <Kbd>End</Kbd>
-        </div>
-    </section>
-
-    <!-- useKbd Hook: Shortcut Listener -->
+    <!-- useKbd: Shortcut Listener -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">useKbd — Shortcut Listener</h2>
         <p class="text-sm text-on-surface-variant">
@@ -326,8 +265,8 @@
                     <Kbd value="ctrl" size="sm" /> + <Kbd value="K" size="sm" /> Toggle search
                 </span>
                 <span class="flex items-center gap-1">
-                    <Kbd value="ctrl" size="sm" /> + <Kbd value="shift" size="sm" /> + <Kbd>P</Kbd> Command
-                    palette
+                    <Kbd value="ctrl" size="sm" /> + <Kbd value="shift" size="sm" /> +
+                    <Kbd value="P" size="sm" /> Command palette
                 </span>
                 <span class="flex items-center gap-1">
                     <Kbd value="escape" size="sm" /> Close
@@ -338,9 +277,9 @@
                 <div
                     class="flex items-center gap-2 rounded-lg border border-primary/50 bg-surface-container p-3"
                 >
-                    <span class="flex-1 text-sm text-on-surface-variant"
-                        >Search is open! Press <Kbd value="escape" size="sm" class="mx-0.5" /> to close.</span
-                    >
+                    <span class="flex-1 text-sm text-on-surface-variant">
+                        Search is open! Press <Kbd value="escape" size="sm" class="mx-0.5" /> to close.
+                    </span>
                 </div>
             {/if}
 
@@ -355,16 +294,11 @@
         </div>
     </section>
 
-    <!-- useKbd Hook: Reactive Key State -->
+    <!-- useKbd: Reactive Key State -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">useKbd — Reactive Key State</h2>
         <p class="text-sm text-on-surface-variant">
-            Hold any key to see it tracked in real-time. The <code
-                class="rounded bg-surface-container-highest px-1 text-xs">pressedKeys</code
-            >
-            set and
-            <code class="rounded bg-surface-container-highest px-1 text-xs">isPressed()</code> update
-            reactively.
+            Hold any key to see it tracked in real-time.
         </p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
             <div class="flex flex-wrap gap-2">
@@ -397,6 +331,42 @@
                     {/if}
                 </p>
             </div>
+        </div>
+    </section>
+
+    <!-- Variants x Colors Matrix -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Variants x Colors</h2>
+        <div class="overflow-x-auto rounded-lg bg-surface-container-high p-4">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-outline-variant">
+                        <th class="px-3 py-3 text-left text-sm font-medium text-on-surface-variant"
+                            >Variant</th
+                        >
+                        {#each colors as color (color)}
+                            <th
+                                class="px-3 py-3 text-center text-sm font-medium text-on-surface-variant capitalize"
+                                >{color}</th
+                            >
+                        {/each}
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each variants as variant (variant)}
+                        <tr class="border-b border-outline-variant/50">
+                            <td class="px-3 py-3 text-sm font-medium text-on-surface-variant"
+                                >{variant}</td
+                            >
+                            {#each colors as color (color)}
+                                <td class="px-3 py-3 text-center">
+                                    <Kbd value="K" {variant} {color} />
+                                </td>
+                            {/each}
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
         </div>
     </section>
 </div>

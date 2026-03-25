@@ -4,7 +4,7 @@ import type { UseKbdOptions, UseKbdReturn, KeyboardShortcutCallback } from './kb
 
 let cachedIsMac: boolean | undefined
 
-const detectPlatform = () => {
+export function isMac(): boolean {
     if (cachedIsMac === undefined) {
         cachedIsMac =
             typeof navigator !== 'undefined' &&
@@ -18,13 +18,12 @@ export const __resetPlatformCache = () => {
     cachedIsMac = undefined
 }
 
-export const isMac = detectPlatform()
-
-export function resolveKey(value: string | undefined): string | null {
+export function resolveKey(value: string | undefined, platformReady = true): string | null {
     if (!value) return null
     const key = value.toLowerCase()
     if (key in kbdKeysPlatformMap) {
-        return isMac ? kbdKeysPlatformMap[key].mac : kbdKeysPlatformMap[key].other
+        if (!platformReady) return null
+        return isMac() ? kbdKeysPlatformMap[key].mac : kbdKeysPlatformMap[key].other
     }
     return kbdKeysMap[key] ?? value
 }
@@ -51,7 +50,7 @@ export function normalizeKey(eventKey: string): string {
     return KEY_NORMALIZE[lower] ?? lower
 }
 
-const CAPTURABLE_MODIFIERS: Record<string, true> = { alt: true, meta: true }
+const CAPTURABLE_MODIFIERS = new Set(['alt', 'meta'])
 
 const MODIFIER_PROPS: ReadonlyArray<
     readonly [string, 'ctrlKey' | 'shiftKey' | 'altKey' | 'metaKey']
@@ -177,6 +176,11 @@ function parseShortcuts(shortcuts: Record<string, KeyboardShortcutCallback>): Pa
 
 export function useKbd(options: UseKbdOptions = {}): UseKbdReturn {
     const _pressedKeys = new SvelteSet<string>()
+    const {
+        captureModifiers = false,
+        repeat: allowRepeat = false,
+        preventDefault: shouldPrevent = true
+    } = options
 
     let _shortcutsRef: Record<string, KeyboardShortcutCallback> | undefined
     let _parsedShortcuts: ParsedBinding[] = []
@@ -205,7 +209,6 @@ export function useKbd(options: UseKbdOptions = {}): UseKbdReturn {
         return t ?? (typeof window !== 'undefined' ? window : null)
     }
 
-    /** Sync modifier state from event booleans to fix missed keyup (e.g. Alt+Tab) */
     function reconcileModifiers(event: KeyboardEvent) {
         for (const [key, prop] of MODIFIER_PROPS) {
             if (event[prop]) _pressedKeys.add(key)
@@ -221,18 +224,15 @@ export function useKbd(options: UseKbdOptions = {}): UseKbdReturn {
         const key = normalizeKey(event.key)
         _pressedKeys.add(key)
 
-        if (options.captureModifiers && key in CAPTURABLE_MODIFIERS) {
+        if (captureModifiers && CAPTURABLE_MODIFIERS.has(key)) {
             event.preventDefault()
         }
 
-        if (event.repeat && !options.repeat) return
+        if (event.repeat && !allowRepeat) return
 
-        const bindings = getParsedShortcuts()
-        for (const binding of bindings) {
+        for (const binding of getParsedShortcuts()) {
             if (matchesShortcut(event, binding)) {
-                if (options.preventDefault !== false) {
-                    event.preventDefault()
-                }
+                if (shouldPrevent) event.preventDefault()
                 binding.callback(event)
             }
         }
@@ -240,15 +240,24 @@ export function useKbd(options: UseKbdOptions = {}): UseKbdReturn {
 
     function handleKeyUp(event: KeyboardEvent) {
         if (!getEnabled()) return
-
         reconcileModifiers(event)
-
-        const key = normalizeKey(event.key)
-        _pressedKeys.delete(key)
+        _pressedKeys.delete(normalizeKey(event.key))
     }
 
     function handleClear() {
         _pressedKeys.clear()
+    }
+
+    const callbacks: KbdInstanceCallbacks = {
+        keydown: handleKeyDown,
+        keyup: handleKeyUp,
+        clear: handleClear
+    }
+
+    const clearOnlyCallbacks: KbdInstanceCallbacks = {
+        keydown: () => {},
+        keyup: () => {},
+        clear: handleClear
     }
 
     $effect(() => {
@@ -260,42 +269,27 @@ export function useKbd(options: UseKbdOptions = {}): UseKbdReturn {
         const target = getTarget()
         if (!target) return
 
-        const isWindowTarget = typeof window !== 'undefined' && target === window
-
-        const callbacks: KbdInstanceCallbacks = {
-            keydown: handleKeyDown,
-            keyup: handleKeyUp,
-            clear: handleClear
-        }
-
-        if (isWindowTarget) {
+        if (typeof window !== 'undefined' && target === window) {
             kbdRegistry.register(callbacks)
             return () => {
                 kbdRegistry.unregister(callbacks)
                 _pressedKeys.clear()
             }
-        } else {
-            const clearOnly: KbdInstanceCallbacks = {
-                keydown: () => {},
-                keyup: () => {},
-                clear: handleClear
-            }
-            target.addEventListener('keydown', handleKeyDown as EventListener)
-            target.addEventListener('keyup', handleKeyUp as EventListener)
-            kbdRegistry.register(clearOnly)
-            return () => {
-                target.removeEventListener('keydown', handleKeyDown as EventListener)
-                target.removeEventListener('keyup', handleKeyUp as EventListener)
-                kbdRegistry.unregister(clearOnly)
-                _pressedKeys.clear()
-            }
+        }
+
+        target.addEventListener('keydown', handleKeyDown as EventListener)
+        target.addEventListener('keyup', handleKeyUp as EventListener)
+        kbdRegistry.register(clearOnlyCallbacks)
+        return () => {
+            target.removeEventListener('keydown', handleKeyDown as EventListener)
+            target.removeEventListener('keyup', handleKeyUp as EventListener)
+            kbdRegistry.unregister(clearOnlyCallbacks)
+            _pressedKeys.clear()
         }
     })
 
     return {
-        isPressed(key: string): boolean {
-            return _pressedKeys.has(normalizeKey(key))
-        },
+        isPressed: (key: string) => _pressedKeys.has(normalizeKey(key)),
         get pressedKeys(): ReadonlySet<string> {
             return _pressedKeys
         }
