@@ -46,9 +46,24 @@ export type TimelineItem = {
      * Additional CSS classes for this item.
      */
     class?: ClassNameValue
+
+    /**
+     * Per-item slot class overrides.
+     */
+    ui?: Partial<
+        Record<
+            'item' | 'container' | 'indicator' | 'separator' | 'wrapper' | 'date' | 'title' | 'description',
+            ClassNameValue
+        >
+    >
 }
 
 export type TimelineProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * The HTML element to render as.
      * @default 'div'
