@@ -13,6 +13,21 @@
     ] as const
     const sizes = ['3xs', '2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'] as const
     const positions = ['top-right', 'bottom-right', 'top-left', 'bottom-left'] as const
+
+    const statuses = [
+        { label: 'Online', color: 'success' },
+        { label: 'Away', color: 'warning' },
+        { label: 'Busy', color: 'error' },
+        { label: 'Offline', color: 'surface' }
+    ] as const
+
+    let statusIndex = $state(0)
+    let showChip = $state(true)
+    let notificationCount = $state(3)
+
+    function cycleStatus() {
+        statusIndex = (statusIndex + 1) % statuses.length
+    }
 </script>
 
 <div class="space-y-8">
@@ -139,9 +154,9 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Show / Hide</h2>
         <p class="text-sm text-on-surface-variant">
-            Control visibility with the <code class="rounded bg-surface-container-highest px-1"
-                >show</code
-            > prop.
+            Control visibility with <code class="rounded bg-surface-container-highest px-1"
+                >bind:show</code
+            > for two-way binding.
         </p>
         <div class="flex flex-wrap items-center gap-8 rounded-lg bg-surface-container-high p-4">
             <div class="flex flex-col items-center gap-2">
@@ -155,6 +170,44 @@
                     <Button icon="lucide:bell" variant="ghost" />
                 </Chip>
                 <span class="text-xs text-on-surface-variant">show=false</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+                <Chip color="error" text={notificationCount} size="lg" bind:show={showChip}>
+                    <Button
+                        icon="lucide:bell"
+                        variant="ghost"
+                        onclick={() => {
+                            showChip = !showChip
+                        }}
+                    />
+                </Chip>
+                <span class="text-xs text-on-surface-variant">
+                    bind:show ({showChip ? 'visible' : 'hidden'})
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Cycling -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Status Indicator</h2>
+        <p class="text-sm text-on-surface-variant">
+            Cycle through statuses by clicking the avatar. Combines color, position, and inset.
+        </p>
+        <div class="flex items-center gap-6 rounded-lg bg-surface-container-high p-4">
+            <button onclick={cycleStatus} class="cursor-pointer">
+                <Chip
+                    color={statuses[statusIndex].color}
+                    position="bottom-right"
+                    inset
+                    size="sm"
+                >
+                    <Avatar src="https://i.pravatar.cc/150?img=5" alt="User" size="lg" />
+                </Chip>
+            </button>
+            <div class="flex items-center gap-2">
+                <Chip color={statuses[statusIndex].color} standalone size="sm" />
+                <span class="text-sm">{statuses[statusIndex].label}</span>
             </div>
         </div>
     </section>
