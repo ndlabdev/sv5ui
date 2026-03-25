@@ -10,6 +10,7 @@
     import { getComponentConfig } from '../config.js'
     import { getContext } from 'svelte'
     import Icon from '../Icon/Icon.svelte'
+    import Chip from '../Chip/Chip.svelte'
 
     const config = getComponentConfig('avatar', avatarDefaults)
 
@@ -21,8 +22,7 @@
         rounded,
         text,
         icon,
-        status,
-        statusPosition,
+        chip,
         loading,
         delayMs = 0,
         class: className,
@@ -56,51 +56,55 @@
               : ''
     )
 
+    const chipProps = $derived(
+        chip === true ? { inset: true as const } : chip ? { inset: true as const, ...chip } : undefined
+    )
+
     const classes = $derived.by(() => {
-        const slots = avatarVariants({
-            size: resolvedSize,
-            rounded: resolvedRounded,
-            statusPosition:
-                statusPosition ?? config.defaultVariants.statusPosition ?? 'bottom-right'
-        })
+        const slots = avatarVariants({ size: resolvedSize, rounded: resolvedRounded })
         return {
             root: slots.root({
                 class: [config.slots.root, groupContext?.baseClass, className, ui?.root]
             }),
             image: slots.image({ class: [config.slots.image, ui?.image] }),
             fallback: slots.fallback({ class: [config.slots.fallback, ui?.fallback] }),
-            icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
-            status: slots.status({ class: [config.slots.status, ui?.status] })
+            icon: slots.icon({ class: [config.slots.icon, ui?.icon] })
         }
     })
 </script>
 
-<Avatar.Root {...restProps} bind:ref class={classes.root} {delayMs}>
-    {#if children}
-        {@render children()}
-    {:else}
-        {#if src}
-            <Avatar.Image
-                {src}
-                alt={alt ?? ''}
-                class={classes.image}
-                width={sizePx}
-                height={sizePx}
-                {loading}
-            />
-        {/if}
-        <Avatar.Fallback class={classes.fallback}>
-            {#if fallbackSnippet}
-                {@render fallbackSnippet()}
-            {:else if initials}
-                {initials}
-            {:else if icon}
-                <Icon name={icon} class={classes.icon} />
+{#snippet avatarContent()}
+    <Avatar.Root {...restProps} bind:ref class={classes.root} {delayMs}>
+        {#if children}
+            {@render children()}
+        {:else}
+            {#if src}
+                <Avatar.Image
+                    {src}
+                    alt={alt ?? ''}
+                    class={classes.image}
+                    width={sizePx}
+                    height={sizePx}
+                    {loading}
+                />
             {/if}
-        </Avatar.Fallback>
-
-        {#if status}
-            <span class="{classes.status} {status}"></span>
+            <Avatar.Fallback class={classes.fallback}>
+                {#if fallbackSnippet}
+                    {@render fallbackSnippet()}
+                {:else if initials}
+                    {initials}
+                {:else if icon}
+                    <Icon name={icon} class={classes.icon} />
+                {/if}
+            </Avatar.Fallback>
         {/if}
-    {/if}
-</Avatar.Root>
+    </Avatar.Root>
+{/snippet}
+
+{#if chipProps}
+    <Chip {...chipProps}>
+        {@render avatarContent()}
+    </Chip>
+{:else}
+    {@render avatarContent()}
+{/if}

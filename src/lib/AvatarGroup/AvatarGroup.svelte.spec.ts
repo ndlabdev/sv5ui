@@ -163,6 +163,38 @@ describe('AvatarGroup', () => {
         })
     })
 
+    // ==================== ROUNDED ====================
+
+    describe('rounded', () => {
+        it('should default to rounded-full on child avatars', async () => {
+            const { container } = render(AvatarGroup, { avatars: avatars.slice(0, 2) })
+            const avatarRoot = container.querySelectorAll('[data-avatar-root]')[0]
+            const root = page.elementLocator(avatarRoot)
+            await expect.element(root).toHaveClass(/rounded-full/)
+        })
+
+        it('should apply rounded-lg to child avatars', async () => {
+            const { container } = render(AvatarGroup, {
+                avatars: avatars.slice(0, 2),
+                rounded: 'lg'
+            })
+            const avatarRoot = container.querySelectorAll('[data-avatar-root]')[0]
+            const root = page.elementLocator(avatarRoot)
+            await expect.element(root).toHaveClass(/rounded-lg/)
+            await expect.element(root).not.toHaveClass(/rounded-full/)
+        })
+
+        it('should apply rounded-none to child avatars', async () => {
+            const { container } = render(AvatarGroup, {
+                avatars: avatars.slice(0, 2),
+                rounded: 'none'
+            })
+            const avatarRoot = container.querySelectorAll('[data-avatar-root]')[0]
+            const root = page.elementLocator(avatarRoot)
+            await expect.element(root).toHaveClass(/rounded-none/)
+        })
+    })
+
     // ==================== UI SLOT OVERRIDES ====================
 
     describe('ui slot overrides', () => {

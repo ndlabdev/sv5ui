@@ -2,10 +2,15 @@ import type { Snippet } from 'svelte'
 import type { Avatar } from 'bits-ui'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { AvatarVariantProps, AvatarSize, AvatarSlots } from './avatar.variants.js'
+import type { ChipProps } from '../Chip/chip.types.js'
 
 export type { AvatarSize }
 export type AvatarRounded = NonNullable<AvatarVariantProps['rounded']>
-export type AvatarStatusPosition = NonNullable<AvatarVariantProps['statusPosition']>
+
+export type AvatarChipProps = Pick<
+    ChipProps,
+    'color' | 'size' | 'position' | 'inset' | 'show' | 'text'
+>
 
 export type AvatarProps = Omit<Avatar.RootProps, 'children'> & {
     /**
@@ -46,17 +51,13 @@ export type AvatarProps = Omit<Avatar.RootProps, 'children'> & {
     icon?: string
 
     /**
-     * Status indicator color (renders a small dot on the avatar).
-     * Use any CSS color value or Tailwind bg-* class.
-     * @example 'bg-success', 'bg-error', 'bg-warning'
+     * Renders a Chip indicator on the avatar.
+     * Pass `true` for default chip, or an object to customize.
+     * @example true
+     * @example { color: 'success' }
+     * @example { color: 'error', position: 'bottom-right' }
      */
-    status?: string
-
-    /**
-     * Position of the status indicator.
-     * @default 'bottom-right'
-     */
-    statusPosition?: AvatarStatusPosition
+    chip?: boolean | AvatarChipProps
 
     /**
      * Image loading strategy.
