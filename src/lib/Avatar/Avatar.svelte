@@ -1,26 +1,15 @@
 <script lang="ts" module>
-    import type { AvatarProps, AvatarSize } from './avatar.types.js'
+    import type { AvatarProps, AvatarSize, AvatarRounded } from './avatar.types.js'
 
     export type Props = AvatarProps
-
-    const SIZE_PX: Record<AvatarSize, number> = {
-        '3xs': 16,
-        '2xs': 20,
-        xs: 24,
-        sm: 28,
-        md: 32,
-        lg: 36,
-        xl: 40,
-        '2xl': 44,
-        '3xl': 48
-    }
 </script>
 
 <script lang="ts">
     import { Avatar } from 'bits-ui'
-    import { avatarVariants, avatarDefaults } from './avatar.variants.js'
+    import { avatarVariants, avatarDefaults, avatarSizePx } from './avatar.variants.js'
     import { getComponentConfig } from '../config.js'
     import { getContext } from 'svelte'
+    import Icon from '../Icon/Icon.svelte'
 
     const config = getComponentConfig('avatar', avatarDefaults)
 
@@ -29,46 +18,64 @@
         src,
         alt,
         size,
+        rounded,
         text,
+        icon,
+        status,
+        statusPosition,
+        loading,
         delayMs = 0,
         class: className,
         ui,
+        fallback: fallbackSnippet,
         children,
         ...restProps
     }: Props = $props()
 
-    const groupContext = getContext<{ size: AvatarSize; baseClass: string } | undefined>(
-        'avatarGroup'
-    )
+    const groupContext = getContext<
+        { size: AvatarSize; rounded: AvatarRounded; baseClass: string } | undefined
+    >('avatarGroup')
 
     const resolvedSize = $derived(size ?? groupContext?.size ?? config.defaultVariants.size ?? 'md')
-    const sizePx = $derived(SIZE_PX[resolvedSize])
+    const resolvedRounded = $derived(
+        rounded ?? groupContext?.rounded ?? config.defaultVariants.rounded ?? 'full'
+    )
+    const sizePx = $derived(avatarSizePx[resolvedSize])
 
     const initials = $derived(
-        text ||
-            (alt
-                ? alt
-                      .split(' ')
-                      .slice(0, 2)
-                      .map((w) => w[0])
-                      .join('')
-                      .toUpperCase()
-                : '')
+        text !== undefined
+            ? text
+            : alt
+              ? alt
+                    .split(' ')
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((w) => w[0])
+                    .join('')
+                    .toUpperCase()
+              : ''
     )
 
     const classes = $derived.by(() => {
-        const slots = avatarVariants({ size: resolvedSize })
+        const slots = avatarVariants({
+            size: resolvedSize,
+            rounded: resolvedRounded,
+            statusPosition:
+                statusPosition ?? config.defaultVariants.statusPosition ?? 'bottom-right'
+        })
         return {
             root: slots.root({
                 class: [config.slots.root, groupContext?.baseClass, className, ui?.root]
             }),
             image: slots.image({ class: [config.slots.image, ui?.image] }),
-            fallback: slots.fallback({ class: [config.slots.fallback, ui?.fallback] })
+            fallback: slots.fallback({ class: [config.slots.fallback, ui?.fallback] }),
+            icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
+            status: slots.status({ class: [config.slots.status, ui?.status] })
         }
     })
 </script>
 
-<Avatar.Root bind:ref class={classes.root} {delayMs} {...restProps}>
+<Avatar.Root {...restProps} bind:ref class={classes.root} {delayMs}>
     {#if children}
         {@render children()}
     {:else}
@@ -79,10 +86,21 @@
                 class={classes.image}
                 width={sizePx}
                 height={sizePx}
+                {loading}
             />
         {/if}
         <Avatar.Fallback class={classes.fallback}>
-            {initials}
+            {#if fallbackSnippet}
+                {@render fallbackSnippet()}
+            {:else if initials}
+                {initials}
+            {:else if icon}
+                <Icon name={icon} class={classes.icon} />
+            {/if}
         </Avatar.Fallback>
+
+        {#if status}
+            <span class="{classes.status} {status}"></span>
+        {/if}
     {/if}
 </Avatar.Root>

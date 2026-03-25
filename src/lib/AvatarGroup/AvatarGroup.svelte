@@ -9,7 +9,7 @@
     import { getComponentConfig } from '../config.js'
     import { setContext } from 'svelte'
     import Avatar from '../Avatar/Avatar.svelte'
-    import type { AvatarSize } from '../Avatar/avatar.types.js'
+    import type { AvatarSize, AvatarRounded } from '../Avatar/avatar.types.js'
 
     const config = getComponentConfig('avatarGroup', avatarGroupDefaults)
 
@@ -17,6 +17,7 @@
         as = 'div',
         ui,
         size = config.defaultVariants.size ?? 'md',
+        rounded = 'full',
         avatars,
         max,
         class: className,
@@ -32,9 +33,12 @@
         }
     })
 
-    setContext<{ size: AvatarSize; baseClass: string }>('avatarGroup', {
+    setContext<{ size: AvatarSize; rounded: AvatarRounded; baseClass: string }>('avatarGroup', {
         get size() {
             return size
+        },
+        get rounded() {
+            return rounded
         },
         get baseClass() {
             return classes.base

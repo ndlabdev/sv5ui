@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { AvatarGroupSlots } from './avatar-group.variants.js'
-import type { AvatarProps, AvatarSize } from '../Avatar/avatar.types.js'
+import type { AvatarProps, AvatarSize, AvatarRounded } from '../Avatar/avatar.types.js'
 
 export type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
     /**
@@ -15,6 +15,12 @@ export type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
      * @default 'md'
      */
     size?: AvatarSize
+
+    /**
+     * Controls the border radius of all avatars in the group.
+     * @default 'full'
+     */
+    rounded?: AvatarRounded
 
     /**
      * Array of avatar props to render.
