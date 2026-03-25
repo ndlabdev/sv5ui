@@ -6,6 +6,7 @@
 
 <script lang="ts">
     import Icon from '@iconify/svelte'
+    import { twMerge } from 'tailwind-merge'
 
     let {
         name,
@@ -18,14 +19,19 @@
         ...restProps
     }: Props = $props()
 
-    const flip = $derived.by(() => {
-        if (flipH && flipV) return 'horizontal,vertical'
-        if (flipH) return 'horizontal'
-        if (flipV) return 'vertical'
-        return undefined
-    })
+    const flip = $derived(
+        flipH && flipV
+            ? 'horizontal,vertical'
+            : flipH
+              ? 'horizontal'
+              : flipV
+                ? 'vertical'
+                : undefined
+    )
 
     const rotateValue = $derived(rotate ? rotate / 90 : undefined)
+
+    const iconClass = $derived(twMerge('shrink-0', className))
 </script>
 
 <Icon
@@ -35,6 +41,6 @@
     {color}
     {flip}
     rotate={rotateValue}
-    class="shrink-0 {className ?? ''}"
+    class={iconClass}
     {...restProps}
 />
