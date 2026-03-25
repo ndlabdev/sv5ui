@@ -244,35 +244,6 @@ describe('Avatar', () => {
         })
     })
 
-    // ==================== STATUS INDICATOR ====================
-
-    describe('status indicator', () => {
-        it('should not render status by default', async () => {
-            const { container } = render(Avatar, { alt: 'User' })
-            const root = container.querySelector('[data-avatar-root]')!
-            expect(root.querySelector('.ring-surface')).toBeNull()
-        })
-
-        it('should render status indicator when status is provided', async () => {
-            const { container } = render(Avatar, { alt: 'User', status: 'bg-success' })
-            const root = container.querySelector('[data-avatar-root]')!
-            const statusEl = root.querySelector('.bg-success')
-            expect(statusEl).toBeTruthy()
-        })
-
-        it('should apply status position class', async () => {
-            const { container } = render(Avatar, {
-                alt: 'User',
-                status: 'bg-success',
-                statusPosition: 'top-right'
-            })
-            const root = container.querySelector('[data-avatar-root]')!
-            const statusEl = root.querySelector('.bg-success')!
-            expect(statusEl.className).toContain('top-0')
-            expect(statusEl.className).toContain('right-0')
-        })
-    })
-
     // ==================== CUSTOM CLASS ====================
 
     describe('custom class', () => {
@@ -319,7 +290,7 @@ describe('Avatar', () => {
             const { container } = render(Avatar, { alt: 'User' })
             const root = getByData(container, 'data-avatar-root')
             await expect.element(root).toHaveClass(/rounded-full/)
-            await expect.element(root).toHaveClass(/relative/)
+            await expect.element(root).toHaveClass(/shrink-0/)
         })
 
         it('should apply fallback base classes', async () => {

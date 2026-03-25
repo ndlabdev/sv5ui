@@ -14,10 +14,11 @@
     const config = getComponentConfig('avatarGroup', avatarGroupDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         size = config.defaultVariants.size ?? 'md',
-        rounded = 'full',
+        rounded = config.defaultVariants.rounded ?? 'full',
         avatars,
         max,
         class: className,
@@ -26,7 +27,7 @@
     }: Props = $props()
 
     const classes = $derived.by(() => {
-        const slots = avatarGroupVariants({ size })
+        const slots = avatarGroupVariants({ size, rounded })
         return {
             root: slots.root({ class: [config.slots.root, className, ui?.root] }),
             base: slots.base({ class: [config.slots.base, ui?.base] })
@@ -46,7 +47,7 @@
     })
 
     const visibleAvatars = $derived(
-        !avatars ? [] : max && max > 0 && avatars.length > max ? avatars.slice(0, max) : avatars
+        !avatars ? [] : max && max > 0 ? avatars.slice(0, max) : avatars
     )
 
     const overflowCount = $derived(
@@ -54,12 +55,12 @@
     )
 </script>
 
-<svelte:element this={as} class={classes.root} {...restProps}>
+<svelte:element this={as} bind:this={ref} class={classes.root} {...restProps}>
     {#if avatars}
         {#if overflowCount > 0}
             <Avatar text={`+${overflowCount}`} />
         {/if}
-        {#each visibleAvatars as avatar, index (avatar.src ?? index)}
+        {#each visibleAvatars as avatar, index (index)}
             <Avatar {...avatar} />
         {/each}
     {:else if children}
