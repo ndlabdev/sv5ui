@@ -145,17 +145,17 @@
     {:else if isLabel(item)}
         <DropdownMenu.GroupHeading class={classes.label}>{item.label}</DropdownMenu.GroupHeading>
     {:else if isActionItem(item)}
-        {@const colorCls = item.color ? itemColorClasses[item.color] : undefined}
+        {@const colorCls = itemColorClasses[item.color ?? 'default']}
         <DropdownMenu.Item
             disabled={item.disabled}
             closeOnSelect={item.closeOnSelect}
             onSelect={item.onSelect}
-            class={[classes.item, colorCls?.item, item.class]}
+            class={[classes.item, colorCls.item, item.class]}
         >
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else if item.icon}
-                <Icon name={item.icon} class={[classes.itemLeadingIcon, colorCls?.itemLeadingIcon]} />
+                <Icon name={item.icon} class={[classes.itemLeadingIcon, colorCls.itemLeadingIcon]} />
             {/if}
 
             {#if itemLabel}

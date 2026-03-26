@@ -1,7 +1,12 @@
 import { tv, type VariantProps } from 'tailwind-variants'
 
-// Per-item color classes — extracted from TV to avoid re-instantiating variants per item
+// Per-item color classes — static map, O(1) lookup, no TV re-instantiation per item
+// Default highlight is here (not in base item slot) to avoid class conflicts
 export const itemColorClasses: Record<string, { item: string; itemLeadingIcon: string }> = {
+    default: {
+        item: 'data-[highlighted]:bg-surface-container-highest',
+        itemLeadingIcon: ''
+    },
     primary: {
         item: 'text-primary data-[highlighted]:bg-primary-container data-[highlighted]:text-on-primary-container',
         itemLeadingIcon:
@@ -62,8 +67,7 @@ export const dropdownMenuVariants = tv({
         item: [
             'group relative flex items-center gap-2 w-full rounded-sm px-2 cursor-pointer select-none',
             'focus:outline-none',
-            'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-            'data-[highlighted]:bg-surface-container-highest'
+            'data-[disabled]:pointer-events-none data-[disabled]:opacity-50'
         ],
         itemLeadingIcon: 'shrink-0',
         itemLabel: 'flex-1 truncate',

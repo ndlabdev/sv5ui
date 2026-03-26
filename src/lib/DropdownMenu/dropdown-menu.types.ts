@@ -7,16 +7,9 @@ import type {
     DropdownMenuContentPropsWithoutHTML,
     DropdownMenuArrowPropsWithoutHTML
 } from 'bits-ui'
+import { itemColorClasses } from './dropdown-menu.variants.js'
 
-export type DropdownMenuItemColor =
-    | 'primary'
-    | 'secondary'
-    | 'tertiary'
-    | 'success'
-    | 'warning'
-    | 'error'
-    | 'info'
-    | 'surface'
+export type DropdownMenuItemColor = Exclude<keyof typeof itemColorClasses, 'default'>
 
 // ============================================================================
 // Item Types

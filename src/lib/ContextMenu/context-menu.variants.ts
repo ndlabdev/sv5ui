@@ -1,5 +1,54 @@
 import { tv, type VariantProps } from 'tailwind-variants'
 
+// Per-item color classes — static map, O(1) lookup, no TV re-instantiation per item
+// Default highlight is here (not in base item slot) to avoid class conflicts
+export const itemColorClasses: Record<string, { item: string; itemLeadingIcon: string }> = {
+    default: {
+        item: 'data-[highlighted]:bg-surface-container-highest',
+        itemLeadingIcon: ''
+    },
+    primary: {
+        item: 'text-primary data-[highlighted]:bg-primary-container data-[highlighted]:text-on-primary-container',
+        itemLeadingIcon:
+            'text-primary group-data-[highlighted]:text-on-primary-container'
+    },
+    secondary: {
+        item: 'text-secondary data-[highlighted]:bg-secondary-container data-[highlighted]:text-on-secondary-container',
+        itemLeadingIcon:
+            'text-secondary group-data-[highlighted]:text-on-secondary-container'
+    },
+    tertiary: {
+        item: 'text-tertiary data-[highlighted]:bg-tertiary-container data-[highlighted]:text-on-tertiary-container',
+        itemLeadingIcon:
+            'text-tertiary group-data-[highlighted]:text-on-tertiary-container'
+    },
+    success: {
+        item: 'text-success data-[highlighted]:bg-success-container data-[highlighted]:text-on-success-container',
+        itemLeadingIcon:
+            'text-success group-data-[highlighted]:text-on-success-container'
+    },
+    warning: {
+        item: 'text-warning data-[highlighted]:bg-warning-container data-[highlighted]:text-on-warning-container',
+        itemLeadingIcon:
+            'text-warning group-data-[highlighted]:text-on-warning-container'
+    },
+    error: {
+        item: 'text-error data-[highlighted]:bg-error-container data-[highlighted]:text-on-error-container',
+        itemLeadingIcon:
+            'text-error group-data-[highlighted]:text-on-error-container'
+    },
+    info: {
+        item: 'text-info data-[highlighted]:bg-info-container data-[highlighted]:text-on-info-container',
+        itemLeadingIcon:
+            'text-info group-data-[highlighted]:text-on-info-container'
+    },
+    surface: {
+        item: 'text-on-surface-variant data-[highlighted]:bg-surface-container-highest data-[highlighted]:text-on-surface',
+        itemLeadingIcon:
+            'text-on-surface-variant group-data-[highlighted]:text-on-surface'
+    }
+}
+
 export const contextMenuVariants = tv({
     slots: {
         content: [
@@ -17,12 +66,11 @@ export const contextMenuVariants = tv({
         item: [
             'group relative flex items-center gap-2 w-full rounded-sm px-2 cursor-pointer select-none',
             'focus:outline-none',
-            'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-            'data-[highlighted]:bg-surface-container-highest'
+            'data-[disabled]:pointer-events-none data-[disabled]:opacity-50'
         ],
-        itemIcon: 'shrink-0',
+        itemLeadingIcon: 'shrink-0',
         itemLabel: 'flex-1 truncate',
-        itemKbd: 'ml-auto flex items-center gap-0.5',
+        itemTrailingKbds: 'ml-auto flex items-center gap-0.5',
         itemIndicator: 'shrink-0',
         subTrigger: [
             'relative flex items-center gap-2 w-full rounded-sm px-2 cursor-pointer select-none',
@@ -40,137 +88,64 @@ export const contextMenuVariants = tv({
             'shadow-lg',
             'focus:outline-none',
             'overflow-hidden'
-        ],
-        checkboxIndicator: 'shrink-0',
-        radioIndicator: 'shrink-0'
+        ]
     },
     variants: {
         transition: {
             true: {
-                content:
-                    'data-[state=open]:animate-[fade-in_150ms_ease-out,scale-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,scale-out_100ms_ease-in]',
-                subContent:
-                    'data-[state=open]:animate-[fade-in_150ms_ease-out,scale-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,scale-out_100ms_ease-in]'
+                content: [
+                    'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+                    'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95'
+                ],
+                subContent: [
+                    'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+                    'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95'
+                ]
             }
         },
         size: {
             xs: {
                 item: 'py-1 text-xs',
                 subTrigger: 'py-1 text-xs',
-                itemIcon: 'size-3',
+                itemLeadingIcon: 'size-3',
                 subTriggerIcon: 'size-3',
-                checkboxIndicator: 'size-3',
-                radioIndicator: 'size-3',
+                itemIndicator: 'size-3',
                 label: 'text-[10px]'
             },
             sm: {
                 item: 'py-1.5 text-xs',
                 subTrigger: 'py-1.5 text-xs',
-                itemIcon: 'size-3.5',
+                itemLeadingIcon: 'size-3.5',
                 subTriggerIcon: 'size-3.5',
-                checkboxIndicator: 'size-3.5',
-                radioIndicator: 'size-3.5',
+                itemIndicator: 'size-3.5',
                 label: 'text-[11px]'
             },
             md: {
                 item: 'py-1.5 text-sm',
                 subTrigger: 'py-1.5 text-sm',
-                itemIcon: 'size-4',
+                itemLeadingIcon: 'size-4',
                 subTriggerIcon: 'size-4',
-                checkboxIndicator: 'size-4',
-                radioIndicator: 'size-4'
+                itemIndicator: 'size-4'
             },
             lg: {
                 item: 'py-2 text-sm',
                 subTrigger: 'py-2 text-sm',
-                itemIcon: 'size-5',
+                itemLeadingIcon: 'size-5',
                 subTriggerIcon: 'size-5',
-                checkboxIndicator: 'size-5',
-                radioIndicator: 'size-5'
+                itemIndicator: 'size-5'
             },
             xl: {
                 item: 'py-2.5 text-base',
                 subTrigger: 'py-2.5 text-base',
-                itemIcon: 'size-5',
+                itemLeadingIcon: 'size-5',
                 subTriggerIcon: 'size-5',
-                checkboxIndicator: 'size-5',
-                radioIndicator: 'size-5'
+                itemIndicator: 'size-5'
             }
-        },
-        color: {
-            default: {},
-            primary: {},
-            secondary: {},
-            tertiary: {},
-            success: {},
-            warning: {},
-            error: {},
-            info: {},
-            surface: {}
         }
     },
-    compoundVariants: [
-        {
-            color: 'error',
-            class: {
-                item: 'text-error data-[highlighted]:bg-error-container data-[highlighted]:text-on-error-container',
-                itemIcon: 'text-error group-data-[highlighted]:text-on-error-container'
-            }
-        },
-        {
-            color: 'success',
-            class: {
-                item: 'text-success data-[highlighted]:bg-success-container data-[highlighted]:text-on-success-container',
-                itemIcon: 'text-success group-data-[highlighted]:text-on-success-container'
-            }
-        },
-        {
-            color: 'warning',
-            class: {
-                item: 'text-warning data-[highlighted]:bg-warning-container data-[highlighted]:text-on-warning-container',
-                itemIcon: 'text-warning group-data-[highlighted]:text-on-warning-container'
-            }
-        },
-        {
-            color: 'info',
-            class: {
-                item: 'text-info data-[highlighted]:bg-info-container data-[highlighted]:text-on-info-container',
-                itemIcon: 'text-info group-data-[highlighted]:text-on-info-container'
-            }
-        },
-        {
-            color: 'primary',
-            class: {
-                item: 'text-primary data-[highlighted]:bg-primary-container data-[highlighted]:text-on-primary-container',
-                itemIcon: 'text-primary group-data-[highlighted]:text-on-primary-container'
-            }
-        },
-        {
-            color: 'secondary',
-            class: {
-                item: 'text-secondary data-[highlighted]:bg-secondary-container data-[highlighted]:text-on-secondary-container',
-                itemIcon: 'text-secondary group-data-[highlighted]:text-on-secondary-container'
-            }
-        },
-        {
-            color: 'tertiary',
-            class: {
-                item: 'text-tertiary data-[highlighted]:bg-tertiary-container data-[highlighted]:text-on-tertiary-container',
-                itemIcon: 'text-tertiary group-data-[highlighted]:text-on-tertiary-container'
-            }
-        },
-        {
-            color: 'surface',
-            class: {
-                item: 'text-on-surface-variant data-[highlighted]:bg-surface-container-highest data-[highlighted]:text-on-surface',
-                itemIcon: 'text-on-surface-variant group-data-[highlighted]:text-on-surface'
-            }
-        }
-    ],
     defaultVariants: {
         transition: true,
-        size: 'md',
-        color: 'default'
+        size: 'md'
     }
 })
 
