@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Modal, Button, Badge, Icon, Separator } from '$lib/index.js'
 
-    // --- State ---
     let basicOpen = $state(false)
     let fullscreenOpen = $state(false)
     let scrollableOpen = $state(false)
@@ -11,15 +10,13 @@
     let noTransitionOpen = $state(false)
     let nonDismissibleOpen = $state(false)
     let slotsOpen = $state(false)
+    let actionsOpen = $state(false)
     let customContentOpen = $state(false)
-    let titleSlotOpen = $state(false)
     let callbacksOpen = $state(false)
     let callbackLog = $state<string[]>([])
-    let noPortalOpen = $state(false)
     let uiOverrideOpen = $state(false)
     let programmaticOpen = $state(false)
 
-    // Real-world demos
     let confirmOpen = $state(false)
     let formOpen = $state(false)
     let alertOpen = $state(false)
@@ -34,14 +31,14 @@
     <div class="space-y-2">
         <h1 class="text-2xl font-bold">Modal</h1>
         <p class="text-on-surface-variant">
-            A modal dialog component built on top of bits-ui Dialog. Supports transitions,
-            fullscreen, scrollable mode, dismissible control, and full slot customization.
+            A modal dialog component built on bits-ui Dialog. Supports transitions, fullscreen,
+            scrollable mode, dismissible control, and full slot customization.
         </p>
     </div>
 
-    <!-- ==================== BASIC ==================== -->
+    <!-- Basic -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Basic Usage</h2>
+        <h2 class="text-lg font-semibold">Basic</h2>
         <div class="rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={basicOpen}
@@ -51,8 +48,7 @@
                 <Button variant="outline" label="Open Modal" />
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        A centered modal dialog. Click the X button, press Escape, or click outside
-                        to close.
+                        A centered modal dialog. Click the X, press Escape, or click outside to close.
                     </p>
                 {/snippet}
                 {#snippet footer()}
@@ -68,12 +64,9 @@
         </div>
     </section>
 
-    <!-- ==================== FULLSCREEN ==================== -->
+    <!-- Fullscreen -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Fullscreen</h2>
-        <p class="text-sm text-on-surface-variant">
-            Enable fullscreen mode to cover the entire viewport.
-        </p>
         <div class="rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={fullscreenOpen}
@@ -84,8 +77,7 @@
                 <Button variant="outline" label="Open Fullscreen" />
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        The modal covers the entire viewport. Useful for complex forms, media
-                        viewers, or immersive content.
+                        Covers the entire viewport. Useful for complex forms or media viewers.
                     </p>
                 {/snippet}
                 {#snippet footer()}
@@ -99,38 +91,22 @@
         </div>
     </section>
 
-    <!-- ==================== SCROLLABLE ==================== -->
+    <!-- Scrollable -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Scrollable</h2>
-        <p class="text-sm text-on-surface-variant">
-            When <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >scrollable</code
-            >
-            is
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">true</code>,
-            the entire overlay scrolls with the content placed inside it. When
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">false</code> (default),
-            only the body area scrolls.
-        </p>
         <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={scrollableOpen}
                 scrollable
                 title="Scrollable Modal"
-                description="Content scrolls within the overlay."
+                description="The entire modal scrolls within the overlay."
             >
                 <Button variant="outline" label="Scrollable" />
                 {#snippet body()}
                     <div class="space-y-3">
-                        <p class="text-on-surface-variant">
-                            The entire overlay area is scrollable. The modal scrolls within the
-                            viewport.
-                        </p>
                         {#each Array.from({ length: 20 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
-                                <p class="text-sm text-on-surface-variant">
-                                    Scrollable item {i + 1}
-                                </p>
+                                <p class="text-sm text-on-surface-variant">Content item {i + 1}</p>
                             </div>
                         {/each}
                     </div>
@@ -149,14 +125,14 @@
                 scrollable
                 fullscreen
                 title="Scrollable + Fullscreen"
-                description="Fullscreen with scrollable overlay."
+                description="Full viewport with scrollable content."
             >
                 <Button variant="outline" label="Scrollable + Fullscreen" />
                 {#snippet body()}
                     <div class="space-y-3">
                         {#each Array.from({ length: 30 }, (_, i) => i) as i (i)}
                             <div class="rounded-md bg-surface-container p-3">
-                                <p class="text-sm text-on-surface-variant">Item {i + 1}</p>
+                                <p class="text-sm text-on-surface-variant">Content item {i + 1}</p>
                             </div>
                         {/each}
                     </div>
@@ -172,28 +148,19 @@
         </div>
     </section>
 
-    <!-- ==================== TRANSITION ==================== -->
+    <!-- Options -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Transition</h2>
-        <p class="text-sm text-on-surface-variant">
-            Animations are enabled by default. Set
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >transition=&#123;false&#125;</code
-            >
-            to disable.
-        </p>
-        <div class="rounded-lg bg-surface-container-high p-4">
+        <h2 class="text-lg font-semibold">Options</h2>
+        <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={noTransitionOpen}
                 transition={false}
                 title="No Transition"
-                description="This modal appears and disappears instantly."
+                description="Appears instantly without animation."
             >
                 <Button variant="outline" label="No Transition" />
                 {#snippet body()}
-                    <p class="text-on-surface-variant">
-                        No fade or scale animation — the modal snaps open and closed.
-                    </p>
+                    <p class="text-on-surface-variant">Modal opens and closes without animation.</p>
                 {/snippet}
                 {#snippet footer()}
                     <Button
@@ -203,64 +170,37 @@
                     />
                 {/snippet}
             </Modal>
-        </div>
-    </section>
 
-    <!-- ==================== CLOSE BUTTON ==================== -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Close Button</h2>
-        <p class="text-sm text-on-surface-variant">
-            Hide the close button with <code
-                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >close=&#123;false&#125;</code
-            >.
-        </p>
-        <div class="rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={noCloseOpen}
                 close={false}
                 title="No Close Button"
-                description="The X button is hidden."
+                description="Close button is hidden."
             >
                 <Button variant="outline" label="No Close Button" />
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        There's no X button. Use the footer button or Escape key to close.
+                        Use the footer button or Escape to close.
                     </p>
                 {/snippet}
                 {#snippet footer()}
                     <Button
                         label="Close"
-                        variant="solid"
-                        color="primary"
+                        variant="outline"
                         onclick={() => (noCloseOpen = false)}
                     />
                 {/snippet}
             </Modal>
-        </div>
-    </section>
 
-    <!-- ==================== OVERLAY ==================== -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Overlay</h2>
-        <p class="text-sm text-on-surface-variant">
-            Hide the overlay with <code
-                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >overlay=&#123;false&#125;</code
-            >.
-        </p>
-        <div class="rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={noOverlayOpen}
                 overlay={false}
                 title="No Overlay"
-                description="The backdrop is hidden."
+                description="Background is visible."
             >
                 <Button variant="outline" label="No Overlay" />
                 {#snippet body()}
-                    <p class="text-on-surface-variant">
-                        The modal has no backdrop overlay. The page content behind is fully visible.
-                    </p>
+                    <p class="text-on-surface-variant">No backdrop overlay behind the modal.</p>
                 {/snippet}
                 {#snippet footer()}
                     <Button
@@ -273,32 +213,25 @@
         </div>
     </section>
 
-    <!-- ==================== NON-DISMISSIBLE ==================== -->
+    <!-- Non-Dismissible -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Non-Dismissible</h2>
-        <p class="text-sm text-on-surface-variant">
-            Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >dismissible=&#123;false&#125;</code
-            >
-            to prevent closing by clicking outside or pressing Escape.
-        </p>
         <div class="rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={nonDismissibleOpen}
                 dismissible={false}
-                close={false}
                 title="Non-Dismissible"
-                description="You must use the button to close."
+                description="Must use the close button."
             >
                 <Button variant="outline" label="Open (Non-Dismissible)" />
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        Try clicking outside or pressing Escape — the modal will not close.
+                        Clicking outside or pressing Escape won't close this modal.
                     </p>
                 {/snippet}
                 {#snippet footer()}
                     <Button
-                        label="I Understand"
+                        label="Close"
                         variant="solid"
                         color="primary"
                         onclick={() => (nonDismissibleOpen = false)}
@@ -308,25 +241,11 @@
         </div>
     </section>
 
-    <!-- ==================== SLOTS ==================== -->
+    <!-- Slots -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Slots</h2>
-        <p class="text-sm text-on-surface-variant">
-            Customize every part: <code
-                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">header</code
-            >,
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">titleSlot</code
-            >,
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >descriptionSlot</code
-            >,
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">body</code>,
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">footer</code>,
-            or replace all with
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">content</code>.
-        </p>
         <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
-            <!-- Custom header slot -->
+            <!-- Custom header -->
             <Modal bind:open={slotsOpen}>
                 <Button variant="outline" label="Custom Header" />
                 {#snippet header()}
@@ -344,60 +263,47 @@
                 {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        The <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                            >header</code
-                        > slot replaces the default title + description + close button with fully custom
-                        markup.
+                        The header slot replaces the default title, description, and close button.
                     </p>
                 {/snippet}
                 {#snippet footer()}
-                    <Button label="Cancel" variant="outline" onclick={() => (slotsOpen = false)} />
-                    <Button
-                        label="Confirm"
-                        variant="solid"
-                        color="primary"
-                        onclick={() => (slotsOpen = false)}
-                    />
+                    <div class="flex gap-2">
+                        <Button
+                            label="Cancel"
+                            variant="outline"
+                            onclick={() => (slotsOpen = false)}
+                        />
+                        <Button
+                            label="Save"
+                            variant="solid"
+                            color="primary"
+                            onclick={() => (slotsOpen = false)}
+                        />
+                    </div>
                 {/snippet}
             </Modal>
 
-            <!-- Custom title/description slots -->
-            <Modal bind:open={titleSlotOpen}>
-                <Button variant="outline" label="Custom Title/Desc" />
-                {#snippet titleSlot()}
-                    <span class="flex items-center gap-2">
-                        <Icon name="lucide:sparkles" size="16" class="text-warning" />
-                        Rich Title with Icon
-                    </span>
-                {/snippet}
-                {#snippet descriptionSlot()}
-                    <span>
-                        Description with <Badge
-                            variant="soft"
-                            color="info"
-                            size="xs"
-                            label="badge"
-                        />
-                    </span>
+            <!-- Actions slot -->
+            <Modal
+                bind:open={actionsOpen}
+                title="User Profile"
+                description="Manage your account settings."
+            >
+                <Button variant="outline" label="Actions Slot" />
+                {#snippet actions()}
+                    <Badge variant="soft" color="success" size="xs" label="Active" />
+                    <Badge variant="soft" color="info" size="xs" label="Pro" />
                 {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                            >titleSlot</code
-                        >
-                        and
-                        <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                            >descriptionSlot</code
-                        >
-                        let you customize just the title/description while keeping the default header
-                        layout.
+                        The actions slot renders between the title/description and the close button.
                     </p>
                 {/snippet}
                 {#snippet footer()}
                     <Button
                         label="Close"
                         variant="outline"
-                        onclick={() => (titleSlotOpen = false)}
+                        onclick={() => (actionsOpen = false)}
                     />
                 {/snippet}
             </Modal>
@@ -414,10 +320,7 @@
                         </div>
                         <h3 class="text-xl font-semibold text-on-surface">Payment Successful</h3>
                         <p class="text-center text-on-surface-variant">
-                            The <code
-                                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                                >content</code
-                            > slot replaces the entire inner layout (header + body + footer).
+                            The content slot replaces the entire inner layout.
                         </p>
                         <Button
                             label="Done"
@@ -431,18 +334,9 @@
         </div>
     </section>
 
-    <!-- ==================== CALLBACKS ==================== -->
+    <!-- Lifecycle Callbacks -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Lifecycle Callbacks</h2>
-        <p class="text-sm text-on-surface-variant">
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >onOpenChange</code
-            >
-            and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >onOpenChangeComplete</code
-            >.
-        </p>
         <div class="rounded-lg bg-surface-container-high p-4">
             <div class="mb-3 space-y-1">
                 {#if callbackLog.length === 0}
@@ -464,7 +358,7 @@
                 <Button variant="outline" label="Open (With Callbacks)" />
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        Open, close, and watch the callback log update in real-time.
+                        Open, close, and watch the callback log update.
                     </p>
                 {/snippet}
                 {#snippet footer()}
@@ -478,45 +372,9 @@
         </div>
     </section>
 
-    <!-- ==================== NO PORTAL ==================== -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Without Portal</h2>
-        <p class="text-sm text-on-surface-variant">
-            Set
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                >portal=&#123;false&#125;</code
-            >
-            to render inline instead of being portalled to the body.
-        </p>
-        <div class="rounded-lg bg-surface-container-high p-4">
-            <Modal
-                bind:open={noPortalOpen}
-                portal={false}
-                title="No Portal"
-                description="Rendered inline, not in a portal."
-            >
-                <Button variant="outline" label="Open (No Portal)" />
-                {#snippet body()}
-                    <p class="text-on-surface-variant">This modal is rendered inline in the DOM.</p>
-                {/snippet}
-                {#snippet footer()}
-                    <Button
-                        label="Close"
-                        variant="outline"
-                        onclick={() => (noPortalOpen = false)}
-                    />
-                {/snippet}
-            </Modal>
-        </div>
-    </section>
-
-    <!-- ==================== PROGRAMMATIC ==================== -->
+    <!-- Programmatic Control -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Programmatic Control</h2>
-        <p class="text-sm text-on-surface-variant">
-            Control the modal without a trigger by binding
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">open</code> externally.
-        </p>
         <div class="flex gap-3 rounded-lg bg-surface-container-high p-4">
             <Button
                 variant="outline"
@@ -530,10 +388,7 @@
             >
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        This modal has no children slot. It was opened by setting
-                        <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
-                            >open = true</code
-                        > externally.
+                        This modal has no trigger. It was opened by setting open = true externally.
                     </p>
                 {/snippet}
                 {#snippet footer()}
@@ -547,40 +402,25 @@
         </div>
     </section>
 
-    <!-- ==================== UI OVERRIDES ==================== -->
+    <!-- UI Overrides -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">UI Prop (Style Overrides)</h2>
-        <p class="text-sm text-on-surface-variant">
-            Override individual slot styles via the
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">ui</code> prop.
-        </p>
+        <h2 class="text-lg font-semibold">UI Slot Overrides</h2>
         <div class="rounded-lg bg-surface-container-high p-4">
             <Modal
                 bind:open={uiOverrideOpen}
                 title="Styled Modal"
                 description="Custom styles via the ui prop."
                 ui={{
-                    content: 'bg-primary-container ring-primary-container',
+                    content: 'bg-primary-container',
                     title: 'text-on-primary-container',
-                    description: 'text-on-primary-container/70'
+                    description: 'text-on-primary-container/70',
+                    header: 'border-on-primary-container/10'
                 }}
             >
                 <Button variant="outline" label="Open Styled Modal" />
                 {#snippet body()}
                     <p class="text-on-primary-container/80">
-                        This modal overrides
-                        <code
-                            class="rounded bg-on-primary-container/10 px-1.5 py-0.5 text-xs text-on-primary-container"
-                            >content</code
-                        >,
-                        <code
-                            class="rounded bg-on-primary-container/10 px-1.5 py-0.5 text-xs text-on-primary-container"
-                            >title</code
-                        >, and
-                        <code
-                            class="rounded bg-on-primary-container/10 px-1.5 py-0.5 text-xs text-on-primary-container"
-                            >description</code
-                        > slot classes.
+                        This modal overrides content, title, description, and header slot classes.
                     </p>
                 {/snippet}
                 {#snippet footer()}
@@ -596,12 +436,11 @@
 
     <Separator />
 
-    <!-- ==================== REAL WORLD EXAMPLES ==================== -->
+    <!-- Real World Examples -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Real World Examples</h2>
-
         <div class="grid gap-4 sm:grid-cols-2">
-            <!-- Confirmation Modal -->
+            <!-- Confirmation Dialog -->
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Confirmation Dialog</p>
                 <Modal bind:open={confirmOpen} dismissible={false} close={false}>
@@ -619,7 +458,9 @@
                             >
                                 <Icon name="lucide:alert-triangle" size="28" class="text-error" />
                             </div>
-                            <h3 class="text-lg font-semibold text-on-surface">Delete Item?</h3>
+                            <h3 class="text-lg font-semibold text-on-surface">
+                                Delete this item?
+                            </h3>
                             <p class="text-sm text-on-surface-variant">
                                 This action is permanent and cannot be undone.
                             </p>
@@ -648,8 +489,8 @@
                 <p class="mb-3 text-sm font-medium">Form Modal</p>
                 <Modal
                     bind:open={formOpen}
-                    title="Create New Project"
-                    description="Fill in the details below to create a new project."
+                    title="Create Project"
+                    description="Fill in the details to create a new project."
                 >
                     <Button
                         variant="outline"
@@ -661,44 +502,29 @@
                         <div class="space-y-4">
                             <div>
                                 <label
-                                    for="name"
-                                    class="mb-1.5 block text-sm font-medium text-on-surface"
+                                    for="project-name"
+                                    class="mb-1 block text-sm font-medium text-on-surface"
                                     >Project Name</label
                                 >
                                 <input
+                                    id="project-name"
                                     type="text"
-                                    id="name"
-                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                                    placeholder="My Awesome Project"
+                                    placeholder="My Project"
+                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                                 />
                             </div>
                             <div>
                                 <label
-                                    for="desc"
-                                    class="mb-1.5 block text-sm font-medium text-on-surface"
+                                    for="project-desc"
+                                    class="mb-1 block text-sm font-medium text-on-surface"
                                     >Description</label
                                 >
                                 <textarea
-                                    id="desc"
+                                    id="project-desc"
                                     rows="3"
-                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                                    placeholder="A brief description of your project..."
+                                    placeholder="Describe your project..."
+                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                                 ></textarea>
-                            </div>
-                            <div>
-                                <label
-                                    for="visibility"
-                                    class="mb-1.5 block text-sm font-medium text-on-surface"
-                                    >Visibility</label
-                                >
-                                <select
-                                    id="visibility"
-                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-                                >
-                                    <option>Public</option>
-                                    <option>Private</option>
-                                    <option>Team Only</option>
-                                </select>
                             </div>
                         </div>
                     {/snippet}
@@ -709,7 +535,7 @@
                             onclick={() => (formOpen = false)}
                         />
                         <Button
-                            label="Create Project"
+                            label="Create"
                             variant="solid"
                             color="primary"
                             onclick={() => (formOpen = false)}
@@ -720,84 +546,57 @@
 
             <!-- Alert Modal -->
             <div class="rounded-lg bg-surface-container-high p-4">
-                <p class="mb-3 text-sm font-medium">Alert / Info</p>
-                <Modal bind:open={alertOpen}>
+                <p class="mb-3 text-sm font-medium">Alert Modal</p>
+                <Modal
+                    bind:open={alertOpen}
+                    title="Session Expired"
+                    description="Your session has timed out due to inactivity."
+                    dismissible={false}
+                >
                     <Button
                         variant="outline"
-                        leadingIcon="lucide:info"
-                        label="Show Alert"
+                        leadingIcon="lucide:clock"
+                        label="Session Alert"
                         class="w-full"
                     />
-                    {#snippet content()}
-                        <div class="flex flex-col items-center gap-4 p-6 text-center">
-                            <div
-                                class="flex size-14 items-center justify-center rounded-full bg-info/10"
-                            >
-                                <Icon name="lucide:info" size="28" class="text-info" />
-                            </div>
-                            <h3 class="text-lg font-semibold text-on-surface">
-                                New Features Available
-                            </h3>
-                            <p class="text-sm text-on-surface-variant">
-                                We've added new features to improve your experience. Check out the
-                                changelog for more details.
-                            </p>
-                            <Button
-                                label="Got it!"
-                                variant="solid"
-                                color="primary"
-                                class="w-full"
-                                onclick={() => (alertOpen = false)}
-                            />
-                        </div>
+                    {#snippet body()}
+                        <p class="text-on-surface-variant">
+                            Please sign in again to continue using the application.
+                        </p>
+                    {/snippet}
+                    {#snippet footer()}
+                        <Button
+                            label="Sign In"
+                            variant="solid"
+                            color="primary"
+                            class="w-full"
+                            onclick={() => (alertOpen = false)}
+                        />
                     {/snippet}
                 </Modal>
             </div>
 
-            <!-- Scrollable Long Content -->
+            <!-- Image Preview -->
             <div class="rounded-lg bg-surface-container-high p-4">
-                <p class="mb-3 text-sm font-medium">Scrollable Long Content</p>
-                <Modal
-                    bind:open={imageOpen}
-                    scrollable
-                    title="Terms of Service"
-                    description="Please read and accept the terms below."
-                >
+                <p class="mb-3 text-sm font-medium">Image Preview</p>
+                <Modal bind:open={imageOpen} close={{ color: 'surface', size: 'md' }}>
                     <Button
                         variant="outline"
-                        leadingIcon="lucide:scroll-text"
-                        label="Terms"
+                        leadingIcon="lucide:image"
+                        label="View Image"
                         class="w-full"
                     />
-                    {#snippet body()}
-                        <div class="space-y-4 text-sm text-on-surface-variant">
-                            {#each Array.from({ length: 15 }, (_, i) => i) as i (i)}
-                                <div>
-                                    <h4 class="mb-1 font-medium text-on-surface">
-                                        Section {i + 1}
-                                    </h4>
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                        do eiusmod tempor incididunt ut labore et dolore magna
-                                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                                        ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                    </p>
-                                </div>
-                            {/each}
+                    {#snippet content()}
+                        <div class="p-2">
+                            <img
+                                src="https://picsum.photos/800/600"
+                                alt="Preview"
+                                class="w-full rounded-md"
+                            />
+                            <p class="mt-2 text-center text-sm text-on-surface-variant">
+                                Photo from Picsum
+                            </p>
                         </div>
-                    {/snippet}
-                    {#snippet footer()}
-                        <Button
-                            label="Decline"
-                            variant="outline"
-                            onclick={() => (imageOpen = false)}
-                        />
-                        <Button
-                            label="Accept"
-                            variant="solid"
-                            color="primary"
-                            onclick={() => (imageOpen = false)}
-                        />
                     {/snippet}
                 </Modal>
             </div>

@@ -40,6 +40,7 @@
         header: headerSlot,
         titleSlot,
         descriptionSlot,
+        actions: actionsSlot,
         body: bodySlot,
         footer: footerSlot,
         closeSlot
@@ -51,7 +52,7 @@
     const hasTitle = $derived(!!title || !!titleSlot)
     const hasDescription = $derived(!!description || !!descriptionSlot)
     const hasHeading = $derived(hasTitle || hasDescription)
-    const hasHeader = $derived(!!headerSlot || hasHeading || showClose || !!closeSlot)
+    const hasHeader = $derived(!!headerSlot || hasHeading || !!actionsSlot || showClose || !!closeSlot)
 
     const variantSlots = $derived(
         modalVariants({ transition, fullscreen, overlay: showOverlay, scrollable })
@@ -66,6 +67,7 @@
         description: variantSlots.description({
             class: [config.slots.description, ui?.description]
         }),
+        actions: variantSlots.actions({ class: [config.slots.actions, ui?.actions] }),
         body: variantSlots.body({ class: [config.slots.body, ui?.body] }),
         footer: variantSlots.footer({ class: [config.slots.footer, ui?.footer] }),
         close: variantSlots.close({ class: [config.slots.close, ui?.close] })
@@ -131,6 +133,10 @@
                                 >
                             {/if}
                         </div>
+
+                        {#if actionsSlot}
+                            <div class={classes.actions}>{@render actionsSlot()}</div>
+                        {/if}
 
                         {#if showClose || closeSlot}
                             <Dialog.Close>

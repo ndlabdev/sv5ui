@@ -153,6 +153,12 @@ export interface SlideoverProps extends RootProps, ContentProps {
     descriptionSlot?: Snippet
 
     /**
+     * Actions slot rendered between the title/description wrapper
+     * and the close button inside the header.
+     */
+    actions?: Snippet
+
+    /**
      * Body content rendered between the header and footer.
      */
     body?: Snippet

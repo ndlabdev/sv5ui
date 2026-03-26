@@ -17,6 +17,7 @@
     let slotsOpen = $state(false)
     let customContentOpen = $state(false)
     let titleSlotOpen = $state(false)
+    let actionsOpen = $state(false)
     let callbacksOpen = $state(false)
     let callbackLog = $state<string[]>([])
     let noPortalOpen = $state(false)
@@ -363,6 +364,8 @@
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
                 >descriptionSlot</code
             >,
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">actions</code
+            >,
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">body</code>,
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">footer</code>,
             or replace all with
@@ -441,6 +444,35 @@
                         label="Close"
                         variant="outline"
                         onclick={() => (titleSlotOpen = false)}
+                    />
+                {/snippet}
+            </Slideover>
+
+            <!-- Actions slot -->
+            <Slideover
+                bind:open={actionsOpen}
+                title="User Profile"
+                description="Manage your account settings."
+            >
+                <Button variant="outline" label="Actions Slot" />
+                {#snippet actions()}
+                    <Badge variant="soft" color="success" size="xs" label="Active" />
+                    <Badge variant="soft" color="info" size="xs" label="Pro" />
+                {/snippet}
+                {#snippet body()}
+                    <p class="text-on-surface-variant">
+                        The <code
+                            class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                            >actions</code
+                        >
+                        slot renders between the title/description and the close button in the header.
+                    </p>
+                {/snippet}
+                {#snippet footer()}
+                    <Button
+                        label="Close"
+                        variant="outline"
+                        onclick={() => (actionsOpen = false)}
                     />
                 {/snippet}
             </Slideover>
