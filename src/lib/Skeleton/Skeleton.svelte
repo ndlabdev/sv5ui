@@ -10,7 +10,7 @@
 
     const config = getComponentConfig('skeleton', skeletonDefaults)
 
-    let { as = 'div', ui, class: className, children, ...restProps }: Props = $props()
+    let { ref = $bindable(null), as = 'div', ui, class: className, children, ...restProps }: Props = $props()
 
     const classes = $derived.by(() => {
         const slots = skeletonVariants()
@@ -20,6 +20,15 @@
     })
 </script>
 
-<svelte:element this={as} class={classes.root} {...restProps}>
+<svelte:element
+    this={as}
+    bind:this={ref}
+    class={classes.root}
+    role="alert"
+    aria-busy="true"
+    aria-label="loading"
+    aria-live="polite"
+    {...restProps}
+>
     {@render children?.()}
 </svelte:element>
