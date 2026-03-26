@@ -13,6 +13,7 @@
     const config = getComponentConfig('tooltip', tooltipDefaults)
 
     let {
+        ref = $bindable(null),
         open = $bindable(false),
         onOpenChange,
         delayDuration,
@@ -20,7 +21,7 @@
         disableCloseOnTriggerClick,
         ignoreNonKeyboardFocus,
         disabled = false,
-        side = config.defaultVariants.side ?? 'bottom',
+        side = 'bottom',
         sideOffset = 8,
         align = 'center',
         alignOffset = 0,
@@ -39,17 +40,18 @@
         ui,
         class: className,
         children,
-        content: contentSlot
+        content: contentSlot,
+        ...restProps
     }: Props = $props()
 
     // Pre-compute booleans
     const hasText = $derived(!!text)
     const hasKbds = $derived(!!kbds?.length)
     const hasContent = $derived(hasText || hasKbds || !!contentSlot)
-    const showArrow = $derived(!!arrow)
 
     // Compute variant classes
-    const variantSlots = $derived(tooltipVariants({ side, transition }))
+    const variantSlots = $derived(tooltipVariants({ transition }))
+    const kbdsSize = (config.slots.kbdsSize ?? 'sm') as 'sm' | 'md' | 'lg'
     const classes = $derived({
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
         arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] }),
@@ -57,7 +59,7 @@
         kbds: variantSlots.kbds({ class: [config.slots.kbds, ui?.kbds] })
     })
 
-    // Arrow props - default size matches tooltip height for proper pointing
+    // Arrow props
     const arrowProps = $derived.by(() => {
         if (typeof arrow === 'object') {
             return { width: 12, height: 6, ...arrow }
@@ -81,9 +83,9 @@
                         <span class="mx-0.5 text-inverse-on-surface/60">·</span>
                     {/if}
                     {#if typeof kbd === 'string'}
-                        <Kbd value={kbd} size="sm" variant="soft" color="surface" />
+                        <Kbd value={kbd} size={kbdsSize} variant="soft" color="surface" />
                     {:else}
-                        <Kbd size="sm" variant="soft" color="surface" {...kbd} />
+                        <Kbd size={kbdsSize} variant="soft" color="surface" {...kbd} />
                     {/if}
                 {/each}
             </span>
@@ -93,6 +95,7 @@
 
 {#snippet tooltipContentEl()}
     <Tooltip.Content
+        bind:ref
         {side}
         {sideOffset}
         {align}
@@ -105,10 +108,11 @@
         {onEscapeKeydown}
         {forceMount}
         class={classes.content}
+        {...restProps}
     >
         {@render tooltipContent()}
 
-        {#if showArrow}
+        {#if arrow}
             <Tooltip.Arrow
                 width={arrowProps.width}
                 height={arrowProps.height}
@@ -122,8 +126,6 @@
     <Tooltip.Root
         bind:open
         {onOpenChange}
-        {delayDuration}
-        {disableHoverableContent}
         {disableCloseOnTriggerClick}
         {ignoreNonKeyboardFocus}
         disabled={disabled || !hasContent}

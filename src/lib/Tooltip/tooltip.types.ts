@@ -4,19 +4,22 @@ import type { TooltipSlots, TooltipVariantProps } from './tooltip.variants.js'
 import type {
     TooltipRootPropsWithoutHTML,
     TooltipContentPropsWithoutHTML,
-    TooltipArrowPropsWithoutHTML
+    TooltipArrowPropsWithoutHTML,
+    TooltipProviderPropsWithoutHTML
 } from 'bits-ui'
 import type { KbdProps } from '../Kbd/kbd.types.js'
 
-export type TooltipSide = 'top' | 'right' | 'bottom' | 'left'
 export type TooltipAlign = 'start' | 'center' | 'end'
+
+type ProviderProps = Pick<
+    TooltipProviderPropsWithoutHTML,
+    'delayDuration' | 'disableHoverableContent'
+>
 
 type RootProps = Pick<
     TooltipRootPropsWithoutHTML,
     | 'open'
     | 'onOpenChange'
-    | 'delayDuration'
-    | 'disableHoverableContent'
     | 'disableCloseOnTriggerClick'
     | 'ignoreNonKeyboardFocus'
     | 'disabled'
@@ -37,7 +40,11 @@ type ContentProps = Pick<
     | 'forceMount'
 >
 
-export interface TooltipProps extends RootProps, ContentProps {
+export interface TooltipProps extends ProviderProps, RootProps, ContentProps {
+    /**
+     * Bindable reference to the content DOM element.
+     */
+    ref?: HTMLElement | null
     /**
      * The text content of the tooltip.
      */
