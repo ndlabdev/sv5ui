@@ -12,10 +12,11 @@
     const config = getComponentConfig('popover', popoverDefaults)
 
     let {
+        ref = $bindable(null),
         open = $bindable(false),
         onOpenChange,
         onOpenChangeComplete,
-        side = config.defaultVariants.side ?? 'bottom',
+        side = 'bottom',
         sideOffset = 8,
         align = 'center',
         alignOffset = 0,
@@ -38,12 +39,11 @@
         ui,
         class: className,
         children,
-        content: contentSlot
+        content: contentSlot,
+        ...restProps
     }: Props = $props()
 
-    const showArrow = $derived(!!arrow)
-
-    const variantSlots = $derived(popoverVariants({ side, transition }))
+    const variantSlots = $derived(popoverVariants({ transition }))
     const classes = $derived({
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
         arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] })
@@ -61,15 +61,11 @@
     function close() {
         open = false
     }
-
-    function handleOpenChange(value: boolean) {
-        open = value
-        onOpenChange?.(value)
-    }
 </script>
 
 {#snippet popoverContentEl()}
     <Popover.Content
+        bind:ref
         {side}
         {sideOffset}
         {align}
@@ -89,12 +85,13 @@
         {onInteractOutside}
         {forceMount}
         class={[classes.content, !children ? className : undefined]}
+        {...restProps}
     >
         {#if contentSlot}
             {@render contentSlot({ open, close })}
         {/if}
 
-        {#if showArrow}
+        {#if arrow}
             <Popover.Arrow
                 width={arrowProps.width}
                 height={arrowProps.height}
@@ -104,7 +101,7 @@
     </Popover.Content>
 {/snippet}
 
-<Popover.Root bind:open onOpenChange={handleOpenChange} {onOpenChangeComplete}>
+<Popover.Root bind:open {onOpenChange} {onOpenChangeComplete}>
     {#if children}
         <Popover.Trigger>
             {#snippet child({ props })}

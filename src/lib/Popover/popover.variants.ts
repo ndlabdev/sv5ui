@@ -11,33 +11,18 @@ export const popoverVariants = tv({
         arrow: ''
     },
     variants: {
-        side: {
-            top: {
-                content:
-                    'data-[state=open]:animate-[slide-in-from-bottom_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-top_100ms_ease-in_reverse]'
-            },
-            right: {
-                content:
-                    'data-[state=open]:animate-[slide-in-from-left_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-right_100ms_ease-in_reverse]'
-            },
-            bottom: {
-                content:
-                    'data-[state=open]:animate-[slide-in-from-top_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-bottom_100ms_ease-in_reverse]'
-            },
-            left: {
-                content:
-                    'data-[state=open]:animate-[slide-in-from-right_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-left_100ms_ease-in_reverse]'
-            }
-        },
         transition: {
             true: {
-                content:
-                    'data-[state=open]:animate-[fade-in_150ms_ease-out,scale-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,scale-out_100ms_ease-in]'
+                content: [
+                    'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+                    'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+                    'data-[side=top]:slide-in-from-bottom-2 data-[side=right]:slide-in-from-left-2',
+                    'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2'
+                ]
             }
         }
     },
     defaultVariants: {
-        side: 'bottom',
         transition: true
     }
 })
