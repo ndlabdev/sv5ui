@@ -50,6 +50,10 @@ type SharedCalendarRootProps = {
 }
 
 type BaseCalendarProps = {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
     /** @default 'lucide:chevron-left' */
     prevMonthIcon?: string
     /** @default 'lucide:chevron-right' */
