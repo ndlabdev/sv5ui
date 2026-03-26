@@ -26,14 +26,17 @@ export const breadcrumbVariants = tv({
         disabled: {
             true: {
                 link: 'cursor-not-allowed opacity-75'
-            },
-            false: ''
+            }
+        },
+        to: {
+            true: ''
         }
     },
     compoundVariants: [
         {
             active: false,
             disabled: false,
+            to: true,
             class: {
                 link: 'hover:text-on-surface transition-colors'
             }
@@ -41,7 +44,8 @@ export const breadcrumbVariants = tv({
     ],
     defaultVariants: {
         active: false,
-        disabled: false
+        disabled: false,
+        to: false
     }
 })
 

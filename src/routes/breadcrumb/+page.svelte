@@ -1,26 +1,20 @@
 <script lang="ts">
-    import { Breadcrumb, Icon, Link } from '$lib/index.js'
+    import { Breadcrumb, Icon, Link, Separator } from '$lib/index.js'
 </script>
 
-<div class="space-y-12">
-    <header>
-        <h1 class="text-3xl font-bold text-on-surface">Breadcrumb</h1>
-        <p class="mt-2 text-on-surface-variant">
+<div class="space-y-8">
+    <div class="space-y-2">
+        <h1 class="text-2xl font-bold">Breadcrumb</h1>
+        <p class="text-on-surface-variant">
             Display a hierarchy of navigation links to show the user's current location within a
             site.
         </p>
-    </header>
+    </div>
 
-    <!-- Basic Usage -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">Basic Usage</h2>
-        <p class="text-sm text-on-surface-variant">
-            A simple breadcrumb with text-only items. The last item is automatically marked as the
-            current page.
-        </p>
-        <div
-            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
+    <!-- Basic -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Basic</h2>
+        <div class="rounded-lg bg-surface-container-high p-4">
             <Breadcrumb
                 items={[
                     { label: 'Home', href: '/' },
@@ -33,15 +27,9 @@
     </section>
 
     <!-- With Icons -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">With Icons</h2>
-        <p class="text-sm text-on-surface-variant">
-            Add leading icons to breadcrumb items using the <code class="text-primary">icon</code>
-            property.
-        </p>
-        <div
-            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">With Icons</h2>
+        <div class="rounded-lg bg-surface-container-high p-4">
             <Breadcrumb
                 items={[
                     { label: 'Home', href: '/', icon: 'lucide:home' },
@@ -52,72 +40,46 @@
         </div>
     </section>
 
-    <!-- Custom Separator -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">Custom Separator</h2>
+    <!-- Separator Icon -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Separator Icon</h2>
         <p class="text-sm text-on-surface-variant">
-            Customize the separator icon between items using the
-            <code class="text-primary">separatorIcon</code> prop.
+            Customize the separator between items via the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >separatorIcon</code
+            > prop.
         </p>
-        <div
-            class="flex flex-col gap-6 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">Chevron (default)</p>
-                <Breadcrumb
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Docs', href: '/docs' },
-                        { label: 'API' }
-                    ]}
-                />
-            </div>
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">Slash</p>
-                <Breadcrumb
-                    separatorIcon="lucide:slash"
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Docs', href: '/docs' },
-                        { label: 'API' }
-                    ]}
-                />
-            </div>
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">Arrow Right</p>
-                <Breadcrumb
-                    separatorIcon="lucide:arrow-right"
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Docs', href: '/docs' },
-                        { label: 'API' }
-                    ]}
-                />
-            </div>
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">Dot</p>
-                <Breadcrumb
-                    separatorIcon="lucide:dot"
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Docs', href: '/docs' },
-                        { label: 'API' }
-                    ]}
-                />
-            </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+            {#each [
+                { icon: 'lucide:chevron-right', name: 'Chevron (default)' },
+                { icon: 'lucide:slash', name: 'Slash' },
+                { icon: 'lucide:arrow-right', name: 'Arrow' },
+                { icon: 'lucide:dot', name: 'Dot' }
+            ] as sep (sep.icon)}
+                <div class="space-y-1 rounded-lg bg-surface-container-high p-4">
+                    <p class="text-xs font-medium text-on-surface-variant">{sep.name}</p>
+                    <Breadcrumb
+                        separatorIcon={sep.icon}
+                        items={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Docs', href: '/docs' },
+                            { label: 'API' }
+                        ]}
+                    />
+                </div>
+            {/each}
         </div>
     </section>
 
-    <!-- Custom Separator Snippet -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">Custom Separator Snippet</h2>
+    <!-- Separator Snippet -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Separator Snippet</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="text-primary">separator</code> snippet slot for fully custom separator
-            content.
+            Use the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">separator</code
+            > snippet for fully custom separator content.
         </p>
-        <div
-            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
+        <div class="rounded-lg bg-surface-container-high p-4">
             <Breadcrumb
                 items={[
                     { label: 'Home', href: '/' },
@@ -133,15 +95,9 @@
     </section>
 
     <!-- Disabled Items -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">Disabled Items</h2>
-        <p class="text-sm text-on-surface-variant">
-            Individual items can be disabled, preventing navigation while maintaining visual
-            structure.
-        </p>
-        <div
-            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Disabled Items</h2>
+        <div class="rounded-lg bg-surface-container-high p-4">
             <Breadcrumb
                 items={[
                     { label: 'Home', href: '/' },
@@ -154,14 +110,14 @@
     </section>
 
     <!-- Custom Item Snippet -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">Custom Item Snippet</h2>
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Custom Item Snippet</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="text-primary">item</code> snippet slot for fully custom item rendering.
+            Use the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">item</code>
+            snippet for fully custom item rendering.
         </p>
-        <div
-            class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
+        <div class="rounded-lg bg-surface-container-high p-4">
             <Breadcrumb
                 items={[
                     { label: 'Home', href: '/', icon: 'lucide:home' },
@@ -181,9 +137,9 @@
                         </span>
                     {:else}
                         <Link
-                            href={crumb.href as string}
+                            href={crumb.href ?? ''}
                             raw
-                            class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-on-surface-variant transition-colors hover:bg-surface-container-high"
+                            class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-on-surface-variant transition-colors hover:bg-surface-container-highest"
                         >
                             {#if crumb.icon}
                                 <Icon name={crumb.icon} size="14" />
@@ -197,116 +153,130 @@
     </section>
 
     <!-- UI Slot Overrides -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">UI Slot Overrides</h2>
-        <p class="text-sm text-on-surface-variant">
-            Customize individual parts with the <code class="text-primary">ui</code> prop.
-        </p>
-        <div
-            class="flex flex-col gap-6 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-        >
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">Custom active color</p>
-                <Breadcrumb
-                    ui={{
-                        link: 'text-on-surface font-semibold'
-                    }}
-                    items={[
-                        { label: 'Dashboard', href: '/' },
-                        { label: 'Analytics', href: '/analytics' },
-                        { label: 'Revenue' }
-                    ]}
-                />
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">UI Slot Overrides</h2>
+        <div class="grid gap-4 lg:grid-cols-2">
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Custom active color</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        ui={{ link: 'text-on-surface font-semibold' }}
+                        items={[
+                            { label: 'Dashboard', href: '/' },
+                            { label: 'Analytics', href: '/analytics' },
+                            { label: 'Revenue' }
+                        ]}
+                    />
+                </div>
             </div>
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">Larger separator</p>
-                <Breadcrumb
-                    ui={{
-                        separatorIcon: 'size-6 text-primary/40'
-                    }}
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Blog', href: '/blog' },
-                        { label: 'Latest Post' }
-                    ]}
-                />
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Larger separator</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        ui={{ separatorIcon: 'size-6 text-primary/40' }}
+                        items={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Blog', href: '/blog' },
+                            { label: 'Latest Post' }
+                        ]}
+                    />
+                </div>
             </div>
-            <div class="space-y-1">
-                <p class="text-xs font-medium text-on-surface-variant">With background container</p>
-                <Breadcrumb
-                    ui={{
-                        root: 'bg-surface-container rounded-lg px-4 py-2'
-                    }}
-                    items={[
-                        { label: 'Home', href: '/' },
-                        { label: 'Shop', href: '/shop' },
-                        { label: 'Electronics', href: '/shop/electronics' },
-                        { label: 'Phones' }
-                    ]}
-                />
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">With background container</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        ui={{ root: 'bg-surface-container rounded-lg px-4 py-2' }}
+                        items={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Shop', href: '/shop' },
+                            { label: 'Electronics', href: '/shop/electronics' },
+                            { label: 'Phones' }
+                        ]}
+                    />
+                </div>
+            </div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Wider gap</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        ui={{ list: 'gap-3' }}
+                        items={[
+                            { label: 'Home', href: '/' },
+                            { label: 'Team', href: '/team' },
+                            { label: 'Members' }
+                        ]}
+                    />
+                </div>
             </div>
         </div>
     </section>
 
+    <Separator />
+
     <!-- Real World Examples -->
-    <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-on-surface">Real World Examples</h2>
-        <p class="text-sm text-on-surface-variant">Common breadcrumb use cases in applications.</p>
+    <section class="space-y-6">
+        <h2 class="text-lg font-semibold">Real World Examples</h2>
 
-        <!-- File Browser -->
-        <div class="space-y-2">
-            <h3 class="text-lg font-medium text-on-surface">File Browser</h3>
-            <div
-                class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-            >
-                <Breadcrumb
-                    items={[
-                        { label: 'Root', href: '/', icon: 'lucide:hard-drive' },
-                        { label: 'Users', href: '/users', icon: 'lucide:users' },
-                        { label: 'Documents', href: '/users/documents', icon: 'lucide:folder' },
-                        {
-                            label: 'Projects',
-                            href: '/users/documents/projects',
-                            icon: 'lucide:folder'
-                        },
-                        { label: 'README.md', icon: 'lucide:file-text' }
-                    ]}
-                    separatorIcon="lucide:chevron-right"
-                />
+        <div class="grid gap-4 md:grid-cols-2">
+            <!-- File Browser -->
+            <div class="space-y-2">
+                <p class="text-sm font-medium">File Browser</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        items={[
+                            { label: 'Root', href: '/', icon: 'lucide:hard-drive' },
+                            { label: 'Users', href: '/users', icon: 'lucide:users' },
+                            { label: 'Documents', href: '/documents', icon: 'lucide:folder' },
+                            { label: 'README.md', icon: 'lucide:file-text' }
+                        ]}
+                    />
+                </div>
             </div>
-        </div>
 
-        <!-- E-commerce -->
-        <div class="space-y-2">
-            <h3 class="text-lg font-medium text-on-surface">E-commerce Category</h3>
-            <div
-                class="flex flex-wrap gap-4 rounded-lg border border-outline-variant bg-surface-container-low p-6"
-            >
-                <Breadcrumb
-                    items={[
-                        { label: 'Store', href: '/' },
-                        { label: 'Electronics', href: '/electronics' },
-                        { label: 'Computers & Laptops', href: '/electronics/computers' },
-                        { label: 'Gaming Laptops', href: '/electronics/computers/gaming' },
-                        { label: 'ASUS ROG Strix G16' }
-                    ]}
-                />
+            <!-- E-commerce -->
+            <div class="space-y-2">
+                <p class="text-sm font-medium">E-commerce</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        items={[
+                            { label: 'Store', href: '/' },
+                            { label: 'Electronics', href: '/electronics' },
+                            { label: 'Laptops', href: '/electronics/laptops' },
+                            { label: 'ASUS ROG Strix' }
+                        ]}
+                    />
+                </div>
             </div>
-        </div>
 
-        <!-- Admin Dashboard -->
-        <div class="space-y-2">
-            <h3 class="text-lg font-medium text-on-surface">Admin Dashboard</h3>
-            <div class="rounded-lg border border-outline-variant bg-surface-container-low p-6">
-                <Breadcrumb
-                    ui={{ root: 'bg-surface-container rounded-lg px-4 py-2.5' }}
-                    items={[
-                        { label: 'Admin', href: '/admin', icon: 'lucide:shield' },
-                        { label: 'Users', href: '/admin/users', icon: 'lucide:users' },
-                        { label: 'John Doe', href: '/admin/users/123', icon: 'lucide:user' },
-                        { label: 'Permissions', icon: 'lucide:lock' }
-                    ]}
-                />
+            <!-- Admin Dashboard -->
+            <div class="space-y-2">
+                <p class="text-sm font-medium">Admin Dashboard</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        ui={{ root: 'bg-surface-container rounded-lg px-4 py-2.5' }}
+                        items={[
+                            { label: 'Admin', href: '/admin', icon: 'lucide:shield' },
+                            { label: 'Users', href: '/admin/users', icon: 'lucide:users' },
+                            { label: 'Permissions', icon: 'lucide:lock' }
+                        ]}
+                    />
+                </div>
+            </div>
+
+            <!-- Documentation -->
+            <div class="space-y-2">
+                <p class="text-sm font-medium">Documentation</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Breadcrumb
+                        separatorIcon="lucide:slash"
+                        items={[
+                            { label: 'Docs', href: '/docs', icon: 'lucide:book-open' },
+                            { label: 'Components', href: '/docs/components' },
+                            { label: 'Breadcrumb' }
+                        ]}
+                    />
+                </div>
             </div>
         </div>
     </section>

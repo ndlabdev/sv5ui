@@ -32,10 +32,15 @@ export interface BreadcrumbItem {
 
 export interface BreadcrumbProps {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * The HTML element to render as the root wrapper.
      * @default 'nav'
      */
-    as?: string
+    as?: keyof HTMLElementTagNameMap
 
     /**
      * Array of breadcrumb items to render.
