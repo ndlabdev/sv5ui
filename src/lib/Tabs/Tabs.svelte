@@ -14,6 +14,7 @@
     const config = getComponentConfig('tabs', tabsDefaults)
 
     let {
+        ref = $bindable(null),
         items = [],
         value = $bindable(),
         defaultValue,
@@ -46,7 +47,7 @@
 
     const variantSlots = $derived(tabsVariants({ variant, color, size, orientation }))
 
-    const classes = $derived.by(() => ({
+    const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className, ui?.root] }),
         list: variantSlots.list({ class: [config.slots.list, ui?.list] }),
         indicator: variantSlots.indicator({
@@ -58,7 +59,7 @@
         }),
         label: variantSlots.label({ class: [config.slots.label, ui?.label] }),
         content: variantSlots.content({ class: [config.slots.content, ui?.content] })
-    }))
+    })
 
     let rafId = 0
 
@@ -107,11 +108,6 @@
         rafId = requestAnimationFrame(updateIndicator)
     }
 
-    function handleValueChange(newValue: string) {
-        value = newValue
-        onValueChange?.(newValue)
-    }
-
     // Update indicator on mount and when dependencies change
     $effect(() => {
         void value
@@ -135,8 +131,9 @@
 </script>
 
 <Tabs.Root
-    {value}
-    onValueChange={handleValueChange}
+    bind:ref
+    bind:value
+    {onValueChange}
     {orientation}
     {activationMode}
     {disabled}

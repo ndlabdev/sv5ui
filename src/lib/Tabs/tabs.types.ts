@@ -109,6 +109,11 @@ export interface TabsSlotProps {
  * @see https://bits-ui.com/docs/components/tabs
  */
 export interface TabsProps {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     // -------------------------------------------------------------------------
     // Content
     // -------------------------------------------------------------------------
