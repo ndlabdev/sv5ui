@@ -8,6 +8,16 @@ import type {
     DropdownMenuArrowPropsWithoutHTML
 } from 'bits-ui'
 
+export type DropdownMenuItemColor =
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'success'
+    | 'warning'
+    | 'error'
+    | 'info'
+    | 'surface'
+
 // ============================================================================
 // Item Types
 // ============================================================================
@@ -66,7 +76,7 @@ export interface DropdownMenuItemAction extends DropdownMenuItemBase {
     /**
      * Color variant for the item (useful for destructive actions).
      */
-    color?: DropdownMenuVariantProps['color']
+    color?: DropdownMenuItemColor
 }
 
 /**
@@ -235,6 +245,11 @@ type ContentProps = Pick<
  * @see https://bits-ui.com/docs/components/dropdown-menu
  */
 export interface DropdownMenuProps extends RootProps, ContentProps {
+    /**
+     * Bindable reference to the content DOM element.
+     */
+    ref?: HTMLElement | null
+
     // -------------------------------------------------------------------------
     // Content
     // -------------------------------------------------------------------------
@@ -278,7 +293,7 @@ export interface DropdownMenuProps extends RootProps, ContentProps {
      * Animate the dropdown on open and close.
      * @default true
      */
-    transition?: DropdownMenuVariantProps['transition']
+    transition?: NonNullable<DropdownMenuVariantProps['transition']>
 
     /**
      * Render the dropdown content in a portal.
@@ -290,7 +305,7 @@ export interface DropdownMenuProps extends RootProps, ContentProps {
      * Size variant for the dropdown menu.
      * @default 'md'
      */
-    size?: DropdownMenuVariantProps['size']
+    size?: NonNullable<DropdownMenuVariantProps['size']>
 
     // -------------------------------------------------------------------------
     // Styling
