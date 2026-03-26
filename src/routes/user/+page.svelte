@@ -325,7 +325,7 @@
         <div class="space-y-3">
             <p class="text-sm font-medium">Team Members</p>
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {#each [{ name: 'Mike Ross', role: 'Frontend', u: 'mike', color: 'primary' }, { name: 'Rachel Zane', role: 'Backend', u: 'rachel', color: 'secondary' }, { name: 'Harvey Specter', role: 'Lead', u: 'harvey', color: 'tertiary' }] as member (member.u)}
+                {#each ([{ name: 'Mike Ross', role: 'Frontend', u: 'mike', color: 'primary' as const }, { name: 'Rachel Zane', role: 'Backend', u: 'rachel', color: 'secondary' as const }, { name: 'Harvey Specter', role: 'Lead', u: 'harvey', color: 'tertiary' as const }]) as member (member.u)}
                     <div
                         class="rounded-lg border border-outline-variant bg-surface-container p-4"
                     >

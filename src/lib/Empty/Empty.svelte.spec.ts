@@ -117,81 +117,48 @@ describe('Empty', () => {
         it('should apply solid variant classes', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                variant: 'solid',
-                color: 'primary'
+                variant: 'solid'
             })
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/bg-primary/)
-            await expect.element(root).toHaveClass(/text-on-primary/)
+            await expect.element(root).toHaveClass(/bg-inverse-surface/)
         })
 
         it('should apply outline variant classes', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                variant: 'outline',
-                color: 'primary'
+                variant: 'outline'
             })
             const root = page.elementLocator(container.firstElementChild!)
             await expect.element(root).toHaveClass(/ring/)
-            await expect.element(root).toHaveClass(/text-primary/)
+            await expect.element(root).toHaveClass(/ring-outline-variant/)
         })
 
         it('should apply soft variant classes', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                variant: 'soft',
-                color: 'primary'
+                variant: 'soft'
             })
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/bg-primary-container/)
-            await expect.element(root).toHaveClass(/text-on-primary-container/)
+            await expect.element(root).toHaveClass(/surface-container-highest/)
         })
 
         it('should apply subtle variant classes', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
-                variant: 'subtle',
-                color: 'primary'
-            })
-            const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/bg-primary-container/)
-            await expect.element(root).toHaveClass(/ring/)
-        })
-    })
-
-    // ==================== COLORS ====================
-
-    describe('colors', () => {
-        const colors = [
-            'primary',
-            'secondary',
-            'tertiary',
-            'success',
-            'warning',
-            'error',
-            'info'
-        ] as const
-
-        for (const color of colors) {
-            it(`should apply ${color} color classes`, async () => {
-                const { container } = render(Empty, {
-                    title: 'Test',
-                    color,
-                    variant: 'soft'
-                })
-                const root = page.elementLocator(container.firstElementChild!)
-                await expect.element(root).toHaveClass(new RegExp(`${color}-container`))
-            })
-        }
-
-        it('should apply surface color classes', async () => {
-            const { container } = render(Empty, {
-                title: 'Test',
-                color: 'surface',
-                variant: 'soft'
+                variant: 'subtle'
             })
             const root = page.elementLocator(container.firstElementChild!)
             await expect.element(root).toHaveClass(/surface-container-highest/)
+            await expect.element(root).toHaveClass(/ring/)
+        })
+
+        it('should apply naked variant without background or ring', async () => {
+            const { container } = render(Empty, {
+                title: 'Test',
+                variant: 'naked'
+            })
+            const root = page.elementLocator(container.firstElementChild!)
+            await expect.element(root).toBeInTheDocument()
         })
     })
 
@@ -212,30 +179,33 @@ describe('Empty', () => {
             })
         }
 
-        it('should apply xs size padding', async () => {
+        it('should apply xs size title text', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
                 size: 'xs'
             })
-            const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/p-4/)
+            const title = container.querySelector('p')
+            const titleEl = page.elementLocator(title!)
+            await expect.element(titleEl).toHaveClass(/text-sm/)
         })
 
-        it('should apply md size padding by default', async () => {
+        it('should apply md size title text by default', async () => {
             const { container } = render(Empty, {
                 title: 'Test'
             })
-            const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/p-6/)
+            const title = container.querySelector('p')
+            const titleEl = page.elementLocator(title!)
+            await expect.element(titleEl).toHaveClass(/text-base/)
         })
 
-        it('should apply xl size padding', async () => {
+        it('should apply xl size title text', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
                 size: 'xl'
             })
-            const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/p-10/)
+            const title = container.querySelector('p')
+            const titleEl = page.elementLocator(title!)
+            await expect.element(titleEl).toHaveClass(/text-lg/)
         })
     })
 
@@ -364,13 +334,12 @@ describe('Empty', () => {
             expect(desc!.textContent).toBe('Test Description')
         })
 
-        it('should accept ui.icon class override', async () => {
+        it('should accept ui.avatar class override', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
                 icon: 'lucide:inbox',
-                ui: { icon: 'custom-icon' }
+                ui: { avatar: 'custom-avatar' }
             })
-            // Verify component renders without error when ui.icon is provided
             expect(container.firstElementChild).not.toBeNull()
             expect(container.textContent).toContain('Test')
         })
@@ -405,31 +374,28 @@ describe('Empty', () => {
             expect(buttons.length).toBe(1)
         })
 
-        it('should apply variant and color together', async () => {
+        it('should apply variant and size together', async () => {
             const { container } = render(Empty, {
                 title: 'Empty State',
                 variant: 'soft',
-                color: 'success',
+                size: 'lg',
                 icon: 'lucide:check-circle'
             })
 
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/bg-success-container/)
-            await expect.element(root).toHaveClass(/text-on-success-container/)
+            await expect.element(root).toHaveClass(/surface-container-highest/)
         })
 
-        it('should render all sizes with all variants', async () => {
+        it('should render outline variant with lg size', async () => {
             const { container } = render(Empty, {
                 title: 'Test',
                 variant: 'outline',
-                size: 'lg',
-                color: 'primary'
+                size: 'lg'
             })
 
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/p-8/)
             await expect.element(root).toHaveClass(/ring/)
-            await expect.element(root).toHaveClass(/text-primary/)
+            await expect.element(root).toHaveClass(/ring-outline-variant/)
         })
 
         it('should render with avatar and actions', async () => {
@@ -450,7 +416,6 @@ describe('Empty', () => {
             const { container } = render(Empty, {
                 title: 'Cart is empty',
                 variant: 'solid',
-                color: 'warning',
                 icon: 'lucide:shopping-cart',
                 actions: [
                     { label: 'Browse Products' },
@@ -459,8 +424,7 @@ describe('Empty', () => {
             })
 
             const root = page.elementLocator(container.firstElementChild!)
-            await expect.element(root).toHaveClass(/bg-warning/)
-            await expect.element(root).toHaveClass(/text-on-warning/)
+            await expect.element(root).toHaveClass(/bg-inverse-surface/)
 
             const buttons = container.querySelectorAll('button')
             expect(buttons.length).toBe(2)

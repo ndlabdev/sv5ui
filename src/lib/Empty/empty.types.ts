@@ -7,24 +7,29 @@ import type { ButtonProps } from '../Button/button.types.js'
 
 export type EmptyProps = Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'title'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * Renders the empty state as a different HTML element.
      * @default 'div'
      */
     as?: keyof HTMLElementTagNameMap
 
     /**
-     * Override styles for specific empty slots (root, icon, avatar, title, description, actions).
+     * Override styles for specific empty slots.
      */
     ui?: Partial<Record<EmptySlots, ClassNameValue>>
 
     /**
-     * Icon to display in the empty state (e.g., 'lucide:inbox', 'lucide:file-x').
+     * Icon to display in the header area.
      * Takes precedence over avatar when both are provided.
      */
     icon?: string
 
     /**
-     * Avatar configuration to display instead of an icon.
+     * Avatar configuration to display in the header area.
      * Only visible when icon is not specified.
      */
     avatar?: AvatarProps
@@ -45,19 +50,13 @@ export type EmptyProps = Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'title'>
     actions?: ButtonProps[]
 
     /**
-     * Controls the color scheme applied to the empty state.
-     * @default 'surface'
-     */
-    color?: NonNullable<EmptyVariantProps['color']>
-
-    /**
      * Controls the visual style and background treatment.
      * @default 'outline'
      */
     variant?: NonNullable<EmptyVariantProps['variant']>
 
     /**
-     * Controls the overall dimensions, icon size, and typography scale.
+     * Controls the overall dimensions and typography scale.
      * @default 'md'
      */
     size?: NonNullable<EmptyVariantProps['size']>
@@ -86,4 +85,26 @@ export type EmptyProps = Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'title'>
      * Custom content to replace the default action buttons.
      */
     actionsSlot?: Snippet
+
+    /**
+     * Custom header slot content.
+     * Replaces the entire header area (leading/icon/avatar + title + description).
+     */
+    header?: Snippet
+
+    /**
+     * Custom body slot content.
+     * Replaces the entire body area (actions).
+     */
+    body?: Snippet
+
+    /**
+     * Custom footer slot content.
+     */
+    footer?: Snippet
+
+    /**
+     * Default slot content rendered in the body area.
+     */
+    children?: Snippet
 }
