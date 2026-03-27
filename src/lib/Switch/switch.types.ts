@@ -1,12 +1,18 @@
 import type { Snippet } from 'svelte'
 import type { Switch as SwitchPrimitive } from 'bits-ui'
 import type { ClassNameValue } from 'tailwind-merge'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { SwitchVariantProps, SwitchSlots } from './switch.variants.js'
 
 export type SwitchProps = Pick<
     SwitchPrimitive.RootProps,
     'disabled' | 'name' | 'value' | 'required'
-> & {
+> &
+    Omit<HTMLAttributes<HTMLElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
     /**
      * The checked state of the switch. Supports two-way binding with `bind:checked`.
      * @default false

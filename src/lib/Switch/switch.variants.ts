@@ -11,7 +11,7 @@ export const switchVariants = tv({
         ],
         container: 'flex items-center',
         thumb: [
-            'group pointer-events-none rounded-full bg-white shadow-lg ring-0',
+            'group pointer-events-none rounded-full bg-surface shadow-lg ring-0',
             'flex items-center justify-center',
             'transition-transform duration-200',
             'data-[state=unchecked]:translate-x-0'
@@ -40,35 +40,35 @@ export const switchVariants = tv({
             xs: {
                 base: 'w-7',
                 container: 'h-4',
-                thumb: 'size-3 data-[state=checked]:translate-x-3',
+                thumb: 'size-3 data-[state=checked]:translate-x-3 rtl:data-[state=checked]:-translate-x-3',
                 icon: 'size-2',
                 wrapper: 'text-xs'
             },
             sm: {
                 base: 'w-8',
                 container: 'h-4',
-                thumb: 'size-3.5 data-[state=checked]:translate-x-3.5',
+                thumb: 'size-3.5 data-[state=checked]:translate-x-3.5 rtl:data-[state=checked]:-translate-x-3.5',
                 icon: 'size-2.5',
                 wrapper: 'text-xs'
             },
             md: {
                 base: 'w-9',
                 container: 'h-5',
-                thumb: 'size-4 data-[state=checked]:translate-x-4',
+                thumb: 'size-4 data-[state=checked]:translate-x-4 rtl:data-[state=checked]:-translate-x-4',
                 icon: 'size-3',
                 wrapper: 'text-sm'
             },
             lg: {
                 base: 'w-10',
                 container: 'h-5',
-                thumb: 'size-4.5 data-[state=checked]:translate-x-4.5',
+                thumb: 'size-4.5 data-[state=checked]:translate-x-4.5 rtl:data-[state=checked]:-translate-x-4.5',
                 icon: 'size-3.5',
                 wrapper: 'text-sm'
             },
             xl: {
                 base: 'w-11',
                 container: 'h-6',
-                thumb: 'size-5 data-[state=checked]:translate-x-5',
+                thumb: 'size-5 data-[state=checked]:translate-x-5 rtl:data-[state=checked]:-translate-x-5',
                 icon: 'size-4',
                 wrapper: 'text-base'
             }
