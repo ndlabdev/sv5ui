@@ -33,7 +33,7 @@
         ...restProps
     }: Props = $props()
 
-    const isIconOnly = $derived(!!icon || (square && !label && !children))
+    const isIconOnly = $derived(!!icon || (square && label === undefined && !children))
 
     const classes = $derived.by(() => {
         const slots = badgeVariants({ variant, color, size, square: isIconOnly || square })
@@ -64,7 +64,7 @@
     {#if icon}
         <Icon name={icon} class={classes.leadingIcon} />
     {:else if !isIconOnly}
-        {#if label != null}
+        {#if label !== undefined}
             <span class={classes.label}>{label}</span>
         {:else if children}
             <span class={classes.label}>{@render children()}</span>
