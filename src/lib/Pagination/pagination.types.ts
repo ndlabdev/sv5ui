@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { PaginationSlots, PaginationVariantProps } from './pagination.variants.js'
+import type { PaginationSlots, PaginationVariantProps, PaginationActiveVariant } from './pagination.variants.js'
+import type { ButtonProps } from '../Button/button.types.js'
 
 // ============================================================================
 // Slot Props Types
@@ -133,10 +134,28 @@ export interface PaginationProps {
     size?: NonNullable<PaginationVariantProps['size']>
 
     /**
+     * Button variant for navigation buttons (first, prev, next, last).
+     * @default 'ghost'
+     */
+    variant?: NonNullable<ButtonProps['variant']>
+
+    /**
+     * Button color for navigation buttons (first, prev, next, last).
+     * @default 'surface'
+     */
+    color?: NonNullable<ButtonProps['color']>
+
+    /**
      * Color applied to the currently selected page button.
      * @default 'primary'
      */
-    activeColor?: NonNullable<PaginationVariantProps['activeColor']>
+    activeColor?: NonNullable<ButtonProps['color']>
+
+    /**
+     * Variant style applied to the currently selected page button.
+     * @default 'solid'
+     */
+    activeVariant?: PaginationActiveVariant
 
     // -------------------------------------------------------------------------
     // Icons
@@ -189,7 +208,6 @@ export interface PaginationProps {
      * ui={{
      *   list: 'gap-2',
      *   item: 'rounded-full',
-     *   prev: 'rounded-full'
      * }}
      * ```
      */

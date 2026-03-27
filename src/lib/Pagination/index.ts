@@ -4,3 +4,4 @@ export type {
     PaginationNavSlotProps,
     PaginationItemSlotProps
 } from './pagination.types.js'
+export type { PaginationActiveVariant } from './pagination.variants.js'

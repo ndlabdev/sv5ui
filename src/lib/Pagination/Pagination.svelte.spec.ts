@@ -9,9 +9,9 @@ describe('Pagination', () => {
     const getRoot = () => document.querySelector('[data-pagination-root]') as HTMLElement | null
     const getPageButtons = () => document.querySelectorAll('[data-pagination-page]')
     const getPrevButton = () =>
-        document.querySelector('[data-pagination-prev]') as HTMLButtonElement | null
+        document.querySelector('button[aria-label="Previous page"]') as HTMLButtonElement | null
     const getNextButton = () =>
-        document.querySelector('[data-pagination-next]') as HTMLButtonElement | null
+        document.querySelector('button[aria-label="Next page"]') as HTMLButtonElement | null
     const getFirstButton = () =>
         document.querySelector('button[aria-label="First page"]') as HTMLButtonElement | null
     const getLastButton = () =>

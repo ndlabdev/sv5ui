@@ -3,6 +3,8 @@
 
     const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
+    const activeVariants = ['solid', 'outline', 'soft', 'subtle', 'ghost'] as const
+    const navVariants = ['ghost', 'outline', 'soft', 'subtle', 'solid', 'link'] as const
 
     let controlledPage = $state(5)
     let callbackPage = $state(1)
@@ -121,6 +123,38 @@
                 <div class="flex items-center gap-4">
                     <span class="w-20 text-sm text-on-surface-variant">{color}</span>
                     <Pagination total={100} itemsPerPage={10} page={3} activeColor={color} />
+                </div>
+            {/each}
+        </div>
+    </section>
+
+    <!-- Active Variant -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Active Variant</h2>
+        <p class="text-sm text-on-surface-variant">
+            Change the selected page style with <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">activeVariant</code>.
+        </p>
+        <div class="space-y-3">
+            {#each activeVariants as av (av)}
+                <div class="flex items-center gap-4">
+                    <span class="w-16 text-sm text-on-surface-variant">{av}</span>
+                    <Pagination total={100} itemsPerPage={10} page={3} activeVariant={av} />
+                </div>
+            {/each}
+        </div>
+    </section>
+
+    <!-- Nav Button Variant -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Nav Button Variant</h2>
+        <p class="text-sm text-on-surface-variant">
+            Change navigation button style with <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">variant</code> and <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code>.
+        </p>
+        <div class="space-y-3">
+            {#each navVariants as v (v)}
+                <div class="flex items-center gap-4">
+                    <span class="w-16 text-sm text-on-surface-variant">{v}</span>
+                    <Pagination total={100} itemsPerPage={10} page={3} variant={v} color="primary" showEdges />
                 </div>
             {/each}
         </div>

@@ -7,7 +7,11 @@
 <script lang="ts">
     import { Pagination } from 'bits-ui'
     import { untrack } from 'svelte'
-    import { paginationVariants, paginationDefaults } from './pagination.variants.js'
+    import {
+        paginationVariants,
+        paginationDefaults,
+        activeVariantColorClasses
+    } from './pagination.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import ButtonComponent from '../Button/Button.svelte'
@@ -27,7 +31,10 @@
         disabled = false,
         onPageChange,
         size = config.defaultVariants.size ?? 'md',
+        variant = config.defaultVariants.variant ?? 'ghost',
+        color = config.defaultVariants.color ?? 'surface',
         activeColor = config.defaultVariants.activeColor ?? 'primary',
+        activeVariant = config.defaultVariants.activeVariant ?? 'solid',
         firstIcon = icons.chevronsLeft,
         prevIcon = icons.chevronLeft,
         nextIcon = icons.chevronRight,
@@ -53,11 +60,14 @@
     const prevDisabled = $derived(disabled || isFirstPage)
     const nextDisabled = $derived(disabled || isLastPage)
 
-    const variantSlots = $derived(paginationVariants({ size, activeColor, disabled }))
+    const variantSlots = $derived(paginationVariants({ size, disabled }))
+    const activeCls = $derived(
+        activeVariantColorClasses[activeVariant]?.[activeColor] ?? activeVariantColorClasses.solid.primary
+    )
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className] }),
         list: variantSlots.list({ class: [config.slots.list, ui?.list] }),
-        item: variantSlots.item({ class: [config.slots.item, ui?.item] }),
+        item: variantSlots.item({ class: [config.slots.item, activeCls, ui?.item] }),
         ellipsis: variantSlots.ellipsis({ class: [config.slots.ellipsis, ui?.ellipsis] }),
         ellipsisIcon: variantSlots.ellipsisIcon({
             class: [config.slots.ellipsisIcon, ui?.ellipsisIcon]
@@ -65,11 +75,7 @@
         first: variantSlots.first({ class: [config.slots.first, ui?.first] }),
         prev: variantSlots.prev({ class: [config.slots.prev, ui?.prev] }),
         next: variantSlots.next({ class: [config.slots.next, ui?.next] }),
-        last: variantSlots.last({ class: [config.slots.last, ui?.last] }),
-        firstIcon: variantSlots.firstIcon({ class: [config.slots.firstIcon, ui?.firstIcon] }),
-        prevIcon: variantSlots.prevIcon({ class: [config.slots.prevIcon, ui?.prevIcon] }),
-        nextIcon: variantSlots.nextIcon({ class: [config.slots.nextIcon, ui?.nextIcon] }),
-        lastIcon: variantSlots.lastIcon({ class: [config.slots.lastIcon, ui?.lastIcon] })
+        last: variantSlots.last({ class: [config.slots.last, ui?.last] })
     })
 
     function handlePageChange(newPage: number) {
@@ -79,6 +85,14 @@
 
     function goToFirst() {
         if (!isFirstPage) handlePageChange(1)
+    }
+
+    function goToPrev() {
+        if (!isFirstPage) handlePageChange(page! - 1)
+    }
+
+    function goToNext() {
+        if (!isLastPage) handlePageChange(page! + 1)
     }
 
     function goToLast() {
@@ -100,8 +114,8 @@
             {#if showEdges}
                 {#if firstSlot}
                     <ButtonComponent
-                        variant="ghost"
-                        color="surface"
+                        {variant}
+                        {color}
                         square
                         {size}
                         class={classes.first}
@@ -113,8 +127,8 @@
                     </ButtonComponent>
                 {:else}
                     <ButtonComponent
-                        variant="ghost"
-                        color="surface"
+                        {variant}
+                        {color}
                         square
                         {size}
                         icon={firstIcon}
@@ -127,13 +141,32 @@
             {/if}
 
             {#if showControls}
-                <Pagination.PrevButton class={classes.prev} disabled={prevDisabled}>
-                    {#if prevSlot}
+                {#if prevSlot}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        class={classes.prev}
+                        disabled={prevDisabled}
+                        aria-label="Previous page"
+                        onclick={goToPrev}
+                    >
                         {@render prevSlot({ page: page!, disabled: prevDisabled })}
-                    {:else}
-                        <Icon name={prevIcon} class={classes.prevIcon} />
-                    {/if}
-                </Pagination.PrevButton>
+                    </ButtonComponent>
+                {:else}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        icon={prevIcon}
+                        class={classes.prev}
+                        disabled={prevDisabled}
+                        aria-label="Previous page"
+                        onclick={goToPrev}
+                    />
+                {/if}
             {/if}
 
             {#each pages as pageItem (pageItem.key)}
@@ -160,20 +193,39 @@
             {/each}
 
             {#if showControls}
-                <Pagination.NextButton class={classes.next} disabled={nextDisabled}>
-                    {#if nextSlot}
+                {#if nextSlot}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        class={classes.next}
+                        disabled={nextDisabled}
+                        aria-label="Next page"
+                        onclick={goToNext}
+                    >
                         {@render nextSlot({ page: page!, disabled: nextDisabled })}
-                    {:else}
-                        <Icon name={nextIcon} class={classes.nextIcon} />
-                    {/if}
-                </Pagination.NextButton>
+                    </ButtonComponent>
+                {:else}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        icon={nextIcon}
+                        class={classes.next}
+                        disabled={nextDisabled}
+                        aria-label="Next page"
+                        onclick={goToNext}
+                    />
+                {/if}
             {/if}
 
             {#if showEdges}
                 {#if lastSlot}
                     <ButtonComponent
-                        variant="ghost"
-                        color="surface"
+                        {variant}
+                        {color}
                         square
                         {size}
                         class={classes.last}
@@ -185,8 +237,8 @@
                     </ButtonComponent>
                 {:else}
                     <ButtonComponent
-                        variant="ghost"
-                        color="surface"
+                        {variant}
+                        {color}
                         square
                         {size}
                         icon={lastIcon}
