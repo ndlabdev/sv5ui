@@ -1,12 +1,19 @@
 import type { Snippet } from 'svelte'
 import type { Checkbox as CheckboxPrimitive } from 'bits-ui'
 import type { ClassNameValue } from 'tailwind-merge'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { CheckboxVariantProps, CheckboxSlots } from './checkbox.variants.js'
 
 export type CheckboxProps = Pick<
     CheckboxPrimitive.RootProps,
     'disabled' | 'name' | 'value' | 'required'
-> & {
+> &
+    Omit<HTMLAttributes<HTMLElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * The checked state of the checkbox. Supports two-way binding with `bind:checked`.
      * @default false
@@ -40,6 +47,18 @@ export type CheckboxProps = Pick<
      * @default 'md'
      */
     size?: NonNullable<CheckboxVariantProps['size']>
+
+    /**
+     * Controls the visual style of the checkbox.
+     * @default 'list'
+     */
+    variant?: NonNullable<CheckboxVariantProps['variant']>
+
+    /**
+     * Controls the position of the checkbox indicator.
+     * @default 'start'
+     */
+    indicator?: NonNullable<CheckboxVariantProps['indicator']>
 
     /**
      * Renders a loading spinner inside the checkbox.

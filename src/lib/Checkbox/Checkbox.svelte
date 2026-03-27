@@ -16,6 +16,7 @@
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         checked = $bindable(false),
         onCheckedChange,
         indeterminate = $bindable(false),
@@ -26,6 +27,8 @@
         value,
         color = config.defaultVariants.color,
         size,
+        variant = config.defaultVariants.variant,
+        indicator = config.defaultVariants.indicator,
         disabled = false,
         required = false,
         loading = false,
@@ -36,7 +39,8 @@
         description,
         labelSlot,
         descriptionSlot,
-        class: className
+        class: className,
+        ...restProps
     }: Props = $props()
 
     const formFieldContext = getContext<
@@ -59,11 +63,13 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
-    const ariaDescribedBy = $derived.by(() => {
-        if (!formFieldContext) return undefined
-        const fid = formFieldContext.ariaId
-        return hasError ? `${fid}-error` : `${fid}-description ${fid}-help`
-    })
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
     const resolvedIcon = $derived(loading ? loadingIcon : indeterminate ? indeterminateIcon : icon)
 
@@ -71,6 +77,8 @@
         const slots = checkboxVariants({
             color: resolvedColor,
             size: resolvedSize,
+            variant,
+            indicator,
             loading,
             required,
             disabled: isDisabled ? true : undefined
@@ -90,7 +98,7 @@
     })
 </script>
 
-<div class={classes.root}>
+<div {...restProps} bind:this={ref} class={classes.root}>
     <div class={classes.container}>
         <Checkbox.Root
             bind:checked
