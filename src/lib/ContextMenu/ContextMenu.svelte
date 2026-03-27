@@ -23,6 +23,7 @@
     import Kbd from '../Kbd/Kbd.svelte'
 
     const config = getComponentConfig('contextMenu', contextMenuDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
         ref = $bindable(null),
@@ -30,8 +31,8 @@
         onOpenChange,
         items = [],
         radioGroups = [],
-        checkedIcon = iconsDefaults.check,
-        submenuIcon = iconsDefaults.chevronRight,
+        checkedIcon = icons.check,
+        submenuIcon = icons.chevronRight,
         sideOffset = 4,
         alignOffset = 0,
         avoidCollisions = true,

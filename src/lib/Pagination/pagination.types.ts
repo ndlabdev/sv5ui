@@ -49,6 +49,11 @@ export interface PaginationItemSlotProps {
  * @see https://bits-ui.com/docs/components/pagination
  */
 export interface PaginationProps {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     // -------------------------------------------------------------------------
     // State
     // -------------------------------------------------------------------------

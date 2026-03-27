@@ -27,7 +27,11 @@
 export const iconsDefaults = {
     loading: 'lucide:loader-2',
     chevronDown: 'lucide:chevron-down',
+    chevronLeft: 'lucide:chevron-left',
     chevronRight: 'lucide:chevron-right',
+    chevronsLeft: 'lucide:chevrons-left',
+    chevronsRight: 'lucide:chevrons-right',
+    ellipsis: 'lucide:ellipsis',
     close: 'lucide:x',
     check: 'lucide:check',
     light: 'lucide:sun',
