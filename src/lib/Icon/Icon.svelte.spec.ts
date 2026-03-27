@@ -73,6 +73,29 @@ describe('Icon', () => {
             const svg = await getSvg(container)
             await expect.element(svg).toHaveClass(/shrink-0/)
         })
+
+        it('should override shrink-0 with conflicting class via tailwind-merge', async () => {
+            const { container } = render(Icon, { name: 'lucide:home', class: 'shrink' })
+            const svg = await getSvg(container)
+            await expect.element(svg).toHaveClass(/shrink/)
+            await expect.element(svg).not.toHaveClass(/shrink-0/)
+        })
+
+        it('should not produce trailing spaces when class is undefined', async () => {
+            const { container } = render(Icon, { name: 'lucide:home' })
+            const classAttr = container.querySelector('svg')!.getAttribute('class') ?? ''
+            expect(classAttr).not.toMatch(/\s$/)
+        })
+    })
+
+    // ==================== ACCESSIBILITY ====================
+
+    describe('accessibility', () => {
+        it('should have aria-hidden by default (from iconify)', async () => {
+            const { container } = render(Icon, { name: 'lucide:home' })
+            const svg = await getSvg(container)
+            await expect.element(svg).toHaveAttribute('aria-hidden', 'true')
+        })
     })
 
     // ==================== FLIP ====================

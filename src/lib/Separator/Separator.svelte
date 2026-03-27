@@ -40,7 +40,6 @@
             container: slots.container({ class: [config.slots.container, ui?.container] }),
             icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
             avatar: slots.avatar({ class: [config.slots.avatar, ui?.avatar] }),
-            avatarSize: slots.avatarSize() as AvatarSize,
             label: slots.label({ class: [config.slots.label, ui?.label] })
         }
     })
@@ -56,7 +55,7 @@
             {:else if avatar}
                 <Avatar
                     {...avatar}
-                    size={avatar.size ?? classes.avatarSize}
+                    size={avatar.size ?? (config.avatarSize as AvatarSize)}
                     class={classes.avatar}
                 />
             {:else if icon}

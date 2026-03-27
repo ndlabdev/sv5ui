@@ -2,7 +2,10 @@
     import type {
         ContextMenuProps,
         ContextMenuItem,
-        ContextMenuItemAction
+        ContextMenuItemAction,
+        ContextMenuItemCheckbox,
+        ContextMenuItemRadio,
+        ContextMenuItemSub
     } from './context-menu.types.js'
 
     export type Props = ContextMenuProps
@@ -13,21 +16,23 @@
     import {
         contextMenuVariants,
         contextMenuDefaults,
-        type ContextMenuVariantProps
+        itemColorClasses
     } from './context-menu.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Kbd from '../Kbd/Kbd.svelte'
 
     const config = getComponentConfig('contextMenu', contextMenuDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         open = $bindable(false),
         onOpenChange,
         items = [],
         radioGroups = [],
-        checkedIcon = iconsDefaults.check,
-        submenuIcon = iconsDefaults.chevronRight,
+        checkedIcon = icons.check,
+        submenuIcon = icons.chevronRight,
         sideOffset = 4,
         alignOffset = 0,
         avoidCollisions = true,
@@ -57,73 +62,63 @@
     const hasRadioItems = $derived(items.some((i) => i.type === 'radio'))
     const firstRadioGroup = $derived(radioGroups[0])
 
-    // Compute variant classes once per transition/size/ui change
     const variantSlots = $derived(contextMenuVariants({ transition, size }))
-
-    function resolveSlot(slot: keyof ReturnType<typeof contextMenuVariants>) {
-        return variantSlots[slot]({
-            class: [config.slots[slot], ui?.[slot]]
-        })
-    }
-
     const classes = $derived({
-        content: resolveSlot('content'),
-        group: resolveSlot('group'),
-        separator: resolveSlot('separator'),
-        label: resolveSlot('label'),
-        item: resolveSlot('item'),
-        itemIcon: resolveSlot('itemIcon'),
-        itemLabel: resolveSlot('itemLabel'),
-        itemKbd: resolveSlot('itemKbd'),
-        subTrigger: resolveSlot('subTrigger'),
-        subTriggerIcon: resolveSlot('subTriggerIcon'),
-        subContent: resolveSlot('subContent'),
-        checkboxIndicator: resolveSlot('checkboxIndicator'),
-        radioIndicator: resolveSlot('radioIndicator')
-    })
-
-    // Cache color variant computations per color — avoids re-calling contextMenuVariants
-    // for every action item with the same color in a single render cycle
-    type ColorKey = NonNullable<ContextMenuVariantProps['color']>
-
-    const getColorVariant = $derived.by(() => {
-        const cache: Partial<Record<ColorKey, ReturnType<typeof contextMenuVariants>>> = {}
-        return (color: ColorKey) => {
-            cache[color] ??= contextMenuVariants({ size, color })
-            return cache[color]
-        }
+        content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
+        group: variantSlots.group({ class: [config.slots.group, ui?.group] }),
+        separator: variantSlots.separator({ class: [config.slots.separator, ui?.separator] }),
+        label: variantSlots.label({ class: [config.slots.label, ui?.label] }),
+        item: variantSlots.item({ class: [config.slots.item, ui?.item] }),
+        itemLeadingIcon: variantSlots.itemLeadingIcon({
+            class: [config.slots.itemLeadingIcon, ui?.itemLeadingIcon]
+        }),
+        itemLabel: variantSlots.itemLabel({ class: [config.slots.itemLabel, ui?.itemLabel] }),
+        itemTrailingKbds: variantSlots.itemTrailingKbds({
+            class: [config.slots.itemTrailingKbds, ui?.itemTrailingKbds]
+        }),
+        itemIndicator: variantSlots.itemIndicator({
+            class: [config.slots.itemIndicator, ui?.itemIndicator]
+        }),
+        subTrigger: variantSlots.subTrigger({ class: [config.slots.subTrigger, ui?.subTrigger] }),
+        subTriggerIcon: variantSlots.subTriggerIcon({
+            class: [config.slots.subTriggerIcon, ui?.subTriggerIcon]
+        }),
+        subContent: variantSlots.subContent({ class: [config.slots.subContent, ui?.subContent] })
     })
 
     function close() {
         open = false
     }
 
-    function handleOpenChange(value: boolean) {
-        open = value
-        onOpenChange?.(value)
+    // Type guards
+    function isActionItem(item: ContextMenuItem): item is ContextMenuItemAction {
+        return !item.type || item.type === 'item'
     }
 
-    function getItemClasses(item: ContextMenuItemAction) {
-        const colorVariant = getColorVariant(item.color ?? 'default')
-        return {
-            item: colorVariant.item({ class: [config.slots.item, ui?.item, item.class] }),
-            itemIcon: colorVariant.itemIcon({ class: [config.slots.itemIcon, ui?.itemIcon] })
-        }
+    function isCheckboxItem(item: ContextMenuItem): item is ContextMenuItemCheckbox {
+        return item.type === 'checkbox'
     }
 
-    // Collision props shared between Content and SubContent
-    const collisionProps = $derived({
-        sideOffset,
-        alignOffset,
-        avoidCollisions,
-        collisionBoundary,
-        collisionPadding
-    })
+    function isRadioItem(item: ContextMenuItem): item is ContextMenuItemRadio {
+        return item.type === 'radio'
+    }
+
+    function isSubItem(item: ContextMenuItem): item is ContextMenuItemSub {
+        return item.type === 'sub'
+    }
+
+    function isSeparator(item: ContextMenuItem): item is { type: 'separator' } {
+        return item.type === 'separator'
+    }
+
+    function isLabel(item: ContextMenuItem): item is { type: 'label'; label: string } {
+        return item.type === 'label'
+    }
 </script>
 
 {#snippet renderKbds(kbds: ContextMenuItemAction['kbds'])}
     {#if kbds?.length}
-        <span class={classes.itemKbd}>
+        <span class={classes.itemTrailingKbds}>
             {#each kbds as kbd, i (i)}
                 {#if typeof kbd === 'string'}
                     <Kbd value={kbd} size="sm" variant="subtle" />
@@ -136,22 +131,25 @@
 {/snippet}
 
 {#snippet renderItem(item: ContextMenuItem, index: number)}
-    {#if item.type === 'separator'}
+    {#if isSeparator(item)}
         <ContextMenu.Separator class={classes.separator} />
-    {:else if item.type === 'label'}
+    {:else if isLabel(item)}
         <ContextMenu.GroupHeading class={classes.label}>{item.label}</ContextMenu.GroupHeading>
-    {:else if !item.type || item.type === 'item'}
-        {@const cls = getItemClasses(item as ContextMenuItemAction)}
+    {:else if isActionItem(item)}
+        {@const colorCls = itemColorClasses[item.color ?? 'default']}
         <ContextMenu.Item
             disabled={item.disabled}
-            closeOnSelect={(item as ContextMenuItemAction).closeOnSelect}
-            onSelect={(item as ContextMenuItemAction).onSelect}
-            class={cls.item}
+            closeOnSelect={item.closeOnSelect}
+            onSelect={item.onSelect}
+            class={[classes.item, colorCls.item, item.class]}
         >
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else if item.icon}
-                <Icon name={item.icon} class={cls.itemIcon} />
+                <Icon
+                    name={item.icon}
+                    class={[classes.itemLeadingIcon, colorCls.itemLeadingIcon]}
+                />
             {/if}
 
             {#if itemLabel}
@@ -163,10 +161,10 @@
             {#if itemTrailing}
                 {@render itemTrailing({ item, index })}
             {:else}
-                {@render renderKbds((item as ContextMenuItemAction).kbds)}
+                {@render renderKbds(item.kbds)}
             {/if}
         </ContextMenu.Item>
-    {:else if item.type === 'checkbox'}
+    {:else if isCheckboxItem(item)}
         <ContextMenu.CheckboxItem
             checked={item.checked}
             disabled={item.disabled}
@@ -177,9 +175,9 @@
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else}
-                <span class={classes.checkboxIndicator}>
+                <span class={classes.itemIndicator}>
                     {#if item.checked}
-                        <Icon name={checkedIcon} class={classes.checkboxIndicator} />
+                        <Icon name={checkedIcon} />
                     {/if}
                 </span>
             {/if}
@@ -196,7 +194,7 @@
                 {@render renderKbds(item.kbds)}
             {/if}
         </ContextMenu.CheckboxItem>
-    {:else if item.type === 'radio'}
+    {:else if isRadioItem(item)}
         <ContextMenu.RadioItem
             value={item.value}
             disabled={item.disabled}
@@ -206,9 +204,9 @@
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else}
-                <span class={classes.radioIndicator}>
+                <span class={classes.itemIndicator}>
                     {#if firstRadioGroup?.value === item.value}
-                        <Icon name={checkedIcon} class={classes.radioIndicator} />
+                        <Icon name={checkedIcon} />
                     {/if}
                 </span>
             {/if}
@@ -225,7 +223,7 @@
                 {@render renderKbds(item.kbds)}
             {/if}
         </ContextMenu.RadioItem>
-    {:else if item.type === 'sub'}
+    {:else if isSubItem(item)}
         <ContextMenu.Sub open={item.open} onOpenChange={item.onOpenChange}>
             <ContextMenu.SubTrigger
                 disabled={item.disabled}
@@ -234,7 +232,7 @@
                 {#if itemLeading}
                     {@render itemLeading({ item, index })}
                 {:else if item.icon}
-                    <Icon name={item.icon} class={classes.itemIcon} />
+                    <Icon name={item.icon} class={classes.itemLeadingIcon} />
                 {/if}
 
                 {#if itemLabel}
@@ -246,7 +244,14 @@
                 <Icon name={submenuIcon} class={classes.subTriggerIcon} />
             </ContextMenu.SubTrigger>
 
-            <ContextMenu.SubContent {...collisionProps} class={classes.subContent}>
+            <ContextMenu.SubContent
+                {sideOffset}
+                {alignOffset}
+                {avoidCollisions}
+                {collisionBoundary}
+                {collisionPadding}
+                class={classes.subContent}
+            >
                 <div class={classes.group}>
                     {#each item.items as subItem, subIndex (subIndex)}
                         {@render renderItem(subItem, subIndex)}
@@ -276,7 +281,12 @@
 
 {#snippet contextMenuContentEl()}
     <ContextMenu.Content
-        {...collisionProps}
+        bind:ref
+        {sideOffset}
+        {alignOffset}
+        {avoidCollisions}
+        {collisionBoundary}
+        {collisionPadding}
         {hideWhenDetached}
         {onEscapeKeydown}
         {onInteractOutside}
@@ -295,9 +305,9 @@
             <ContextMenu.Group class={classes.group}>
                 {#if itemSlot}
                     {#each items as item, index (index)}
-                        {#if item.type === 'separator'}
+                        {#if isSeparator(item)}
                             <ContextMenu.Separator class={classes.separator} />
-                        {:else if item.type === 'label'}
+                        {:else if isLabel(item)}
                             <ContextMenu.GroupHeading class={classes.label}
                                 >{item.label}</ContextMenu.GroupHeading
                             >
@@ -317,7 +327,7 @@
     </ContextMenu.Content>
 {/snippet}
 
-<ContextMenu.Root bind:open onOpenChange={handleOpenChange}>
+<ContextMenu.Root bind:open {onOpenChange}>
     {#if children}
         <ContextMenu.Trigger class={className as string}>
             {@render children({ open })}

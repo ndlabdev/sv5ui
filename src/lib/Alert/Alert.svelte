@@ -15,6 +15,7 @@
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         title,
@@ -24,7 +25,7 @@
         color = config.defaultVariants.color,
         variant = config.defaultVariants.variant,
         orientation = config.defaultVariants.orientation,
-        open = true,
+        open = $bindable(true),
         close = false,
         closeIcon,
         actions,
@@ -41,7 +42,7 @@
     const resolvedCloseIcon = $derived(closeIcon ?? icons.close)
 
     const classes = $derived.by(() => {
-        const slots = alertVariants({ variant, color, orientation })
+        const slots = alertVariants({ variant, color, orientation, title: !!title })
         return {
             root: slots.root({ class: [config.slots.root, className, ui?.root] }),
             wrapper: slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
@@ -54,19 +55,31 @@
         }
     })
 
-    const closeButtonProps = $derived.by(() => {
-        if (!close) return null
-        if (close === true) return {}
-        return close
-    })
+    const closeButtonProps = $derived(!close ? null : close === true ? {} : close)
+
+    const isVertical = $derived(orientation === 'vertical')
+    const hasActions = $derived(!!actionsSlot || (actions && actions.length > 0))
 
     function handleClose() {
+        open = false
         onClose?.()
     }
 </script>
 
+{#snippet actionsContent()}
+    {#if actionsSlot}
+        {@render actionsSlot()}
+    {:else if actions && actions.length > 0}
+        <div class={classes.actions}>
+            {#each actions as action, index (index)}
+                <Button size="xs" {...action} />
+            {/each}
+        </div>
+    {/if}
+{/snippet}
+
 {#if open}
-    <svelte:element this={as} class={classes.root} role="alert" {...restProps}>
+    <svelte:element this={as} bind:this={ref} class={classes.root} role="alert" {...restProps}>
         {#if leading}
             {@render leading()}
         {:else if icon}
@@ -75,7 +88,7 @@
             <Avatar {...avatar} class={classes.avatar} />
         {/if}
 
-        {#if title || description || titleSlot || descriptionSlot}
+        {#if title || description || titleSlot || descriptionSlot || (isVertical && hasActions)}
             <div class={classes.wrapper}>
                 {#if titleSlot}
                     {@render titleSlot()}
@@ -88,17 +101,15 @@
                 {:else if description}
                     <div class={classes.description}>{description}</div>
                 {/if}
+
+                {#if isVertical}
+                    {@render actionsContent()}
+                {/if}
             </div>
         {/if}
 
-        {#if actionsSlot}
-            {@render actionsSlot()}
-        {:else if actions && actions.length > 0}
-            <div class={classes.actions}>
-                {#each actions as action, index (index)}
-                    <Button size="xs" {...action} />
-                {/each}
-            </div>
+        {#if !isVertical}
+            {@render actionsContent()}
         {/if}
 
         {#if closeSlot}
@@ -107,13 +118,13 @@
             </div>
         {:else if closeButtonProps}
             <Button
-                icon={resolvedCloseIcon}
-                variant="link"
-                color="surface"
+                {...closeButtonProps}
+                icon={closeButtonProps.icon ?? resolvedCloseIcon}
+                variant={closeButtonProps.variant ?? 'link'}
+                color={closeButtonProps.color ?? 'surface'}
                 class={classes.close}
                 onclick={handleClose}
-                aria-label="Close alert"
-                {...closeButtonProps}
+                aria-label={closeButtonProps['aria-label'] ?? 'Close alert'}
             />
         {/if}
     </svelte:element>

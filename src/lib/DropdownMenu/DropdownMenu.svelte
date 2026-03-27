@@ -13,21 +13,27 @@
 
 <script lang="ts">
     import { DropdownMenu } from 'bits-ui'
-    import { dropdownMenuVariants, dropdownMenuDefaults } from './dropdown-menu.variants.js'
+    import {
+        dropdownMenuVariants,
+        dropdownMenuDefaults,
+        itemColorClasses
+    } from './dropdown-menu.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import Kbd from '../Kbd/Kbd.svelte'
 
     const config = getComponentConfig('dropdownMenu', dropdownMenuDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         open = $bindable(false),
         onOpenChange,
         items = [],
         radioGroups = [],
-        checkedIcon = iconsDefaults.check,
-        submenuIcon = iconsDefaults.chevronRight,
-        side = config.defaultVariants.side ?? 'bottom',
+        checkedIcon = icons.check,
+        submenuIcon = icons.chevronRight,
+        side = 'bottom',
         sideOffset = 4,
         align = 'start',
         alignOffset = 0,
@@ -57,36 +63,34 @@
         content: contentSlot
     }: Props = $props()
 
-    // Pre-compute booleans
-    const showArrow = $derived(!!arrow)
     const hasRadioItems = $derived(items.some((i) => i.type === 'radio'))
     const firstRadioGroup = $derived(radioGroups[0])
 
-    // Compute variant classes
-    const variantSlots = $derived(dropdownMenuVariants({ side, transition, size }))
+    const variantSlots = $derived(dropdownMenuVariants({ transition, size }))
     const classes = $derived({
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
+        arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] }),
         group: variantSlots.group({ class: [config.slots.group, ui?.group] }),
         separator: variantSlots.separator({ class: [config.slots.separator, ui?.separator] }),
         label: variantSlots.label({ class: [config.slots.label, ui?.label] }),
         item: variantSlots.item({ class: [config.slots.item, ui?.item] }),
-        itemIcon: variantSlots.itemIcon({ class: [config.slots.itemIcon, ui?.itemIcon] }),
+        itemLeadingIcon: variantSlots.itemLeadingIcon({
+            class: [config.slots.itemLeadingIcon, ui?.itemLeadingIcon]
+        }),
         itemLabel: variantSlots.itemLabel({ class: [config.slots.itemLabel, ui?.itemLabel] }),
-        itemKbd: variantSlots.itemKbd({ class: [config.slots.itemKbd, ui?.itemKbd] }),
+        itemTrailingKbds: variantSlots.itemTrailingKbds({
+            class: [config.slots.itemTrailingKbds, ui?.itemTrailingKbds]
+        }),
+        itemIndicator: variantSlots.itemIndicator({
+            class: [config.slots.itemIndicator, ui?.itemIndicator]
+        }),
         subTrigger: variantSlots.subTrigger({ class: [config.slots.subTrigger, ui?.subTrigger] }),
         subTriggerIcon: variantSlots.subTriggerIcon({
             class: [config.slots.subTriggerIcon, ui?.subTriggerIcon]
         }),
-        subContent: variantSlots.subContent({ class: [config.slots.subContent, ui?.subContent] }),
-        checkboxIndicator: variantSlots.checkboxIndicator({
-            class: [config.slots.checkboxIndicator, ui?.checkboxIndicator]
-        }),
-        radioIndicator: variantSlots.radioIndicator({
-            class: [config.slots.radioIndicator, ui?.radioIndicator]
-        })
+        subContent: variantSlots.subContent({ class: [config.slots.subContent, ui?.subContent] })
     })
 
-    // Arrow props
     const arrowProps = $derived.by(() => {
         if (typeof arrow === 'object') return { width: 12, height: 6, ...arrow }
         return { width: 12, height: 6 }
@@ -94,20 +98,6 @@
 
     function close() {
         open = false
-    }
-
-    function handleOpenChange(value: boolean) {
-        open = value
-        onOpenChange?.(value)
-    }
-
-    // Get classes for action items with color variants
-    function getItemClasses(item: DropdownMenuItemAction) {
-        const colorVariant = dropdownMenuVariants({ size, color: item.color ?? 'default' })
-        return {
-            item: colorVariant.item({ class: [config.slots.item, ui?.item, item.class] }),
-            itemIcon: colorVariant.itemIcon({ class: [config.slots.itemIcon, ui?.itemIcon] })
-        }
     }
 
     // Type guards
@@ -138,7 +128,7 @@
 
 {#snippet renderKbds(kbds: DropdownMenuItemAction['kbds'])}
     {#if kbds?.length}
-        <span class={classes.itemKbd}>
+        <span class={classes.itemTrailingKbds}>
             {#each kbds as kbd, i (i)}
                 {#if typeof kbd === 'string'}
                     <Kbd value={kbd} size="sm" variant="subtle" />
@@ -156,17 +146,20 @@
     {:else if isLabel(item)}
         <DropdownMenu.GroupHeading class={classes.label}>{item.label}</DropdownMenu.GroupHeading>
     {:else if isActionItem(item)}
-        {@const cls = getItemClasses(item)}
+        {@const colorCls = itemColorClasses[item.color ?? 'default']}
         <DropdownMenu.Item
             disabled={item.disabled}
             closeOnSelect={item.closeOnSelect}
             onSelect={item.onSelect}
-            class={cls.item}
+            class={[classes.item, colorCls.item, item.class]}
         >
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else if item.icon}
-                <Icon name={item.icon} class={cls.itemIcon} />
+                <Icon
+                    name={item.icon}
+                    class={[classes.itemLeadingIcon, colorCls.itemLeadingIcon]}
+                />
             {/if}
 
             {#if itemLabel}
@@ -192,9 +185,9 @@
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else}
-                <span class={classes.checkboxIndicator}>
+                <span class={classes.itemIndicator}>
                     {#if item.checked}
-                        <Icon name={checkedIcon} class={classes.checkboxIndicator} />
+                        <Icon name={checkedIcon} />
                     {/if}
                 </span>
             {/if}
@@ -221,9 +214,9 @@
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else}
-                <span class={classes.radioIndicator}>
+                <span class={classes.itemIndicator}>
                     {#if firstRadioGroup?.value === item.value}
-                        <Icon name={checkedIcon} class={classes.radioIndicator} />
+                        <Icon name={checkedIcon} />
                     {/if}
                 </span>
             {/if}
@@ -249,7 +242,7 @@
                 {#if itemLeading}
                     {@render itemLeading({ item, index })}
                 {:else if item.icon}
-                    <Icon name={item.icon} class={classes.itemIcon} />
+                    <Icon name={item.icon} class={classes.itemLeadingIcon} />
                 {/if}
 
                 {#if itemLabel}
@@ -298,6 +291,7 @@
 
 {#snippet dropdownContentEl()}
     <DropdownMenu.Content
+        bind:ref
         {side}
         {sideOffset}
         {align}
@@ -344,13 +338,13 @@
             {/if}
         {/if}
 
-        {#if showArrow}
+        {#if !!arrow}
             <DropdownMenu.Arrow width={arrowProps.width} height={arrowProps.height} />
         {/if}
     </DropdownMenu.Content>
 {/snippet}
 
-<DropdownMenu.Root bind:open onOpenChange={handleOpenChange}>
+<DropdownMenu.Root bind:open {onOpenChange}>
     {#if children}
         <DropdownMenu.Trigger>
             {#snippet child({ props })}

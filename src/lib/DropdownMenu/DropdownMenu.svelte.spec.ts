@@ -675,7 +675,7 @@ describe('DropdownMenu', () => {
                     content: 'content-custom',
                     group: 'group-custom',
                     item: 'item-custom',
-                    itemIcon: 'icon-custom',
+                    itemLeadingIcon: 'icon-custom',
                     itemLabel: 'label-custom'
                 }
             })

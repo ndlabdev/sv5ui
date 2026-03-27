@@ -173,11 +173,20 @@ describe('Breadcrumb', () => {
             expect(firstLink?.className).toMatch(/font-medium/)
         })
 
-        it('should apply hover transition on non-active, non-disabled items', async () => {
+        it('should apply hover transition on non-active, non-disabled linked items', async () => {
             const { container } = render(Breadcrumb, { items: basicItems })
             const firstLink = container.querySelector('a')
             expect(firstLink?.className).toMatch(/hover:text-on-surface/)
             expect(firstLink?.className).toMatch(/transition-colors/)
+        })
+
+        it('should not apply hover on non-linked items', async () => {
+            const { container } = render(Breadcrumb, {
+                items: [{ label: 'Home', href: '/' }, { label: 'No Link' }, { label: 'Current' }]
+            })
+            const spans = container.querySelectorAll('span[class]')
+            const noLinkSpan = Array.from(spans).find((s) => s.textContent?.includes('No Link'))
+            expect(noLinkSpan?.parentElement?.className).not.toMatch(/hover:text-on-surface/)
         })
     })
 

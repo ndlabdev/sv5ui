@@ -14,6 +14,7 @@
     const config = getComponentConfig('user', userDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         name,
@@ -44,13 +45,10 @@
     })
 
     const mergedAvatarProps = $derived(
-        avatar ? { size: size as typeof avatar.size, ...avatar } : undefined
+        avatar ? { alt: name, size: size as typeof avatar.size, ...avatar } : undefined
     )
 
-    const chipProps = $derived.by(() => {
-        if (!chip || !avatar) return null
-        return chip === true ? {} : chip
-    })
+    const chipProps = $derived(chip && avatar ? (chip === true ? {} : chip) : null)
 </script>
 
 {#snippet userContent()}
@@ -71,24 +69,30 @@
             {#if nameSlot}
                 {@render nameSlot()}
             {:else if name}
-                <div class={classes.name}>{name}</div>
+                <p class={classes.name}>{name}</p>
             {/if}
 
             {#if descriptionSlot}
                 {@render descriptionSlot()}
             {:else if description}
-                <div class={classes.description}>{description}</div>
+                <p class={classes.description}>{description}</p>
             {/if}
         </div>
     {/if}
 {/snippet}
 
 {#if href}
-    <Link {href} raw class={classes.root}>
+    <Link bind:ref {href} raw class={classes.root} data-orientation={orientation} {...restProps}>
         {@render userContent()}
     </Link>
 {:else}
-    <svelte:element this={as} class={classes.root} {...restProps}>
+    <svelte:element
+        this={as}
+        bind:this={ref}
+        class={classes.root}
+        data-orientation={orientation}
+        {...restProps}
+    >
         {@render userContent()}
     </svelte:element>
 {/if}

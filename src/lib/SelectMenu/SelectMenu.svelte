@@ -1,12 +1,16 @@
 <script lang="ts" module>
-    import type { SelectProps, SelectItem, SelectItemType } from './select.types.js'
+    import type {
+        SelectMenuProps,
+        SelectMenuItem,
+        SelectMenuItemType
+    } from './select-menu.types.js'
 
-    export type Props = SelectProps
+    export type Props = SelectMenuProps
 </script>
 
 <script lang="ts">
-    import { Select } from 'bits-ui'
-    import { selectVariants, selectDefaults } from './select.variants.js'
+    import { Combobox } from 'bits-ui'
+    import { selectMenuVariants, selectMenuDefaults } from './select-menu.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import { getContext } from 'svelte'
     import {
@@ -15,10 +19,11 @@
     } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
+    import Input from '../Input/Input.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import type { FormFieldProps } from '../FormField/form-field.types.js'
 
-    const config = getComponentConfig('select', selectDefaults)
+    const config = getComponentConfig('selectMenu', selectMenuDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
@@ -28,6 +33,7 @@
         onOpenChange,
         items = [],
         placeholder,
+        searchPlaceholder = 'Search...',
         name,
         required = false,
         disabled = false,
@@ -44,10 +50,13 @@
         trailingIcon = icons.chevronDown,
         selectedIcon = icons.check,
         avatar,
+        filterFields = ['label', 'value'] as string[],
+        ignoreFilter = false,
+        emptyText = 'No results found.',
         transition = config.defaultVariants.transition ?? true,
         portal = true,
         side = config.defaultVariants.side ?? 'bottom',
-        sideOffset = 4,
+        sideOffset = 8,
         align = 'start',
         alignOffset = 0,
         avoidCollisions = true,
@@ -56,7 +65,6 @@
         onEscapeKeydown,
         onInteractOutside,
         forceMount,
-        loop = true,
         class: className,
         leadingSlot,
         trailingSlot,
@@ -64,6 +72,7 @@
         itemLeading,
         itemLabel: itemLabelSlot,
         itemTrailing,
+        empty: emptySlot,
         content: contentSlot
     }: Props = $props()
 
@@ -114,8 +123,8 @@
     // ---- Items lookup (O(1) via Map) ----
     const itemsMap = $derived(
         new Map(
-            (items as SelectItemType[])
-                .filter((i): i is SelectItem => !('type' in i))
+            (items as SelectMenuItemType[])
+                .filter((i): i is SelectMenuItem => !('type' in i))
                 .map((i) => [i.value, i])
         )
     )
@@ -123,21 +132,30 @@
     const selectedItem = $derived(value ? itemsMap.get(value) : undefined)
     const displayLabel = $derived(selectedItem?.label ?? selectedItem?.value ?? '')
 
+    // ---- Search & filtering ----
+    let searchTerm = $state('')
+
+    const filteredItems = $derived(
+        ignoreFilter || !searchTerm.trim()
+            ? items
+            : items.filter((item) => {
+                  if ('type' in item) return true
+                  const query = searchTerm.toLowerCase()
+                  return filterFields.some((field) => {
+                      const val = (item as unknown as Record<string, unknown>)[field]
+                      return typeof val === 'string' && val.toLowerCase().includes(query)
+                  })
+              })
+    )
+
+    const hasFilteredSelectItems = $derived(filteredItems.some((item) => !('type' in item)))
+
     // ---- Leading / trailing ----
     const displayAvatar = $derived(selectedItem?.avatar ?? avatar)
     const displayIcon = $derived(selectedItem?.icon ?? leadingIcon ?? icon)
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
     const leadingIconName = $derived(
         loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
-    )
-
-    // ---- bits-ui items for typeahead ----
-    const bitsItems = $derived(
-        [...itemsMap.values()].map((i) => ({
-            value: i.value,
-            label: i.label ?? i.value,
-            disabled: i.disabled
-        }))
     )
 
     // ---- Trailing icon ----
@@ -148,7 +166,7 @@
 
     // ---- Variant slots ----
     const variantSlots = $derived(
-        selectVariants({
+        selectMenuVariants({
             variant,
             color: resolvedColor,
             size: resolvedSize,
@@ -161,7 +179,7 @@
         })
     )
 
-    // ---- Trigger classes (root, base, leading, trailing, value, placeholder) ----
+    // ---- Trigger classes ----
     const rootClass = $derived(
         variantSlots.root({
             class: [config.slots.root, fieldGroupClass?.root, className, ui?.root]
@@ -175,14 +193,14 @@
     const leadingClass = $derived(
         variantSlots.leading({ class: [config.slots.leading, ui?.leading] })
     )
-    const leadingIconClass = $derived(
+    const leadingIconStyleClass = $derived(
         variantSlots.leadingIcon({ class: [config.slots.leadingIcon, ui?.leadingIcon] })
     )
     const leadingAvatarClass = $derived(
         variantSlots.leadingAvatar({ class: [config.slots.leadingAvatar, ui?.leadingAvatar] })
     )
     const leadingAvatarSizeClass = $derived(variantSlots.leadingAvatarSize() as AvatarSize)
-    const trailingClass = $derived(
+    const trailingStyleClass = $derived(
         variantSlots.trailing({ class: [config.slots.trailing, ui?.trailing] })
     )
     const trailingIconBaseClass = $derived(
@@ -197,6 +215,7 @@
     const contentClass = $derived(
         variantSlots.content({ class: [config.slots.content, ui?.content] })
     )
+    const inputClass = $derived(variantSlots.input({ class: [config.slots.input, ui?.input] }))
     const viewportClass = $derived(
         variantSlots.viewport({ class: [config.slots.viewport, ui?.viewport] })
     )
@@ -206,6 +225,7 @@
     const separatorClass = $derived(
         variantSlots.separator({ class: [config.slots.separator, ui?.separator] })
     )
+    const emptyClass = $derived(variantSlots.empty({ class: [config.slots.empty, ui?.empty] }))
 
     // ---- Item classes ----
     const itemClass = $derived(variantSlots.item({ class: [config.slots.item, ui?.item] }))
@@ -229,22 +249,30 @@
     )
 
     // ---- Type guards ----
-    function isSelectItem(item: SelectItemType): item is SelectItem {
+    function isSelectItem(item: SelectMenuItemType): item is SelectMenuItem {
         return !('type' in item)
     }
 
-    function isSeparator(item: SelectItemType): item is { type: 'separator' } {
+    function isSeparator(item: SelectMenuItemType): item is { type: 'separator' } {
         return 'type' in item && item.type === 'separator'
     }
 
-    function isLabel(item: SelectItemType): item is { type: 'label'; label: string } {
+    function isLabel(item: SelectMenuItemType): item is { type: 'label'; label: string } {
         return 'type' in item && item.type === 'label'
+    }
+
+    // ---- Event handlers (Nuxt UI v4 pattern) ----
+    function onUpdateOpen(val: boolean) {
+        if (!val) {
+            searchTerm = ''
+        }
+        onOpenChange?.(val)
     }
 </script>
 
-{#snippet renderItem(item: SelectItem, index: number)}
+{#snippet renderItem(item: SelectMenuItem, index: number)}
     {@const isSelected = value === item.value}
-    <Select.Item
+    <Combobox.Item
         value={item.value}
         label={item.label ?? item.value}
         disabled={item.disabled}
@@ -274,11 +302,11 @@
         {:else if isSelected}
             <Icon name={selectedIcon} class={itemIndicatorClass} />
         {/if}
-    </Select.Item>
+    </Combobox.Item>
 {/snippet}
 
-{#snippet selectContentEl()}
-    <Select.Content
+{#snippet contentEl()}
+    <Combobox.Content
         {side}
         {sideOffset}
         {align}
@@ -289,22 +317,31 @@
         {onEscapeKeydown}
         {onInteractOutside}
         {forceMount}
-        {loop}
         class={contentClass}
     >
-        <Select.Viewport class={viewportClass}>
-            {#if contentSlot}
-                {@render contentSlot({ open })}
-            {:else}
-                {#each items as selectItem, index (index)}
+        <Input
+            autofocus
+            placeholder={searchPlaceholder}
+            value={searchTerm}
+            oninput={(e) => (searchTerm = (e.currentTarget as HTMLInputElement).value)}
+            variant="none"
+            size={resolvedSize}
+            class={inputClass}
+        />
+
+        {#if contentSlot}
+            {@render contentSlot({ open, searchTerm })}
+        {:else}
+            <div class={viewportClass}>
+                {#each filteredItems as selectItem, index ('value' in selectItem ? selectItem.value : `${selectItem.type}-${index}`)}
                     {#if isSeparator(selectItem)}
                         <div role="separator" class={separatorClass}></div>
                     {:else if isLabel(selectItem)}
-                        <Select.Group>
-                            <Select.GroupHeading class={groupLabelClass}
-                                >{selectItem.label}</Select.GroupHeading
+                        <Combobox.Group>
+                            <Combobox.GroupHeading class={groupLabelClass}
+                                >{selectItem.label}</Combobox.GroupHeading
                             >
-                        </Select.Group>
+                        </Combobox.Group>
                     {:else if isSelectItem(selectItem)}
                         {#if itemSlot}
                             {@render itemSlot({
@@ -317,20 +354,28 @@
                         {/if}
                     {/if}
                 {/each}
-            {/if}
-        </Select.Viewport>
-    </Select.Content>
+
+                {#if !hasFilteredSelectItems}
+                    {#if emptySlot}
+                        {@render emptySlot({ searchTerm })}
+                    {:else}
+                        <div class={emptyClass}>{emptyText}</div>
+                    {/if}
+                {/if}
+            </div>
+        {/if}
+    </Combobox.Content>
 {/snippet}
 
-<Select.Root
+<Combobox.Root
     type="single"
     bind:open
-    onOpenChange={(val) => onOpenChange?.(val)}
+    onOpenChange={onUpdateOpen}
     {disabled}
     {required}
-    items={bitsItems}
     {value}
     onValueChange={(val) => (value = val)}
+    name={resolvedName}
 >
     <div bind:this={ref} class={rootClass}>
         {#if leadingSlot}
@@ -339,7 +384,7 @@
             </span>
         {:else if isLeading && leadingIconName}
             <span class={leadingClass}>
-                <Icon name={leadingIconName} class={leadingIconClass} />
+                <Icon name={leadingIconName} class={leadingIconStyleClass} />
             </span>
         {:else if displayAvatar}
             <span class={leadingClass}>
@@ -351,9 +396,14 @@
             </span>
         {/if}
 
-        <Select.Trigger
+        <Combobox.Input
+            class="pointer-events-none absolute inset-0 opacity-0"
+            tabindex={-1}
+            aria-hidden="true"
+        />
+
+        <Combobox.Trigger
             id={resolvedId}
-            name={resolvedName}
             aria-describedby={ariaDescribedBy}
             aria-invalid={resolvedHighlight ? true : undefined}
             class={baseClass}
@@ -363,24 +413,24 @@
             {:else if placeholder}
                 <span class={placeholderClass}>{placeholder}</span>
             {/if}
-        </Select.Trigger>
+        </Combobox.Trigger>
 
         {#if trailingSlot}
-            <span class={trailingClass}>
+            <span class={trailingStyleClass}>
                 {@render trailingSlot()}
             </span>
         {:else}
-            <span class={trailingClass}>
+            <span class={trailingStyleClass}>
                 <Icon name={trailingIconName} class="{trailingIconBaseClass} {trailingIconClass}" />
             </span>
         {/if}
     </div>
 
     {#if portal}
-        <Select.Portal>
-            {@render selectContentEl()}
-        </Select.Portal>
+        <Combobox.Portal>
+            {@render contentEl()}
+        </Combobox.Portal>
     {:else}
-        {@render selectContentEl()}
+        {@render contentEl()}
     {/if}
-</Select.Root>
+</Combobox.Root>

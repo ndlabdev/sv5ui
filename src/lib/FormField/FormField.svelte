@@ -13,6 +13,7 @@
     const config = getComponentConfig('formField', formFieldDefaults)
 
     let {
+        ref = $bindable(null),
         ui,
         name,
         label,
@@ -36,23 +37,21 @@
     const id = useId()
     const ariaId = $derived(name ? `form-field-${name}` : id)
 
-    const classes = $derived.by(() => {
-        const slots = formFieldVariants({ size, required, orientation })
-        return {
-            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
-            wrapper: slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
-            labelWrapper: slots.labelWrapper({
-                class: [config.slots.labelWrapper, ui?.labelWrapper]
-            }),
-            label: slots.label({ class: [config.slots.label, ui?.label] }),
-            container: slots.container({ class: [config.slots.container, ui?.container] }),
-            description: slots.description({
-                class: [config.slots.description, ui?.description]
-            }),
-            error: slots.error({ class: [config.slots.error, ui?.error] }),
-            hint: slots.hint({ class: [config.slots.hint, ui?.hint] }),
-            help: slots.help({ class: [config.slots.help, ui?.help] })
-        }
+    const variantSlots = $derived(formFieldVariants({ size, required, orientation }))
+    const classes = $derived({
+        root: variantSlots.root({ class: [config.slots.root, className, ui?.root] }),
+        wrapper: variantSlots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
+        labelWrapper: variantSlots.labelWrapper({
+            class: [config.slots.labelWrapper, ui?.labelWrapper]
+        }),
+        label: variantSlots.label({ class: [config.slots.label, ui?.label] }),
+        container: variantSlots.container({ class: [config.slots.container, ui?.container] }),
+        description: variantSlots.description({
+            class: [config.slots.description, ui?.description]
+        }),
+        error: variantSlots.error({ class: [config.slots.error, ui?.error] }),
+        hint: variantSlots.hint({ class: [config.slots.hint, ui?.hint] }),
+        help: variantSlots.help({ class: [config.slots.help, ui?.help] })
     })
 
     const hasError = $derived(error !== undefined && error !== false)
@@ -79,7 +78,7 @@
     })
 </script>
 
-<div class={classes.root} {...restProps}>
+<div bind:this={ref} class={classes.root} {...restProps}>
     <div class={classes.wrapper}>
         {#if label || labelSlot || hint || hintSlot}
             <div class={classes.labelWrapper}>

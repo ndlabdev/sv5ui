@@ -11,6 +11,7 @@ export const slideoverVariants = tv({
         footer: 'flex items-center gap-1.5 p-4 sm:px-6',
         title: 'text-on-surface font-semibold',
         description: 'mt-1 text-on-surface-variant text-sm',
+        actions: 'flex items-center gap-1.5 shrink-0',
         close: 'absolute top-4 end-4'
     },
     variants: {
@@ -36,7 +37,9 @@ export const slideoverVariants = tv({
         },
         inset: {
             true: {},
-            false: {}
+            false: {
+                content: 'shadow-lg'
+            }
         },
         overlay: {
             true: {
@@ -105,34 +108,6 @@ export const slideoverVariants = tv({
             side: 'left',
             class: {
                 content: 'left-4 inset-y-4 rounded-xl shadow-lg ring ring-outline-variant'
-            }
-        },
-        {
-            inset: false,
-            side: 'top',
-            class: {
-                content: 'shadow-lg'
-            }
-        },
-        {
-            inset: false,
-            side: 'right',
-            class: {
-                content: 'shadow-lg'
-            }
-        },
-        {
-            inset: false,
-            side: 'bottom',
-            class: {
-                content: 'shadow-lg'
-            }
-        },
-        {
-            inset: false,
-            side: 'left',
-            class: {
-                content: 'shadow-lg'
             }
         }
     ],

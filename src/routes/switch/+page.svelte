@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Switch, FormField } from '$lib/index.js'
+    import { Switch, FormField, Separator } from '$lib/index.js'
 
     const colors = [
         'primary',
@@ -17,46 +17,43 @@
 </script>
 
 <div class="space-y-8">
-    <div class="space-y-2">
-        <h1 class="text-2xl font-bold">Switch</h1>
-        <p class="text-on-surface-variant">
-            A toggle switch component for binary states with customizable colors, sizes, icons, and
-            FormField integration.
-        </p>
-    </div>
+    <h1 class="text-2xl font-bold text-on-surface">Switch</h1>
 
     <!-- Basic Usage -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Basic Usage</h2>
-        <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
-            <Switch />
-        </div>
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Basic Usage</h2>
+        <p class="text-sm text-on-surface-variant">A toggle switch component for binary states.</p>
+        <Switch />
     </section>
 
     <!-- Two-way Binding -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Two-way Binding</h2>
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Two-way Binding</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1">bind:checked</code> for reactive
-            two-way data binding.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >bind:checked</code
+            > for reactive two-way data binding.
         </p>
-        <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
-            <Switch bind:checked={bindChecked} />
+        <div class="flex flex-wrap items-center gap-6">
+            <Switch bind:checked={bindChecked} label="Toggle me" />
             <p class="text-sm text-on-surface-variant">
                 Checked: <span class="font-mono text-on-surface">{bindChecked}</span>
             </p>
         </div>
     </section>
 
-    <!-- With Label & Description -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Label & Description</h2>
+    <!-- Label & Description -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Label &amp; Description</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1">label</code> and
-            <code class="rounded bg-surface-container-highest px-1">description</code> props to add text
-            next to the switch.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">label</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >description</code
+            > to add text next to the switch.
         </p>
-        <div class="flex flex-col gap-4 rounded-lg bg-surface-container-high p-4">
+        <div class="flex flex-col gap-4">
             <Switch label="Notifications" />
             <Switch label="Dark mode" description="Enable dark mode for the application." />
             <Switch
@@ -67,44 +64,50 @@
     </section>
 
     <!-- Colors -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Colors</h2>
-        <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Colors</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code
+            > to control the checked background color.
+        </p>
+        <div class="flex flex-wrap gap-6">
             {#each colors as color (color)}
-                <div class="flex flex-col items-center gap-2">
-                    <Switch {color} checked={true} label={color} />
-                </div>
+                <Switch {color} checked={true} label={color} />
             {/each}
         </div>
     </section>
 
     <!-- Sizes -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Sizes</h2>
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Sizes</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">size</code> prop to control
-            the dimensions.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to
+            control the dimensions.
         </p>
-        <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+        <div class="flex flex-wrap items-center gap-6">
             {#each sizes as size (size)}
                 <Switch {size} checked={true} label={size} />
             {/each}
         </div>
     </section>
 
-    <!-- With Icons -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Icons</h2>
+    <!-- Icons -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Icons</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1">checkedIcon</code> and
-            <code class="rounded bg-surface-container-highest px-1">uncheckedIcon</code> to display icons
-            inside the thumb.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >checkedIcon</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >uncheckedIcon</code
+            > to display icons inside the thumb.
         </p>
-        <div class="flex flex-col gap-4 rounded-lg bg-surface-container-high p-4">
+        <div class="flex flex-col gap-4">
             <Switch
                 checkedIcon="lucide:check"
                 uncheckedIcon="lucide:x"
-                label="With check/x icons"
+                label="With check / x icons"
             />
             <Switch
                 checkedIcon="lucide:sun"
@@ -113,120 +116,181 @@
                 description="Switch between light and dark mode."
             />
             <Switch checkedIcon="lucide:volume-2" uncheckedIcon="lucide:volume-x" label="Sound" />
+            <Switch
+                checkedIcon="lucide:wifi"
+                uncheckedIcon="lucide:wifi-off"
+                label="Wi-Fi"
+                color="success"
+            />
         </div>
     </section>
 
     <!-- Loading -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Loading</h2>
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Loading</h2>
         <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">loading</code> prop to show
-            a loading spinner inside the thumb.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >loading</code
+            > to show a spinner inside the thumb and disable interaction.
         </p>
-        <div class="flex flex-col gap-4 rounded-lg bg-surface-container-high p-4">
+        <div class="flex flex-col gap-4">
             <Switch loading label="Syncing..." />
             <Switch loading checked={true} label="Saving preferences..." color="success" />
         </div>
     </section>
 
     <!-- Disabled -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Disabled</h2>
-        <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Disabled</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >disabled</code
+            > to prevent interaction.
+        </p>
+        <div class="flex flex-wrap gap-6">
             <Switch disabled label="Disabled (off)" />
             <Switch disabled checked={true} label="Disabled (on)" />
         </div>
     </section>
 
     <!-- Required -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Required</h2>
-        <div class="flex flex-wrap gap-6 rounded-lg bg-surface-container-high p-4">
-            <Switch required label="Accept terms and conditions" />
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Required</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >required</code
+            > to show an asterisk next to the label.
+        </p>
+        <Switch required label="Accept terms and conditions" />
+    </section>
+
+    <!-- Custom Slots -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Custom Slots</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >labelSlot</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >descriptionSlot</code
+            > for fully custom label content.
+        </p>
+        <div class="flex flex-col gap-4">
+            <Switch checked={true} color="success">
+                {#snippet labelSlot()}
+                    <span class="flex items-center gap-1.5 text-sm font-medium text-on-surface">
+                        <span class="inline-block size-2 rounded-full bg-success"></span>
+                        System online
+                    </span>
+                {/snippet}
+                {#snippet descriptionSlot()}
+                    <span class="text-xs text-on-surface-variant">
+                        All services are running normally. Last checked <strong>just now</strong>.
+                    </span>
+                {/snippet}
+            </Switch>
+
+            <Switch>
+                {#snippet labelSlot()}
+                    <span class="flex items-center gap-2 text-sm font-medium text-on-surface">
+                        Beta features
+                        <span
+                            class="rounded bg-tertiary-container px-1.5 py-0.5 text-[10px] font-bold text-on-tertiary-container"
+                            >BETA</span
+                        >
+                    </span>
+                {/snippet}
+            </Switch>
         </div>
     </section>
 
     <!-- FormField Integration -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">FormField Integration</h2>
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">FormField Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1"
-                >FormField</code
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code
             >, the Switch automatically inherits size and error state.
         </p>
-        <div class="flex flex-col gap-6 rounded-lg bg-surface-container-high p-4">
-            <div class="w-full max-w-sm">
-                <FormField label="Notifications" description="Choose how you want to be notified.">
-                    <Switch label="Push notifications" />
-                </FormField>
-            </div>
-
-            <div class="w-full max-w-sm">
-                <FormField label="Agreement" error="You must accept the terms.">
-                    <Switch label="I accept the terms of service" />
-                </FormField>
-            </div>
+        <div class="max-w-sm space-y-4">
+            <FormField label="Notifications" description="Choose how you want to be notified.">
+                <Switch label="Push notifications" />
+            </FormField>
+            <FormField label="Agreement" error="You must accept the terms.">
+                <Switch label="I accept the terms of service" />
+            </FormField>
         </div>
     </section>
 
-    <!-- Custom UI -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Custom UI</h2>
-        <p class="text-sm text-on-surface-variant">
-            Use the <code class="rounded bg-surface-container-highest px-1">ui</code> prop to override
-            classes on specific slots.
-        </p>
-        <div class="flex flex-col gap-6 rounded-lg bg-surface-container-high p-4">
+    <Separator />
+
+    <!-- Real World Examples -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Real World Examples</h2>
+
+        <div class="space-y-6">
             <div>
-                <p class="mb-2 text-xs text-on-surface-variant">Custom label & description</p>
-                <Switch
-                    label="Bold primary label"
-                    description="Italic description text"
-                    checked={true}
-                    ui={{
-                        label: 'font-bold text-primary',
-                        description: 'italic text-tertiary'
-                    }}
-                />
+                <p class="mb-2 text-xs text-on-surface-variant">Notification preferences</p>
+                <div
+                    class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+                >
+                    <Switch
+                        checked={true}
+                        label="Push notifications"
+                        description="Receive alerts on your device."
+                        color="primary"
+                    />
+                    <Switch
+                        checked={true}
+                        label="Email digest"
+                        description="Daily summary of activity."
+                        color="primary"
+                    />
+                    <Switch
+                        label="SMS alerts"
+                        description="Text messages for critical updates."
+                        color="primary"
+                    />
+                    <Switch
+                        loading
+                        label="Marketing emails"
+                        description="Updating preference..."
+                        color="primary"
+                    />
+                </div>
             </div>
 
             <div>
-                <p class="mb-2 text-xs text-on-surface-variant">Rounded track with shadow thumb</p>
-                <Switch
-                    label="Elevated switch"
-                    checked={true}
-                    color="success"
-                    ui={{
-                        base: 'shadow-inner rounded-lg',
-                        thumb: 'shadow-xl rounded-lg'
-                    }}
-                />
-            </div>
-
-            <div>
-                <p class="mb-2 text-xs text-on-surface-variant">
-                    Custom root layout & wrapper spacing
-                </p>
-                <Switch
-                    label="Wide spacing"
-                    description="More gap between switch and text."
-                    ui={{
-                        root: 'gap-1',
-                        wrapper: 'ms-4'
-                    }}
-                />
-            </div>
-
-            <div>
-                <p class="mb-2 text-xs text-on-surface-variant">Custom container height</p>
-                <Switch
-                    label="Taller container"
-                    checked={true}
-                    color="tertiary"
-                    ui={{
-                        container: 'h-7'
-                    }}
-                />
+                <p class="mb-2 text-xs text-on-surface-variant">Privacy settings</p>
+                <div
+                    class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+                >
+                    <Switch
+                        checked={true}
+                        checkedIcon="lucide:eye"
+                        uncheckedIcon="lucide:eye-off"
+                        label="Profile visibility"
+                        description="Make your profile public."
+                        color="secondary"
+                    />
+                    <Switch
+                        checkedIcon="lucide:share-2"
+                        uncheckedIcon="lucide:share-2"
+                        label="Data sharing"
+                        description="Share usage data to improve the product."
+                        color="secondary"
+                    />
+                    <Switch
+                        checked={true}
+                        checkedIcon="lucide:shield-check"
+                        uncheckedIcon="lucide:shield-off"
+                        label="Two-factor auth"
+                        description="Add an extra layer of security."
+                        color="success"
+                        disabled
+                    />
+                </div>
             </div>
         </div>
     </section>

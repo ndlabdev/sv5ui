@@ -7,7 +7,6 @@ export const separatorVariants = tv({
         container: 'font-medium flex',
         icon: 'shrink-0',
         avatar: 'shrink-0',
-        avatarSize: '2xs',
         label: ''
     },
     variants: {
@@ -105,5 +104,6 @@ export type SeparatorSlots = keyof ReturnType<typeof separatorVariants>
 
 export const separatorDefaults = {
     defaultVariants: separatorVariants.defaultVariants,
-    slots: {} as Partial<Record<SeparatorSlots, string>>
+    slots: {} as Partial<Record<SeparatorSlots, string>>,
+    avatarSize: '2xs' as string
 }

@@ -5,6 +5,11 @@ import type { ChipVariantProps, ChipSlots } from './chip.variants.js'
 
 export type ChipProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     /**
+     * Bind to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * The HTML element to render as.
      * @default 'div'
      */
@@ -51,7 +56,7 @@ export type ChipProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     standalone?: boolean
 
     /**
-     * Controls the visibility of the chip.
+     * Controls the visibility of the chip. Supports `bind:show`.
      * @default true
      */
     show?: boolean

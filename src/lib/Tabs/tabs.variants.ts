@@ -8,6 +8,8 @@ export const tabsVariants = tv({
         trigger: [
             'relative inline-flex items-center justify-center whitespace-nowrap',
             'font-medium cursor-pointer select-none',
+            'data-[state=inactive]:text-on-surface-variant',
+            'hover:data-[state=inactive]:not-disabled:text-on-surface',
             'focus-visible:outline-none focus-visible:ring-2',
             'disabled:cursor-not-allowed disabled:opacity-50',
             'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',

@@ -14,6 +14,7 @@
     const config = getComponentConfig('empty', emptyDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         icon,
@@ -21,7 +22,6 @@
         title,
         description,
         actions,
-        color = config.defaultVariants.color,
         variant = config.defaultVariants.variant,
         size = config.defaultVariants.size,
         class: className,
@@ -29,55 +29,90 @@
         titleSlot,
         descriptionSlot,
         actionsSlot,
+        header,
+        body,
+        footer,
         children,
         ...restProps
     }: Props = $props()
 
     const classes = $derived.by(() => {
-        const slots = emptyVariants({ variant, color, size })
+        const slots = emptyVariants({ variant, size })
+        const c = config.slots
         return {
-            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
-            icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
-            avatar: slots.avatar({ class: [config.slots.avatar, ui?.avatar] }),
-            title: slots.title({ class: [config.slots.title, ui?.title] }),
-            description: slots.description({ class: [config.slots.description, ui?.description] }),
-            actions: slots.actions({ class: [config.slots.actions, ui?.actions] })
+            root: slots.root({ class: [c.root, className, ui?.root] }),
+            header: slots.header({ class: [c.header, ui?.header] }),
+            avatar: slots.avatar({ class: [c.avatar, ui?.avatar] }),
+            title: slots.title({ class: [c.title, ui?.title] }),
+            description: slots.description({ class: [c.description, ui?.description] }),
+            body: slots.body({ class: [c.body, ui?.body] }),
+            actions: slots.actions({ class: [c.actions, ui?.actions] }),
+            footer: slots.footer({ class: [c.footer, ui?.footer] })
         }
     })
 
+    const hasHeader = $derived(
+        !!icon ||
+            !!avatar ||
+            !!title ||
+            !!description ||
+            !!leading ||
+            !!titleSlot ||
+            !!descriptionSlot ||
+            !!header
+    )
     const hasActions = $derived(actions && actions.length > 0)
+    const hasBody = $derived(!!hasActions || !!actionsSlot || !!body || !!children)
 </script>
 
-<svelte:element this={as} class={classes.root} {...restProps}>
-    {#if leading}
-        {@render leading()}
-    {:else if icon}
-        <Icon name={icon} class={classes.icon} />
-    {:else if avatar}
-        <Avatar {...avatar} class={classes.avatar} />
+<svelte:element this={as} bind:this={ref} class={classes.root} {...restProps}>
+    {#if header}
+        {@render header()}
+    {:else if hasHeader}
+        <div class={classes.header}>
+            {#if leading}
+                {@render leading()}
+            {:else if icon}
+                <Icon name={icon} class={classes.avatar} />
+            {:else if avatar}
+                <Avatar {...avatar} class={classes.avatar} />
+            {/if}
+
+            {#if titleSlot}
+                {@render titleSlot()}
+            {:else if title}
+                <p class={classes.title}>{title}</p>
+            {/if}
+
+            {#if descriptionSlot}
+                {@render descriptionSlot()}
+            {:else if description}
+                <p class={classes.description}>{description}</p>
+            {/if}
+        </div>
     {/if}
 
-    {#if titleSlot}
-        {@render titleSlot()}
-    {:else if title}
-        <div class={classes.title}>{title}</div>
+    {#if body}
+        {@render body()}
+    {:else if hasBody}
+        <div class={classes.body}>
+            {@render children?.()}
+
+            {#if actionsSlot}
+                {@render actionsSlot()}
+            {:else if hasActions}
+                <div class={classes.actions}>
+                    {#each actions as action, index (index)}
+                        <Button size="sm" {...action} />
+                    {/each}
+                </div>
+            {/if}
+        </div>
     {/if}
 
-    {#if descriptionSlot}
-        {@render descriptionSlot()}
-    {:else if description}
-        <p class={classes.description}>{description}</p>
-    {/if}
-
-    {@render children?.()}
-
-    {#if actionsSlot}
-        {@render actionsSlot()}
-    {:else if hasActions}
-        <div class={classes.actions}>
-            {#each actions as action, index (index)}
-                <Button size="sm" {...action} />
-            {/each}
+    {#if footer}
+        <div class={classes.footer}>
+            {@render footer()}
         </div>
     {/if}
 </svelte:element>

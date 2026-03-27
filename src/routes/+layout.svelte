@@ -43,6 +43,7 @@
         { href: '/input', label: 'Input', icon: 'lucide:text-cursor' },
         { href: '/textarea', label: 'Textarea', icon: 'lucide:text' },
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
+        { href: '/select-menu', label: 'Select Menu', icon: 'lucide:list-filter' },
         { href: '/switch', label: 'Switch', icon: 'lucide:toggle-left' },
         { href: '/checkbox', label: 'Checkbox', icon: 'lucide:square-check' },
         { href: '/radio-group', label: 'Radio Group', icon: 'lucide:circle-dot-dashed' },

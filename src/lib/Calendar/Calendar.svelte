@@ -20,6 +20,7 @@
     const config = getComponentConfig('calendar', calendarDefaults)
 
     let {
+        ref = $bindable(null),
         value = $bindable(),
         onValueChange,
         placeholder = $bindable(),
@@ -245,6 +246,7 @@
         | 'weekNumbers'
     >}
     <RangeCalendar.Root
+        bind:ref
         bind:value={value as CalendarRangeProps['value']}
         onValueChange={onValueChange as CalendarRangeProps['onValueChange']}
         {...commonProps}
@@ -264,6 +266,7 @@
     {@const calInitialFocus = (restProps as { initialFocus?: boolean }).initialFocus}
     {#if calType === 'multiple'}
         <Calendar.Root
+            bind:ref
             bind:value={value as CalendarMultipleProps['value']}
             onValueChange={onValueChange as CalendarMultipleProps['onValueChange']}
             {...commonProps}
@@ -277,6 +280,7 @@
         </Calendar.Root>
     {:else}
         <Calendar.Root
+            bind:ref
             bind:value={value as CalendarSingleProps['value']}
             onValueChange={onValueChange as CalendarSingleProps['onValueChange']}
             {...commonProps}

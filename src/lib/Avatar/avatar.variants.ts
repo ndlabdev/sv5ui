@@ -2,30 +2,45 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 export const avatarVariants = tv({
     slots: {
-        root: 'inline-flex items-center justify-center shrink-0 select-none rounded-full align-middle overflow-hidden bg-surface-container-highest',
+        root: 'inline-flex items-center justify-center shrink-0 select-none align-middle bg-surface-container-highest',
         image: 'h-full w-full rounded-[inherit] object-cover',
-        fallback: 'font-medium leading-none truncate text-on-surface-variant'
+        fallback: 'font-medium leading-none truncate text-on-surface-variant',
+        icon: 'text-on-surface-variant'
     },
     variants: {
         size: {
-            '3xs': { root: 'size-4 text-[8px]' },
-            '2xs': { root: 'size-5 text-[10px]' },
-            xs: { root: 'size-6 text-xs' },
-            sm: { root: 'size-7 text-sm' },
-            md: { root: 'size-8 text-base' },
-            lg: { root: 'size-9 text-lg' },
-            xl: { root: 'size-10 text-xl' },
-            '2xl': { root: 'size-11 text-[22px]' },
-            '3xl': { root: 'size-12 text-2xl' }
+            '3xs': { root: 'size-4 text-[8px]', icon: 'size-2.5' },
+            '2xs': { root: 'size-5 text-[10px]', icon: 'size-3' },
+            xs: { root: 'size-6 text-xs', icon: 'size-3.5' },
+            sm: { root: 'size-7 text-sm', icon: 'size-4' },
+            md: { root: 'size-8 text-base', icon: 'size-5' },
+            lg: { root: 'size-9 text-lg', icon: 'size-5' },
+            xl: { root: 'size-10 text-xl', icon: 'size-6' },
+            '2xl': { root: 'size-11 text-[22px]', icon: 'size-7' },
+            '3xl': { root: 'size-12 text-2xl', icon: 'size-8' }
+        },
+        rounded: {
+            full: { root: 'rounded-full' },
+            lg: { root: 'rounded-lg' },
+            md: { root: 'rounded-md' },
+            sm: { root: 'rounded-sm' },
+            none: { root: 'rounded-none' }
         }
     },
     defaultVariants: {
-        size: 'md'
+        size: 'md',
+        rounded: 'full'
     }
 })
 
 export type AvatarVariantProps = VariantProps<typeof avatarVariants>
+export type AvatarSize = NonNullable<AvatarVariantProps['size']>
 export type AvatarSlots = keyof ReturnType<typeof avatarVariants>
+
+/** Tailwind size-4 through size-12 → (4 + index) × 4 pixels */
+export const avatarSizePx = Object.fromEntries(
+    (Object.keys(avatarVariants.variants.size) as AvatarSize[]).map((key, i) => [key, (4 + i) * 4])
+) as Record<AvatarSize, number>
 
 export const avatarDefaults = {
     defaultVariants: avatarVariants.defaultVariants,

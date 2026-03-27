@@ -14,28 +14,35 @@
     const config = getComponentConfig('breadcrumb', breadcrumbDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'nav',
         items,
         separatorIcon = 'lucide:chevron-right',
         class: className,
         ui,
         item: itemSnippet,
-        separator: separatorSnippet
+        separator: separatorSnippet,
+        ...restProps
     }: Props = $props()
 
     const variantSlots = $derived(breadcrumbVariants(config.defaultVariants))
 
-    const classes = $derived.by(() => ({
+    const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className, ui?.root] }),
         list: variantSlots.list({ class: [config.slots.list, ui?.list] }),
         separator: variantSlots.separator({ class: [config.slots.separator, ui?.separator] }),
         separatorIcon: variantSlots.separatorIcon({
             class: [config.slots.separatorIcon, ui?.separatorIcon]
         })
-    }))
+    })
 
-    function getLinkClasses(active: boolean, disabled: boolean, itemClass?: ClassNameValue) {
-        const slots = breadcrumbVariants({ ...config.defaultVariants, active, disabled })
+    function getLinkClasses(
+        active: boolean,
+        disabled: boolean,
+        to: boolean,
+        itemClass?: ClassNameValue
+    ) {
+        const slots = breadcrumbVariants({ ...config.defaultVariants, active, disabled, to })
         return {
             item: slots.item({ class: [config.slots.item, ui?.item] }),
             link: slots.link({ class: [config.slots.link, itemClass, ui?.link] }),
@@ -47,12 +54,18 @@
     }
 </script>
 
-<svelte:element this={as} aria-label={as === 'nav' ? 'Breadcrumb' : undefined} class={classes.root}>
+<svelte:element
+    this={as}
+    bind:this={ref}
+    aria-label={as === 'nav' ? 'Breadcrumb' : undefined}
+    class={classes.root}
+    {...restProps}
+>
     <ol class={classes.list}>
         {#each items as item, index (item.label ?? index)}
             {@const active = index === items.length - 1}
             {@const disabled = item.disabled ?? false}
-            {@const itemClasses = getLinkClasses(active, disabled, item.class)}
+            {@const itemClasses = getLinkClasses(active, disabled, !!item.href, item.class)}
 
             <li class={itemClasses.item}>
                 {#if itemSnippet}

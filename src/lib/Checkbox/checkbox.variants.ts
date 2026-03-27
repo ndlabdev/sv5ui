@@ -12,8 +12,8 @@ export const checkboxVariants = tv({
         ],
         container: 'flex items-center',
         indicator: 'flex items-center justify-center',
-        icon: 'shrink-0 text-white',
-        wrapper: 'ms-2',
+        icon: 'shrink-0 text-surface',
+        wrapper: '',
         label: 'block font-medium text-on-surface',
         description: 'text-on-surface-variant'
     },
@@ -58,6 +58,24 @@ export const checkboxVariants = tv({
                 container: 'h-6',
                 icon: 'size-4.5',
                 wrapper: 'text-base'
+            }
+        },
+        variant: {
+            list: '',
+            card: {
+                root: 'border border-outline-variant rounded-lg cursor-pointer select-none'
+            }
+        },
+        indicator: {
+            start: {
+                wrapper: 'ms-2'
+            },
+            end: {
+                root: 'flex-row-reverse',
+                wrapper: 'me-2'
+            },
+            hidden: {
+                container: 'sr-only'
             }
         },
         loading: {
@@ -128,11 +146,62 @@ export const checkboxVariants = tv({
             class: {
                 base: 'data-[state=checked]:bg-on-surface data-[state=checked]:border-on-surface data-[state=indeterminate]:bg-on-surface data-[state=indeterminate]:border-on-surface focus-visible:outline-outline'
             }
-        }
+        },
+        // ========== CARD × SIZE (padding) ==========
+        { variant: 'card', size: 'xs', class: { root: 'p-2' } },
+        { variant: 'card', size: 'sm', class: { root: 'p-2.5' } },
+        { variant: 'card', size: 'md', class: { root: 'p-3' } },
+        { variant: 'card', size: 'lg', class: { root: 'p-3.5' } },
+        { variant: 'card', size: 'xl', class: { root: 'p-4' } },
+        // ========== CARD × COLOR (checked border) ==========
+        {
+            variant: 'card',
+            color: 'primary',
+            class: { root: 'has-[[data-state=checked]]:border-primary' }
+        },
+        {
+            variant: 'card',
+            color: 'secondary',
+            class: { root: 'has-[[data-state=checked]]:border-secondary' }
+        },
+        {
+            variant: 'card',
+            color: 'tertiary',
+            class: { root: 'has-[[data-state=checked]]:border-tertiary' }
+        },
+        {
+            variant: 'card',
+            color: 'success',
+            class: { root: 'has-[[data-state=checked]]:border-success' }
+        },
+        {
+            variant: 'card',
+            color: 'warning',
+            class: { root: 'has-[[data-state=checked]]:border-warning' }
+        },
+        {
+            variant: 'card',
+            color: 'error',
+            class: { root: 'has-[[data-state=checked]]:border-error' }
+        },
+        {
+            variant: 'card',
+            color: 'info',
+            class: { root: 'has-[[data-state=checked]]:border-info' }
+        },
+        {
+            variant: 'card',
+            color: 'surface',
+            class: { root: 'has-[[data-state=checked]]:border-on-surface' }
+        },
+        // ========== CARD × DISABLED ==========
+        { variant: 'card', disabled: true, class: { root: 'cursor-not-allowed' } }
     ],
     defaultVariants: {
         color: 'primary',
-        size: 'md'
+        size: 'md',
+        variant: 'list',
+        indicator: 'start'
     }
 })
 

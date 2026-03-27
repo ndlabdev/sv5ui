@@ -3,6 +3,9 @@ import type { ClassNameValue } from 'tailwind-merge'
 import type { ContextMenuSlots, ContextMenuVariantProps } from './context-menu.variants.js'
 import type { KbdProps } from '../Kbd/kbd.types.js'
 import type { ContextMenuRootPropsWithoutHTML, ContextMenuContentPropsWithoutHTML } from 'bits-ui'
+import { itemColorClasses } from './context-menu.variants.js'
+
+export type ContextMenuItemColor = Exclude<keyof typeof itemColorClasses, 'default'>
 
 // ============================================================================
 // Item Types
@@ -62,7 +65,7 @@ export interface ContextMenuItemAction extends ContextMenuItemBase {
     /**
      * Color variant for the item (useful for destructive actions).
      */
-    color?: ContextMenuVariantProps['color']
+    color?: ContextMenuItemColor
 }
 
 /**
@@ -228,6 +231,11 @@ type ContentProps = Pick<
  * @see https://bits-ui.com/docs/components/context-menu
  */
 export interface ContextMenuProps extends RootProps, ContentProps {
+    /**
+     * Bindable reference to the content DOM element.
+     */
+    ref?: HTMLElement | null
+
     // -------------------------------------------------------------------------
     // Content
     // -------------------------------------------------------------------------
@@ -264,7 +272,7 @@ export interface ContextMenuProps extends RootProps, ContentProps {
      * Animate the context menu on open and close.
      * @default true
      */
-    transition?: ContextMenuVariantProps['transition']
+    transition?: NonNullable<ContextMenuVariantProps['transition']>
 
     /**
      * Render the context menu content in a portal.
@@ -276,7 +284,7 @@ export interface ContextMenuProps extends RootProps, ContentProps {
      * Size variant for the context menu.
      * @default 'md'
      */
-    size?: ContextMenuVariantProps['size']
+    size?: NonNullable<ContextMenuVariantProps['size']>
 
     // -------------------------------------------------------------------------
     // Styling

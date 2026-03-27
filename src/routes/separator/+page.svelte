@@ -87,13 +87,20 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">With Avatar</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+            <p class="text-xs text-on-surface-variant">Default avatarSize (2xs from config)</p>
             <Separator
-                avatar={{ src: 'https://i.pravatar.cc/150?img=1', alt: 'John Doe', size: 'sm' }}
+                avatar={{ src: 'https://i.pravatar.cc/150?img=1', alt: 'Default size' }}
                 color="primary"
             />
+            <p class="text-xs text-on-surface-variant">Avatar with explicit size override (sm)</p>
             <Separator
-                avatar={{ src: 'https://i.pravatar.cc/150?img=2', alt: 'Alice Brown', size: 'md' }}
+                avatar={{ src: 'https://i.pravatar.cc/150?img=2', alt: 'Size sm', size: 'sm' }}
                 color="secondary"
+            />
+            <p class="text-xs text-on-surface-variant">Avatar with explicit size override (md)</p>
+            <Separator
+                avatar={{ src: 'https://i.pravatar.cc/150?img=3', alt: 'Size md', size: 'md' }}
+                color="tertiary"
             />
         </div>
     </section>

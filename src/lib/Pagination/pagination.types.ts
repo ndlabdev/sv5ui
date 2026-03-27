@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { PaginationSlots, PaginationVariantProps } from './pagination.variants.js'
+import type { ButtonProps } from '../Button/button.types.js'
 
 // ============================================================================
 // Slot Props Types
@@ -49,6 +50,11 @@ export interface PaginationItemSlotProps {
  * @see https://bits-ui.com/docs/components/pagination
  */
 export interface PaginationProps {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     // -------------------------------------------------------------------------
     // State
     // -------------------------------------------------------------------------
@@ -128,10 +134,28 @@ export interface PaginationProps {
     size?: NonNullable<PaginationVariantProps['size']>
 
     /**
+     * Button variant for navigation buttons (first, prev, next, last).
+     * @default 'ghost'
+     */
+    variant?: NonNullable<ButtonProps['variant']>
+
+    /**
+     * Button color for navigation buttons (first, prev, next, last).
+     * @default 'surface'
+     */
+    color?: NonNullable<ButtonProps['color']>
+
+    /**
      * Color applied to the currently selected page button.
      * @default 'primary'
      */
-    activeColor?: NonNullable<PaginationVariantProps['activeColor']>
+    activeColor?: NonNullable<ButtonProps['color']>
+
+    /**
+     * Variant style applied to the currently selected page button.
+     * @default 'solid'
+     */
+    activeVariant?: NonNullable<ButtonProps['variant']>
 
     // -------------------------------------------------------------------------
     // Icons
@@ -184,7 +208,6 @@ export interface PaginationProps {
      * ui={{
      *   list: 'gap-2',
      *   item: 'rounded-full',
-     *   prev: 'rounded-full'
      * }}
      * ```
      */

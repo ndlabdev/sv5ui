@@ -1,9 +1,15 @@
+import type { Snippet } from 'svelte'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { AvatarGroupSlots } from './avatar-group.variants.js'
-import type { AvatarProps, AvatarSize } from '../Avatar/avatar.types.js'
+import type { AvatarProps, AvatarSize, AvatarRounded } from '../Avatar/avatar.types.js'
 
-export type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
+export type AvatarGroupProps = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * The HTML element to render as.
      * @default 'div'
@@ -17,10 +23,16 @@ export type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
     size?: AvatarSize
 
     /**
+     * Controls the border radius of all avatars in the group.
+     * @default 'full'
+     */
+    rounded?: AvatarRounded
+
+    /**
      * Array of avatar props to render.
      * Use with `max` to limit visible count.
      */
-    avatars?: Omit<AvatarProps, 'size' | 'children'>[]
+    avatars?: Omit<AvatarProps, 'size' | 'rounded' | 'children'>[]
 
     /**
      * Maximum visible avatars.
@@ -37,4 +49,10 @@ export type AvatarGroupProps = HTMLAttributes<HTMLDivElement> & {
      * Override styles for specific avatar group slots.
      */
     ui?: Partial<Record<AvatarGroupSlots, ClassNameValue>>
+
+    /**
+     * Custom content to render inside the group.
+     * When provided, overrides the `avatars` prop.
+     */
+    children?: Snippet
 }

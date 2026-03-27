@@ -16,6 +16,7 @@
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         checked = $bindable(false),
         onCheckedChange,
         ui,
@@ -34,7 +35,8 @@
         description,
         labelSlot,
         descriptionSlot,
-        class: className
+        class: className,
+        ...restProps
     }: Props = $props()
 
     const formFieldContext = getContext<
@@ -57,11 +59,13 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
-    const ariaDescribedBy = $derived.by(() => {
-        if (!formFieldContext) return undefined
-        const fid = formFieldContext.ariaId
-        return hasError ? `${fid}-error` : `${fid}-description ${fid}-help`
-    })
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
     const hasCheckedIcon = $derived(loading || !!checkedIcon)
     const hasUncheckedIcon = $derived(loading || !!uncheckedIcon)
@@ -74,7 +78,7 @@
         loading,
         required,
         disabled: isDisabled ? true : undefined
-    } as const)
+    })
 
     const classes = $derived.by(() => {
         const slots = switchVariants(variantOpts)
@@ -85,34 +89,31 @@
             thumb: slots.thumb({ class: [config.slots.thumb, ui?.thumb] }),
             wrapper: slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
             label: slots.label({ class: [config.slots.label, ui?.label] }),
-            description: slots.description({
-                class: [config.slots.description, ui?.description]
-            })
+            description: slots.description({ class: [config.slots.description, ui?.description] })
         }
     })
 
-    const iconUiClass = $derived([config.slots.icon, ui?.icon])
-
-    const checkedIconClass = $derived.by(() => {
-        if (!hasCheckedIcon) return undefined
-        return switchVariants({
-            ...variantOpts,
-            checked: true,
-            unchecked: loading ? true : undefined
-        }).icon({ class: iconUiClass })
-    })
-
-    const uncheckedIconClass = $derived.by(() => {
-        if (!hasUncheckedIcon) return undefined
-        return switchVariants({
-            ...variantOpts,
-            unchecked: true,
-            checked: loading ? true : undefined
-        }).icon({ class: iconUiClass })
+    const iconClasses = $derived.by(() => {
+        if (!hasCheckedIcon && !hasUncheckedIcon)
+            return { checked: undefined, unchecked: undefined }
+        const iconUiClass = [config.slots.icon, ui?.icon]
+        return {
+            checked: hasCheckedIcon
+                ? switchVariants({ ...variantOpts, checked: true, unchecked: loading }).icon({
+                      class: iconUiClass
+                  })
+                : undefined,
+            unchecked:
+                hasUncheckedIcon && !loading
+                    ? switchVariants({ ...variantOpts, unchecked: true }).icon({
+                          class: iconUiClass
+                      })
+                    : undefined
+        }
     })
 </script>
 
-<div class={classes.root}>
+<div {...restProps} bind:this={ref} class={classes.root}>
     <div class={classes.container}>
         <Switch.Root
             bind:checked
@@ -128,10 +129,10 @@
         >
             <Switch.Thumb class={classes.thumb}>
                 {#if hasCheckedIcon && checkedIconName}
-                    <Icon name={checkedIconName} class={checkedIconClass} />
+                    <Icon name={checkedIconName} class={iconClasses.checked} />
                 {/if}
                 {#if hasUncheckedIcon && uncheckedIconName && !loading}
-                    <Icon name={uncheckedIconName} class={uncheckedIconClass} />
+                    <Icon name={uncheckedIconName} class={iconClasses.unchecked} />
                 {/if}
             </Switch.Thumb>
         </Switch.Root>

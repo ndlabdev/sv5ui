@@ -7,14 +7,20 @@
 <script lang="ts">
     import { Pagination } from 'bits-ui'
     import { untrack } from 'svelte'
-    import { paginationVariants, paginationDefaults } from './pagination.variants.js'
-    import { getComponentConfig } from '../config.js'
+    import {
+        paginationVariants,
+        paginationDefaults,
+        activeVariantColorClasses
+    } from './pagination.variants.js'
+    import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
     import ButtonComponent from '../Button/Button.svelte'
 
     const config = getComponentConfig('pagination', paginationDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         page = $bindable(),
         defaultPage = 1,
         total = 0,
@@ -25,12 +31,15 @@
         disabled = false,
         onPageChange,
         size = config.defaultVariants.size ?? 'md',
+        variant = config.defaultVariants.variant ?? 'ghost',
+        color = config.defaultVariants.color ?? 'surface',
         activeColor = config.defaultVariants.activeColor ?? 'primary',
-        firstIcon = 'lucide:chevrons-left',
-        prevIcon = 'lucide:chevron-left',
-        nextIcon = 'lucide:chevron-right',
-        lastIcon = 'lucide:chevrons-right',
-        ellipsisIcon = 'lucide:ellipsis',
+        activeVariant = config.defaultVariants.activeVariant ?? 'solid',
+        firstIcon = icons.chevronsLeft,
+        prevIcon = icons.chevronLeft,
+        nextIcon = icons.chevronRight,
+        lastIcon = icons.chevronsRight,
+        ellipsisIcon = icons.ellipsis,
         ui,
         class: className,
         firstSlot,
@@ -51,45 +60,24 @@
     const prevDisabled = $derived(disabled || isFirstPage)
     const nextDisabled = $derived(disabled || isLastPage)
 
-    const variantSlots = $derived(paginationVariants({ size, activeColor, disabled }))
-
-    function resolveSlot(slot: keyof typeof variantSlots, extra?: unknown) {
-        const configSlot = config.slots[slot as keyof typeof config.slots]
-        const uiSlot = ui?.[slot as keyof typeof ui]
-        return (variantSlots[slot] as (opts: { class: unknown[] }) => string)({
-            class: [configSlot, extra, uiSlot]
-        })
-    }
-
-    const baseClasses = $derived.by(() => ({
-        root: resolveSlot('root', className),
-        list: resolveSlot('list'),
-        item: resolveSlot('item'),
-        ellipsis: resolveSlot('ellipsis'),
-        ellipsisIcon: resolveSlot('ellipsisIcon')
-    }))
-
-    const controlClasses = $derived.by(() =>
-        showControls
-            ? {
-                  prev: resolveSlot('prev'),
-                  next: resolveSlot('next'),
-                  prevIcon: resolveSlot('prevIcon'),
-                  nextIcon: resolveSlot('nextIcon')
-              }
-            : null
+    const variantSlots = $derived(paginationVariants({ size, disabled }))
+    const activeCls = $derived(
+        activeVariantColorClasses[activeVariant]?.[activeColor] ??
+            activeVariantColorClasses.solid.primary
     )
-
-    const edgeClasses = $derived.by(() =>
-        showEdges
-            ? {
-                  first: resolveSlot('first'),
-                  last: resolveSlot('last'),
-                  firstIcon: resolveSlot('firstIcon'),
-                  lastIcon: resolveSlot('lastIcon')
-              }
-            : null
-    )
+    const classes = $derived({
+        root: variantSlots.root({ class: [config.slots.root, className] }),
+        list: variantSlots.list({ class: [config.slots.list, ui?.list] }),
+        item: variantSlots.item({ class: [config.slots.item, activeCls, ui?.item] }),
+        ellipsis: variantSlots.ellipsis({ class: [config.slots.ellipsis, ui?.ellipsis] }),
+        ellipsisIcon: variantSlots.ellipsisIcon({
+            class: [config.slots.ellipsisIcon, ui?.ellipsisIcon]
+        }),
+        first: variantSlots.first({ class: [config.slots.first, ui?.first] }),
+        prev: variantSlots.prev({ class: [config.slots.prev, ui?.prev] }),
+        next: variantSlots.next({ class: [config.slots.next, ui?.next] }),
+        last: variantSlots.last({ class: [config.slots.last, ui?.last] })
+    })
 
     function handlePageChange(newPage: number) {
         page = newPage
@@ -106,54 +94,85 @@
 </script>
 
 <Pagination.Root
+    bind:ref
     count={total}
     perPage={itemsPerPage}
     {siblingCount}
     {page}
     onPageChange={handlePageChange}
-    class={baseClasses.root}
+    class={classes.root}
 >
     {#snippet children({ pages })}
-        <div class={baseClasses.list}>
-            {#if edgeClasses}
-                <ButtonComponent
-                    variant="ghost"
-                    color="surface"
-                    square
-                    class={edgeClasses.first}
-                    disabled={prevDisabled}
-                    aria-label="First page"
-                    onclick={goToFirst}
-                >
-                    {#if firstSlot}
+        <div class={classes.list}>
+            {#if showEdges}
+                {#if firstSlot}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        class={classes.first}
+                        disabled={prevDisabled}
+                        aria-label="First page"
+                        onclick={goToFirst}
+                    >
                         {@render firstSlot({ page: page!, disabled: prevDisabled })}
-                    {:else}
-                        <Icon name={firstIcon} class={edgeClasses.firstIcon} />
-                    {/if}
-                </ButtonComponent>
+                    </ButtonComponent>
+                {:else}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        icon={firstIcon}
+                        class={classes.first}
+                        disabled={prevDisabled}
+                        aria-label="First page"
+                        onclick={goToFirst}
+                    />
+                {/if}
             {/if}
 
-            {#if controlClasses}
-                <Pagination.PrevButton class={controlClasses.prev} disabled={prevDisabled}>
-                    {#if prevSlot}
-                        {@render prevSlot({ page: page!, disabled: prevDisabled })}
-                    {:else}
-                        <Icon name={prevIcon} class={controlClasses.prevIcon} />
-                    {/if}
+            {#if showControls}
+                <Pagination.PrevButton disabled={prevDisabled}>
+                    {#snippet child({ props })}
+                        {#if prevSlot}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                class={classes.prev}
+                            >
+                                {@render prevSlot({ page: page!, disabled: prevDisabled })}
+                            </ButtonComponent>
+                        {:else}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                icon={prevIcon}
+                                class={classes.prev}
+                            />
+                        {/if}
+                    {/snippet}
                 </Pagination.PrevButton>
             {/if}
 
             {#each pages as pageItem (pageItem.key)}
                 {#if pageItem.type === 'ellipsis'}
-                    <span class={baseClasses.ellipsis}>
+                    <span class={classes.ellipsis}>
                         {#if ellipsisSlot}
                             {@render ellipsisSlot()}
                         {:else}
-                            <Icon name={ellipsisIcon} class={baseClasses.ellipsisIcon} />
+                            <Icon name={ellipsisIcon} class={classes.ellipsisIcon} />
                         {/if}
                     </span>
                 {:else}
-                    <Pagination.Page page={pageItem} class={baseClasses.item} {disabled}>
+                    <Pagination.Page page={pageItem} class={classes.item} {disabled}>
                         {#if itemSlot}
                             {@render itemSlot({
                                 page: pageItem.value,
@@ -166,32 +185,62 @@
                 {/if}
             {/each}
 
-            {#if controlClasses}
-                <Pagination.NextButton class={controlClasses.next} disabled={nextDisabled}>
-                    {#if nextSlot}
-                        {@render nextSlot({ page: page!, disabled: nextDisabled })}
-                    {:else}
-                        <Icon name={nextIcon} class={controlClasses.nextIcon} />
-                    {/if}
+            {#if showControls}
+                <Pagination.NextButton disabled={nextDisabled}>
+                    {#snippet child({ props })}
+                        {#if nextSlot}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                class={classes.next}
+                            >
+                                {@render nextSlot({ page: page!, disabled: nextDisabled })}
+                            </ButtonComponent>
+                        {:else}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                icon={nextIcon}
+                                class={classes.next}
+                            />
+                        {/if}
+                    {/snippet}
                 </Pagination.NextButton>
             {/if}
 
-            {#if edgeClasses}
-                <ButtonComponent
-                    variant="ghost"
-                    color="surface"
-                    square
-                    class={edgeClasses.last}
-                    disabled={nextDisabled}
-                    aria-label="Last page"
-                    onclick={goToLast}
-                >
-                    {#if lastSlot}
+            {#if showEdges}
+                {#if lastSlot}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        class={classes.last}
+                        disabled={nextDisabled}
+                        aria-label="Last page"
+                        onclick={goToLast}
+                    >
                         {@render lastSlot({ page: page!, disabled: nextDisabled })}
-                    {:else}
-                        <Icon name={lastIcon} class={edgeClasses.lastIcon} />
-                    {/if}
-                </ButtonComponent>
+                    </ButtonComponent>
+                {:else}
+                    <ButtonComponent
+                        {variant}
+                        {color}
+                        square
+                        {size}
+                        icon={lastIcon}
+                        class={classes.last}
+                        disabled={nextDisabled}
+                        aria-label="Last page"
+                        onclick={goToLast}
+                    />
+                {/if}
             {/if}
         </div>
     {/snippet}

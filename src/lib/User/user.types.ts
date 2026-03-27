@@ -8,6 +8,11 @@ import type { LinkProps } from '../Link/link.types.js'
 
 export type UserProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * Sets the HTML element type to render.
      * Ignored when `href` is provided.
      * @default 'div'

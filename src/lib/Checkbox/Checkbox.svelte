@@ -16,6 +16,7 @@
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         checked = $bindable(false),
         onCheckedChange,
         indeterminate = $bindable(false),
@@ -26,6 +27,8 @@
         value,
         color = config.defaultVariants.color,
         size,
+        variant = config.defaultVariants.variant,
+        indicator = config.defaultVariants.indicator,
         disabled = false,
         required = false,
         loading = false,
@@ -36,7 +39,8 @@
         description,
         labelSlot,
         descriptionSlot,
-        class: className
+        class: className,
+        ...restProps
     }: Props = $props()
 
     const formFieldContext = getContext<
@@ -59,18 +63,31 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
-    const ariaDescribedBy = $derived.by(() => {
-        if (!formFieldContext) return undefined
-        const fid = formFieldContext.ariaId
-        return hasError ? `${fid}-error` : `${fid}-description ${fid}-help`
-    })
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
     const resolvedIcon = $derived(loading ? loadingIcon : indeterminate ? indeterminateIcon : icon)
+
+    let containerRef: HTMLElement | null = null
+
+    function handleCardClick(e: MouseEvent) {
+        if (isDisabled) return
+        // Don't re-click when the event originated from the checkbox button itself
+        if ((e.target as Element).closest('button')) return
+        containerRef?.querySelector('button')?.click()
+    }
 
     const classes = $derived.by(() => {
         const slots = checkboxVariants({
             color: resolvedColor,
             size: resolvedSize,
+            variant,
+            indicator,
             loading,
             required,
             disabled: isDisabled ? true : undefined
@@ -90,8 +107,13 @@
     })
 </script>
 
-<div class={classes.root}>
-    <div class={classes.container}>
+<div
+    {...restProps}
+    bind:this={ref}
+    class={classes.root}
+    onclick={variant === 'card' ? handleCardClick : undefined}
+>
+    <div bind:this={containerRef} class={classes.container}>
         <Checkbox.Root
             bind:checked
             {onCheckedChange}
@@ -123,9 +145,13 @@
             {#if labelSlot}
                 {@render labelSlot({ label })}
             {:else if label}
-                <Label.Root for={resolvedId} class={classes.label}>
-                    {label}
-                </Label.Root>
+                {#if variant === 'card'}
+                    <span class={classes.label}>{label}</span>
+                {:else}
+                    <Label.Root for={resolvedId} class={classes.label}>
+                        {label}
+                    </Label.Root>
+                {/if}
             {/if}
 
             {#if descriptionSlot}

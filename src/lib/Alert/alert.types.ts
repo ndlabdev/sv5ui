@@ -7,6 +7,11 @@ import type { ButtonProps } from '../Button/button.types.js'
 
 export type AlertProps = Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'title'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * The HTML element to render as.
      * @default 'div'
      */

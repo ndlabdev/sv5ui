@@ -3,7 +3,12 @@ import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { CardVariantProps, CardSlots } from './card.variants.js'
 
-export type CardProps = HTMLAttributes<HTMLDivElement> & {
+export type CardProps = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * Renders the card as a different HTML element.
      * @default 'div'

@@ -11,6 +11,7 @@
     const config = getComponentConfig('chip', chipDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         text,
@@ -19,7 +20,7 @@
         position = config.defaultVariants.position,
         inset = false,
         standalone = false,
-        show = true,
+        show = $bindable(true),
         class: className,
         children,
         content,
@@ -35,7 +36,7 @@
     })
 </script>
 
-<svelte:element this={as} class={classes.root} {...restProps}>
+<svelte:element this={as} bind:this={ref} class={classes.root} {...restProps}>
     {@render children?.()}
 
     {#if show}

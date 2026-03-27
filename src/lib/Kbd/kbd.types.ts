@@ -1,6 +1,7 @@
+import type { Snippet } from 'svelte'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { KbdVariantProps } from './kbd.variants.js'
+import type { KbdVariantProps, KbdSlots } from './kbd.variants.js'
 
 export type KeyboardShortcutCallback = (event: KeyboardEvent) => void
 
@@ -56,6 +57,11 @@ export interface UseKbdReturn {
 
 export type KbdProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * Sets the HTML element type to render.
      * @default 'kbd'
      */
@@ -88,7 +94,18 @@ export type KbdProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     variant?: NonNullable<KbdVariantProps['variant']>
 
     /**
+     * Override styles for specific kbd slots.
+     * Available slots: base.
+     */
+    ui?: Partial<Record<KbdSlots, ClassNameValue>>
+
+    /**
      * Additional CSS classes for the root element.
      */
     class?: ClassNameValue
+
+    /**
+     * Default content slot for custom key display.
+     */
+    children?: Snippet
 }

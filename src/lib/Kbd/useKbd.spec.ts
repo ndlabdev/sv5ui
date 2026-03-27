@@ -95,7 +95,7 @@ describe('Kbd utilities', () => {
 
     describe('platform detection', () => {
         it('should detect platform', () => {
-            expect(typeof isMac).toBe('boolean')
+            expect(typeof isMac()).toBe('boolean')
         })
     })
 

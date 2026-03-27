@@ -11,6 +11,7 @@
     const config = getComponentConfig('card', cardDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         variant = config.defaultVariants.variant,
@@ -25,14 +26,14 @@
         const slots = cardVariants({ variant })
         return {
             root: slots.root({ class: [config.slots.root, className, ui?.root] }),
-            header: header ? slots.header({ class: [config.slots.header, ui?.header] }) : '',
-            body: children ? slots.body({ class: [config.slots.body, ui?.body] }) : '',
-            footer: footer ? slots.footer({ class: [config.slots.footer, ui?.footer] }) : ''
+            header: slots.header({ class: [config.slots.header, ui?.header] }),
+            body: slots.body({ class: [config.slots.body, ui?.body] }),
+            footer: slots.footer({ class: [config.slots.footer, ui?.footer] })
         }
     })
 </script>
 
-<svelte:element this={as} class={classes.root} {...restProps}>
+<svelte:element this={as} bind:this={ref} class={classes.root} {...restProps}>
     {#if header}
         <div class={classes.header}>
             {@render header()}

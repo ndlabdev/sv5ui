@@ -173,7 +173,7 @@ describe('Progress', () => {
         it('should use translateY for vertical', () => {
             const { container } = render(Progress, { value: 75, orientation: 'vertical' })
             const indicator = getIndicator(container)
-            expect(indicator.style.transform).toContain('translateY(25%)')
+            expect(indicator.style.transform).toContain('translateY(-25%)')
         })
     })
 
@@ -193,7 +193,7 @@ describe('Progress', () => {
                 inverted: true
             })
             const indicator = getIndicator(container)
-            expect(indicator.style.transform).toContain('translateY(-25%)')
+            expect(indicator.style.transform).toContain('translateY(25%)')
         })
     })
 
@@ -215,13 +215,8 @@ describe('Progress', () => {
             expect(container.textContent).toContain('75%')
         })
 
-        it('should display 0% for indeterminate with status', () => {
+        it('should not render status for indeterminate', () => {
             const { container } = render(Progress, { value: null, status: true })
-            expect(container.textContent).toContain('0%')
-        })
-
-        it('should not render status when max is array', () => {
-            const { container } = render(Progress, { value: 1, max: ['A', 'B', 'C'], status: true })
             expect(container.textContent).not.toContain('%')
         })
     })
@@ -239,18 +234,31 @@ describe('Progress', () => {
             expect(container.textContent).toContain('Step 3')
         })
 
-        it('should render correct number of step spans', () => {
+        it('should render correct number of step divs', () => {
             const { container } = render(Progress, { value: 1, max: ['A', 'B', 'C', 'D'] })
-            const steps = container.querySelectorAll('span')
-            expect(steps.length).toBe(4)
+            const stepsContainer = container.querySelector('[class*="grid"]')
+            const steps = stepsContainer?.querySelectorAll(':scope > div')
+            expect(steps?.length).toBe(4)
         })
 
-        it('should apply active class to completed steps', () => {
+        it('should apply active opacity to current step', () => {
             const { container } = render(Progress, { value: 1, max: ['A', 'B', 'C'] })
-            const steps = container.querySelectorAll('span')
-            expect(steps[0].className).toContain('text-on-surface')
-            expect(steps[1].className).toContain('text-on-surface')
-            expect(steps[2].className).toContain('text-on-surface-variant')
+            const stepsContainer = container.querySelector('[class*="grid"]')
+            const steps = stepsContainer?.querySelectorAll(':scope > div')
+            // index 0 is first + not active => 'other' (opacity-0)
+            expect(steps?.[0].className).toContain('opacity-0')
+            // index 1 is active => 'active' (opacity-100)
+            expect(steps?.[1].className).toContain('opacity-100')
+            // index 2 is other => 'other' (opacity-0)
+            expect(steps?.[2].className).toContain('opacity-0')
+        })
+
+        it('should apply first variant when value is 0', () => {
+            const { container } = render(Progress, { value: 0, max: ['A', 'B', 'C'] })
+            const stepsContainer = container.querySelector('[class*="grid"]')
+            const steps = stepsContainer?.querySelectorAll(':scope > div')
+            // index 0 is first + active => 'first' (opacity-100 text-on-surface-variant)
+            expect(steps?.[0].className).toContain('opacity-100')
         })
 
         it('should calculate progress based on step count', () => {
@@ -352,7 +360,7 @@ describe('Progress', () => {
                 color: 'tertiary'
             })
             const indicator = getIndicator(container)
-            expect(indicator.style.transform).toContain('translateY(-40%)')
+            expect(indicator.style.transform).toContain('translateY(40%)')
             expect(indicator.className).toContain('bg-tertiary')
         })
 

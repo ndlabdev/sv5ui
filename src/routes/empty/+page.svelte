@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Empty } from '$lib/index.js'
+    import { Empty, Separator } from '$lib/index.js'
+    import Link from '$lib/Link/Link.svelte'
 
-    const variants = ['solid', 'outline', 'soft', 'subtle'] as const
-    const colors = ['primary', 'secondary', 'success', 'error'] as const
+    const variants = ['solid', 'outline', 'soft', 'subtle', 'naked'] as const
+    const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 </script>
 
 <div class="space-y-8">
@@ -14,138 +15,256 @@
         </p>
     </div>
 
-    <!-- Basic Usage -->
+    <!-- Basic -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Basic Usage</h2>
-        <div class="space-y-3 rounded-lg bg-surface-container-high p-4">
-            <Empty
-                icon="lucide:inbox"
-                title="No messages"
-                description="You don't have any messages yet."
-            />
+        <h2 class="text-lg font-semibold">Basic</h2>
+        <div class="grid gap-4 lg:grid-cols-3">
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">
+                    Icon + title + description
+                </p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty
+                        icon="lucide:inbox"
+                        title="No messages"
+                        description="You don't have any messages yet."
+                    />
+                </div>
+            </div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Title only</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty icon="lucide:file-x" title="No files found" />
+                </div>
+            </div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">With avatar</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty
+                        avatar={{ src: 'https://i.pravatar.cc/150?u=empty', alt: 'User' }}
+                        title="No notifications"
+                        description="You're all caught up!"
+                    />
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Variants -->
+    <!-- Variants with Icon -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Variants</h2>
-        <div class="grid gap-3 rounded-lg bg-surface-container-high p-4 sm:grid-cols-2">
-            <Empty
-                variant="solid"
-                icon="lucide:inbox"
-                title="Solid"
-                description="Filled background style"
-            />
-            <Empty
-                variant="outline"
-                icon="lucide:inbox"
-                title="Outline"
-                description="Border with transparent background"
-            />
-            <Empty
-                variant="soft"
-                icon="lucide:inbox"
-                title="Soft"
-                description="Light colored background"
-            />
-            <Empty
-                variant="subtle"
-                icon="lucide:inbox"
-                title="Subtle"
-                description="Light background with border"
-            />
+        <h2 class="text-lg font-semibold">Variants with Icon</h2>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {#each variants as variant (variant)}
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-on-surface-variant capitalize">{variant}</p>
+                    <div class="rounded-lg bg-surface-container-high p-4">
+                        <Empty
+                            {variant}
+                            icon="lucide:inbox"
+                            title="No items"
+                            description="Nothing to display here."
+                            size="sm"
+                        />
+                    </div>
+                </div>
+            {/each}
         </div>
     </section>
 
-    <!-- Colors -->
+    <!-- Variants with Avatar -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Colors</h2>
-        <div
-            class="grid gap-3 rounded-lg bg-surface-container-high p-4 sm:grid-cols-2 lg:grid-cols-4"
-        >
-            <Empty color="primary" icon="lucide:inbox" title="Primary" />
-            <Empty color="secondary" icon="lucide:inbox" title="Secondary" />
-            <Empty color="tertiary" icon="lucide:inbox" title="Tertiary" />
-            <Empty color="success" icon="lucide:check-circle" title="Success" />
-            <Empty color="warning" icon="lucide:alert-triangle" title="Warning" />
-            <Empty color="error" icon="lucide:x-circle" title="Error" />
-            <Empty color="info" icon="lucide:info" title="Info" />
-            <Empty color="surface" icon="lucide:inbox" title="Surface" />
+        <h2 class="text-lg font-semibold">Variants with Avatar</h2>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {#each variants as variant (variant)}
+                <div class="space-y-2">
+                    <p class="text-sm font-medium text-on-surface-variant capitalize">{variant}</p>
+                    <div class="rounded-lg bg-surface-container-high p-4">
+                        <Empty
+                            {variant}
+                            avatar={{
+                                src: 'https://i.pravatar.cc/150?u=variant-{variant}',
+                                alt: 'User'
+                            }}
+                            title="No notifications"
+                            description="You're all caught up!"
+                            size="sm"
+                        />
+                    </div>
+                </div>
+            {/each}
         </div>
     </section>
 
     <!-- Sizes -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
-        <div class="space-y-3 rounded-lg bg-surface-container-high p-4">
-            <Empty size="xs" icon="lucide:inbox" title="Extra Small" description="Compact size" />
-            <Empty size="sm" icon="lucide:inbox" title="Small" description="Small size" />
-            <Empty size="md" icon="lucide:inbox" title="Medium" description="Default medium size" />
-            <Empty size="lg" icon="lucide:inbox" title="Large" description="Large size" />
-            <Empty
-                size="xl"
-                icon="lucide:inbox"
-                title="Extra Large"
-                description="Extra large size"
-            />
-        </div>
-    </section>
-
-    <!-- With Avatar -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">With Avatar</h2>
-        <div class="grid gap-3 rounded-lg bg-surface-container-high p-4 sm:grid-cols-2">
-            <Empty
-                avatar={{ src: 'https://i.pravatar.cc/150?img=1', alt: 'User' }}
-                title="No notifications"
-                description="You're all caught up!"
-            />
-            <Empty
-                color="success"
-                avatar={{ alt: 'Success' }}
-                title="All done"
-                description="No pending tasks"
-            />
+        <div class="space-y-3">
+            {#each sizes as size (size)}
+                <div class="flex items-start gap-4">
+                    <span class="w-8 pt-4 text-sm font-medium text-on-surface-variant">{size}</span>
+                    <div class="flex-1">
+                        <Empty
+                            {size}
+                            icon="lucide:inbox"
+                            title="Empty state"
+                            description="This is the {size} size."
+                        />
+                    </div>
+                </div>
+            {/each}
         </div>
     </section>
 
     <!-- With Actions -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">With Actions</h2>
-        <div class="grid gap-3 rounded-lg bg-surface-container-high p-4 sm:grid-cols-2">
-            <Empty
-                icon="lucide:inbox"
-                title="No messages"
-                description="Start a conversation with your team."
-                actions={[{ label: 'New Message', leadingIcon: 'lucide:plus' }]}
-            />
-            <Empty
-                color="warning"
-                icon="lucide:shopping-cart"
-                title="Cart is empty"
-                description="Add some items to get started."
-                actions={[
-                    { label: 'Browse Products', color: 'warning' },
-                    { label: 'View Wishlist', variant: 'ghost' }
-                ]}
-            />
+        <div class="grid gap-4 lg:grid-cols-2">
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Single action</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty
+                        icon="lucide:inbox"
+                        title="No messages"
+                        description="Start a conversation with your team."
+                        actions={[{ label: 'New Message', leadingIcon: 'lucide:plus' }]}
+                    />
+                </div>
+            </div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Multiple actions</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty
+                        icon="lucide:shopping-cart"
+                        title="Cart is empty"
+                        description="Add some items to get started."
+                        actions={[
+                            { label: 'Browse Products' },
+                            { label: 'View Wishlist', variant: 'ghost' }
+                        ]}
+                    />
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Real World Examples -->
+    <!-- Custom Slots -->
     <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Custom Slots</h2>
+        <div class="grid gap-4 lg:grid-cols-2">
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Custom leading</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty
+                        variant="outline"
+                        title="Welcome!"
+                        description="Get started by exploring our components."
+                    >
+                        {#snippet leading()}
+                            <div
+                                class="flex size-16 items-center justify-center rounded-full bg-tertiary/10 text-tertiary"
+                            >
+                                <span class="text-3xl">🎉</span>
+                            </div>
+                        {/snippet}
+                    </Empty>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Custom header</p>
+                <div class="rounded-lg bg-surface-container-high p-4">
+                    <Empty variant="soft">
+                        {#snippet header()}
+                            <div class="flex flex-col items-center gap-3 text-center">
+                                <div
+                                    class="flex size-14 items-center justify-center rounded-full bg-primary/10"
+                                >
+                                    <span class="text-2xl text-primary">✨</span>
+                                </div>
+                                <div>
+                                    <p class="text-lg font-bold text-primary">Custom Header</p>
+                                    <p class="text-sm text-on-surface-variant">
+                                        Entirely custom header content
+                                    </p>
+                                </div>
+                            </div>
+                        {/snippet}
+                    </Empty>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Slot -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">With Footer</h2>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <Empty
+                variant="subtle"
+                icon="lucide:help-circle"
+                title="Need help?"
+                description="Check our documentation or contact support."
+            >
+                {#snippet footer()}
+                    <p class="text-xs text-on-surface-variant">
+                        Last updated: March 2026 · <Link href="/empty" class="underline"
+                            >Documentation</Link
+                        >
+                    </p>
+                {/snippet}
+            </Empty>
+        </div>
+    </section>
+
+    <!-- UI Slot Overrides -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">UI Slot Overrides</h2>
+        <div class="grid gap-4 lg:grid-cols-2">
+            <div class="rounded-lg bg-surface-container-high p-4">
+                <Empty
+                    icon="lucide:star"
+                    title="Custom Styles"
+                    description="With ui slot overrides."
+                    actions={[{ label: 'Action' }]}
+                    ui={{
+                        title: 'text-warning font-bold',
+                        description: 'italic',
+                        actions: 'mt-2'
+                    }}
+                />
+            </div>
+            <div class="rounded-lg bg-surface-container-high p-4">
+                <Empty
+                    icon="lucide:heart"
+                    title="Custom Root"
+                    description="Dashed border styling."
+                    ui={{
+                        root: 'border-2 border-dashed border-outline-variant'
+                    }}
+                />
+            </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <!-- Real World Examples -->
+    <section class="space-y-6">
         <h2 class="text-lg font-semibold">Real World Examples</h2>
-        <div class="space-y-3 rounded-lg bg-surface-container-high p-4">
-            <!-- Empty Inbox -->
+
+        <!-- Empty Inbox -->
+        <div class="space-y-3">
+            <p class="text-sm font-medium">Empty Inbox</p>
             <Empty
                 variant="soft"
-                color="primary"
                 icon="lucide:mail"
                 title="Inbox Zero!"
                 description="You've read all your messages. Great job staying on top of things!"
             />
+        </div>
 
-            <!-- No Search Results -->
+        <!-- No Search Results -->
+        <div class="space-y-3">
+            <p class="text-sm font-medium">No Search Results</p>
             <Empty
                 variant="outline"
                 icon="lucide:search-x"
@@ -156,117 +275,60 @@
                     { label: 'Browse All', variant: 'outline' }
                 ]}
             />
+        </div>
 
-            <!-- Empty Shopping Cart -->
+        <!-- Network Error -->
+        <div class="space-y-3">
+            <p class="text-sm font-medium">Network Error</p>
             <Empty
                 variant="subtle"
-                color="warning"
-                icon="lucide:shopping-cart"
-                title="Your cart is empty"
-                description="Looks like you haven't added anything yet. Start shopping to fill it up!"
-                actions={[
-                    {
-                        label: 'Start Shopping',
-                        color: 'warning',
-                        leadingIcon: 'lucide:shopping-bag'
-                    }
-                ]}
-            />
-
-            <!-- No Files -->
-            <Empty
-                variant="soft"
-                color="info"
-                icon="lucide:file-x"
-                title="No files uploaded"
-                description="Upload your first file to get started with your project."
-                actions={[
-                    { label: 'Upload File', color: 'info', leadingIcon: 'lucide:upload' },
-                    { label: 'Import from URL', variant: 'ghost' }
-                ]}
-            />
-
-            <!-- Network Error -->
-            <Empty
-                variant="outline"
-                color="error"
                 icon="lucide:wifi-off"
                 title="Connection lost"
                 description="Unable to load data. Please check your internet connection and try again."
-                actions={[{ label: 'Retry', color: 'error', leadingIcon: 'lucide:refresh-cw' }]}
+                actions={[{ label: 'Retry', leadingIcon: 'lucide:refresh-cw' }]}
             />
+        </div>
 
-            <!-- Completed Tasks -->
+        <!-- Completed Tasks -->
+        <div class="space-y-3">
+            <p class="text-sm font-medium">All Tasks Done</p>
             <Empty
                 variant="soft"
-                color="success"
                 icon="lucide:check-circle-2"
                 title="All tasks completed!"
                 description="You've finished everything on your list. Time to relax or add new tasks."
                 actions={[
-                    { label: 'Add Task', color: 'success', leadingIcon: 'lucide:plus' },
+                    { label: 'Add Task', leadingIcon: 'lucide:plus' },
                     { label: 'View Archive', variant: 'ghost' }
                 ]}
             />
         </div>
-    </section>
 
-    <!-- Variants x Colors Matrix -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Variants x Colors</h2>
-        <div class="overflow-x-auto rounded-lg bg-surface-container-high p-4">
-            <div class="grid gap-3 lg:grid-cols-2">
-                {#each variants as variant (variant)}
-                    {#each colors as color (color)}
-                        <Empty
-                            {variant}
-                            {color}
-                            icon="lucide:inbox"
-                            title={`${variant} - ${color}`}
-                            description="Example empty state"
-                            size="sm"
-                        />
-                    {/each}
-                {/each}
-            </div>
+        <!-- Empty Cart -->
+        <div class="space-y-3">
+            <p class="text-sm font-medium">Empty Shopping Cart</p>
+            <Empty
+                variant="naked"
+                icon="lucide:shopping-cart"
+                title="Your cart is empty"
+                description="Looks like you haven't added anything yet."
+                actions={[{ label: 'Start Shopping', leadingIcon: 'lucide:shopping-bag' }]}
+            />
         </div>
-    </section>
 
-    <!-- Custom Content with Slots -->
-    <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Custom Content with Slots</h2>
-        <div class="rounded-lg bg-surface-container-high p-4">
-            <Empty variant="outline" color="tertiary">
-                {#snippet leading()}
-                    <div
-                        class="flex size-16 items-center justify-center rounded-full bg-tertiary/10 text-tertiary"
-                    >
-                        <span class="text-3xl">🎉</span>
-                    </div>
-                {/snippet}
-                {#snippet titleSlot()}
-                    <h3 class="text-lg font-bold text-tertiary">Welcome to SV5UI!</h3>
-                {/snippet}
-                {#snippet descriptionSlot()}
-                    <p class="text-sm text-on-surface-variant">
-                        Get started by exploring our components and building amazing UIs.
-                    </p>
-                {/snippet}
-                {#snippet actionsSlot()}
-                    <div class="flex flex-wrap gap-2">
-                        <button
-                            class="rounded-md bg-tertiary px-4 py-2 text-sm font-medium text-on-tertiary hover:bg-tertiary/90"
-                        >
-                            Get Started
-                        </button>
-                        <button
-                            class="rounded-md px-4 py-2 text-sm font-medium text-on-surface-variant hover:bg-surface-container-highest"
-                        >
-                            Learn More
-                        </button>
-                    </div>
-                {/snippet}
-            </Empty>
+        <!-- No Files -->
+        <div class="space-y-3">
+            <p class="text-sm font-medium">No Files Uploaded</p>
+            <Empty
+                variant="soft"
+                icon="lucide:file-x"
+                title="No files uploaded"
+                description="Upload your first file to get started with your project."
+                actions={[
+                    { label: 'Upload File', leadingIcon: 'lucide:upload' },
+                    { label: 'Import from URL', variant: 'ghost' }
+                ]}
+            />
         </div>
     </section>
 </div>

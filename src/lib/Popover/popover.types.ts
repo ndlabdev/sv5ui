@@ -31,6 +31,11 @@ type ContentProps = Pick<
 
 export interface PopoverProps extends RootProps, ContentProps {
     /**
+     * Bindable reference to the content DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * Display an arrow alongside the popover.
      * Can be a boolean or arrow props for customization.
      * @default false
