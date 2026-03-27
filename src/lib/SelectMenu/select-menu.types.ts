@@ -259,7 +259,7 @@ export interface SelectMenuProps extends ContentProps {
      * Fields to search when filtering items.
      * @default ['label', 'value']
      */
-    filterFields?: (keyof SelectMenuItem)[]
+    filterFields?: string[]
 
     /**
      * Disables the default filtering. Use this for server-side / custom filtering.

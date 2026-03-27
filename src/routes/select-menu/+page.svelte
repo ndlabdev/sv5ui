@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { SelectMenu, FormField, FieldGroup, Separator } from '$lib/index.js'
+    import { SelectMenu, FormField, FieldGroup, Separator, Icon } from '$lib/index.js'
     import type { SelectMenuItem, SelectMenuItemType } from '$lib/index.js'
 
     const variants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
@@ -55,6 +55,34 @@
         value: `item-${i + 1}`,
         label: `Item ${i + 1}`
     }))
+
+    type StatusItem = SelectMenuItem & { status?: 'active' | 'idle' | 'offline' }
+    const statusItems: StatusItem[] = [
+        { value: 'alice', label: 'Alice Johnson', description: 'Frontend Engineer', status: 'active', avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' } },
+        { value: 'bob', label: 'Bob Smith', description: 'Backend Engineer', status: 'idle', avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' } },
+        { value: 'charlie', label: 'Charlie Lee', description: 'Designer', status: 'offline', avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' } },
+        { value: 'diana', label: 'Diana Prince', description: 'Product Manager', status: 'active', avatar: { src: 'https://i.pravatar.cc/120?img=9', alt: 'Diana' } }
+    ]
+
+    const statusColor: Record<string, string> = {
+        active: 'bg-success',
+        idle: 'bg-warning',
+        offline: 'bg-on-surface-variant/40'
+    }
+
+    const planItems: SelectMenuItem[] = [
+        { value: 'free', label: 'Free', description: 'Up to 3 projects' },
+        { value: 'pro', label: 'Pro', description: 'Unlimited projects' },
+        { value: 'team', label: 'Team', description: 'Collaboration features' },
+        { value: 'enterprise', label: 'Enterprise', description: 'Custom pricing' }
+    ]
+
+    const planBadge: Record<string, { label: string; class: string }> = {
+        free: { label: 'FREE', class: 'bg-surface-container text-on-surface-variant' },
+        pro: { label: 'PRO', class: 'bg-primary-container text-on-primary-container' },
+        team: { label: 'TEAM', class: 'bg-secondary-container text-on-secondary-container' },
+        enterprise: { label: 'ENT', class: 'bg-tertiary-container text-on-tertiary-container' }
+    }
 </script>
 
 <div class="space-y-8">
@@ -308,6 +336,158 @@
             <SelectMenu items={fruits} placeholder="First" />
             <SelectMenu items={fruits} placeholder="Last" />
         </FieldGroup>
+    </section>
+
+    <!-- Custom Slots -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Custom Slots</h2>
+
+        <!-- itemLeading slot -->
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-on-surface-variant">
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemLeading</code>
+                — Custom leading per item (online status dot)
+            </p>
+            <div class="w-72">
+                <SelectMenu items={statusItems} placeholder="Assign to...">
+                    {#snippet itemLeading({ item })}
+                        {@const s = item as StatusItem}
+                        <div class="relative shrink-0">
+                            <img
+                                src={s.avatar?.src}
+                                alt={s.avatar?.alt ?? ''}
+                                class="size-7 rounded-full object-cover"
+                            />
+                            <span class="absolute right-0 bottom-0 size-2 rounded-full ring-1 ring-surface-container-low {statusColor[s.status ?? 'offline']}"></span>
+                        </div>
+                    {/snippet}
+                </SelectMenu>
+            </div>
+        </div>
+
+        <!-- itemLabel slot -->
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-on-surface-variant">
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemLabel</code>
+                — Custom label with badge
+            </p>
+            <div class="w-64">
+                <SelectMenu items={planItems} placeholder="Choose a plan...">
+                    {#snippet itemLabel({ item })}
+                        <span class="flex items-center gap-2">
+                            <span class="flex-1 text-sm text-on-surface">{item.label}</span>
+                            <span class="rounded px-1.5 py-0.5 text-[10px] font-bold {planBadge[item.value]?.class}">
+                                {planBadge[item.value]?.label}
+                            </span>
+                        </span>
+                        {#if item.description}
+                            <span class="text-xs text-on-surface-variant">{item.description}</span>
+                        {/if}
+                    {/snippet}
+                </SelectMenu>
+            </div>
+        </div>
+
+        <!-- itemTrailing slot -->
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-on-surface-variant">
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemTrailing</code>
+                — Custom trailing (keyboard shortcut)
+            </p>
+            <div class="w-64">
+                <SelectMenu
+                    items={[
+                        { value: 'cut', label: 'Cut' },
+                        { value: 'copy', label: 'Copy' },
+                        { value: 'paste', label: 'Paste' },
+                        { value: 'select-all', label: 'Select All' }
+                    ]}
+                    placeholder="Choose action..."
+                >
+                    {#snippet itemTrailing({ item, selected })}
+                        {#if selected}
+                            <Icon name="lucide:check" class="size-4 text-primary" />
+                        {:else}
+                            <span class="text-xs text-on-surface-variant/60">
+                                {#if item.value === 'cut'}⌘X
+                                {:else if item.value === 'copy'}⌘C
+                                {:else if item.value === 'paste'}⌘V
+                                {:else if item.value === 'select-all'}⌘A{/if}
+                            </span>
+                        {/if}
+                    {/snippet}
+                </SelectMenu>
+            </div>
+        </div>
+
+        <!-- item slot -->
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-on-surface-variant">
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">item</code>
+                — Fully custom item rendering
+            </p>
+            <div class="w-80">
+                <SelectMenu items={statusItems} placeholder="Select a team member...">
+                    {#snippet item({ item, selected })}
+                        {@const s = item as StatusItem}
+                        <div class="flex items-center gap-3 rounded-md px-2 py-1.5 {selected ? 'bg-primary-container' : 'hover:bg-surface-container-high'} cursor-pointer transition-colors">
+                            <div class="relative shrink-0">
+                                <img src={s.avatar?.src} alt={s.avatar?.alt ?? ''} class="size-8 rounded-full object-cover" />
+                                <span class="absolute right-0 bottom-0 size-2.5 rounded-full ring-2 ring-surface-container-low {statusColor[s.status ?? 'offline']}"></span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p class="truncate text-sm font-medium {selected ? 'text-on-primary-container' : 'text-on-surface'}">{item.label}</p>
+                                <p class="truncate text-xs {selected ? 'text-on-primary-container/70' : 'text-on-surface-variant'}">{item.description}</p>
+                            </div>
+                            <span class="shrink-0 capitalize text-xs {statusColor[s.status ?? 'offline'].replace('bg-', 'text-').replace('bg-on-', 'text-on-')} {s.status === 'offline' ? 'text-on-surface-variant/40' : ''}">
+                                {s.status}
+                            </span>
+                        </div>
+                    {/snippet}
+                </SelectMenu>
+            </div>
+        </div>
+
+        <!-- empty slot -->
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-on-surface-variant">
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">empty</code>
+                — Custom empty state
+            </p>
+            <div class="w-64">
+                <SelectMenu items={fruits} placeholder="Search (try 'xyz')...">
+                    {#snippet empty({ searchTerm })}
+                        <div class="flex flex-col items-center gap-1 py-6 text-center">
+                            <Icon name="lucide:search-x" class="size-8 text-on-surface-variant/40" />
+                            <p class="text-sm font-medium text-on-surface">No match</p>
+                            <p class="text-xs text-on-surface-variant">
+                                Nothing found for <span class="font-mono text-primary">"{searchTerm}"</span>
+                            </p>
+                        </div>
+                    {/snippet}
+                </SelectMenu>
+            </div>
+        </div>
+
+        <!-- leadingSlot + trailingSlot -->
+        <div class="space-y-2">
+            <p class="text-sm font-medium text-on-surface-variant">
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">leadingSlot</code>
+                /
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">trailingSlot</code>
+                — Custom trigger leading & trailing
+            </p>
+            <div class="w-72">
+                <SelectMenu items={fruits} placeholder="Pick a fruit...">
+                    {#snippet leadingSlot()}
+                        <span class="text-base">🍎</span>
+                    {/snippet}
+                    {#snippet trailingSlot()}
+                        <Icon name="lucide:chevrons-up-down" class="size-4 text-on-surface-variant/60" />
+                    {/snippet}
+                </SelectMenu>
+            </div>
+        </div>
     </section>
 
     <Separator />

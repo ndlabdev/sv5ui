@@ -15,6 +15,7 @@
     } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
+    import Input from '../Input/Input.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import type { FormFieldProps } from '../FormField/form-field.types.js'
 
@@ -45,13 +46,13 @@
         trailingIcon = icons.chevronDown,
         selectedIcon = icons.check,
         avatar,
-        filterFields = ['label', 'value'],
+        filterFields = ['label', 'value'] as string[],
         ignoreFilter = false,
         emptyText = 'No results found.',
         transition = config.defaultVariants.transition ?? true,
         portal = true,
         side = config.defaultVariants.side ?? 'bottom',
-        sideOffset = 4,
+        sideOffset = 8,
         align = 'start',
         alignOffset = 0,
         avoidCollisions = true,
@@ -137,7 +138,7 @@
                   if ('type' in item) return true
                   const query = searchTerm.toLowerCase()
                   return filterFields.some((field) => {
-                      const val = item[field]
+                      const val = (item as unknown as Record<string, unknown>)[field]
                       return typeof val === 'string' && val.toLowerCase().includes(query)
                   })
               })
@@ -261,6 +262,14 @@
     function isLabel(item: SelectMenuItemType): item is { type: 'label'; label: string } {
         return 'type' in item && item.type === 'label'
     }
+
+    // ---- Event handlers (Nuxt UI v4 pattern) ----
+    function onUpdateOpen(val: boolean) {
+        if (!val) {
+            searchTerm = ''
+        }
+        onOpenChange?.(val)
+    }
 </script>
 
 {#snippet renderItem(item: SelectMenuItem, index: number)}
@@ -298,7 +307,7 @@
     </Combobox.Item>
 {/snippet}
 
-{#snippet selectMenuContentEl()}
+{#snippet contentEl()}
     <Combobox.Content
         {side}
         {sideOffset}
@@ -312,9 +321,13 @@
         {forceMount}
         class={contentClass}
     >
-        <Combobox.Input
+        <Input
+            autofocus
             placeholder={searchPlaceholder}
-            oninput={(e) => (searchTerm = e.currentTarget.value)}
+            value={searchTerm}
+            oninput={(e) => (searchTerm = (e.currentTarget as HTMLInputElement).value)}
+            variant="none"
+            size={resolvedSize}
             class={inputClass}
         />
 
@@ -322,14 +335,12 @@
             {@render contentSlot({ open, searchTerm })}
         {:else}
             <div class={viewportClass}>
-                {#each filteredItems as selectItem, index (index)}
+                {#each filteredItems as selectItem, index ('value' in selectItem ? selectItem.value : `${selectItem.type}-${index}`)}
                     {#if isSeparator(selectItem)}
                         <div role="separator" class={separatorClass}></div>
                     {:else if isLabel(selectItem)}
                         <Combobox.Group>
-                            <Combobox.GroupHeading class={groupLabelClass}
-                                >{selectItem.label}</Combobox.GroupHeading
-                            >
+                            <Combobox.GroupHeading class={groupLabelClass}>{selectItem.label}</Combobox.GroupHeading>
                         </Combobox.Group>
                     {:else if isSelectItem(selectItem)}
                         {#if itemSlot}
@@ -359,10 +370,7 @@
 <Combobox.Root
     type="single"
     bind:open
-    onOpenChange={(val) => {
-        if (!val) searchTerm = ''
-        onOpenChange?.(val)
-    }}
+    onOpenChange={onUpdateOpen}
     {disabled}
     {required}
     {value}
@@ -387,6 +395,8 @@
                 />
             </span>
         {/if}
+
+        <Combobox.Input class="absolute inset-0 opacity-0 pointer-events-none" tabindex={-1} aria-hidden="true" />
 
         <Combobox.Trigger
             id={resolvedId}
@@ -414,9 +424,9 @@
 
     {#if portal}
         <Combobox.Portal>
-            {@render selectMenuContentEl()}
+            {@render contentEl()}
         </Combobox.Portal>
     {:else}
-        {@render selectMenuContentEl()}
+        {@render contentEl()}
     {/if}
 </Combobox.Root>
