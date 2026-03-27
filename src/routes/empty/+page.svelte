@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Empty, Separator } from '$lib/index.js'
+    import Link from '$lib/Link/Link.svelte'
 
     const variants = ['solid', 'outline', 'soft', 'subtle', 'naked'] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
@@ -205,8 +206,8 @@
             >
                 {#snippet footer()}
                     <p class="text-xs text-on-surface-variant">
-                        Last updated: March 2026 · <a href="/empty" class="underline"
-                            >Documentation</a
+                        Last updated: March 2026 · <Link href="/empty" class="underline"
+                            >Documentation</Link
                         >
                     </p>
                 {/snippet}

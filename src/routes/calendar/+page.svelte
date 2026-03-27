@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Calendar, Button, Popover, Icon, Separator } from '$lib/index.js'
+    import { Calendar, Button, Popover, Icon } from '$lib/index.js'
     import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
     import type { DateValue } from '@internationalized/date'
     import type { DateRange } from 'bits-ui'

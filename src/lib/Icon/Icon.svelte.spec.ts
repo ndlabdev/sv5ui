@@ -83,7 +83,6 @@ describe('Icon', () => {
 
         it('should not produce trailing spaces when class is undefined', async () => {
             const { container } = render(Icon, { name: 'lucide:home' })
-            const svg = await getSvg(container)
             const classAttr = container.querySelector('svg')!.getAttribute('class') ?? ''
             expect(classAttr).not.toMatch(/\s$/)
         })
