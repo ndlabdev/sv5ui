@@ -85,7 +85,6 @@ export const activeVariantColorClasses: Record<string, Record<string, string>> =
     }
 }
 
-export type PaginationActiveVariant = Exclude<keyof typeof activeVariantColorClasses, 'default'>
 
 export const paginationVariants = tv({
     slots: {

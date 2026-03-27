@@ -87,14 +87,6 @@
         if (!isFirstPage) handlePageChange(1)
     }
 
-    function goToPrev() {
-        if (!isFirstPage) handlePageChange(page! - 1)
-    }
-
-    function goToNext() {
-        if (!isLastPage) handlePageChange(page! + 1)
-    }
-
     function goToLast() {
         if (!isLastPage) handlePageChange(totalPages)
     }
@@ -141,32 +133,32 @@
             {/if}
 
             {#if showControls}
-                {#if prevSlot}
-                    <ButtonComponent
-                        {variant}
-                        {color}
-                        square
-                        {size}
-                        class={classes.prev}
-                        disabled={prevDisabled}
-                        aria-label="Previous page"
-                        onclick={goToPrev}
-                    >
-                        {@render prevSlot({ page: page!, disabled: prevDisabled })}
-                    </ButtonComponent>
-                {:else}
-                    <ButtonComponent
-                        {variant}
-                        {color}
-                        square
-                        {size}
-                        icon={prevIcon}
-                        class={classes.prev}
-                        disabled={prevDisabled}
-                        aria-label="Previous page"
-                        onclick={goToPrev}
-                    />
-                {/if}
+                <Pagination.PrevButton disabled={prevDisabled}>
+                    {#snippet child({ props })}
+                        {#if prevSlot}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                class={classes.prev}
+                            >
+                                {@render prevSlot({ page: page!, disabled: prevDisabled })}
+                            </ButtonComponent>
+                        {:else}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                icon={prevIcon}
+                                class={classes.prev}
+                            />
+                        {/if}
+                    {/snippet}
+                </Pagination.PrevButton>
             {/if}
 
             {#each pages as pageItem (pageItem.key)}
@@ -193,32 +185,32 @@
             {/each}
 
             {#if showControls}
-                {#if nextSlot}
-                    <ButtonComponent
-                        {variant}
-                        {color}
-                        square
-                        {size}
-                        class={classes.next}
-                        disabled={nextDisabled}
-                        aria-label="Next page"
-                        onclick={goToNext}
-                    >
-                        {@render nextSlot({ page: page!, disabled: nextDisabled })}
-                    </ButtonComponent>
-                {:else}
-                    <ButtonComponent
-                        {variant}
-                        {color}
-                        square
-                        {size}
-                        icon={nextIcon}
-                        class={classes.next}
-                        disabled={nextDisabled}
-                        aria-label="Next page"
-                        onclick={goToNext}
-                    />
-                {/if}
+                <Pagination.NextButton disabled={nextDisabled}>
+                    {#snippet child({ props })}
+                        {#if nextSlot}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                class={classes.next}
+                            >
+                                {@render nextSlot({ page: page!, disabled: nextDisabled })}
+                            </ButtonComponent>
+                        {:else}
+                            <ButtonComponent
+                                {...props}
+                                {variant}
+                                {color}
+                                square
+                                {size}
+                                icon={nextIcon}
+                                class={classes.next}
+                            />
+                        {/if}
+                    {/snippet}
+                </Pagination.NextButton>
             {/if}
 
             {#if showEdges}

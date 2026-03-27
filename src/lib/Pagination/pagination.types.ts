@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { PaginationSlots, PaginationVariantProps, PaginationActiveVariant } from './pagination.variants.js'
+import type { PaginationSlots, PaginationVariantProps } from './pagination.variants.js'
 import type { ButtonProps } from '../Button/button.types.js'
 
 // ============================================================================
@@ -155,7 +155,7 @@ export interface PaginationProps {
      * Variant style applied to the currently selected page button.
      * @default 'solid'
      */
-    activeVariant?: PaginationActiveVariant
+    activeVariant?: NonNullable<ButtonProps['variant']>
 
     // -------------------------------------------------------------------------
     // Icons
