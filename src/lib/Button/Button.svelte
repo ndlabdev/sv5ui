@@ -162,10 +162,12 @@
         <Avatar {...avatar} size={classes.leadingAvatarSize} class={classes.leadingAvatar} />
     {/if}
 
-    {#if label}
-        <span class={classes.label}>{label}</span>
-    {:else if children}
-        <span class={classes.label}>{@render children()}</span>
+    {#if !isIconOnly}
+        {#if label}
+            <span class={classes.label}>{label}</span>
+        {:else if children}
+            <span class={classes.label}>{@render children()}</span>
+        {/if}
     {/if}
 
     {#if trailingSlot}
