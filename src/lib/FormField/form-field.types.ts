@@ -5,6 +5,11 @@ import type { FormFieldSlots, FormFieldVariantProps } from './form-field.variant
 
 export type FormFieldProps = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * The name of the form field, used for matching form errors.
      */
     name?: string
