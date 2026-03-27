@@ -52,7 +52,9 @@
     const hasTitle = $derived(!!title || !!titleSlot)
     const hasDescription = $derived(!!description || !!descriptionSlot)
     const hasHeading = $derived(hasTitle || hasDescription)
-    const hasHeader = $derived(!!headerSlot || hasHeading || !!actionsSlot || showClose || !!closeSlot)
+    const hasHeader = $derived(
+        !!headerSlot || hasHeading || !!actionsSlot || showClose || !!closeSlot
+    )
 
     const variantSlots = $derived(
         slideoverVariants({ transition, side, inset, overlay: showOverlay })

@@ -32,100 +32,100 @@ export type RadioGroupProps = Pick<
     'disabled' | 'name' | 'required' | 'loop' | 'readonly'
 > &
     Omit<HTMLAttributes<HTMLElement>, 'class'> & {
-    /**
-     * Bindable reference to the root DOM element.
-     */
-    ref?: HTMLElement | null
+        /**
+         * Bindable reference to the root DOM element.
+         */
+        ref?: HTMLElement | null
 
-    /**
-     * The selected value. Supports two-way binding with `bind:value`.
-     */
-    value?: string
+        /**
+         * The selected value. Supports two-way binding with `bind:value`.
+         */
+        value?: string
 
-    /**
-     * Callback when the value changes.
-     */
-    onValueChange?: (value: string) => void
+        /**
+         * Callback when the value changes.
+         */
+        onValueChange?: (value: string) => void
 
-    /**
-     * The list of radio items to render.
-     */
-    items?: RadioGroupItem[]
+        /**
+         * The list of radio items to render.
+         */
+        items?: RadioGroupItem[]
 
-    /**
-     * Sets the color scheme for the radio indicators.
-     * @default 'primary'
-     */
-    color?: NonNullable<RadioGroupVariantProps['color']>
+        /**
+         * Sets the color scheme for the radio indicators.
+         * @default 'primary'
+         */
+        color?: NonNullable<RadioGroupVariantProps['color']>
 
-    /**
-     * Controls the dimensions of the radio group.
-     * @default 'md'
-     */
-    size?: NonNullable<RadioGroupVariantProps['size']>
+        /**
+         * Controls the dimensions of the radio group.
+         * @default 'md'
+         */
+        size?: NonNullable<RadioGroupVariantProps['size']>
 
-    /**
-     * Controls the visual style of each radio item.
-     * @default 'list'
-     */
-    variant?: NonNullable<RadioGroupVariantProps['variant']>
+        /**
+         * Controls the visual style of each radio item.
+         * @default 'list'
+         */
+        variant?: NonNullable<RadioGroupVariantProps['variant']>
 
-    /**
-     * Controls the position of the radio indicator.
-     * @default 'start'
-     */
-    indicator?: NonNullable<RadioGroupVariantProps['indicator']>
+        /**
+         * Controls the position of the radio indicator.
+         * @default 'start'
+         */
+        indicator?: NonNullable<RadioGroupVariantProps['indicator']>
 
-    /**
-     * Controls the layout direction.
-     * @default 'vertical'
-     */
-    orientation?: NonNullable<RadioGroupVariantProps['orientation']>
+        /**
+         * Controls the layout direction.
+         * @default 'vertical'
+         */
+        orientation?: NonNullable<RadioGroupVariantProps['orientation']>
 
-    /**
-     * Legend text displayed above the radio group.
-     */
-    legend?: string
+        /**
+         * Legend text displayed above the radio group.
+         */
+        legend?: string
 
-    /**
-     * Renders a loading spinner and disables interaction.
-     * @default false
-     */
-    loading?: boolean
+        /**
+         * Renders a loading spinner and disables interaction.
+         * @default false
+         */
+        loading?: boolean
 
-    /**
-     * Icon displayed as the loading indicator.
-     * @default Uses `icons.loading` from app config
-     */
-    loadingIcon?: string
+        /**
+         * Icon displayed as the loading indicator.
+         * @default Uses `icons.loading` from app config
+         */
+        loadingIcon?: string
 
-    /**
-     * The HTML id attribute for the radio group.
-     */
-    id?: string
+        /**
+         * The HTML id attribute for the radio group.
+         */
+        id?: string
 
-    /**
-     * Custom snippet for the legend.
-     */
-    legendSlot?: Snippet<[{ legend?: string }]>
+        /**
+         * Custom snippet for the legend.
+         */
+        legendSlot?: Snippet<[{ legend?: string }]>
 
-    /**
-     * Custom snippet for each item's label.
-     */
-    labelSlot?: Snippet<[{ item: RadioGroupItem }]>
+        /**
+         * Custom snippet for each item's label.
+         */
+        labelSlot?: Snippet<[{ item: RadioGroupItem }]>
 
-    /**
-     * Custom snippet for each item's description.
-     */
-    descriptionSlot?: Snippet<[{ item: RadioGroupItem }]>
+        /**
+         * Custom snippet for each item's description.
+         */
+        descriptionSlot?: Snippet<[{ item: RadioGroupItem }]>
 
-    /**
-     * Additional CSS classes for the root element.
-     */
-    class?: ClassNameValue
+        /**
+         * Additional CSS classes for the root element.
+         */
+        class?: ClassNameValue
 
-    /**
-     * Override styles for specific radio group slots.
-     */
-    ui?: Partial<Record<RadioGroupSlots, ClassNameValue>>
-}
+        /**
+         * Override styles for specific radio group slots.
+         */
+        ui?: Partial<Record<RadioGroupSlots, ClassNameValue>>
+    }

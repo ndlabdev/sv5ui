@@ -151,14 +151,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Keyboard Shortcuts</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
-            {#each [
-                { label: 'Copy', keys: ['meta', 'C'] },
-                { label: 'Paste', keys: ['meta', 'V'] },
-                { label: 'Save', keys: ['meta', 'S'] },
-                { label: 'Search', keys: ['meta', 'K'] },
-                { label: 'Undo', keys: ['meta', 'Z'] },
-                { label: 'Redo', keys: ['meta', 'shift', 'Z'] }
-            ] as shortcut (shortcut.label)}
+            {#each [{ label: 'Copy', keys: ['meta', 'C'] }, { label: 'Paste', keys: ['meta', 'V'] }, { label: 'Save', keys: ['meta', 'S'] }, { label: 'Search', keys: ['meta', 'K'] }, { label: 'Undo', keys: ['meta', 'Z'] }, { label: 'Redo', keys: ['meta', 'shift', 'Z'] }] as shortcut (shortcut.label)}
                 <div class="flex items-center justify-between">
                     <span class="text-sm">{shortcut.label}</span>
                     <div class="flex items-center gap-1">
@@ -206,11 +199,7 @@
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Menu Item with Shortcut</p>
                 <div class="max-w-xs rounded-lg border border-outline-variant bg-surface-container">
-                    {#each [
-                        { label: 'New File', keys: ['meta', 'N'] },
-                        { label: 'Open File', keys: ['meta', 'O'] },
-                        { label: 'Save', keys: ['meta', 'S'] }
-                    ] as item (item.label)}
+                    {#each [{ label: 'New File', keys: ['meta', 'N'] }, { label: 'Open File', keys: ['meta', 'O'] }, { label: 'Save', keys: ['meta', 'S'] }] as item (item.label)}
                         <div
                             class="flex items-center justify-between px-3 py-2 hover:bg-surface-container-high"
                         >
@@ -297,9 +286,7 @@
     <!-- useKbd: Reactive Key State -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">useKbd — Reactive Key State</h2>
-        <p class="text-sm text-on-surface-variant">
-            Hold any key to see it tracked in real-time.
-        </p>
+        <p class="text-sm text-on-surface-variant">Hold any key to see it tracked in real-time.</p>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
             <div class="flex flex-wrap gap-2">
                 {#each ['shift', 'ctrl', 'alt', 'meta'] as key (key)}

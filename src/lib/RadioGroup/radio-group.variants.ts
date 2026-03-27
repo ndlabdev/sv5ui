@@ -176,14 +176,46 @@ export const radioGroupVariants = tv({
         { variant: 'card', size: 'lg', class: { item: 'p-3.5' } },
         { variant: 'card', size: 'xl', class: { item: 'p-4' } },
         // ========== CARD × COLOR (checked border) ==========
-        { variant: 'card', color: 'primary', class: { item: 'has-[[data-state=checked]]:border-primary' } },
-        { variant: 'card', color: 'secondary', class: { item: 'has-[[data-state=checked]]:border-secondary' } },
-        { variant: 'card', color: 'tertiary', class: { item: 'has-[[data-state=checked]]:border-tertiary' } },
-        { variant: 'card', color: 'success', class: { item: 'has-[[data-state=checked]]:border-success' } },
-        { variant: 'card', color: 'warning', class: { item: 'has-[[data-state=checked]]:border-warning' } },
-        { variant: 'card', color: 'error', class: { item: 'has-[[data-state=checked]]:border-error' } },
-        { variant: 'card', color: 'info', class: { item: 'has-[[data-state=checked]]:border-info' } },
-        { variant: 'card', color: 'surface', class: { item: 'has-[[data-state=checked]]:border-on-surface' } },
+        {
+            variant: 'card',
+            color: 'primary',
+            class: { item: 'has-[[data-state=checked]]:border-primary' }
+        },
+        {
+            variant: 'card',
+            color: 'secondary',
+            class: { item: 'has-[[data-state=checked]]:border-secondary' }
+        },
+        {
+            variant: 'card',
+            color: 'tertiary',
+            class: { item: 'has-[[data-state=checked]]:border-tertiary' }
+        },
+        {
+            variant: 'card',
+            color: 'success',
+            class: { item: 'has-[[data-state=checked]]:border-success' }
+        },
+        {
+            variant: 'card',
+            color: 'warning',
+            class: { item: 'has-[[data-state=checked]]:border-warning' }
+        },
+        {
+            variant: 'card',
+            color: 'error',
+            class: { item: 'has-[[data-state=checked]]:border-error' }
+        },
+        {
+            variant: 'card',
+            color: 'info',
+            class: { item: 'has-[[data-state=checked]]:border-info' }
+        },
+        {
+            variant: 'card',
+            color: 'surface',
+            class: { item: 'has-[[data-state=checked]]:border-on-surface' }
+        },
         // ========== CARD × DISABLED ==========
         { variant: 'card', disabled: true, class: { item: 'cursor-not-allowed' } }
     ],

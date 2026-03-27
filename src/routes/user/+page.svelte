@@ -29,20 +29,13 @@
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Avatar with initials</p>
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <User
-                        name="Alex Chen"
-                        description="Product Manager"
-                        avatar={{ alt: 'AC' }}
-                    />
+                    <User name="Alex Chen" description="Product Manager" avatar={{ alt: 'AC' }} />
                 </div>
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Name only</p>
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <User
-                        name="Jane Smith"
-                        avatar={{ src: 'https://i.pravatar.cc/128?u=jane' }}
-                    />
+                    <User name="Jane Smith" avatar={{ src: 'https://i.pravatar.cc/128?u=jane' }} />
                 </div>
             </div>
         </div>
@@ -199,9 +192,7 @@
                         {/snippet}
                         {#snippet descriptionSlot()}
                             <div class="flex items-center gap-1">
-                                <span
-                                    class="inline-block size-2 rounded-full bg-success"
-                                ></span>
+                                <span class="inline-block size-2 rounded-full bg-success"></span>
                                 <span class="text-xs text-on-surface-variant">Active now</span>
                             </div>
                         {/snippet}
@@ -288,9 +279,7 @@
         <!-- Comment Header -->
         <div class="space-y-3">
             <p class="text-sm font-medium">Comment Header</p>
-            <div
-                class="max-w-md rounded-lg border border-outline-variant bg-surface-container p-4"
-            >
+            <div class="max-w-md rounded-lg border border-outline-variant bg-surface-container p-4">
                 <User
                     name="Sarah Chen"
                     description="2 hours ago"
@@ -307,9 +296,7 @@
         <!-- Profile Card -->
         <div class="space-y-3">
             <p class="text-sm font-medium">Profile Card</p>
-            <div
-                class="max-w-xs rounded-lg border border-outline-variant bg-surface-container p-6"
-            >
+            <div class="max-w-xs rounded-lg border border-outline-variant bg-surface-container p-6">
                 <User
                     name="Emily Parker"
                     description="Senior Developer at Acme Corp"
@@ -325,10 +312,8 @@
         <div class="space-y-3">
             <p class="text-sm font-medium">Team Members</p>
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {#each ([{ name: 'Mike Ross', role: 'Frontend', u: 'mike', color: 'primary' as const }, { name: 'Rachel Zane', role: 'Backend', u: 'rachel', color: 'secondary' as const }, { name: 'Harvey Specter', role: 'Lead', u: 'harvey', color: 'tertiary' as const }]) as member (member.u)}
-                    <div
-                        class="rounded-lg border border-outline-variant bg-surface-container p-4"
-                    >
+                {#each [{ name: 'Mike Ross', role: 'Frontend', u: 'mike', color: 'primary' as const }, { name: 'Rachel Zane', role: 'Backend', u: 'rachel', color: 'secondary' as const }, { name: 'Harvey Specter', role: 'Lead', u: 'harvey', color: 'tertiary' as const }] as member (member.u)}
+                    <div class="rounded-lg border border-outline-variant bg-surface-container p-4">
                         <User
                             name={member.name}
                             description={member.role}

@@ -39,13 +39,10 @@
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">side</code>
             prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg bg-surface-container-high p-8">
-            {#each [
-                { side: 'top' as const, label: 'Top' },
-                { side: 'right' as const, label: 'Right' },
-                { side: 'bottom' as const, label: 'Bottom' },
-                { side: 'left' as const, label: 'Left' }
-            ] as item (item.side)}
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg bg-surface-container-high p-8"
+        >
+            {#each [{ side: 'top' as const, label: 'Top' }, { side: 'right' as const, label: 'Right' }, { side: 'bottom' as const, label: 'Bottom' }, { side: 'left' as const, label: 'Left' }] as item (item.side)}
                 <Popover side={item.side}>
                     <Button variant="soft">{item.label}</Button>
                     {#snippet content()}
@@ -66,12 +63,10 @@
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">align</code>
             prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg bg-surface-container-high p-8">
-            {#each [
-                { align: 'start' as const, label: 'Start' },
-                { align: 'center' as const, label: 'Center' },
-                { align: 'end' as const, label: 'End' }
-            ] as item (item.align)}
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg bg-surface-container-high p-8"
+        >
+            {#each [{ align: 'start' as const, label: 'Start' }, { align: 'center' as const, label: 'Center' }, { align: 'end' as const, label: 'End' }] as item (item.align)}
                 <Popover side="bottom" align={item.align}>
                     <Button variant="outline">{item.label}</Button>
                     {#snippet content()}
@@ -88,13 +83,10 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Arrow</h2>
         <div class="grid gap-4 sm:grid-cols-2">
-            {#each [
-                { side: 'top' as const, label: 'Top' },
-                { side: 'right' as const, label: 'Right' },
-                { side: 'bottom' as const, label: 'Bottom' },
-                { side: 'left' as const, label: 'Left' }
-            ] as item (item.side)}
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+            {#each [{ side: 'top' as const, label: 'Top' }, { side: 'right' as const, label: 'Right' }, { side: 'bottom' as const, label: 'Bottom' }, { side: 'left' as const, label: 'Left' }] as item (item.side)}
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover arrow side={item.side}>
                         <Button>{item.label}</Button>
                         {#snippet content()}
@@ -125,7 +117,13 @@
                     <div class="w-72 p-4">
                         <div class="flex items-center justify-between">
                             <p class="font-medium">Confirm Action</p>
-                            <Button icon="lucide:x" square variant="ghost" size="xs" onclick={close} />
+                            <Button
+                                icon="lucide:x"
+                                square
+                                variant="ghost"
+                                size="xs"
+                                onclick={close}
+                            />
                         </div>
                         <p class="mt-2 text-sm text-on-surface-variant">
                             Are you sure you want to proceed with this action?
@@ -214,7 +212,9 @@
         <div class="grid gap-4 sm:grid-cols-2">
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Custom rounding</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover ui={{ content: 'rounded-xl shadow-2xl' }}>
                         <Button variant="outline">Rounded</Button>
                         {#snippet content()}
@@ -227,7 +227,9 @@
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">No ring border</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover ui={{ content: 'ring-0 shadow-xl' }}>
                         <Button variant="outline">No Ring</Button>
                         {#snippet content()}
@@ -251,7 +253,9 @@
             <!-- User Profile Card -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">User Profile Card</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover>
                         <Button variant="soft" icon="lucide:user">Profile</Button>
                         {#snippet content()}
@@ -265,19 +269,36 @@
                                         </div>
                                         <div>
                                             <p class="font-medium">John Doe</p>
-                                            <p class="text-sm text-on-surface-variant">john@example.com</p>
+                                            <p class="text-sm text-on-surface-variant">
+                                                john@example.com
+                                            </p>
                                         </div>
                                     </div>
                                     <Separator class="my-3" />
                                     <div class="flex gap-4 text-sm text-on-surface-variant">
-                                        <span><strong class="text-on-surface">128</strong> posts</span>
-                                        <span><strong class="text-on-surface">1.2k</strong> followers</span>
+                                        <span
+                                            ><strong class="text-on-surface">128</strong> posts</span
+                                        >
+                                        <span
+                                            ><strong class="text-on-surface">1.2k</strong> followers</span
+                                        >
                                     </div>
                                 </div>
                                 <Separator />
                                 <div class="p-2">
-                                    <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:settings">Settings</Button>
-                                    <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:log-out" color="error">Sign out</Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        class="w-full justify-start"
+                                        icon="lucide:settings">Settings</Button
+                                    >
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        class="w-full justify-start"
+                                        icon="lucide:log-out"
+                                        color="error">Sign out</Button
+                                    >
                                 </div>
                             </div>
                         {/snippet}
@@ -288,15 +309,41 @@
             <!-- Share Menu -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">Share Menu</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover>
                         <Button variant="outline" icon="lucide:share-2">Share</Button>
                         {#snippet content({ close })}
                             <div class="w-56 p-2">
-                                <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:link" onclick={close}>Copy link</Button>
-                                <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:twitter" onclick={close}>Twitter</Button>
-                                <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:facebook" onclick={close}>Facebook</Button>
-                                <Button variant="ghost" size="sm" class="w-full justify-start" icon="lucide:mail" onclick={close}>Email</Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    class="w-full justify-start"
+                                    icon="lucide:link"
+                                    onclick={close}>Copy link</Button
+                                >
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    class="w-full justify-start"
+                                    icon="lucide:twitter"
+                                    onclick={close}>Twitter</Button
+                                >
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    class="w-full justify-start"
+                                    icon="lucide:facebook"
+                                    onclick={close}>Facebook</Button
+                                >
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    class="w-full justify-start"
+                                    icon="lucide:mail"
+                                    onclick={close}>Email</Button
+                                >
                             </div>
                         {/snippet}
                     </Popover>
@@ -306,7 +353,9 @@
             <!-- Notification Panel -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">Notification Panel</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover>
                         <Button variant="outline" icon="lucide:bell">Notifications</Button>
                         {#snippet content()}
@@ -317,21 +366,29 @@
                                 </div>
                                 <div class="divide-y divide-outline-variant">
                                     <div class="flex gap-3 p-4">
-                                        <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                        <div
+                                            class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+                                        >
                                             <Icon name="lucide:message-circle" size="16" />
                                         </div>
                                         <div>
                                             <p class="text-sm">New comment on your post</p>
-                                            <p class="text-xs text-on-surface-variant">2 minutes ago</p>
+                                            <p class="text-xs text-on-surface-variant">
+                                                2 minutes ago
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="flex gap-3 p-4">
-                                        <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-success/10 text-success">
+                                        <div
+                                            class="flex size-8 shrink-0 items-center justify-center rounded-full bg-success/10 text-success"
+                                        >
                                             <Icon name="lucide:user-plus" size="16" />
                                         </div>
                                         <div>
                                             <p class="text-sm">New follower: Jane Smith</p>
-                                            <p class="text-xs text-on-surface-variant">1 hour ago</p>
+                                            <p class="text-xs text-on-surface-variant">
+                                                1 hour ago
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -344,7 +401,9 @@
             <!-- Filter Panel -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">Filter Panel</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Popover>
                         <Button variant="outline" icon="lucide:filter">Filters</Button>
                         {#snippet content({ close })}

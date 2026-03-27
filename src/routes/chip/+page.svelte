@@ -196,12 +196,7 @@
         </p>
         <div class="flex items-center gap-6 rounded-lg bg-surface-container-high p-4">
             <button onclick={cycleStatus} class="cursor-pointer">
-                <Chip
-                    color={statuses[statusIndex].color}
-                    position="bottom-right"
-                    inset
-                    size="sm"
-                >
+                <Chip color={statuses[statusIndex].color} position="bottom-right" inset size="sm">
                     <Avatar src="https://i.pravatar.cc/150?img=5" alt="User" size="lg" />
                 </Chip>
             </button>

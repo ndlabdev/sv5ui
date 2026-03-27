@@ -3,7 +3,16 @@
     import type { SelectItem, SelectItemType } from '$lib/index.js'
 
     const variants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
-    const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
+    const colors = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     let bindValue = $state('')
@@ -24,15 +33,31 @@
     ]
 
     const avatarItems: SelectItem[] = [
-        { value: 'alice', label: 'Alice', avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' } },
-        { value: 'bob', label: 'Bob', avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' } },
-        { value: 'charlie', label: 'Charlie', avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' } }
+        {
+            value: 'alice',
+            label: 'Alice',
+            avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' }
+        },
+        {
+            value: 'bob',
+            label: 'Bob',
+            avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' }
+        },
+        {
+            value: 'charlie',
+            label: 'Charlie',
+            avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' }
+        }
     ]
 
     const descriptionItems: SelectItem[] = [
         { value: 'standard', label: 'Standard', description: 'Free shipping, 5-7 business days' },
         { value: 'express', label: 'Express', description: 'Paid shipping, 2-3 business days' },
-        { value: 'overnight', label: 'Overnight', description: 'Premium shipping, next business day' }
+        {
+            value: 'overnight',
+            label: 'Overnight',
+            description: 'Premium shipping, next business day'
+        }
     ]
 
     const groupedItems: SelectItemType[] = [
@@ -59,7 +84,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Basic Usage</h2>
         <p class="text-sm text-on-surface-variant">
-            A dropdown select component with variants, colors, icons, avatars, and integration with FormField and FieldGroup.
+            A dropdown select component with variants, colors, icons, avatars, and integration with
+            FormField and FieldGroup.
         </p>
         <div class="max-w-sm">
             <Select items={fruits} placeholder="Pick a fruit..." />
@@ -70,10 +96,17 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Two-way Binding</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">bind:value</code> for reactive two-way data binding.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >bind:value</code
+            > for reactive two-way data binding.
         </p>
         <div class="max-w-sm space-y-3">
-            <Select bind:value={bindValue} items={fruits} placeholder="Select a fruit..." leadingIcon="lucide:apple" />
+            <Select
+                bind:value={bindValue}
+                items={fruits}
+                placeholder="Select a fruit..."
+                leadingIcon="lucide:apple"
+            />
             <p class="text-sm text-on-surface-variant">
                 Value: <span class="font-mono text-on-surface">{bindValue || '(empty)'}</span>
             </p>
@@ -84,23 +117,34 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Variants &times; Colors</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">variant</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control appearance.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >variant</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control
+            appearance.
         </p>
         <div class="overflow-x-auto">
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant"></th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant"
+                        ></th>
                         {#each colors as color (color)}
-                            <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant capitalize">{color}</th>
+                            <th
+                                class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant capitalize"
+                                >{color}</th
+                            >
                         {/each}
                     </tr>
                 </thead>
                 <tbody>
                     {#each variants as variant (variant)}
                         <tr>
-                            <td class="px-3 py-2 text-xs font-medium text-on-surface-variant capitalize">{variant}</td>
+                            <td
+                                class="px-3 py-2 text-xs font-medium text-on-surface-variant capitalize"
+                                >{variant}</td
+                            >
                             {#each colors as color (color)}
                                 <td class="px-3 py-2">
                                     <Select {variant} {color} items={fruits} placeholder={color} />
@@ -117,7 +161,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Size</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to control the dimensions and text size.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to
+            control the dimensions and text size.
         </p>
         <div class="flex flex-wrap items-end gap-4">
             {#each sizes as size (size)}
@@ -132,7 +177,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Icons</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">leadingIcon</code> to add an icon before the value.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >leadingIcon</code
+            > to add an icon before the value.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -157,7 +204,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Avatar</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">avatar</code> on the trigger, or provide avatars on individual items.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >avatar</code
+            > on the trigger, or provide avatars on individual items.
         </p>
         <div class="w-64">
             <Select
@@ -171,7 +220,9 @@
     <!-- Item Descriptions -->
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Item Descriptions</h2>
-        <p class="text-sm text-on-surface-variant">Items can include descriptions shown below the label.</p>
+        <p class="text-sm text-on-surface-variant">
+            Items can include descriptions shown below the label.
+        </p>
         <div class="w-80">
             <Select items={descriptionItems} placeholder="Choose shipping..." />
         </div>
@@ -181,8 +232,13 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Grouped Items</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">type: 'label'</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">type: 'separator'</code> to organize items into groups.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type: 'label'</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type: 'separator'</code
+            > to organize items into groups.
         </p>
         <div class="w-64">
             <Select items={groupedItems} placeholder="Pick an item..." />
@@ -202,7 +258,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Loading</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">loading</code> to show a loading spinner.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >loading</code
+            > to show a loading spinner.
         </p>
         <div class="w-64">
             <Select loading items={fruits} placeholder="Loading..." />
@@ -213,7 +271,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Disabled</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">disabled</code> to prevent interaction.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >disabled</code
+            > to prevent interaction.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -229,7 +289,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Highlight</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">highlight</code> to emphasize the ring color.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >highlight</code
+            > to emphasize the ring color.
         </p>
         <div class="flex flex-wrap gap-4">
             {#each colors as color (color)}
@@ -244,7 +306,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FormField Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code>, the Select automatically inherits size, error state, and accessibility attributes.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code
+            >, the Select automatically inherits size, error state, and accessibility attributes.
         </p>
         <div class="max-w-sm space-y-4">
             <FormField label="Country" description="Select your country of residence." required>
@@ -277,7 +341,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FieldGroup Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code>, selects are visually connected.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code
+            >, selects are visually connected.
         </p>
         <FieldGroup orientation="horizontal">
             <Select
@@ -302,7 +368,9 @@
         <div class="space-y-6">
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">User assignment</p>
-                <div class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4">
+                <div
+                    class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+                >
                     <FormField label="Assignee" required>
                         <Select items={avatarItems} placeholder="Select a team member..." />
                     </FormField>
@@ -331,7 +399,11 @@
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">Grouped categories</p>
                 <div class="max-w-sm">
-                    <Select items={groupedItems} placeholder="Select category..." leadingIcon="lucide:tag" />
+                    <Select
+                        items={groupedItems}
+                        placeholder="Select category..."
+                        leadingIcon="lucide:tag"
+                    />
                 </div>
             </div>
         </div>

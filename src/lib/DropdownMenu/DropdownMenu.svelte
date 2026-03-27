@@ -156,7 +156,10 @@
             {#if itemLeading}
                 {@render itemLeading({ item, index })}
             {:else if item.icon}
-                <Icon name={item.icon} class={[classes.itemLeadingIcon, colorCls.itemLeadingIcon]} />
+                <Icon
+                    name={item.icon}
+                    class={[classes.itemLeadingIcon, colorCls.itemLeadingIcon]}
+                />
             {/if}
 
             {#if itemLabel}

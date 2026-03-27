@@ -9,113 +9,113 @@ export type CheckboxProps = Pick<
     'disabled' | 'name' | 'value' | 'required'
 > &
     Omit<HTMLAttributes<HTMLElement>, 'class'> & {
-    /**
-     * Bindable reference to the root DOM element.
-     */
-    ref?: HTMLElement | null
+        /**
+         * Bindable reference to the root DOM element.
+         */
+        ref?: HTMLElement | null
 
-    /**
-     * The checked state of the checkbox. Supports two-way binding with `bind:checked`.
-     * @default false
-     */
-    checked?: boolean
+        /**
+         * The checked state of the checkbox. Supports two-way binding with `bind:checked`.
+         * @default false
+         */
+        checked?: boolean
 
-    /**
-     * Callback when the checked state changes.
-     */
-    onCheckedChange?: (checked: boolean) => void
+        /**
+         * Callback when the checked state changes.
+         */
+        onCheckedChange?: (checked: boolean) => void
 
-    /**
-     * Whether the checkbox is in an indeterminate state.
-     * @default false
-     */
-    indeterminate?: boolean
+        /**
+         * Whether the checkbox is in an indeterminate state.
+         * @default false
+         */
+        indeterminate?: boolean
 
-    /**
-     * Callback when the indeterminate state changes.
-     */
-    onIndeterminateChange?: (indeterminate: boolean) => void
+        /**
+         * Callback when the indeterminate state changes.
+         */
+        onIndeterminateChange?: (indeterminate: boolean) => void
 
-    /**
-     * Sets the color scheme for the checkbox.
-     * @default 'primary'
-     */
-    color?: NonNullable<CheckboxVariantProps['color']>
+        /**
+         * Sets the color scheme for the checkbox.
+         * @default 'primary'
+         */
+        color?: NonNullable<CheckboxVariantProps['color']>
 
-    /**
-     * Controls the dimensions of the checkbox.
-     * @default 'md'
-     */
-    size?: NonNullable<CheckboxVariantProps['size']>
+        /**
+         * Controls the dimensions of the checkbox.
+         * @default 'md'
+         */
+        size?: NonNullable<CheckboxVariantProps['size']>
 
-    /**
-     * Controls the visual style of the checkbox.
-     * @default 'list'
-     */
-    variant?: NonNullable<CheckboxVariantProps['variant']>
+        /**
+         * Controls the visual style of the checkbox.
+         * @default 'list'
+         */
+        variant?: NonNullable<CheckboxVariantProps['variant']>
 
-    /**
-     * Controls the position of the checkbox indicator.
-     * @default 'start'
-     */
-    indicator?: NonNullable<CheckboxVariantProps['indicator']>
+        /**
+         * Controls the position of the checkbox indicator.
+         * @default 'start'
+         */
+        indicator?: NonNullable<CheckboxVariantProps['indicator']>
 
-    /**
-     * Renders a loading spinner inside the checkbox.
-     * @default false
-     */
-    loading?: boolean
+        /**
+         * Renders a loading spinner inside the checkbox.
+         * @default false
+         */
+        loading?: boolean
 
-    /**
-     * Icon displayed as the loading indicator.
-     * @default Uses `icons.loading` from app config
-     */
-    loadingIcon?: string
+        /**
+         * Icon displayed as the loading indicator.
+         * @default Uses `icons.loading` from app config
+         */
+        loadingIcon?: string
 
-    /**
-     * Icon displayed when checked.
-     * @default Uses `icons.check` from app config
-     */
-    icon?: string
+        /**
+         * Icon displayed when checked.
+         * @default Uses `icons.check` from app config
+         */
+        icon?: string
 
-    /**
-     * Icon displayed when in indeterminate state.
-     * @default 'lucide:minus'
-     */
-    indeterminateIcon?: string
+        /**
+         * Icon displayed when in indeterminate state.
+         * @default 'lucide:minus'
+         */
+        indeterminateIcon?: string
 
-    /**
-     * Label text displayed next to the checkbox.
-     */
-    label?: string
+        /**
+         * Label text displayed next to the checkbox.
+         */
+        label?: string
 
-    /**
-     * Description text displayed below the label.
-     */
-    description?: string
+        /**
+         * Description text displayed below the label.
+         */
+        description?: string
 
-    /**
-     * The HTML id attribute for the checkbox.
-     */
-    id?: string
+        /**
+         * The HTML id attribute for the checkbox.
+         */
+        id?: string
 
-    /**
-     * Custom snippet for the label.
-     */
-    labelSlot?: Snippet<[{ label?: string }]>
+        /**
+         * Custom snippet for the label.
+         */
+        labelSlot?: Snippet<[{ label?: string }]>
 
-    /**
-     * Custom snippet for the description.
-     */
-    descriptionSlot?: Snippet<[{ description?: string }]>
+        /**
+         * Custom snippet for the description.
+         */
+        descriptionSlot?: Snippet<[{ description?: string }]>
 
-    /**
-     * Additional CSS classes for the root element.
-     */
-    class?: ClassNameValue
+        /**
+         * Additional CSS classes for the root element.
+         */
+        class?: ClassNameValue
 
-    /**
-     * Override styles for specific checkbox slots.
-     */
-    ui?: Partial<Record<CheckboxSlots, ClassNameValue>>
-}
+        /**
+         * Override styles for specific checkbox slots.
+         */
+        ui?: Partial<Record<CheckboxSlots, ClassNameValue>>
+    }

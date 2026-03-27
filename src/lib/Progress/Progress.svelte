@@ -108,7 +108,12 @@
     {#if hasSteps && Array.isArray(max)}
         <div class={classes.steps}>
             {#each max as step, index (index)}
-                {@const stepClass = progressVariants({ size, orientation, inverted, step: stepVariant(index) }).step({ class: [config.slots.step, ui?.step] })}
+                {@const stepClass = progressVariants({
+                    size,
+                    orientation,
+                    inverted,
+                    step: stepVariant(index)
+                }).step({ class: [config.slots.step, ui?.step] })}
                 <div class={stepClass}>
                     {#if stepSlot}
                         {@render stepSlot({ step, index })}

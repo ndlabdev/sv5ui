@@ -93,13 +93,10 @@
             prop.
         </p>
         <div class="grid gap-4 sm:grid-cols-2">
-            {#each [
-                { side: 'top' as const, label: 'Top' },
-                { side: 'right' as const, label: 'Right' },
-                { side: 'bottom' as const, label: 'Bottom' },
-                { side: 'left' as const, label: 'Left' }
-            ] as item (item.side)}
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+            {#each [{ side: 'top' as const, label: 'Top' }, { side: 'right' as const, label: 'Right' }, { side: 'bottom' as const, label: 'Bottom' }, { side: 'left' as const, label: 'Left' }] as item (item.side)}
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Tooltip text="Arrow on {item.side}" arrow side={item.side}>
                         <Button>{item.label}</Button>
                     </Tooltip>
@@ -282,7 +279,9 @@
         <div class="grid gap-4 sm:grid-cols-2">
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Primary style</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Tooltip
                         text="Custom styled tooltip"
                         ui={{ content: 'bg-primary text-on-primary rounded-full px-4' }}
@@ -293,7 +292,9 @@
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Error style</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Tooltip text="Error styled" ui={{ content: 'bg-error text-on-error' }}>
                         <Button color="error" variant="soft">Error</Button>
                     </Tooltip>
@@ -301,7 +302,9 @@
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Success style</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Tooltip text="Success message" ui={{ content: 'bg-success text-on-success' }}>
                         <Button color="success" variant="soft">Success</Button>
                     </Tooltip>
@@ -309,7 +312,9 @@
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Large size</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <Tooltip text="Large tooltip" ui={{ content: 'text-sm px-4 py-2' }}>
                         <Button variant="outline">Large</Button>
                     </Tooltip>
@@ -328,9 +333,7 @@
             <!-- Editor Toolbar -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">Editor Toolbar</p>
-                <div
-                    class="flex items-center gap-1 rounded-lg bg-surface-container-high p-2"
-                >
+                <div class="flex items-center gap-1 rounded-lg bg-surface-container-high p-2">
                     <Tooltip text="Bold" kbds={['meta', 'b']}>
                         <Button icon="lucide:bold" square variant="ghost" size="sm" />
                     </Tooltip>

@@ -40,7 +40,13 @@
     })
 </script>
 
-<svelte:element this={as} bind:this={ref} class={classes.root} data-orientation={orientation} {...restProps}>
+<svelte:element
+    this={as}
+    bind:this={ref}
+    class={classes.root}
+    data-orientation={orientation}
+    {...restProps}
+>
     {#if children}
         {@render children()}
     {/if}

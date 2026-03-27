@@ -48,7 +48,8 @@
                 <Button variant="outline" label="Open Modal" />
                 {#snippet body()}
                     <p class="text-on-surface-variant">
-                        A centered modal dialog. Click the X, press Escape, or click outside to close.
+                        A centered modal dialog. Click the X, press Escape, or click outside to
+                        close.
                     </p>
                 {/snippet}
                 {#snippet footer()}
@@ -179,16 +180,10 @@
             >
                 <Button variant="outline" label="No Close Button" />
                 {#snippet body()}
-                    <p class="text-on-surface-variant">
-                        Use the footer button or Escape to close.
-                    </p>
+                    <p class="text-on-surface-variant">Use the footer button or Escape to close.</p>
                 {/snippet}
                 {#snippet footer()}
-                    <Button
-                        label="Close"
-                        variant="outline"
-                        onclick={() => (noCloseOpen = false)}
-                    />
+                    <Button label="Close" variant="outline" onclick={() => (noCloseOpen = false)} />
                 {/snippet}
             </Modal>
 
@@ -300,11 +295,7 @@
                     </p>
                 {/snippet}
                 {#snippet footer()}
-                    <Button
-                        label="Close"
-                        variant="outline"
-                        onclick={() => (actionsOpen = false)}
-                    />
+                    <Button label="Close" variant="outline" onclick={() => (actionsOpen = false)} />
                 {/snippet}
             </Modal>
 
@@ -458,9 +449,7 @@
                             >
                                 <Icon name="lucide:alert-triangle" size="28" class="text-error" />
                             </div>
-                            <h3 class="text-lg font-semibold text-on-surface">
-                                Delete this item?
-                            </h3>
+                            <h3 class="text-lg font-semibold text-on-surface">Delete this item?</h3>
                             <p class="text-sm text-on-surface-variant">
                                 This action is permanent and cannot be undone.
                             </p>
@@ -510,7 +499,7 @@
                                     id="project-name"
                                     type="text"
                                     placeholder="My Project"
-                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                                 />
                             </div>
                             <div>
@@ -523,7 +512,7 @@
                                     id="project-desc"
                                     rows="3"
                                     placeholder="Describe your project..."
-                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                    class="w-full rounded-md border border-outline-variant bg-surface px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                                 ></textarea>
                             </div>
                         </div>

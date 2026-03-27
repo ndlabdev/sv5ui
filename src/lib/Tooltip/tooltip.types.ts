@@ -18,11 +18,7 @@ type ProviderProps = Pick<
 
 type RootProps = Pick<
     TooltipRootPropsWithoutHTML,
-    | 'open'
-    | 'onOpenChange'
-    | 'disableCloseOnTriggerClick'
-    | 'ignoreNonKeyboardFocus'
-    | 'disabled'
+    'open' | 'onOpenChange' | 'disableCloseOnTriggerClick' | 'ignoreNonKeyboardFocus' | 'disabled'
 >
 
 type ContentProps = Pick<

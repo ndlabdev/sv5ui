@@ -2,7 +2,16 @@
     import { RadioGroup, FormField, Separator } from '$lib/index.js'
     import type { RadioGroupItem } from '$lib/index.js'
 
-    const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
+    const colors = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     const fruits: RadioGroupItem[] = [
@@ -42,7 +51,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Two-way Binding</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">bind:value</code> for reactive two-way data binding.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >bind:value</code
+            > for reactive two-way data binding.
         </p>
         <div class="flex flex-wrap items-start gap-8">
             <RadioGroup items={fruits} bind:value={bindValue} />
@@ -56,8 +67,13 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Label &amp; Description</h2>
         <p class="text-sm text-on-surface-variant">
-            Each item supports <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">label</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">description</code> properties.
+            Each item supports <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">label</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >description</code
+            > properties.
         </p>
         <RadioGroup items={plans} />
     </section>
@@ -66,8 +82,12 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Legend</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">legend</code> to add a title above the radio group.
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">required</code> to show an asterisk.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >legend</code
+            >
+            to add a title above the radio group. Use
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">required</code> to
+            show an asterisk.
         </p>
         <div class="flex flex-wrap gap-8">
             <RadioGroup items={fruits} legend="Select a fruit" />
@@ -79,7 +99,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Colors</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control the checked indicator color.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code
+            > to control the checked indicator color.
         </p>
         <div class="flex flex-wrap gap-8">
             {#each colors as color (color)}
@@ -92,7 +113,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Sizes</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to control the dimensions.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to
+            control the dimensions.
         </p>
         <div class="flex flex-wrap items-start gap-8">
             {#each sizes as size (size)}
@@ -105,7 +127,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Orientation</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">orientation</code> to control layout direction.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >orientation</code
+            > to control layout direction.
         </p>
         <div class="flex flex-col gap-6">
             <div>
@@ -123,7 +147,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Variant</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">variant="card"</code> to display each item as a bordered card. The border highlights when selected.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >variant="card"</code
+            > to display each item as a bordered card. The border highlights when selected.
         </p>
         <div class="flex flex-col gap-6">
             <div class="max-w-sm">
@@ -132,7 +158,13 @@
             </div>
             <div class="max-w-sm">
                 <p class="mb-2 text-xs text-on-surface-variant">Horizontal cards</p>
-                <RadioGroup variant="card" value="apple" items={fruits} orientation="horizontal" color="success" />
+                <RadioGroup
+                    variant="card"
+                    value="apple"
+                    items={fruits}
+                    orientation="horizontal"
+                    color="success"
+                />
             </div>
         </div>
     </section>
@@ -141,7 +173,10 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Indicator Position</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">indicator</code> to control where the radio appears:
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >indicator</code
+            >
+            to control where the radio appears:
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">start</code>,
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">end</code>, or
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">hidden</code>.
@@ -170,7 +205,13 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Disabled</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">disabled</code> to disable the entire group or individual items via <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">item.disabled</code>.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >disabled</code
+            >
+            to disable the entire group or individual items via
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >item.disabled</code
+            >.
         </p>
         <div class="flex flex-wrap gap-8">
             <div>
@@ -188,7 +229,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Loading</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">loading</code> to show a spinner and disable interaction.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >loading</code
+            > to show a spinner and disable interaction.
         </p>
         <RadioGroup items={fruits} loading value="apple" />
     </section>
@@ -197,16 +240,23 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Custom Slots</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">legendSlot</code>,
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">labelSlot</code>, and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">descriptionSlot</code> for fully custom content.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >legendSlot</code
+            >,
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">labelSlot</code
+            >, and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >descriptionSlot</code
+            > for fully custom content.
         </p>
         <div class="flex flex-col gap-6">
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">Custom legend</p>
                 <RadioGroup items={fruits} value="apple">
                     {#snippet legendSlot()}
-                        <span class="flex items-center gap-1.5 mb-2 text-sm font-semibold text-on-surface">
+                        <span
+                            class="mb-2 flex items-center gap-1.5 text-sm font-semibold text-on-surface"
+                        >
                             <span class="inline-block size-2 rounded-full bg-primary"></span>
                             Pick your favorite
                         </span>
@@ -215,13 +265,18 @@
             </div>
 
             <div class="max-w-sm">
-                <p class="mb-2 text-xs text-on-surface-variant">Custom label + description per item</p>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    Custom label + description per item
+                </p>
                 <RadioGroup items={plans} value="pro">
                     {#snippet labelSlot({ item })}
                         <span class="flex items-center gap-2 text-sm font-medium text-on-surface">
                             {item.label}
                             {#if item.value === 'pro'}
-                                <span class="rounded bg-primary-container px-1.5 py-0.5 text-[10px] font-bold text-on-primary-container">POPULAR</span>
+                                <span
+                                    class="rounded bg-primary-container px-1.5 py-0.5 text-[10px] font-bold text-on-primary-container"
+                                    >POPULAR</span
+                                >
                             {/if}
                         </span>
                     {/snippet}
@@ -237,7 +292,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FormField Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code>, the RadioGroup automatically inherits size and error state.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code
+            >, the RadioGroup automatically inherits size and error state.
         </p>
         <div class="max-w-sm space-y-4">
             <FormField label="Subscription Plan" description="Choose the plan that works for you.">
@@ -257,7 +314,9 @@
 
         <div class="space-y-6">
             <div>
-                <p class="mb-2 text-xs text-on-surface-variant">Pricing plan selection (card + end)</p>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    Pricing plan selection (card + end)
+                </p>
                 <div class="max-w-sm space-y-2">
                     <RadioGroup
                         variant="card"
@@ -265,16 +324,30 @@
                         value="pro"
                         color="primary"
                         items={[
-                            { value: 'starter', label: 'Starter', description: '$9/mo · Up to 3 projects' },
-                            { value: 'pro', label: 'Pro', description: '$29/mo · Unlimited projects' },
-                            { value: 'enterprise', label: 'Enterprise', description: 'Custom pricing · SSO + security' }
+                            {
+                                value: 'starter',
+                                label: 'Starter',
+                                description: '$9/mo · Up to 3 projects'
+                            },
+                            {
+                                value: 'pro',
+                                label: 'Pro',
+                                description: '$29/mo · Unlimited projects'
+                            },
+                            {
+                                value: 'enterprise',
+                                label: 'Enterprise',
+                                description: 'Custom pricing · SSO + security'
+                            }
                         ]}
                     />
                 </div>
             </div>
 
             <div>
-                <p class="mb-2 text-xs text-on-surface-variant">Notification frequency (horizontal + card)</p>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    Notification frequency (horizontal + card)
+                </p>
                 <RadioGroup
                     variant="card"
                     orientation="horizontal"
@@ -290,7 +363,9 @@
             </div>
 
             <div>
-                <p class="mb-2 text-xs text-on-surface-variant">Theme selector (hidden indicator + custom label)</p>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    Theme selector (hidden indicator + custom label)
+                </p>
                 <RadioGroup
                     indicator="hidden"
                     orientation="horizontal"

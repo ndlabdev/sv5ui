@@ -94,15 +94,21 @@
     })
 
     const iconClasses = $derived.by(() => {
-        if (!hasCheckedIcon && !hasUncheckedIcon) return { checked: undefined, unchecked: undefined }
+        if (!hasCheckedIcon && !hasUncheckedIcon)
+            return { checked: undefined, unchecked: undefined }
         const iconUiClass = [config.slots.icon, ui?.icon]
         return {
             checked: hasCheckedIcon
-                ? switchVariants({ ...variantOpts, checked: true, unchecked: loading }).icon({ class: iconUiClass })
+                ? switchVariants({ ...variantOpts, checked: true, unchecked: loading }).icon({
+                      class: iconUiClass
+                  })
                 : undefined,
-            unchecked: hasUncheckedIcon && !loading
-                ? switchVariants({ ...variantOpts, unchecked: true }).icon({ class: iconUiClass })
-                : undefined
+            unchecked:
+                hasUncheckedIcon && !loading
+                    ? switchVariants({ ...variantOpts, unchecked: true }).icon({
+                          class: iconUiClass
+                      })
+                    : undefined
         }
     })
 </script>

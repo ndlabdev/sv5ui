@@ -52,7 +52,14 @@ export type TimelineItem = {
      */
     ui?: Partial<
         Record<
-            'item' | 'container' | 'indicator' | 'separator' | 'wrapper' | 'date' | 'title' | 'description',
+            | 'item'
+            | 'container'
+            | 'indicator'
+            | 'separator'
+            | 'wrapper'
+            | 'date'
+            | 'title'
+            | 'description',
             ClassNameValue
         >
     >

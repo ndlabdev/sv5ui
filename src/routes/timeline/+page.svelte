@@ -270,7 +270,8 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Per-item UI Overrides</h2>
         <p class="text-sm text-on-surface-variant">
-            Each item can have its own <code class="rounded bg-surface-container-highest px-1">ui</code
+            Each item can have its own <code class="rounded bg-surface-container-highest px-1"
+                >ui</code
             > prop to override slot classes.
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
@@ -351,7 +352,9 @@
                                     </ul>
                                 {:else}
                                     <p class="text-sm text-on-surface-variant">
-                                        {state === 'pending' ? 'Exciting features coming!' : 'Released!'}
+                                        {state === 'pending'
+                                            ? 'Exciting features coming!'
+                                            : 'Released!'}
                                     </p>
                                 {/if}
                             </div>

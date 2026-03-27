@@ -1,5 +1,9 @@
 <script lang="ts" module>
-    import type { SelectMenuProps, SelectMenuItem, SelectMenuItemType } from './select-menu.types.js'
+    import type {
+        SelectMenuProps,
+        SelectMenuItem,
+        SelectMenuItemType
+    } from './select-menu.types.js'
 
     export type Props = SelectMenuProps
 </script>
@@ -144,9 +148,7 @@
               })
     )
 
-    const hasFilteredSelectItems = $derived(
-        filteredItems.some((item) => !('type' in item))
-    )
+    const hasFilteredSelectItems = $derived(filteredItems.some((item) => !('type' in item)))
 
     // ---- Leading / trailing ----
     const displayAvatar = $derived(selectedItem?.avatar ?? avatar)
@@ -213,9 +215,7 @@
     const contentClass = $derived(
         variantSlots.content({ class: [config.slots.content, ui?.content] })
     )
-    const inputClass = $derived(
-        variantSlots.input({ class: [config.slots.input, ui?.input] })
-    )
+    const inputClass = $derived(variantSlots.input({ class: [config.slots.input, ui?.input] }))
     const viewportClass = $derived(
         variantSlots.viewport({ class: [config.slots.viewport, ui?.viewport] })
     )
@@ -225,9 +225,7 @@
     const separatorClass = $derived(
         variantSlots.separator({ class: [config.slots.separator, ui?.separator] })
     )
-    const emptyClass = $derived(
-        variantSlots.empty({ class: [config.slots.empty, ui?.empty] })
-    )
+    const emptyClass = $derived(variantSlots.empty({ class: [config.slots.empty, ui?.empty] }))
 
     // ---- Item classes ----
     const itemClass = $derived(variantSlots.item({ class: [config.slots.item, ui?.item] }))
@@ -340,7 +338,9 @@
                         <div role="separator" class={separatorClass}></div>
                     {:else if isLabel(selectItem)}
                         <Combobox.Group>
-                            <Combobox.GroupHeading class={groupLabelClass}>{selectItem.label}</Combobox.GroupHeading>
+                            <Combobox.GroupHeading class={groupLabelClass}
+                                >{selectItem.label}</Combobox.GroupHeading
+                            >
                         </Combobox.Group>
                     {:else if isSelectItem(selectItem)}
                         {#if itemSlot}
@@ -396,7 +396,11 @@
             </span>
         {/if}
 
-        <Combobox.Input class="absolute inset-0 opacity-0 pointer-events-none" tabindex={-1} aria-hidden="true" />
+        <Combobox.Input
+            class="pointer-events-none absolute inset-0 opacity-0"
+            tabindex={-1}
+            aria-hidden="true"
+        />
 
         <Combobox.Trigger
             id={resolvedId}

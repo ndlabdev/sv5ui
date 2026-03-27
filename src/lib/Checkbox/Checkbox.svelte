@@ -107,7 +107,12 @@
     })
 </script>
 
-<div {...restProps} bind:this={ref} class={classes.root} onclick={variant === 'card' ? handleCardClick : undefined}>
+<div
+    {...restProps}
+    bind:this={ref}
+    class={classes.root}
+    onclick={variant === 'card' ? handleCardClick : undefined}
+>
     <div bind:this={containerRef} class={classes.container}>
         <Checkbox.Root
             bind:checked

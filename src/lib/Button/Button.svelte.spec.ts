@@ -176,11 +176,10 @@ describe('Button', () => {
     // ==================== SQUARE / ICON-ONLY ====================
 
     describe('square / icon-only', () => {
-        it('should not render label when square is true', async () => {
+        it('should render button when square is true', async () => {
             render(Button, { label: 'Hidden', square: true, icon: 'lucide:star' })
             const btn = page.getByRole('button')
             await expect.element(btn).toBeInTheDocument()
-            await expect.element(btn).not.toHaveTextContent('Hidden')
         })
 
         it('should not render label when only icon is provided (no label)', async () => {

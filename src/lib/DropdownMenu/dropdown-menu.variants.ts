@@ -9,43 +9,35 @@ export const itemColorClasses: Record<string, { item: string; itemLeadingIcon: s
     },
     primary: {
         item: 'text-primary data-[highlighted]:bg-primary-container data-[highlighted]:text-on-primary-container',
-        itemLeadingIcon:
-            'text-primary group-data-[highlighted]:text-on-primary-container'
+        itemLeadingIcon: 'text-primary group-data-[highlighted]:text-on-primary-container'
     },
     secondary: {
         item: 'text-secondary data-[highlighted]:bg-secondary-container data-[highlighted]:text-on-secondary-container',
-        itemLeadingIcon:
-            'text-secondary group-data-[highlighted]:text-on-secondary-container'
+        itemLeadingIcon: 'text-secondary group-data-[highlighted]:text-on-secondary-container'
     },
     tertiary: {
         item: 'text-tertiary data-[highlighted]:bg-tertiary-container data-[highlighted]:text-on-tertiary-container',
-        itemLeadingIcon:
-            'text-tertiary group-data-[highlighted]:text-on-tertiary-container'
+        itemLeadingIcon: 'text-tertiary group-data-[highlighted]:text-on-tertiary-container'
     },
     success: {
         item: 'text-success data-[highlighted]:bg-success-container data-[highlighted]:text-on-success-container',
-        itemLeadingIcon:
-            'text-success group-data-[highlighted]:text-on-success-container'
+        itemLeadingIcon: 'text-success group-data-[highlighted]:text-on-success-container'
     },
     warning: {
         item: 'text-warning data-[highlighted]:bg-warning-container data-[highlighted]:text-on-warning-container',
-        itemLeadingIcon:
-            'text-warning group-data-[highlighted]:text-on-warning-container'
+        itemLeadingIcon: 'text-warning group-data-[highlighted]:text-on-warning-container'
     },
     error: {
         item: 'text-error data-[highlighted]:bg-error-container data-[highlighted]:text-on-error-container',
-        itemLeadingIcon:
-            'text-error group-data-[highlighted]:text-on-error-container'
+        itemLeadingIcon: 'text-error group-data-[highlighted]:text-on-error-container'
     },
     info: {
         item: 'text-info data-[highlighted]:bg-info-container data-[highlighted]:text-on-info-container',
-        itemLeadingIcon:
-            'text-info group-data-[highlighted]:text-on-info-container'
+        itemLeadingIcon: 'text-info group-data-[highlighted]:text-on-info-container'
     },
     surface: {
         item: 'text-on-surface-variant data-[highlighted]:bg-surface-container-highest data-[highlighted]:text-on-surface',
-        itemLeadingIcon:
-            'text-on-surface-variant group-data-[highlighted]:text-on-surface'
+        itemLeadingIcon: 'text-on-surface-variant group-data-[highlighted]:text-on-surface'
     }
 }
 

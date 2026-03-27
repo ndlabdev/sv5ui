@@ -137,12 +137,16 @@
             {:else if radioItem.label}
                 {#if variant === 'card'}
                     <span
-                        class={[elementClasses.label, itemDisabled && 'cursor-not-allowed'].filter(Boolean).join(' ')}
-                    >{radioItem.label}</span>
+                        class={[elementClasses.label, itemDisabled && 'cursor-not-allowed']
+                            .filter(Boolean)
+                            .join(' ')}>{radioItem.label}</span
+                    >
                 {:else}
                     <Label.Root
                         for={itemId}
-                        class={[elementClasses.label, itemDisabled && 'cursor-not-allowed'].filter(Boolean).join(' ')}
+                        class={[elementClasses.label, itemDisabled && 'cursor-not-allowed']
+                            .filter(Boolean)
+                            .join(' ')}
                     >
                         {radioItem.label}
                     </Label.Root>
@@ -153,7 +157,9 @@
                 {@render descriptionSlot({ item: radioItem })}
             {:else if radioItem.description}
                 <p
-                    class={[elementClasses.description, itemDisabled && 'cursor-not-allowed'].filter(Boolean).join(' ')}
+                    class={[elementClasses.description, itemDisabled && 'cursor-not-allowed']
+                        .filter(Boolean)
+                        .join(' ')}
                 >
                     {radioItem.description}
                 </p>
@@ -191,7 +197,12 @@
                     role="none"
                     class={layoutClasses.item}
                     class:opacity-75={radioItem.disabled && !isDisabled}
-                    onclick={(e) => handleCardItemClick(e, `${resolvedId}-${radioItem.value}`, isDisabled || !!radioItem.disabled)}
+                    onclick={(e) =>
+                        handleCardItemClick(
+                            e,
+                            `${resolvedId}-${radioItem.value}`,
+                            isDisabled || !!radioItem.disabled
+                        )}
                 >
                     {@render itemContent(radioItem)}
                 </div>

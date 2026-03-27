@@ -229,11 +229,7 @@
             </div>
 
             <Progress value={0} max={['Account', 'Profile', 'Review', 'Done']} color="tertiary" />
-            <Progress
-                value={3}
-                max={['Account', 'Profile', 'Review', 'Done']}
-                color="success"
-            />
+            <Progress value={3} max={['Account', 'Profile', 'Review', 'Done']} color="success" />
         </div>
     </section>
 
@@ -267,7 +263,9 @@
                     <span class="flex items-center gap-1">
                         <span
                             class="inline-flex size-5 items-center justify-center rounded-full text-xs
-                            {index <= 1 ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface-variant'}"
+                            {index <= 1
+                                ? 'bg-primary text-on-primary'
+                                : 'bg-surface-container-highest text-on-surface-variant'}"
                         >
                             {index + 1}
                         </span>

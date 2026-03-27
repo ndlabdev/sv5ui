@@ -56,20 +56,30 @@
                     ? slots.item({ class: [c.item, ui?.item, itemUi?.item, itemClass] })
                     : _item,
             container: (itemUi?: ItemUi) =>
-                itemUi ? slots.container({ class: [c.container, ui?.container, itemUi.container] }) : _container,
+                itemUi
+                    ? slots.container({ class: [c.container, ui?.container, itemUi.container] })
+                    : _container,
             indicator: (itemUi?: ItemUi) =>
-                itemUi ? slots.indicator({ class: [c.indicator, ui?.indicator, itemUi.indicator] }) : _indicator,
+                itemUi
+                    ? slots.indicator({ class: [c.indicator, ui?.indicator, itemUi.indicator] })
+                    : _indicator,
             separator: (itemUi?: ItemUi) =>
-                itemUi ? slots.separator({ class: [c.separator, ui?.separator, itemUi.separator] }) : _separator,
+                itemUi
+                    ? slots.separator({ class: [c.separator, ui?.separator, itemUi.separator] })
+                    : _separator,
             wrapper: (itemUi?: ItemUi) =>
-                itemUi ? slots.wrapper({ class: [c.wrapper, ui?.wrapper, itemUi.wrapper] }) : _wrapper,
+                itemUi
+                    ? slots.wrapper({ class: [c.wrapper, ui?.wrapper, itemUi.wrapper] })
+                    : _wrapper,
             date: (itemUi?: ItemUi) =>
                 itemUi?.date ? slots.date({ class: [c.date, ui?.date, itemUi.date] }) : _date,
             title: (itemUi?: ItemUi) =>
                 itemUi?.title ? slots.title({ class: [c.title, ui?.title, itemUi.title] }) : _title,
             description: (itemUi?: ItemUi) =>
                 itemUi?.description
-                    ? slots.description({ class: [c.description, ui?.description, itemUi.description] })
+                    ? slots.description({
+                          class: [c.description, ui?.description, itemUi.description]
+                      })
                     : _description
         }
     })

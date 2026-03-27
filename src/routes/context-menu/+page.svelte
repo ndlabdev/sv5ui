@@ -226,13 +226,7 @@
             prop.
         </p>
         <div class="grid gap-4 md:grid-cols-3">
-            {#each [
-                { size: 'xs' as const, label: 'XS' },
-                { size: 'sm' as const, label: 'SM' },
-                { size: 'md' as const, label: 'MD (default)' },
-                { size: 'lg' as const, label: 'LG' },
-                { size: 'xl' as const, label: 'XL' }
-            ] as item (item.size)}
+            {#each [{ size: 'xs' as const, label: 'XS' }, { size: 'sm' as const, label: 'SM' }, { size: 'md' as const, label: 'MD (default)' }, { size: 'lg' as const, label: 'LG' }, { size: 'xl' as const, label: 'XL' }] as item (item.size)}
                 <ContextMenu items={basicItems.slice(0, 5)} size={item.size}>
                     <div class="{triggerClass} h-28">
                         <span class="text-xs">{item.label}</span>
@@ -289,7 +283,9 @@
                         {#each ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-teal-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-gray-500'] as color (color)}
                             <button
                                 class="size-8 rounded-full {color} transition-all hover:ring-2 hover:ring-outline hover:ring-offset-2"
-                                aria-label="Select {color.replace('bg-', '').replace('-500', '')} color"
+                                aria-label="Select {color
+                                    .replace('bg-', '')
+                                    .replace('-500', '')} color"
                                 onclick={close}
                             ></button>
                         {/each}
@@ -320,7 +316,10 @@
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Custom rounding</p>
-                <ContextMenu items={basicItems.slice(0, 4)} ui={{ content: 'rounded-xl shadow-2xl' }}>
+                <ContextMenu
+                    items={basicItems.slice(0, 4)}
+                    ui={{ content: 'rounded-xl shadow-2xl' }}
+                >
                     <div class="{triggerClass} h-28">
                         <span class="text-sm">Custom Rounding</span>
                     </div>

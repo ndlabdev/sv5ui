@@ -36,7 +36,12 @@
         })
     })
 
-    function getLinkClasses(active: boolean, disabled: boolean, to: boolean, itemClass?: ClassNameValue) {
+    function getLinkClasses(
+        active: boolean,
+        disabled: boolean,
+        to: boolean,
+        itemClass?: ClassNameValue
+    ) {
         const slots = breadcrumbVariants({ ...config.defaultVariants, active, disabled, to })
         return {
             item: slots.item({ class: [config.slots.item, ui?.item] }),
@@ -49,7 +54,13 @@
     }
 </script>
 
-<svelte:element this={as} bind:this={ref} aria-label={as === 'nav' ? 'Breadcrumb' : undefined} class={classes.root} {...restProps}>
+<svelte:element
+    this={as}
+    bind:this={ref}
+    aria-label={as === 'nav' ? 'Breadcrumb' : undefined}
+    class={classes.root}
+    {...restProps}
+>
     <ol class={classes.list}>
         {#each items as item, index (item.label ?? index)}
             {@const active = index === items.length - 1}

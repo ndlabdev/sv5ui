@@ -3,7 +3,16 @@
     import type { SelectMenuItem, SelectMenuItemType } from '$lib/index.js'
 
     const variants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
-    const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
+    const colors = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     let bindValue = $state('')
@@ -24,15 +33,31 @@
     ]
 
     const avatarItems: SelectMenuItem[] = [
-        { value: 'alice', label: 'Alice', avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' } },
-        { value: 'bob', label: 'Bob', avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' } },
-        { value: 'charlie', label: 'Charlie', avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' } }
+        {
+            value: 'alice',
+            label: 'Alice',
+            avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' }
+        },
+        {
+            value: 'bob',
+            label: 'Bob',
+            avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' }
+        },
+        {
+            value: 'charlie',
+            label: 'Charlie',
+            avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' }
+        }
     ]
 
     const descriptionItems: SelectMenuItem[] = [
         { value: 'standard', label: 'Standard', description: 'Free shipping, 5-7 business days' },
         { value: 'express', label: 'Express', description: 'Paid shipping, 2-3 business days' },
-        { value: 'overnight', label: 'Overnight', description: 'Premium shipping, next business day' }
+        {
+            value: 'overnight',
+            label: 'Overnight',
+            description: 'Premium shipping, next business day'
+        }
     ]
 
     const groupedItems: SelectMenuItemType[] = [
@@ -58,10 +83,34 @@
 
     type StatusItem = SelectMenuItem & { status?: 'active' | 'idle' | 'offline' }
     const statusItems: StatusItem[] = [
-        { value: 'alice', label: 'Alice Johnson', description: 'Frontend Engineer', status: 'active', avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' } },
-        { value: 'bob', label: 'Bob Smith', description: 'Backend Engineer', status: 'idle', avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' } },
-        { value: 'charlie', label: 'Charlie Lee', description: 'Designer', status: 'offline', avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' } },
-        { value: 'diana', label: 'Diana Prince', description: 'Product Manager', status: 'active', avatar: { src: 'https://i.pravatar.cc/120?img=9', alt: 'Diana' } }
+        {
+            value: 'alice',
+            label: 'Alice Johnson',
+            description: 'Frontend Engineer',
+            status: 'active',
+            avatar: { src: 'https://i.pravatar.cc/120?img=1', alt: 'Alice' }
+        },
+        {
+            value: 'bob',
+            label: 'Bob Smith',
+            description: 'Backend Engineer',
+            status: 'idle',
+            avatar: { src: 'https://i.pravatar.cc/120?img=3', alt: 'Bob' }
+        },
+        {
+            value: 'charlie',
+            label: 'Charlie Lee',
+            description: 'Designer',
+            status: 'offline',
+            avatar: { src: 'https://i.pravatar.cc/120?img=5', alt: 'Charlie' }
+        },
+        {
+            value: 'diana',
+            label: 'Diana Prince',
+            description: 'Product Manager',
+            status: 'active',
+            avatar: { src: 'https://i.pravatar.cc/120?img=9', alt: 'Diana' }
+        }
     ]
 
     const statusColor: Record<string, string> = {
@@ -92,7 +141,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Basic Usage</h2>
         <p class="text-sm text-on-surface-variant">
-            A searchable select dropdown built on bits-ui Combobox. Supports filtering, icons, avatars, groups, and empty states.
+            A searchable select dropdown built on bits-ui Combobox. Supports filtering, icons,
+            avatars, groups, and empty states.
         </p>
         <div class="max-w-sm">
             <SelectMenu items={fruits} placeholder="Pick a fruit..." />
@@ -103,10 +153,17 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Two-way Binding</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">bind:value</code> for reactive two-way data binding.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >bind:value</code
+            > for reactive two-way data binding.
         </p>
         <div class="max-w-sm space-y-3">
-            <SelectMenu bind:value={bindValue} items={fruits} placeholder="Select a fruit..." leadingIcon="lucide:apple" />
+            <SelectMenu
+                bind:value={bindValue}
+                items={fruits}
+                placeholder="Select a fruit..."
+                leadingIcon="lucide:apple"
+            />
             <p class="text-sm text-on-surface-variant">
                 Value: <span class="font-mono text-on-surface">{bindValue || '(empty)'}</span>
             </p>
@@ -117,26 +174,42 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Variants &times; Colors</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">variant</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control appearance.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >variant</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control
+            appearance.
         </p>
         <div class="overflow-x-auto">
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant"></th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant"
+                        ></th>
                         {#each colors as color (color)}
-                            <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant capitalize">{color}</th>
+                            <th
+                                class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant capitalize"
+                                >{color}</th
+                            >
                         {/each}
                     </tr>
                 </thead>
                 <tbody>
                     {#each variants as variant (variant)}
                         <tr>
-                            <td class="px-3 py-2 text-xs font-medium text-on-surface-variant capitalize">{variant}</td>
+                            <td
+                                class="px-3 py-2 text-xs font-medium text-on-surface-variant capitalize"
+                                >{variant}</td
+                            >
                             {#each colors as color (color)}
                                 <td class="px-3 py-2">
-                                    <SelectMenu {variant} {color} items={fruits} placeholder={color} />
+                                    <SelectMenu
+                                        {variant}
+                                        {color}
+                                        items={fruits}
+                                        placeholder={color}
+                                    />
                                 </td>
                             {/each}
                         </tr>
@@ -150,7 +223,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Size</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to control the dimensions and text size.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to
+            control the dimensions and text size.
         </p>
         <div class="flex flex-wrap items-end gap-4">
             {#each sizes as size (size)}
@@ -165,7 +239,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Icons</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">leadingIcon</code> to add an icon before the value.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >leadingIcon</code
+            > to add an icon before the value.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -190,7 +266,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Avatar</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">avatar</code> on the trigger, or provide avatars on individual items.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >avatar</code
+            > on the trigger, or provide avatars on individual items.
         </p>
         <div class="w-64">
             <SelectMenu
@@ -204,7 +282,9 @@
     <!-- Item Descriptions -->
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Item Descriptions</h2>
-        <p class="text-sm text-on-surface-variant">Items can include descriptions shown below the label.</p>
+        <p class="text-sm text-on-surface-variant">
+            Items can include descriptions shown below the label.
+        </p>
         <div class="w-80">
             <SelectMenu items={descriptionItems} placeholder="Choose shipping..." />
         </div>
@@ -214,8 +294,13 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Grouped Items</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">type: 'label'</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">type: 'separator'</code> to organize items into groups.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type: 'label'</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type: 'separator'</code
+            > to organize items into groups.
         </p>
         <div class="w-64">
             <SelectMenu items={groupedItems} placeholder="Pick an item..." />
@@ -236,7 +321,9 @@
         <h2 class="text-lg font-semibold text-on-surface">Filtering</h2>
         <p class="text-sm text-on-surface-variant">
             The dropdown includes a search input. Items are filtered client-side by
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">filterFields</code> (defaults to label and value).
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >filterFields</code
+            > (defaults to label and value).
         </p>
         <div class="w-64">
             <SelectMenu items={manyItems} placeholder="Search 50 items..." />
@@ -247,7 +334,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Loading</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">loading</code> to show a loading spinner.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >loading</code
+            > to show a loading spinner.
         </p>
         <div class="w-64">
             <SelectMenu loading items={fruits} placeholder="Loading..." />
@@ -258,7 +347,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Disabled</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">disabled</code> to prevent interaction.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >disabled</code
+            > to prevent interaction.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -274,7 +365,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Highlight</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">highlight</code> to emphasize the ring color.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >highlight</code
+            > to emphasize the ring color.
         </p>
         <div class="flex flex-wrap gap-4">
             {#each colors as color (color)}
@@ -289,7 +382,10 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FormField Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code>, the SelectMenu automatically inherits size, error state, and accessibility attributes.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code
+            >, the SelectMenu automatically inherits size, error state, and accessibility
+            attributes.
         </p>
         <div class="max-w-sm space-y-4">
             <FormField label="Country" description="Select your country of residence." required>
@@ -322,7 +418,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FieldGroup Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code>, select menus are visually connected.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code
+            >, select menus are visually connected.
         </p>
         <FieldGroup orientation="horizontal">
             <SelectMenu
@@ -345,7 +443,9 @@
         <!-- itemLeading slot -->
         <div class="space-y-2">
             <p class="text-sm font-medium text-on-surface-variant">
-                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemLeading</code>
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                    >itemLeading</code
+                >
                 — Custom leading per item (online status dot)
             </p>
             <div class="w-72">
@@ -358,7 +458,11 @@
                                 alt={s.avatar?.alt ?? ''}
                                 class="size-7 rounded-full object-cover"
                             />
-                            <span class="absolute right-0 bottom-0 size-2 rounded-full ring-1 ring-surface-container-low {statusColor[s.status ?? 'offline']}"></span>
+                            <span
+                                class="absolute right-0 bottom-0 size-2 rounded-full ring-1 ring-surface-container-low {statusColor[
+                                    s.status ?? 'offline'
+                                ]}"
+                            ></span>
                         </div>
                     {/snippet}
                 </SelectMenu>
@@ -368,7 +472,9 @@
         <!-- itemLabel slot -->
         <div class="space-y-2">
             <p class="text-sm font-medium text-on-surface-variant">
-                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemLabel</code>
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                    >itemLabel</code
+                >
                 — Custom label with badge
             </p>
             <div class="w-64">
@@ -376,7 +482,11 @@
                     {#snippet itemLabel({ item })}
                         <span class="flex items-center gap-2">
                             <span class="flex-1 text-sm text-on-surface">{item.label}</span>
-                            <span class="rounded px-1.5 py-0.5 text-[10px] font-bold {planBadge[item.value]?.class}">
+                            <span
+                                class="rounded px-1.5 py-0.5 text-[10px] font-bold {planBadge[
+                                    item.value
+                                ]?.class}"
+                            >
                                 {planBadge[item.value]?.label}
                             </span>
                         </span>
@@ -391,7 +501,9 @@
         <!-- itemTrailing slot -->
         <div class="space-y-2">
             <p class="text-sm font-medium text-on-surface-variant">
-                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemTrailing</code>
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                    >itemTrailing</code
+                >
                 — Custom trailing (keyboard shortcut)
             </p>
             <div class="w-64">
@@ -430,16 +542,48 @@
                 <SelectMenu items={statusItems} placeholder="Select a team member...">
                     {#snippet item({ item, selected })}
                         {@const s = item as StatusItem}
-                        <div class="flex items-center gap-3 rounded-md px-2 py-1.5 {selected ? 'bg-primary-container' : 'hover:bg-surface-container-high'} cursor-pointer transition-colors">
+                        <div
+                            class="flex items-center gap-3 rounded-md px-2 py-1.5 {selected
+                                ? 'bg-primary-container'
+                                : 'hover:bg-surface-container-high'} cursor-pointer transition-colors"
+                        >
                             <div class="relative shrink-0">
-                                <img src={s.avatar?.src} alt={s.avatar?.alt ?? ''} class="size-8 rounded-full object-cover" />
-                                <span class="absolute right-0 bottom-0 size-2.5 rounded-full ring-2 ring-surface-container-low {statusColor[s.status ?? 'offline']}"></span>
+                                <img
+                                    src={s.avatar?.src}
+                                    alt={s.avatar?.alt ?? ''}
+                                    class="size-8 rounded-full object-cover"
+                                />
+                                <span
+                                    class="absolute right-0 bottom-0 size-2.5 rounded-full ring-2 ring-surface-container-low {statusColor[
+                                        s.status ?? 'offline'
+                                    ]}"
+                                ></span>
                             </div>
                             <div class="min-w-0 flex-1">
-                                <p class="truncate text-sm font-medium {selected ? 'text-on-primary-container' : 'text-on-surface'}">{item.label}</p>
-                                <p class="truncate text-xs {selected ? 'text-on-primary-container/70' : 'text-on-surface-variant'}">{item.description}</p>
+                                <p
+                                    class="truncate text-sm font-medium {selected
+                                        ? 'text-on-primary-container'
+                                        : 'text-on-surface'}"
+                                >
+                                    {item.label}
+                                </p>
+                                <p
+                                    class="truncate text-xs {selected
+                                        ? 'text-on-primary-container/70'
+                                        : 'text-on-surface-variant'}"
+                                >
+                                    {item.description}
+                                </p>
                             </div>
-                            <span class="shrink-0 capitalize text-xs {statusColor[s.status ?? 'offline'].replace('bg-', 'text-').replace('bg-on-', 'text-on-')} {s.status === 'offline' ? 'text-on-surface-variant/40' : ''}">
+                            <span
+                                class="shrink-0 text-xs capitalize {statusColor[
+                                    s.status ?? 'offline'
+                                ]
+                                    .replace('bg-', 'text-')
+                                    .replace('bg-on-', 'text-on-')} {s.status === 'offline'
+                                    ? 'text-on-surface-variant/40'
+                                    : ''}"
+                            >
                                 {s.status}
                             </span>
                         </div>
@@ -451,17 +595,23 @@
         <!-- empty slot -->
         <div class="space-y-2">
             <p class="text-sm font-medium text-on-surface-variant">
-                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">empty</code>
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">empty</code
+                >
                 — Custom empty state
             </p>
             <div class="w-64">
                 <SelectMenu items={fruits} placeholder="Search (try 'xyz')...">
                     {#snippet empty({ searchTerm })}
                         <div class="flex flex-col items-center gap-1 py-6 text-center">
-                            <Icon name="lucide:search-x" class="size-8 text-on-surface-variant/40" />
+                            <Icon
+                                name="lucide:search-x"
+                                class="size-8 text-on-surface-variant/40"
+                            />
                             <p class="text-sm font-medium text-on-surface">No match</p>
                             <p class="text-xs text-on-surface-variant">
-                                Nothing found for <span class="font-mono text-primary">"{searchTerm}"</span>
+                                Nothing found for <span class="font-mono text-primary"
+                                    >"{searchTerm}"</span
+                                >
                             </p>
                         </div>
                     {/snippet}
@@ -472,9 +622,13 @@
         <!-- leadingSlot + trailingSlot -->
         <div class="space-y-2">
             <p class="text-sm font-medium text-on-surface-variant">
-                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">leadingSlot</code>
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                    >leadingSlot</code
+                >
                 /
-                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">trailingSlot</code>
+                <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                    >trailingSlot</code
+                >
                 — Custom trigger leading & trailing
             </p>
             <div class="w-72">
@@ -483,7 +637,10 @@
                         <span class="text-base">🍎</span>
                     {/snippet}
                     {#snippet trailingSlot()}
-                        <Icon name="lucide:chevrons-up-down" class="size-4 text-on-surface-variant/60" />
+                        <Icon
+                            name="lucide:chevrons-up-down"
+                            class="size-4 text-on-surface-variant/60"
+                        />
                     {/snippet}
                 </SelectMenu>
             </div>
@@ -499,7 +656,9 @@
         <div class="space-y-6">
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">User assignment</p>
-                <div class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4">
+                <div
+                    class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+                >
                     <FormField label="Assignee" required>
                         <SelectMenu items={avatarItems} placeholder="Select a team member..." />
                     </FormField>
@@ -528,7 +687,11 @@
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">Large list with search</p>
                 <div class="max-w-sm">
-                    <SelectMenu items={manyItems} placeholder="Search from 50 items..." leadingIcon="lucide:search" />
+                    <SelectMenu
+                        items={manyItems}
+                        placeholder="Search from 50 items..."
+                        leadingIcon="lucide:search"
+                    />
                 </div>
             </div>
         </div>

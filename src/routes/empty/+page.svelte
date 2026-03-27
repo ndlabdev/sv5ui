@@ -19,7 +19,9 @@
         <h2 class="text-lg font-semibold">Basic</h2>
         <div class="grid gap-4 lg:grid-cols-3">
             <div class="space-y-2">
-                <p class="text-sm font-medium text-on-surface-variant">Icon + title + description</p>
+                <p class="text-sm font-medium text-on-surface-variant">
+                    Icon + title + description
+                </p>
                 <div class="rounded-lg bg-surface-container-high p-4">
                     <Empty
                         icon="lucide:inbox"
@@ -78,7 +80,10 @@
                     <div class="rounded-lg bg-surface-container-high p-4">
                         <Empty
                             {variant}
-                            avatar={{ src: 'https://i.pravatar.cc/150?u=variant-{variant}', alt: 'User' }}
+                            avatar={{
+                                src: 'https://i.pravatar.cc/150?u=variant-{variant}',
+                                alt: 'User'
+                            }}
                             title="No notifications"
                             description="You're all caught up!"
                             size="sm"
@@ -148,7 +153,11 @@
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Custom leading</p>
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <Empty variant="outline" title="Welcome!" description="Get started by exploring our components.">
+                    <Empty
+                        variant="outline"
+                        title="Welcome!"
+                        description="Get started by exploring our components."
+                    >
                         {#snippet leading()}
                             <div
                                 class="flex size-16 items-center justify-center rounded-full bg-tertiary/10 text-tertiary"
@@ -165,12 +174,16 @@
                     <Empty variant="soft">
                         {#snippet header()}
                             <div class="flex flex-col items-center gap-3 text-center">
-                                <div class="flex size-14 items-center justify-center rounded-full bg-primary/10">
+                                <div
+                                    class="flex size-14 items-center justify-center rounded-full bg-primary/10"
+                                >
                                     <span class="text-2xl text-primary">✨</span>
                                 </div>
                                 <div>
                                     <p class="text-lg font-bold text-primary">Custom Header</p>
-                                    <p class="text-sm text-on-surface-variant">Entirely custom header content</p>
+                                    <p class="text-sm text-on-surface-variant">
+                                        Entirely custom header content
+                                    </p>
                                 </div>
                             </div>
                         {/snippet}
@@ -192,7 +205,9 @@
             >
                 {#snippet footer()}
                     <p class="text-xs text-on-surface-variant">
-                        Last updated: March 2026 · <a href="/empty" class="underline">Documentation</a>
+                        Last updated: March 2026 · <a href="/empty" class="underline"
+                            >Documentation</a
+                        >
                     </p>
                 {/snippet}
             </Empty>

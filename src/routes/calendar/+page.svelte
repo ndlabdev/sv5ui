@@ -50,7 +50,16 @@
         return date.month === 3 && (date.day === 25 || date.day === 26)
     }
 
-    const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
+    const colors = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ] as const
     const variants = ['solid', 'outline', 'soft', 'subtle'] as const
 </script>
 
@@ -77,7 +86,11 @@
                         <Button variant="outline" color="surface" class="w-56 justify-start">
                             <span class="flex items-center gap-2">
                                 <Icon name="lucide:calendar" class="size-4" />
-                                <span class={datePickerValue ? 'text-on-surface' : 'text-on-surface-variant'}>
+                                <span
+                                    class={datePickerValue
+                                        ? 'text-on-surface'
+                                        : 'text-on-surface-variant'}
+                                >
                                     {formatDate(datePickerValue)}
                                 </span>
                             </span>
@@ -99,13 +112,22 @@
                         <Button variant="outline" color="surface" class="w-72 justify-start">
                             <span class="flex items-center gap-2">
                                 <Icon name="lucide:calendar" class="size-4" />
-                                <span class={rangeDatePickerValue?.start ? 'text-on-surface' : 'text-on-surface-variant'}>
+                                <span
+                                    class={rangeDatePickerValue?.start
+                                        ? 'text-on-surface'
+                                        : 'text-on-surface-variant'}
+                                >
                                     {formatRange(rangeDatePickerValue)}
                                 </span>
                             </span>
                         </Button>
                         {#snippet content()}
-                            <Calendar range bind:value={rangeDatePickerValue} class="p-2" numberOfMonths={2} />
+                            <Calendar
+                                range
+                                bind:value={rangeDatePickerValue}
+                                class="p-2"
+                                numberOfMonths={2}
+                            />
                         {/snippet}
                     </Popover>
                 </div>
@@ -130,7 +152,9 @@
         <div class="flex flex-wrap items-start gap-6 rounded-lg bg-surface-container-high p-4">
             {#each colors as color (color)}
                 <div class="space-y-2">
-                    <p class="text-center text-xs font-medium text-on-surface-variant capitalize">{color}</p>
+                    <p class="text-center text-xs font-medium text-on-surface-variant capitalize">
+                        {color}
+                    </p>
                     <Calendar {color} value={today(getLocalTimeZone())} size="xs" />
                 </div>
             {/each}
@@ -143,7 +167,9 @@
         <div class="flex flex-wrap items-start gap-6 rounded-lg bg-surface-container-high p-4">
             {#each variants as variant (variant)}
                 <div class="space-y-2">
-                    <p class="text-center text-xs font-medium text-on-surface-variant capitalize">{variant}</p>
+                    <p class="text-center text-xs font-medium text-on-surface-variant capitalize">
+                        {variant}
+                    </p>
                     <Calendar {variant} value={today(getLocalTimeZone())} size="sm" />
                 </div>
             {/each}
@@ -171,11 +197,17 @@
         <h2 class="text-lg font-semibold">Multiple Selection</h2>
         <p class="text-sm text-on-surface-variant">
             Use
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">type="multiple"</code>
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type="multiple"</code
+            >
             to allow selecting multiple dates.
         </p>
         <div class="flex flex-wrap items-start gap-6 rounded-lg bg-surface-container-high p-4">
-            <Calendar type="multiple" bind:value={multipleValues} placeholder={new CalendarDate(2024, 3, 1)} />
+            <Calendar
+                type="multiple"
+                bind:value={multipleValues}
+                placeholder={new CalendarDate(2024, 3, 1)}
+            />
             <div class="text-sm text-on-surface-variant">
                 <p class="font-medium">Selected dates:</p>
                 {#if multipleValues?.length}
@@ -200,10 +232,21 @@
             prop to enable date range selection.
         </p>
         <div class="flex flex-wrap items-start gap-6 rounded-lg bg-surface-container-high p-4">
-            <Calendar range bind:value={rangeValue} placeholder={new CalendarDate(2024, 3, 1)} numberOfMonths={2} />
+            <Calendar
+                range
+                bind:value={rangeValue}
+                placeholder={new CalendarDate(2024, 3, 1)}
+                numberOfMonths={2}
+            />
             <div class="text-sm text-on-surface-variant">
-                <p>Start: <code class="text-primary">{rangeValue?.start?.toString() ?? 'none'}</code></p>
-                <p>End: <code class="text-primary">{rangeValue?.end?.toString() ?? 'none'}</code></p>
+                <p>
+                    Start: <code class="text-primary"
+                        >{rangeValue?.start?.toString() ?? 'none'}</code
+                    >
+                </p>
+                <p>
+                    End: <code class="text-primary">{rangeValue?.end?.toString() ?? 'none'}</code>
+                </p>
             </div>
         </div>
     </section>
@@ -229,7 +272,10 @@
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Holidays unavailable</p>
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <Calendar isDateUnavailable={isHoliday} placeholder={new CalendarDate(2024, 3, 1)} />
+                    <Calendar
+                        isDateUnavailable={isHoliday}
+                        placeholder={new CalendarDate(2024, 3, 1)}
+                    />
                 </div>
             </div>
             <div class="space-y-2">
@@ -255,11 +301,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Locale</h2>
         <div class="grid gap-4 sm:grid-cols-3">
-            {#each [
-                { locale: 'en', label: 'English' },
-                { locale: 'vi', label: 'Vietnamese' },
-                { locale: 'ja', label: 'Japanese' }
-            ] as item (item.locale)}
+            {#each [{ locale: 'en', label: 'English' }, { locale: 'vi', label: 'Vietnamese' }, { locale: 'ja', label: 'Japanese' }] as item (item.locale)}
                 <div class="space-y-2">
                     <p class="text-sm font-medium text-on-surface-variant">{item.label}</p>
                     <div class="rounded-lg bg-surface-container-high p-4">

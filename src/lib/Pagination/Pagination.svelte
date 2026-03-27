@@ -62,7 +62,8 @@
 
     const variantSlots = $derived(paginationVariants({ size, disabled }))
     const activeCls = $derived(
-        activeVariantColorClasses[activeVariant]?.[activeColor] ?? activeVariantColorClasses.solid.primary
+        activeVariantColorClasses[activeVariant]?.[activeColor] ??
+            activeVariantColorClasses.solid.primary
     )
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className] }),

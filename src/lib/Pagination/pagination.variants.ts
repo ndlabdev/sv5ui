@@ -68,23 +68,17 @@ export const activeVariantColorClasses: Record<string, Record<string, string>> =
             'data-[selected]:bg-surface-container-highest/50 data-[selected]:text-on-surface data-[selected]:hover:bg-surface-container-highest/70'
     },
     ghost: {
-        primary:
-            'data-[selected]:text-primary data-[selected]:hover:bg-primary/10',
-        secondary:
-            'data-[selected]:text-secondary data-[selected]:hover:bg-secondary/10',
-        tertiary:
-            'data-[selected]:text-tertiary data-[selected]:hover:bg-tertiary/10',
-        success:
-            'data-[selected]:text-success data-[selected]:hover:bg-success/10',
-        warning:
-            'data-[selected]:text-warning data-[selected]:hover:bg-warning/10',
+        primary: 'data-[selected]:text-primary data-[selected]:hover:bg-primary/10',
+        secondary: 'data-[selected]:text-secondary data-[selected]:hover:bg-secondary/10',
+        tertiary: 'data-[selected]:text-tertiary data-[selected]:hover:bg-tertiary/10',
+        success: 'data-[selected]:text-success data-[selected]:hover:bg-success/10',
+        warning: 'data-[selected]:text-warning data-[selected]:hover:bg-warning/10',
         error: 'data-[selected]:text-error data-[selected]:hover:bg-error/10',
         info: 'data-[selected]:text-info data-[selected]:hover:bg-info/10',
         surface:
             'data-[selected]:text-on-surface data-[selected]:hover:bg-surface-container-highest'
     }
 }
-
 
 export const paginationVariants = tv({
     slots: {

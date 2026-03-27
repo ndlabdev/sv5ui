@@ -169,8 +169,8 @@
     <div class="space-y-2">
         <h1 class="text-2xl font-bold">DropdownMenu</h1>
         <p class="text-on-surface-variant">
-            Display a menu of actions or options triggered by a button. Built on bits-ui DropdownMenu
-            primitive.
+            Display a menu of actions or options triggered by a button. Built on bits-ui
+            DropdownMenu primitive.
         </p>
     </div>
 
@@ -195,13 +195,10 @@
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">side</code>
             prop.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-8 rounded-lg bg-surface-container-high p-8">
-            {#each [
-                { side: 'top' as const, label: 'Top' },
-                { side: 'right' as const, label: 'Right' },
-                { side: 'bottom' as const, label: 'Bottom' },
-                { side: 'left' as const, label: 'Left' }
-            ] as item (item.side)}
+        <div
+            class="flex flex-wrap items-center justify-center gap-8 rounded-lg bg-surface-container-high p-8"
+        >
+            {#each [{ side: 'top' as const, label: 'Top' }, { side: 'right' as const, label: 'Right' }, { side: 'bottom' as const, label: 'Bottom' }, { side: 'left' as const, label: 'Left' }] as item (item.side)}
                 <DropdownMenu items={basicItems.slice(0, 4)} side={item.side}>
                     <Button variant="soft">{item.label}</Button>
                 </DropdownMenu>
@@ -213,13 +210,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
-            {#each [
-                { size: 'xs' as const, label: 'XS' },
-                { size: 'sm' as const, label: 'SM' },
-                { size: 'md' as const, label: 'MD' },
-                { size: 'lg' as const, label: 'LG' },
-                { size: 'xl' as const, label: 'XL' }
-            ] as item (item.size)}
+            {#each [{ size: 'xs' as const, label: 'XS' }, { size: 'sm' as const, label: 'SM' }, { size: 'md' as const, label: 'MD' }, { size: 'lg' as const, label: 'LG' }, { size: 'xl' as const, label: 'XL' }] as item (item.size)}
                 <DropdownMenu items={basicItems.slice(0, 4)} size={item.size}>
                     <Button size={item.size} variant="outline">{item.label}</Button>
                 </DropdownMenu>
@@ -287,7 +278,9 @@
         <h2 class="text-lg font-semibold">Close On Select</h2>
         <p class="text-sm text-on-surface-variant">
             Use
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">closeOnSelect: false</code>
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >closeOnSelect: false</code
+            >
             to keep the menu open after clicking an item.
         </p>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
@@ -388,7 +381,9 @@
                             {#each ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500', 'bg-teal-500', 'bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-gray-500'] as color (color)}
                                 <button
                                     class="size-8 rounded-full {color} transition-all hover:ring-2 hover:ring-outline hover:ring-offset-2"
-                                    aria-label="Select {color.replace('bg-', '').replace('-500', '')} color"
+                                    aria-label="Select {color
+                                        .replace('bg-', '')
+                                        .replace('-500', '')} color"
                                     onclick={close}
                                 ></button>
                             {/each}
@@ -421,7 +416,10 @@
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Custom rounding</p>
                 <div class="rounded-lg bg-surface-container-high p-4">
-                    <DropdownMenu items={basicItems.slice(0, 4)} ui={{ content: 'rounded-xl shadow-2xl' }}>
+                    <DropdownMenu
+                        items={basicItems.slice(0, 4)}
+                        ui={{ content: 'rounded-xl shadow-2xl' }}
+                    >
                         <Button variant="outline">Rounded</Button>
                     </DropdownMenu>
                 </div>
@@ -439,11 +437,15 @@
             <!-- Profile Menu -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">Profile Menu</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <DropdownMenu items={profileItems}>
                         <Button icon="lucide:chevron-down" trailing>
                             <span class="flex items-center gap-2">
-                                <span class="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-on-primary">
+                                <span
+                                    class="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-on-primary"
+                                >
                                     JD
                                 </span>
                                 shadcn
@@ -456,9 +458,16 @@
             <!-- Context Menu Style -->
             <div class="space-y-2">
                 <p class="text-sm font-medium">Right-Click Style</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-6">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
                     <DropdownMenu items={coloredItems} arrow align="center">
-                        <Button variant="outline" icon="lucide:more-vertical" square aria-label="More options" />
+                        <Button
+                            variant="outline"
+                            icon="lucide:more-vertical"
+                            square
+                            aria-label="More options"
+                        />
                     </DropdownMenu>
                 </div>
             </div>

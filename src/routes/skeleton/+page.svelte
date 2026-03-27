@@ -34,19 +34,25 @@
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Circle (Avatar)</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-4">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-4"
+                >
                     <Skeleton class="size-12 rounded-full" />
                 </div>
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Square</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-4">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-4"
+                >
                     <Skeleton class="size-24 rounded-lg" />
                 </div>
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">Rectangle (Image)</p>
-                <div class="flex items-center justify-center rounded-lg bg-surface-container-high p-4">
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-4"
+                >
                     <Skeleton class="h-24 w-full rounded-lg" />
                 </div>
             </div>
@@ -113,15 +119,19 @@
                 <Card>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
-                            <Avatar src="https://i.pravatar.cc/150?img=3" alt="Jane Smith" size="md" />
+                            <Avatar
+                                src="https://i.pravatar.cc/150?img=3"
+                                alt="Jane Smith"
+                                size="md"
+                            />
                             <div>
                                 <h3 class="font-semibold">Jane Smith</h3>
                                 <p class="text-sm text-on-surface-variant">Product Designer</p>
                             </div>
                         </div>
                         <p class="text-on-surface-variant">
-                            Creating beautiful and functional user interfaces with attention to detail
-                            and user experience.
+                            Creating beautiful and functional user interfaces with attention to
+                            detail and user experience.
                         </p>
                         <div class="flex gap-2">
                             <Button variant="solid" color="primary" label="Follow" size="sm" />

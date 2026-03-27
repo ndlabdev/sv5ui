@@ -2,7 +2,16 @@
     import { Input, FormField, FieldGroup, Separator } from '$lib/index.js'
 
     const variants = ['outline', 'soft', 'subtle', 'ghost', 'none'] as const
-    const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info', 'surface'] as const
+    const colors = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     let bindValue = $state('')
@@ -15,7 +24,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Basic Usage</h2>
         <p class="text-sm text-on-surface-variant">
-            A form input component with variants, colors, icons, and integration with FormField and FieldGroup.
+            A form input component with variants, colors, icons, and integration with FormField and
+            FieldGroup.
         </p>
         <div class="max-w-sm">
             <Input placeholder="Enter text..." />
@@ -26,10 +36,16 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Two-way Binding</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">bind:value</code> for reactive two-way data binding.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >bind:value</code
+            > for reactive two-way data binding.
         </p>
         <div class="max-w-sm space-y-3">
-            <Input bind:value={bindValue} leadingIcon="lucide:pencil" placeholder="Type something..." />
+            <Input
+                bind:value={bindValue}
+                leadingIcon="lucide:pencil"
+                placeholder="Type something..."
+            />
             <p class="text-sm text-on-surface-variant">
                 Value: <span class="font-mono text-on-surface">{bindValue || '(empty)'}</span>
             </p>
@@ -43,23 +59,34 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Variants &times; Colors</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">variant</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control appearance.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >variant</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">color</code> to control
+            appearance.
         </p>
         <div class="overflow-x-auto">
             <table class="w-full border-collapse">
                 <thead>
                     <tr>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant"></th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant"
+                        ></th>
                         {#each colors as color (color)}
-                            <th class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant capitalize">{color}</th>
+                            <th
+                                class="px-3 py-2 text-left text-xs font-medium text-on-surface-variant capitalize"
+                                >{color}</th
+                            >
                         {/each}
                     </tr>
                 </thead>
                 <tbody>
                     {#each variants as variant (variant)}
                         <tr>
-                            <td class="px-3 py-2 text-xs font-medium text-on-surface-variant capitalize">{variant}</td>
+                            <td
+                                class="px-3 py-2 text-xs font-medium text-on-surface-variant capitalize"
+                                >{variant}</td
+                            >
                             {#each colors as color (color)}
                                 <td class="px-3 py-2">
                                     <Input {variant} {color} placeholder={color} />
@@ -76,7 +103,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Size</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to control the dimensions and text size.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to
+            control the dimensions and text size.
         </p>
         <div class="flex flex-wrap items-end gap-4">
             {#each sizes as size (size)}
@@ -91,8 +119,13 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Icons</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">leadingIcon</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">trailingIcon</code> to add icons.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >leadingIcon</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >trailingIcon</code
+            > to add icons.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -102,7 +135,12 @@
                 <Input trailingIcon="lucide:eye" placeholder="Password" type="password" />
             </div>
             <div class="w-64">
-                <Input leadingIcon="lucide:mail" trailingIcon="lucide:check" placeholder="Email" type="email" />
+                <Input
+                    leadingIcon="lucide:mail"
+                    trailingIcon="lucide:check"
+                    placeholder="Email"
+                    type="email"
+                />
             </div>
         </div>
     </section>
@@ -111,8 +149,10 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Icon (with trailing)</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">icon</code> with
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">trailing</code> to position it.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">icon</code>
+            with
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">trailing</code> to
+            position it.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -128,10 +168,15 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Avatar</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">avatar</code> to display an avatar before the input.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >avatar</code
+            > to display an avatar before the input.
         </p>
         <div class="w-64">
-            <Input avatar={{ src: 'https://i.pravatar.cc/120?img=1', alt: 'User' }} placeholder="With avatar" />
+            <Input
+                avatar={{ src: 'https://i.pravatar.cc/120?img=1', alt: 'User' }}
+                placeholder="With avatar"
+            />
         </div>
     </section>
 
@@ -139,7 +184,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Loading</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">loading</code> to show a loading spinner.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >loading</code
+            > to show a loading spinner.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -155,7 +202,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Disabled</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">disabled</code> to prevent interaction.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >disabled</code
+            > to prevent interaction.
         </p>
         <div class="flex flex-wrap gap-4">
             <div class="w-64">
@@ -171,7 +220,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Highlight</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">highlight</code> to emphasize the ring color like a focus state.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >highlight</code
+            > to emphasize the ring color like a focus state.
         </p>
         <div class="flex flex-wrap gap-4">
             {#each colors as color (color)}
@@ -186,15 +237,29 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FormField Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code>, the Input automatically inherits size, error state, and accessibility attributes.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FormField</code
+            >, the Input automatically inherits size, error state, and accessibility attributes.
         </p>
         <div class="max-w-sm space-y-4">
-            <FormField label="Email" description="We'll use this to send you notifications." required>
+            <FormField
+                label="Email"
+                description="We'll use this to send you notifications."
+                required
+            >
                 <Input leadingIcon="lucide:mail" placeholder="Enter your email" type="email" />
             </FormField>
 
-            <FormField label="Password" help="Must be at least 8 characters." error="Password is too short.">
-                <Input trailingIcon="lucide:eye" placeholder="Enter your password" type="password" />
+            <FormField
+                label="Password"
+                help="Must be at least 8 characters."
+                error="Password is too short."
+            >
+                <Input
+                    trailingIcon="lucide:eye"
+                    placeholder="Enter your password"
+                    type="password"
+                />
             </FormField>
         </div>
     </section>
@@ -203,7 +268,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">FieldGroup Integration</h2>
         <p class="text-sm text-on-surface-variant">
-            When used inside a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code>, inputs are visually connected.
+            When used inside a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code
+            >, inputs are visually connected.
         </p>
         <div class="space-y-6">
             <div>
@@ -247,26 +314,43 @@
 
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">Login form</p>
-                <div class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4">
+                <div
+                    class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+                >
                     <FormField label="Email" required>
-                        <Input leadingIcon="lucide:mail" placeholder="john@example.com" type="email" />
+                        <Input
+                            leadingIcon="lucide:mail"
+                            placeholder="john@example.com"
+                            type="email"
+                        />
                     </FormField>
 
                     <FormField label="Password" required help="Must be at least 8 characters.">
-                        <Input leadingIcon="lucide:lock" placeholder="Enter your password" type="password" />
+                        <Input
+                            leadingIcon="lucide:lock"
+                            placeholder="Enter your password"
+                            type="password"
+                        />
                     </FormField>
                 </div>
             </div>
 
             <div>
                 <p class="mb-2 text-xs text-on-surface-variant">Validation states</p>
-                <div class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4">
+                <div
+                    class="max-w-sm space-y-4 rounded-lg border border-outline-variant bg-surface-container-low p-4"
+                >
                     <FormField label="Username" error="Username is already taken.">
                         <Input value="admin" color="error" leadingIcon="lucide:user" />
                     </FormField>
 
                     <FormField label="Email" help="Looks good!">
-                        <Input type="email" value="valid@example.com" color="success" leadingIcon="lucide:mail" />
+                        <Input
+                            type="email"
+                            value="valid@example.com"
+                            color="success"
+                            leadingIcon="lucide:mail"
+                        />
                     </FormField>
                 </div>
             </div>

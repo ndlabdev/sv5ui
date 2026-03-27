@@ -51,7 +51,16 @@
         }
     })
 
-    const hasHeader = $derived(!!icon || !!avatar || !!title || !!description || !!leading || !!titleSlot || !!descriptionSlot || !!header)
+    const hasHeader = $derived(
+        !!icon ||
+            !!avatar ||
+            !!title ||
+            !!description ||
+            !!leading ||
+            !!titleSlot ||
+            !!descriptionSlot ||
+            !!header
+    )
     const hasActions = $derived(actions && actions.length > 0)
     const hasBody = $derived(!!hasActions || !!actionsSlot || !!body || !!children)
 </script>

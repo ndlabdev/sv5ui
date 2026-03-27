@@ -50,12 +50,7 @@
             > prop.
         </p>
         <div class="grid gap-4 sm:grid-cols-2">
-            {#each [
-                { icon: 'lucide:chevron-right', name: 'Chevron (default)' },
-                { icon: 'lucide:slash', name: 'Slash' },
-                { icon: 'lucide:arrow-right', name: 'Arrow' },
-                { icon: 'lucide:dot', name: 'Dot' }
-            ] as sep (sep.icon)}
+            {#each [{ icon: 'lucide:chevron-right', name: 'Chevron (default)' }, { icon: 'lucide:slash', name: 'Slash' }, { icon: 'lucide:arrow-right', name: 'Arrow' }, { icon: 'lucide:dot', name: 'Dot' }] as sep (sep.icon)}
                 <div class="space-y-1 rounded-lg bg-surface-container-high p-4">
                     <p class="text-xs font-medium text-on-surface-variant">{sep.name}</p>
                     <Breadcrumb

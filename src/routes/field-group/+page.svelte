@@ -11,8 +11,13 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Basic Usage</h2>
         <p class="text-sm text-on-surface-variant">
-            Wrap multiple <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">Button</code>
-            within a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">FieldGroup</code> to group them together.
+            Wrap multiple <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >Button</code
+            >
+            within a
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >FieldGroup</code
+            > to group them together.
         </p>
         <FieldGroup>
             <Button label="Action" />
@@ -25,7 +30,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Orientation</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">orientation</code> to change the layout direction.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >orientation</code
+            > to change the layout direction.
         </p>
         <div class="flex flex-wrap items-start gap-6">
             <div class="space-y-2">
@@ -51,7 +58,8 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Size</h2>
         <p class="text-sm text-on-surface-variant">
-            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to set the size of all child components.
+            Use <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to
+            set the size of all child components.
         </p>
         <div class="flex flex-wrap items-end gap-6">
             {#each sizes as size (size)}
@@ -97,7 +105,9 @@
     <!-- With Icons -->
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">With Icons</h2>
-        <p class="text-sm text-on-surface-variant">Icon-only button groups for toolbar-style layouts.</p>
+        <p class="text-sm text-on-surface-variant">
+            Icon-only button groups for toolbar-style layouts.
+        </p>
         <div class="flex flex-wrap items-center gap-6">
             <FieldGroup>
                 <Button icon="lucide:align-left" variant="outline" color="surface" />
@@ -137,8 +147,12 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">With Input</h2>
         <p class="text-sm text-on-surface-variant">
-            Combine <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">Input</code> and
-            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">Button</code> in a FieldGroup.
+            Combine <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >Input</code
+            >
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">Button</code> in
+            a FieldGroup.
         </p>
         <div class="flex flex-wrap items-start gap-6">
             <FieldGroup>
@@ -179,7 +193,9 @@
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Input + Button Sizes</h2>
         <p class="text-sm text-on-surface-variant">
-            FieldGroup propagates <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code> to all children.
+            FieldGroup propagates <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">size</code
+            > to all children.
         </p>
         <div class="flex flex-wrap items-end gap-6">
             {#each sizes as size (size)}
@@ -207,16 +223,41 @@
                     <FieldGroup>
                         <Button icon="lucide:bold" variant="outline" color="surface" size="sm" />
                         <Button icon="lucide:italic" variant="outline" color="surface" size="sm" />
-                        <Button icon="lucide:underline" variant="outline" color="surface" size="sm" />
+                        <Button
+                            icon="lucide:underline"
+                            variant="outline"
+                            color="surface"
+                            size="sm"
+                        />
                     </FieldGroup>
                     <FieldGroup>
-                        <Button icon="lucide:align-left" variant="outline" color="surface" size="sm" />
-                        <Button icon="lucide:align-center" variant="outline" color="surface" size="sm" />
-                        <Button icon="lucide:align-right" variant="outline" color="surface" size="sm" />
+                        <Button
+                            icon="lucide:align-left"
+                            variant="outline"
+                            color="surface"
+                            size="sm"
+                        />
+                        <Button
+                            icon="lucide:align-center"
+                            variant="outline"
+                            color="surface"
+                            size="sm"
+                        />
+                        <Button
+                            icon="lucide:align-right"
+                            variant="outline"
+                            color="surface"
+                            size="sm"
+                        />
                     </FieldGroup>
                     <FieldGroup>
                         <Button icon="lucide:list" variant="outline" color="surface" size="sm" />
-                        <Button icon="lucide:list-ordered" variant="outline" color="surface" size="sm" />
+                        <Button
+                            icon="lucide:list-ordered"
+                            variant="outline"
+                            color="surface"
+                            size="sm"
+                        />
                     </FieldGroup>
                 </div>
             </div>

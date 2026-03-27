@@ -89,7 +89,8 @@
                     <Button variant="outline" label={dir.charAt(0).toUpperCase() + dir.slice(1)} />
                     {#snippet body()}
                         <p class="text-on-surface-variant">
-                            Drawer from the <strong>{dir}</strong>. Swipe towards the edge to dismiss.
+                            Drawer from the <strong>{dir}</strong>. Swipe towards the edge to
+                            dismiss.
                         </p>
                     {/snippet}
                     {#snippet footer()}
@@ -305,9 +306,24 @@
                             Active snap point: <strong>{activeSnap}</strong>
                         </p>
                         <div class="flex gap-2">
-                            <Button size="sm" variant="soft" label="25%" onclick={() => (activeSnap = 0.25)} />
-                            <Button size="sm" variant="soft" label="50%" onclick={() => (activeSnap = 0.5)} />
-                            <Button size="sm" variant="soft" label="100%" onclick={() => (activeSnap = 1)} />
+                            <Button
+                                size="sm"
+                                variant="soft"
+                                label="25%"
+                                onclick={() => (activeSnap = 0.25)}
+                            />
+                            <Button
+                                size="sm"
+                                variant="soft"
+                                label="50%"
+                                onclick={() => (activeSnap = 0.5)}
+                            />
+                            <Button
+                                size="sm"
+                                variant="soft"
+                                label="100%"
+                                onclick={() => (activeSnap = 1)}
+                            />
                         </div>
                     </div>
                 {/snippet}
@@ -339,7 +355,8 @@
                             <Button variant="solid" color="primary" label="Open Inner Drawer" />
                             {#snippet body()}
                                 <p class="text-on-surface-variant">
-                                    This is the nested drawer. Closing it returns to the outer drawer.
+                                    This is the nested drawer. Closing it returns to the outer
+                                    drawer.
                                 </p>
                             {/snippet}
                             {#snippet footer()}
