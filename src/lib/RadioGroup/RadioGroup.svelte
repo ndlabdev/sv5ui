@@ -162,7 +162,6 @@
     {/if}
 {/snippet}
 
-<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
 <div {...restProps} bind:this={ref} class={layoutClasses.root}>
     <RadioGroup.Root
         bind:value
@@ -188,7 +187,6 @@
 
         {#each items as radioItem (radioItem.value)}
             {#if variant === 'card'}
-                <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <div
                     role="none"
                     class={layoutClasses.item}
