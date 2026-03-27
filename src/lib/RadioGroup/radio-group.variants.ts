@@ -16,10 +16,10 @@ export const radioGroupVariants = tv({
         ],
         indicator: [
             'flex items-center justify-center rounded-full',
-            'after:content-[""] after:block after:rounded-full after:bg-white'
+            'after:content-[""] after:block after:rounded-full after:bg-surface'
         ],
-        loadingIcon: 'shrink-0 animate-spin text-white',
-        wrapper: 'ms-2',
+        loadingIcon: 'shrink-0 animate-spin text-surface',
+        wrapper: '',
         label: 'block font-medium text-on-surface',
         description: 'text-on-surface-variant'
     },
@@ -74,6 +74,24 @@ export const radioGroupVariants = tv({
                 indicator: 'size-5.5 after:size-2.5',
                 loadingIcon: 'size-4',
                 wrapper: 'text-base'
+            }
+        },
+        variant: {
+            list: '',
+            card: {
+                item: 'border border-outline-variant rounded-lg cursor-pointer select-none'
+            }
+        },
+        indicator: {
+            start: {
+                wrapper: 'ms-2'
+            },
+            end: {
+                item: 'flex-row-reverse',
+                wrapper: 'me-2'
+            },
+            hidden: {
+                container: 'sr-only'
             }
         },
         orientation: {
@@ -150,11 +168,30 @@ export const radioGroupVariants = tv({
             class: {
                 base: 'data-[state=checked]:bg-on-surface data-[state=checked]:border-on-surface focus-visible:outline-outline'
             }
-        }
+        },
+        // ========== CARD × SIZE (padding) ==========
+        { variant: 'card', size: 'xs', class: { item: 'p-2' } },
+        { variant: 'card', size: 'sm', class: { item: 'p-2.5' } },
+        { variant: 'card', size: 'md', class: { item: 'p-3' } },
+        { variant: 'card', size: 'lg', class: { item: 'p-3.5' } },
+        { variant: 'card', size: 'xl', class: { item: 'p-4' } },
+        // ========== CARD × COLOR (checked border) ==========
+        { variant: 'card', color: 'primary', class: { item: 'has-[[data-state=checked]]:border-primary' } },
+        { variant: 'card', color: 'secondary', class: { item: 'has-[[data-state=checked]]:border-secondary' } },
+        { variant: 'card', color: 'tertiary', class: { item: 'has-[[data-state=checked]]:border-tertiary' } },
+        { variant: 'card', color: 'success', class: { item: 'has-[[data-state=checked]]:border-success' } },
+        { variant: 'card', color: 'warning', class: { item: 'has-[[data-state=checked]]:border-warning' } },
+        { variant: 'card', color: 'error', class: { item: 'has-[[data-state=checked]]:border-error' } },
+        { variant: 'card', color: 'info', class: { item: 'has-[[data-state=checked]]:border-info' } },
+        { variant: 'card', color: 'surface', class: { item: 'has-[[data-state=checked]]:border-on-surface' } },
+        // ========== CARD × DISABLED ==========
+        { variant: 'card', disabled: true, class: { item: 'cursor-not-allowed' } }
     ],
     defaultVariants: {
         color: 'primary',
         size: 'md',
+        variant: 'list',
+        indicator: 'start',
         orientation: 'vertical'
     }
 })

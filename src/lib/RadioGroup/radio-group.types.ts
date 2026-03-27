@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte'
 import type { RadioGroup as RadioGroupPrimitive } from 'bits-ui'
 import type { ClassNameValue } from 'tailwind-merge'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { RadioGroupVariantProps, RadioGroupSlots } from './radio-group.variants.js'
 
 export type RadioGroupItem = {
@@ -28,8 +29,14 @@ export type RadioGroupItem = {
 
 export type RadioGroupProps = Pick<
     RadioGroupPrimitive.RootProps,
-    'disabled' | 'name' | 'required' | 'loop'
-> & {
+    'disabled' | 'name' | 'required' | 'loop' | 'readonly'
+> &
+    Omit<HTMLAttributes<HTMLElement>, 'class'> & {
+    /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
     /**
      * The selected value. Supports two-way binding with `bind:value`.
      */
@@ -56,6 +63,18 @@ export type RadioGroupProps = Pick<
      * @default 'md'
      */
     size?: NonNullable<RadioGroupVariantProps['size']>
+
+    /**
+     * Controls the visual style of each radio item.
+     * @default 'list'
+     */
+    variant?: NonNullable<RadioGroupVariantProps['variant']>
+
+    /**
+     * Controls the position of the radio indicator.
+     * @default 'start'
+     */
+    indicator?: NonNullable<RadioGroupVariantProps['indicator']>
 
     /**
      * Controls the layout direction.

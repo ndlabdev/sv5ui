@@ -11,11 +11,13 @@
     import { getContext } from 'svelte'
     import Icon from '../Icon/Icon.svelte'
     import type { FormFieldProps } from '../FormField/form-field.types.js'
+    import type { RadioGroupItem } from './radio-group.types.js'
 
     const config = getComponentConfig('radioGroup', radioGroupDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         value = $bindable(''),
         onValueChange,
         items = [],
@@ -24,9 +26,12 @@
         name,
         color = config.defaultVariants.color,
         size,
+        variant = config.defaultVariants.variant,
+        indicator = config.defaultVariants.indicator,
         orientation = config.defaultVariants.orientation,
         disabled = false,
         required = false,
+        readonly = false,
         loop = true,
         loading = false,
         loadingIcon = icons.loading,
@@ -34,7 +39,8 @@
         legendSlot,
         labelSlot,
         descriptionSlot,
-        class: className
+        class: className,
+        ...restProps
     }: Props = $props()
 
     const formFieldContext = getContext<
@@ -57,16 +63,20 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
-    const ariaDescribedBy = $derived.by(() => {
-        if (!formFieldContext) return undefined
-        const fid = formFieldContext.ariaId
-        return hasError ? `${fid}-error` : `${fid}-description ${fid}-help`
-    })
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
     const slots = $derived(
         radioGroupVariants({
             color: resolvedColor,
             size: resolvedSize,
+            variant,
+            indicator,
             orientation,
             loading,
             required,
@@ -90,9 +100,70 @@
         label: slots.label({ class: [config.slots.label, ui?.label] }),
         description: slots.description({ class: [config.slots.description, ui?.description] })
     }))
+
+    function handleCardItemClick(e: MouseEvent, btnId: string, itemDisabled: boolean) {
+        if (itemDisabled) return
+        if ((e.target as Element).closest('button')) return
+        document.getElementById(btnId)?.click()
+    }
 </script>
 
-<div class={layoutClasses.root}>
+{#snippet itemContent(radioItem: RadioGroupItem)}
+    {@const itemId = `${resolvedId}-${radioItem.value}`}
+    {@const itemDisabled = isDisabled || !!radioItem.disabled}
+    <div class={layoutClasses.container}>
+        <RadioGroup.Item
+            value={radioItem.value}
+            disabled={itemDisabled}
+            id={itemId}
+            class={elementClasses.base}
+        >
+            {#snippet children({ checked })}
+                {#if checked}
+                    <span class={elementClasses.indicator}>
+                        {#if loading}
+                            <Icon name={loadingIcon} class={elementClasses.loadingIcon} />
+                        {/if}
+                    </span>
+                {/if}
+            {/snippet}
+        </RadioGroup.Item>
+    </div>
+
+    {#if radioItem.label || radioItem.description || labelSlot || descriptionSlot}
+        <div class={layoutClasses.wrapper}>
+            {#if labelSlot}
+                {@render labelSlot({ item: radioItem })}
+            {:else if radioItem.label}
+                {#if variant === 'card'}
+                    <span
+                        class={[elementClasses.label, itemDisabled && 'cursor-not-allowed'].filter(Boolean).join(' ')}
+                    >{radioItem.label}</span>
+                {:else}
+                    <Label.Root
+                        for={itemId}
+                        class={[elementClasses.label, itemDisabled && 'cursor-not-allowed'].filter(Boolean).join(' ')}
+                    >
+                        {radioItem.label}
+                    </Label.Root>
+                {/if}
+            {/if}
+
+            {#if descriptionSlot}
+                {@render descriptionSlot({ item: radioItem })}
+            {:else if radioItem.description}
+                <p
+                    class={[elementClasses.description, itemDisabled && 'cursor-not-allowed'].filter(Boolean).join(' ')}
+                >
+                    {radioItem.description}
+                </p>
+            {/if}
+        </div>
+    {/if}
+{/snippet}
+
+<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+<div {...restProps} bind:this={ref} class={layoutClasses.root}>
     <RadioGroup.Root
         bind:value
         {onValueChange}
@@ -100,6 +171,7 @@
         name={resolvedName}
         disabled={isDisabled}
         {required}
+        {readonly}
         {loop}
         {orientation}
         aria-describedby={ariaDescribedBy}
@@ -115,61 +187,24 @@
         {/if}
 
         {#each items as radioItem (radioItem.value)}
-            {@const itemId = `${resolvedId}-${radioItem.value}`}
-            {@const itemDisabled = isDisabled || radioItem.disabled}
-
-            <div class="{layoutClasses.item}{itemDisabled && !isDisabled ? ' opacity-75' : ''}">
-                <div class={layoutClasses.container}>
-                    <RadioGroup.Item
-                        value={radioItem.value}
-                        disabled={itemDisabled}
-                        id={itemId}
-                        class={elementClasses.base}
-                    >
-                        {#snippet children({ checked })}
-                            {#if checked}
-                                <span class={elementClasses.indicator}>
-                                    {#if loading}
-                                        <Icon
-                                            name={loadingIcon}
-                                            class={elementClasses.loadingIcon}
-                                        />
-                                    {/if}
-                                </span>
-                            {/if}
-                        {/snippet}
-                    </RadioGroup.Item>
+            {#if variant === 'card'}
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <div
+                    role="none"
+                    class={layoutClasses.item}
+                    class:opacity-75={radioItem.disabled && !isDisabled}
+                    onclick={(e) => handleCardItemClick(e, `${resolvedId}-${radioItem.value}`, isDisabled || !!radioItem.disabled)}
+                >
+                    {@render itemContent(radioItem)}
                 </div>
-
-                {#if radioItem.label || radioItem.description || labelSlot || descriptionSlot}
-                    <div class={layoutClasses.wrapper}>
-                        {#if labelSlot}
-                            {@render labelSlot({ item: radioItem })}
-                        {:else if radioItem.label}
-                            <Label.Root
-                                for={itemId}
-                                class="{elementClasses.label}{itemDisabled
-                                    ? ' cursor-not-allowed'
-                                    : ''}"
-                            >
-                                {radioItem.label}
-                            </Label.Root>
-                        {/if}
-
-                        {#if descriptionSlot}
-                            {@render descriptionSlot({ item: radioItem })}
-                        {:else if radioItem.description}
-                            <p
-                                class="{elementClasses.description}{itemDisabled
-                                    ? ' cursor-not-allowed'
-                                    : ''}"
-                            >
-                                {radioItem.description}
-                            </p>
-                        {/if}
-                    </div>
-                {/if}
-            </div>
+            {:else}
+                <div
+                    class={layoutClasses.item}
+                    class:opacity-75={radioItem.disabled && !isDisabled}
+                >
+                    {@render itemContent(radioItem)}
+                </div>
+            {/if}
         {/each}
     </RadioGroup.Root>
 </div>
