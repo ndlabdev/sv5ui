@@ -22,6 +22,7 @@
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
+        ref = $bindable(null),
         value = $bindable(),
         open = $bindable(false),
         onOpenChange,
@@ -102,11 +103,13 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
     // ---- ARIA ----
-    const ariaDescribedBy = $derived.by(() => {
-        if (!formFieldContext) return undefined
-        const fid = formFieldContext.ariaId
-        return hasError ? `${fid}-error` : `${fid}-description ${fid}-help`
-    })
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
     // ---- Items lookup (O(1) via Map) ----
     const itemsMap = $derived(
@@ -329,7 +332,7 @@
     {value}
     onValueChange={(val) => (value = val)}
 >
-    <div class={rootClass}>
+    <div bind:this={ref} class={rootClass}>
         {#if leadingSlot}
             <span class={leadingClass}>
                 {@render leadingSlot()}
