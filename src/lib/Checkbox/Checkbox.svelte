@@ -73,6 +73,15 @@
 
     const resolvedIcon = $derived(loading ? loadingIcon : indeterminate ? indeterminateIcon : icon)
 
+    let containerRef: HTMLElement | null = null
+
+    function handleCardClick(e: MouseEvent) {
+        if (isDisabled) return
+        // Don't re-click when the event originated from the checkbox button itself
+        if ((e.target as Element).closest('button')) return
+        containerRef?.querySelector('button')?.click()
+    }
+
     const classes = $derived.by(() => {
         const slots = checkboxVariants({
             color: resolvedColor,
@@ -98,8 +107,9 @@
     })
 </script>
 
-<div {...restProps} bind:this={ref} class={classes.root}>
-    <div class={classes.container}>
+<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+<div {...restProps} bind:this={ref} class={classes.root} onclick={variant === 'card' ? handleCardClick : undefined}>
+    <div bind:this={containerRef} class={classes.container}>
         <Checkbox.Root
             bind:checked
             {onCheckedChange}
@@ -131,9 +141,13 @@
             {#if labelSlot}
                 {@render labelSlot({ label })}
             {:else if label}
-                <Label.Root for={resolvedId} class={classes.label}>
-                    {label}
-                </Label.Root>
+                {#if variant === 'card'}
+                    <span class={classes.label}>{label}</span>
+                {:else}
+                    <Label.Root for={resolvedId} class={classes.label}>
+                        {label}
+                    </Label.Root>
+                {/if}
             {/if}
 
             {#if descriptionSlot}
