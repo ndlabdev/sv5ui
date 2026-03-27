@@ -12,6 +12,7 @@
     const config = getComponentConfig('fieldGroup', fieldGroupDefaults)
 
     let {
+        ref = $bindable(null),
         as = 'div',
         ui,
         size = config.defaultVariants.size ?? 'md',
@@ -21,11 +22,9 @@
         ...restProps
     }: Props = $props()
 
-    const classes = $derived.by(() => {
-        const slots = fieldGroupVariants({ size, orientation })
-        return {
-            root: slots.root({ class: [config.slots.root, className, ui?.root] })
-        }
+    const variantSlots = $derived(fieldGroupVariants({ size, orientation }))
+    const classes = $derived({
+        root: variantSlots.root({ class: [config.slots.root, className, ui?.root] })
     })
 
     setContext<{
@@ -41,7 +40,7 @@
     })
 </script>
 
-<svelte:element this={as} class={classes.root} data-orientation={orientation} {...restProps}>
+<svelte:element this={as} bind:this={ref} class={classes.root} data-orientation={orientation} {...restProps}>
     {#if children}
         {@render children()}
     {/if}

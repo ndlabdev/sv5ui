@@ -5,6 +5,11 @@ import type { FieldGroupSlots, FieldGroupVariantProps } from './field-group.vari
 
 export type FieldGroupProps = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
     /**
+     * Bindable reference to the root DOM element.
+     */
+    ref?: HTMLElement | null
+
+    /**
      * The HTML element to render as.
      * @default 'div'
      */
