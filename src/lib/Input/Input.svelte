@@ -94,15 +94,16 @@
         loading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
     )
 
-    const ariaDescribedBy = $derived.by(() => {
-        if (!formFieldContext) return undefined
-        const id = formFieldContext.ariaId
-        if (hasError) return `${id}-error`
-        return `${id}-description ${id}-help`
-    })
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
-    const classes = $derived.by(() => {
-        const slots = inputVariants({
+    const variantSlots = $derived(
+        inputVariants({
             variant,
             color: resolvedColor,
             size: resolvedSize,
@@ -111,26 +112,26 @@
             loading,
             highlight: resolvedHighlight
         })
-        return {
-            root: slots.root({
-                class: [config.slots.root, fieldGroupClass?.root, className, ui?.root]
-            }),
-            base: slots.base({
-                class: [config.slots.base, fieldGroupClass?.base, ui?.base]
-            }),
-            leading: slots.leading({ class: [config.slots.leading, ui?.leading] }),
-            leadingIcon: slots.leadingIcon({
-                class: [config.slots.leadingIcon, ui?.leadingIcon]
-            }),
-            leadingAvatar: slots.leadingAvatar({
-                class: [config.slots.leadingAvatar, ui?.leadingAvatar]
-            }),
-            leadingAvatarSize: slots.leadingAvatarSize() as AvatarSize,
-            trailing: slots.trailing({ class: [config.slots.trailing, ui?.trailing] }),
-            trailingIcon: slots.trailingIcon({
-                class: [config.slots.trailingIcon, ui?.trailingIcon]
-            })
-        }
+    )
+    const classes = $derived({
+        root: variantSlots.root({
+            class: [config.slots.root, fieldGroupClass?.root, className, ui?.root]
+        }),
+        base: variantSlots.base({
+            class: [config.slots.base, fieldGroupClass?.base, ui?.base]
+        }),
+        leading: variantSlots.leading({ class: [config.slots.leading, ui?.leading] }),
+        leadingIcon: variantSlots.leadingIcon({
+            class: [config.slots.leadingIcon, ui?.leadingIcon]
+        }),
+        leadingAvatar: variantSlots.leadingAvatar({
+            class: [config.slots.leadingAvatar, ui?.leadingAvatar]
+        }),
+        leadingAvatarSize: variantSlots.leadingAvatarSize() as AvatarSize,
+        trailing: variantSlots.trailing({ class: [config.slots.trailing, ui?.trailing] }),
+        trailingIcon: variantSlots.trailingIcon({
+            class: [config.slots.trailingIcon, ui?.trailingIcon]
+        })
     })
 </script>
 
@@ -150,6 +151,7 @@
     {/if}
 
     <input
+        {...restProps}
         bind:this={ref}
         bind:value
         {type}
@@ -159,7 +161,6 @@
         aria-describedby={ariaDescribedBy}
         aria-invalid={resolvedHighlight ? true : undefined}
         class={classes.base}
-        {...restProps}
     />
 
     {#if trailingSlot}
