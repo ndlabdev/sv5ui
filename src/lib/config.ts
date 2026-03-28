@@ -35,7 +35,11 @@ export const iconsDefaults = {
     close: 'lucide:x',
     check: 'lucide:check',
     light: 'lucide:sun',
-    dark: 'lucide:moon'
+    dark: 'lucide:moon',
+    upload: 'lucide:upload',
+    file: 'lucide:file',
+    zoomIn: 'lucide:zoom-in',
+    trash: 'lucide:trash-2'
 }
 
 // ==================== TYPES ====================
