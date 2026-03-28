@@ -1,96 +1,78 @@
+import type { Slider as SliderPrimitive } from 'bits-ui'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { SliderVariantProps, SliderSlots } from './slider.variants.js'
 
-export type SliderProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
-    /**
-     * Bindable reference to the root DOM element.
-     */
-    ref?: HTMLElement | null
+export type SliderProps = Pick<
+    SliderPrimitive.RootProps,
+    | 'dir'
+    | 'orientation'
+    | 'disabled'
+    | 'min'
+    | 'max'
+    | 'step'
+    | 'autoSort'
+    | 'thumbPositioning'
+    | 'trackPadding'
+> &
+    Omit<HTMLAttributes<HTMLElement>, 'class' | 'children' | 'dir'> & {
+        /**
+         * Bindable reference to the root DOM element.
+         */
+        ref?: HTMLElement | null
 
-    /**
-     * The current value. Use `number` for a single thumb, `number[]` for a range slider.
-     * Supports two-way binding with `bind:value`.
-     * @default 0
-     */
-    value?: number | number[]
+        /**
+         * The HTML id attribute forwarded to the slider root element.
+         */
+        id?: string
 
-    /**
-     * Callback fired continuously while the user drags a thumb.
-     */
-    onValueChange?: (value: number | number[]) => void
+        /**
+         * The current value. Use `number` for a single thumb, `number[]` for a range slider.
+         * Supports two-way binding with `bind:value`.
+         * @default 0
+         */
+        value?: number | number[]
 
-    /**
-     * Callback fired once when the user releases the thumb.
-     */
-    onValueCommit?: (value: number | number[]) => void
+        /**
+         * Callback fired continuously while the user drags a thumb.
+         */
+        onValueChange?: (value: number | number[]) => void
 
-    /**
-     * The minimum allowed value.
-     * @default 0
-     */
-    min?: number
+        /**
+         * Callback fired once when the user releases the thumb.
+         */
+        onValueCommit?: (value: number | number[]) => void
 
-    /**
-     * The maximum allowed value.
-     * @default 100
-     */
-    max?: number
+        /**
+         * Color scheme of the slider.
+         * @default 'primary'
+         */
+        color?: NonNullable<SliderVariantProps['color']>
 
-    /**
-     * The increment amount, or an array of discrete snap values.
-     * @default 1
-     */
-    step?: number | number[]
+        /**
+         * Size of the slider track and thumbs.
+         * @default 'md'
+         */
+        size?: NonNullable<SliderVariantProps['size']>
 
-    /**
-     * The orientation of the slider.
-     * @default 'horizontal'
-     */
-    orientation?: NonNullable<SliderVariantProps['orientation']>
+        /**
+         * Show a floating value label above each thumb.
+         * @default false
+         */
+        tooltip?: boolean
 
-    /**
-     * Whether the slider is disabled.
-     * @default false
-     */
-    disabled?: boolean
+        /**
+         * The name attribute for hidden inputs used in form submission.
+         */
+        name?: string
 
-    /**
-     * Whether to automatically sort thumb values when they cross each other (range mode).
-     * @default true
-     */
-    autoSort?: boolean
+        /**
+         * Additional CSS classes for the root element.
+         */
+        class?: ClassNameValue
 
-    /**
-     * Color scheme of the slider.
-     * @default 'primary'
-     */
-    color?: NonNullable<SliderVariantProps['color']>
-
-    /**
-     * Size of the slider track and thumbs.
-     * @default 'md'
-     */
-    size?: NonNullable<SliderVariantProps['size']>
-
-    /**
-     * Show a floating value label above each thumb.
-     * @default false
-     */
-    tooltip?: boolean
-
-    /**
-     * The name attribute for hidden inputs used in form submission.
-     */
-    name?: string
-
-    /**
-     * Additional CSS classes for the root element.
-     */
-    class?: ClassNameValue
-
-    /**
-     * Override styles for specific slider slots.
-     */
-    ui?: Partial<Record<SliderSlots, ClassNameValue>>
-}
+        /**
+         * Override styles for specific slider slots.
+         */
+        ui?: Partial<Record<SliderSlots, ClassNameValue>>
+    }

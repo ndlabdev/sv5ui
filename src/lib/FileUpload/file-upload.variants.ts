@@ -131,11 +131,31 @@ export const fileUploadVariants = tv({
         { color: 'info', highlight: true, class: { base: 'border-info' } },
         { color: 'surface', highlight: true, class: { base: 'border-outline' } },
         // Dragging: colored border per color
-        { color: 'primary', dropzone: true, class: { base: 'data-[dragging=true]:border-primary' } },
-        { color: 'secondary', dropzone: true, class: { base: 'data-[dragging=true]:border-secondary' } },
-        { color: 'tertiary', dropzone: true, class: { base: 'data-[dragging=true]:border-tertiary' } },
-        { color: 'success', dropzone: true, class: { base: 'data-[dragging=true]:border-success' } },
-        { color: 'warning', dropzone: true, class: { base: 'data-[dragging=true]:border-warning' } },
+        {
+            color: 'primary',
+            dropzone: true,
+            class: { base: 'data-[dragging=true]:border-primary' }
+        },
+        {
+            color: 'secondary',
+            dropzone: true,
+            class: { base: 'data-[dragging=true]:border-secondary' }
+        },
+        {
+            color: 'tertiary',
+            dropzone: true,
+            class: { base: 'data-[dragging=true]:border-tertiary' }
+        },
+        {
+            color: 'success',
+            dropzone: true,
+            class: { base: 'data-[dragging=true]:border-success' }
+        },
+        {
+            color: 'warning',
+            dropzone: true,
+            class: { base: 'data-[dragging=true]:border-warning' }
+        },
         { color: 'error', dropzone: true, class: { base: 'data-[dragging=true]:border-error' } },
         { color: 'info', dropzone: true, class: { base: 'data-[dragging=true]:border-info' } },
         // Button variant size padding

@@ -10,12 +10,13 @@ export const sliderVariants = tv({
             'block rounded-full bg-surface shadow-sm ring-2',
             'focus-visible:outline-none focus-visible:ring-4',
             'transition-[box-shadow] duration-150',
-            'data-[disabled]:pointer-events-none data-[disabled]:opacity-50'
+            'data-[disabled]:pointer-events-none'
         ],
         tooltip: [
             'rounded px-1.5 py-0.5 text-xs font-medium',
             'bg-on-surface text-surface shadow-sm',
-            'pointer-events-none select-none whitespace-nowrap'
+            'pointer-events-none select-none whitespace-nowrap',
+            'mb-2.5 me-2.5'
         ]
     },
     variants: {
@@ -66,6 +67,7 @@ export const sliderVariants = tv({
                 range: 'h-full left-0'
             },
             vertical: {
+                root: 'h-full',
                 base: 'h-full flex-col',
                 range: 'w-full bottom-0'
             }

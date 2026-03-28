@@ -104,8 +104,12 @@
             fileWrapper: slots.fileWrapper({ class: [config.slots.fileWrapper, u.fileWrapper] }),
             fileName: slots.fileName({ class: [config.slots.fileName, u.fileName] }),
             fileSize: slots.fileSize({ class: [config.slots.fileSize, u.fileSize] }),
-            fileTrailing: slots.fileTrailing({ class: [config.slots.fileTrailing, u.fileTrailing] }),
-            previewContent: slots.previewContent({ class: [config.slots.previewContent, u.previewContent] }),
+            fileTrailing: slots.fileTrailing({
+                class: [config.slots.fileTrailing, u.fileTrailing]
+            }),
+            previewContent: slots.previewContent({
+                class: [config.slots.previewContent, u.previewContent]
+            }),
             previewBody: slots.previewBody({ class: [config.slots.previewBody, u.previewBody] })
         }
     })
@@ -139,7 +143,8 @@
             .map((s) => s.trim())
             .some((token) => {
                 if (!token || token === '*') return true
-                if (token.startsWith('.')) return file.name.toLowerCase().endsWith(token.toLowerCase())
+                if (token.startsWith('.'))
+                    return file.name.toLowerCase().endsWith(token.toLowerCase())
                 if (token.endsWith('/*')) return file.type.startsWith(token.slice(0, -1))
                 return file.type === token
             })
@@ -286,15 +291,11 @@
             {#if showFilesInside}
                 <!-- Grid single: file fills the area as overlay -->
                 {#each value as file, i (fileKey(file))}
-                    <div
-                        class={classes.file}
-                        role="none"
-                        onclick={(e) => e.stopPropagation()}
-                    >
+                    <div class={classes.file} role="none" onclick={(e) => e.stopPropagation()}>
                         {#if isImageFile(file)}
                             {#if imagePreview}
                                 <button
-                                    class="group relative size-full overflow-hidden rounded-[7px] cursor-zoom-in"
+                                    class="group relative size-full cursor-zoom-in overflow-hidden rounded-[7px]"
                                     onclick={() => openPreview(file)}
                                     aria-label="Preview {file.name}"
                                 >
@@ -303,8 +304,13 @@
                                         alt={file.name}
                                         class="size-full object-cover transition-[filter] duration-200 group-hover:brightness-75"
                                     />
-                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                                        <Icon name={icons.zoomIn} class="size-6 text-white drop-shadow-md" />
+                                    <div
+                                        class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                                    >
+                                        <Icon
+                                            name={icons.zoomIn}
+                                            class="size-6 text-white drop-shadow-md"
+                                        />
                                     </div>
                                 </button>
                             {:else}
@@ -335,7 +341,9 @@
                                 size="xs"
                                 icon={icons.close}
                                 square
-                                ui={{ base: 'size-5 rounded-full border-2 border-surface p-0 shadow-sm' }}
+                                ui={{
+                                    base: 'size-5 rounded-full border-2 border-surface p-0 shadow-sm'
+                                }}
                                 onclick={() => removeFile(i)}
                                 aria-label="Remove {file.name}"
                             />
@@ -388,7 +396,7 @@
             {loading}
             {loadingIcon}
             leadingIcon={loading ? undefined : icon}
-            label={label}
+            {label}
             onclick={handleAreaClick}
         />
     {/if}
@@ -422,7 +430,7 @@
                             {#if isImageFile(file)}
                                 {#if imagePreview}
                                     <button
-                                        class="group relative size-full overflow-hidden rounded-[7px] cursor-zoom-in"
+                                        class="group relative size-full cursor-zoom-in overflow-hidden rounded-[7px]"
                                         onclick={() => openPreview(file)}
                                         aria-label="Preview {file.name}"
                                     >
@@ -431,8 +439,13 @@
                                             alt={file.name}
                                             class="size-full object-cover transition-[filter] duration-200 group-hover:brightness-75"
                                         />
-                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                                            <Icon name={icons.zoomIn} class="size-6 text-white drop-shadow-md" />
+                                        <div
+                                            class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                                        >
+                                            <Icon
+                                                name={icons.zoomIn}
+                                                class="size-6 text-white drop-shadow-md"
+                                            />
                                         </div>
                                     </button>
                                 {:else}
@@ -449,7 +462,9 @@
                                     class="flex size-full flex-col items-center justify-center gap-1.5 overflow-hidden rounded-[7px] bg-surface-container-low p-3 text-on-surface-variant"
                                 >
                                     <Icon name={fileIcon} class="size-8 shrink-0" />
-                                    <span class="w-full truncate text-center text-xs">{file.name}</span>
+                                    <span class="w-full truncate text-center text-xs"
+                                        >{file.name}</span
+                                    >
                                 </div>
                             {/if}
                             <div class={classes.fileTrailing}>
@@ -459,7 +474,9 @@
                                     size="xs"
                                     icon={icons.close}
                                     square
-                                    ui={{ base: 'size-5 rounded-full border-2 border-surface p-0 shadow-sm' }}
+                                    ui={{
+                                        base: 'size-5 rounded-full border-2 border-surface p-0 shadow-sm'
+                                    }}
                                     onclick={() => removeFile(i)}
                                     aria-label="Remove {file.name}"
                                 />
@@ -476,7 +493,10 @@
                                         class="size-8 shrink-0 rounded object-cover"
                                     />
                                 {:else}
-                                    <Icon name={fileIcon} class="size-4 shrink-0 text-on-surface-variant" />
+                                    <Icon
+                                        name={fileIcon}
+                                        class="size-4 shrink-0 text-on-surface-variant"
+                                    />
                                 {/if}
                             </div>
                             <div class={classes.fileWrapper}>
@@ -516,10 +536,15 @@
 {#if imagePreview}
     <Modal
         bind:open={previewOpen}
-        onOpenChange={(v) => { if (!v) previewFile = null }}
+        onOpenChange={(v) => {
+            if (!v) previewFile = null
+        }}
         title={previewFile?.name ?? ''}
         description={previewFile ? formatFileSize(previewFile.size) : ''}
-        ui={{ content: ['max-w-3xl overflow-hidden', classes.previewContent], body: ['p-0', classes.previewBody] }}
+        ui={{
+            content: ['max-w-3xl overflow-hidden', classes.previewContent],
+            body: ['p-0', classes.previewBody]
+        }}
     >
         {#snippet body()}
             {#if previewFile}

@@ -129,7 +129,10 @@
         <div class="grid grid-cols-1 gap-4 rounded-lg bg-surface-container-high p-4 sm:grid-cols-2">
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">With dropzone (default)</p>
-                <FileUpload label="Drag & drop or click" description="Drag files anywhere on this area" />
+                <FileUpload
+                    label="Drag & drop or click"
+                    description="Drag files anywhere on this area"
+                />
             </div>
             <div class="space-y-2">
                 <p class="text-sm font-medium text-on-surface-variant">No dropzone · click only</p>

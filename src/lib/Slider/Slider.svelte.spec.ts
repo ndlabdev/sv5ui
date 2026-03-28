@@ -8,7 +8,8 @@ const getTrack = () => document.querySelector('[data-slider-track]') as HTMLElem
 const pressKey = (el: HTMLElement, key: string) =>
     el.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
 const getRange = () => document.querySelector('[data-slider-range]') as HTMLElement | null
-const getThumbs = () => Array.from(document.querySelectorAll('[data-slider-thumb]')) as HTMLElement[]
+const getThumbs = () =>
+    Array.from(document.querySelectorAll('[data-slider-thumb]')) as HTMLElement[]
 const getThumb = () => getThumbs()[0]
 
 describe('Slider', () => {
@@ -178,7 +179,15 @@ describe('Slider', () => {
     // ==================== COLORS ====================
 
     describe('colors', () => {
-        const colors = ['primary', 'secondary', 'tertiary', 'success', 'warning', 'error', 'info'] as const
+        const colors = [
+            'primary',
+            'secondary',
+            'tertiary',
+            'success',
+            'warning',
+            'error',
+            'info'
+        ] as const
 
         for (const color of colors) {
             it(`should apply range color for color="${color}"`, () => {
@@ -271,7 +280,9 @@ describe('Slider', () => {
     describe('form integration', () => {
         it('should render a hidden input when name is set', () => {
             const { container } = render(Slider, { name: 'volume', value: 50 })
-            const hidden = container.querySelector('input[type="hidden"][name="volume"]') as HTMLInputElement
+            const hidden = container.querySelector(
+                'input[type="hidden"][name="volume"]'
+            ) as HTMLInputElement
             expect(hidden).not.toBeNull()
             expect(hidden!.value).toBe('50')
         })

@@ -1,9 +1,15 @@
 <script lang="ts">
-    import { Slider } from '$lib/index.js'
+    import { Slider, FormField } from '$lib/index.js'
 
     const colors = [
-        'primary', 'secondary', 'tertiary',
-        'success', 'warning', 'error', 'info', 'surface'
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
     ] as const
 
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
@@ -16,20 +22,23 @@
     let verticalValue = $state(60)
     let verticalRangeValue = $state([25, 75])
     let formValue = $state(50)
+    let formFieldValue = $state(40)
+    let formFieldErrorValue = $state(15)
 </script>
 
 <div class="space-y-8">
     <div class="space-y-2">
         <h1 class="text-2xl font-bold">Slider</h1>
         <p class="text-on-surface-variant">
-            Accessible range input built on bits-ui. Supports single thumb, range, tooltip, and all orientations.
+            Accessible range input built on bits-ui. Supports single thumb, range, tooltip, and all
+            orientations.
         </p>
     </div>
 
     <!-- Basic -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Basic</h2>
-        <div class="rounded-lg bg-surface-container-high p-6 space-y-4">
+        <div class="space-y-4 rounded-lg bg-surface-container-high p-6">
             <Slider bind:value={basicValue} />
             <p class="text-sm text-on-surface-variant">Value: {basicValue}</p>
         </div>
@@ -38,7 +47,7 @@
     <!-- Range -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Range (Multiple Thumbs)</h2>
-        <div class="rounded-lg bg-surface-container-high p-6 space-y-4">
+        <div class="space-y-4 rounded-lg bg-surface-container-high p-6">
             <Slider bind:value={rangeValue} />
             <p class="text-sm text-on-surface-variant">Value: [{rangeValue.join(', ')}]</p>
         </div>
@@ -54,7 +63,9 @@
                 <p class="text-sm text-on-surface-variant">Value: {stepValue}</p>
             </div>
             <div class="space-y-3">
-                <p class="text-sm font-medium text-on-surface-variant">Discrete steps: [0, 25, 50, 75, 100]</p>
+                <p class="text-sm font-medium text-on-surface-variant">
+                    Discrete steps: [0, 25, 50, 75, 100]
+                </p>
                 <Slider value={25} step={[0, 25, 50, 75, 100]} />
             </div>
         </div>
@@ -174,7 +185,10 @@
         <div class="rounded-lg bg-surface-container-high p-6">
             <form
                 class="max-w-sm space-y-4"
-                onsubmit={(e) => { e.preventDefault(); alert(`volume = ${formValue}`) }}
+                onsubmit={(e) => {
+                    e.preventDefault()
+                    alert(`volume = ${formValue}`)
+                }}
             >
                 <div class="space-y-2">
                     <label class="block text-sm font-medium text-on-surface" for="vol-out">
@@ -192,12 +206,43 @@
         </div>
     </section>
 
+    <!-- FormField Integration -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">FormField Integration</h2>
+        <div class="max-w-sm space-y-4 rounded-lg bg-surface-container-high p-6">
+            <FormField
+                label="Volume"
+                description="Adjust the playback volume."
+                hint="{formFieldValue}%"
+            >
+                <Slider bind:value={formFieldValue} class="mt-1" />
+            </FormField>
+
+            <FormField
+                label="Brightness"
+                required
+                help="Recommended between 20–80 for eye comfort."
+            >
+                <Slider bind:value={formFieldValue} color="warning" class="mt-1" />
+            </FormField>
+
+            <FormField
+                label="Quality"
+                error={formFieldErrorValue < 20 ? 'Value must be at least 20.' : undefined}
+            >
+                <Slider bind:value={formFieldErrorValue} class="mt-1" />
+            </FormField>
+        </div>
+    </section>
+
     <!-- Custom ui -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Custom UI Slots</h2>
         <div class="space-y-4 rounded-lg bg-surface-container-high p-6">
             <div class="space-y-2">
-                <p class="text-sm font-medium text-on-surface-variant">Thick track + large rounded thumb</p>
+                <p class="text-sm font-medium text-on-surface-variant">
+                    Thick track + large rounded thumb
+                </p>
                 <Slider
                     value={55}
                     color="tertiary"
