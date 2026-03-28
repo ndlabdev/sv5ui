@@ -40,6 +40,7 @@ export * from './CheckboxGroup/index.js'
 export * from './RadioGroup/index.js'
 export * from './FileUpload/index.js'
 export * from './Slider/index.js'
+export * from './PinInput/index.js'
 export * from './ThemeModeButton/index.js'
 
 // Configuration
