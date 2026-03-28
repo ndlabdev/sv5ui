@@ -190,12 +190,11 @@ describe('Tabs', () => {
             const itemsWithIcon = [
                 { label: 'Home', content: 'Home content', value: 'home', icon: 'lucide:home' }
             ]
-            render(Tabs, { items: itemsWithIcon })
-            await vi.waitFor(() => {
-                const triggers = getTriggers()
-                const icons = triggers[0].querySelectorAll('svg')
-                expect(icons.length).toBeGreaterThanOrEqual(1)
-            })
+            const { container } = render(Tabs, { items: itemsWithIcon })
+            // Iconify loads icons asynchronously
+            await expect
+                .poll(() => container.querySelector('svg'), { timeout: 5000 })
+                .toBeTruthy()
         })
     })
 

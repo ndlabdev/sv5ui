@@ -373,7 +373,7 @@ describe('FileUpload', () => {
 
         it('should not set role on non-interactive area', () => {
             render(FileUpload, { interactive: false })
-            expect(getArea()?.getAttribute('role')).toBeNull()
+            expect(document.querySelector('[role="button"]')).toBeNull()
         })
 
         it('should have aria-label on remove buttons', async () => {

@@ -233,7 +233,7 @@
         const k = 1024
         const sizes = ['B', 'KB', 'MB', 'GB']
         const i = Math.floor(Math.log(bytes) / Math.log(k))
-        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+        return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`
     }
 
     function isImageFile(file: File): boolean {
@@ -276,7 +276,7 @@
         <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
         <div
             class={classes.base}
-            data-dragging={isDragging || undefined}
+            data-dragging={isDragging ? '' : undefined}
             role={interactive ? 'button' : undefined}
             tabindex={interactive && !isDisabled ? 0 : undefined}
             aria-disabled={isDisabled || undefined}
