@@ -192,9 +192,7 @@ describe('Tabs', () => {
             ]
             const { container } = render(Tabs, { items: itemsWithIcon })
             // Iconify loads icons asynchronously
-            await expect
-                .poll(() => container.querySelector('svg'), { timeout: 5000 })
-                .toBeTruthy()
+            await expect.poll(() => container.querySelector('svg'), { timeout: 5000 }).toBeTruthy()
         })
     })
 
