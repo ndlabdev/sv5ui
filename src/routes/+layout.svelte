@@ -49,6 +49,7 @@
         { href: '/checkbox-group', label: 'Checkbox Group', icon: 'lucide:square-check-big' },
         { href: '/radio-group', label: 'Radio Group', icon: 'lucide:circle-dot-dashed' },
         { href: '/file-upload', label: 'File Upload', icon: 'lucide:upload' },
+        { href: '/slider', label: 'Slider', icon: 'lucide:sliders-horizontal' },
         { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' }
     ]
 
