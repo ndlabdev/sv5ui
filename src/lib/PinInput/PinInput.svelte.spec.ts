@@ -1,4 +1,3 @@
-import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import PinInput from './PinInput.svelte'
@@ -148,7 +147,6 @@ describe('PinInput', () => {
     describe('mask', () => {
         it('should render cells without mask icons when value is empty', () => {
             render(PinInput, { mask: true, value: '' })
-            const cells = getCells()
             // no filled cells → no mask dots
             const dots = document.querySelectorAll('.rounded-full.bg-current')
             expect(dots).toHaveLength(0)
