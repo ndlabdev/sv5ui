@@ -3,7 +3,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 export const commandVariants = tv({
     slots: {
         root: 'flex flex-col overflow-hidden',
-        input: 'flex h-12 w-full border-b border-outline-variant bg-transparent px-3 text-sm outline-none placeholder:text-on-surface-variant/50 disabled:cursor-not-allowed disabled:opacity-50',
+        input: 'flex h-12 w-full bg-transparent px-3 text-sm outline-none placeholder:text-on-surface-variant/50 disabled:cursor-not-allowed disabled:opacity-50',
         list: 'scroll-py-1 overflow-y-auto overflow-x-hidden',
         empty: 'py-6 text-center text-sm text-on-surface-variant',
         loading: 'py-6 text-center text-sm text-on-surface-variant',
@@ -11,11 +11,10 @@ export const commandVariants = tv({
         groupHeading: 'px-2 py-1.5 text-xs font-semibold text-on-surface-variant',
         groupItems: '',
         separator: '-mx-1 h-px bg-outline-variant',
-        item: 'relative flex w-full cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[selected]:bg-primary data-[selected]:text-on-primary',
+        item: 'relative flex w-full cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[selected]:bg-surface-container-highest',
         itemIcon: 'size-4 shrink-0',
         itemLabel: 'truncate',
-        itemDescription:
-            'truncate text-xs text-on-surface-variant data-[selected]:text-on-primary/70',
+        itemDescription: 'truncate text-xs text-on-surface-variant',
         itemTrailing: 'ms-auto flex items-center gap-1'
     },
     variants: {

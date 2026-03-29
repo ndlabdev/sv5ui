@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Command, Separator, Badge, Kbd } from '$lib/index.js'
+    import { Command, Separator, Badge, Kbd, Button, Popover } from '$lib/index.js'
     import type { CommandGroup } from '$lib/index.js'
 
     // --- Basic groups ---
@@ -317,16 +317,57 @@
     <!-- Custom UI slots -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Custom UI Slots</h2>
-        <div class="rounded-lg border border-outline-variant shadow-md">
-            <Command
-                groups={basicGroups}
-                placeholder="Styled command..."
-                ui={{
-                    root: 'bg-surface-container',
-                    item: 'rounded-lg',
-                    groupHeading: 'uppercase tracking-wider'
-                }}
-            />
+        <p class="text-sm text-on-surface-variant">
+            Available ui slots: root, input, list, empty, loading, group, groupHeading, groupItems,
+            separator, item, itemIcon, itemLabel, itemDescription, itemTrailing
+        </p>
+        <div class="space-y-4">
+            <div>
+                <p class="mb-1 text-xs font-medium text-on-surface-variant">
+                    Custom background + rounded items + uppercase headings
+                </p>
+                <div class="rounded-lg border border-outline-variant shadow-md">
+                    <Command
+                        groups={basicGroups}
+                        placeholder="Styled command..."
+                        ui={{
+                            root: 'bg-surface-container-low',
+                            item: 'rounded-lg',
+                            groupHeading: 'uppercase tracking-wider text-primary'
+                        }}
+                    />
+                </div>
+            </div>
+            <div>
+                <p class="mb-1 text-xs font-medium text-on-surface-variant">
+                    Custom selected item color + item icon color
+                </p>
+                <div class="rounded-lg border border-outline-variant shadow-md">
+                    <Command
+                        groups={basicGroups}
+                        placeholder="Custom highlight..."
+                        ui={{
+                            item: 'data-[selected]:bg-primary/10 data-[selected]:text-primary',
+                            itemIcon: 'text-primary'
+                        }}
+                    />
+                </div>
+            </div>
+            <div>
+                <p class="mb-1 text-xs font-medium text-on-surface-variant">
+                    Custom input + list max height
+                </p>
+                <div class="rounded-lg border border-outline-variant shadow-md">
+                    <Command
+                        groups={multiGroups}
+                        placeholder="Compact list..."
+                        ui={{
+                            input: 'font-mono',
+                            list: 'max-h-48'
+                        }}
+                    />
+                </div>
+            </div>
         </div>
     </section>
 
@@ -370,5 +411,25 @@
                 placeholder="Filtering disabled — all items always visible"
             />
         </div>
+    </section>
+
+    <Separator />
+
+    <!-- Inside Popover -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Inside Popover</h2>
+        <Popover>
+            {#snippet trigger()}
+                <Button variant="outline" leadingIcon="lucide:search">Open Command...</Button>
+            {/snippet}
+            {#snippet content()}
+                <Command
+                    groups={basicGroups}
+                    placeholder="Search..."
+                    ui={{ list: 'max-h-64' }}
+                    class="w-80"
+                />
+            {/snippet}
+        </Popover>
     </section>
 </div>
