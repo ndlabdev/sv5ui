@@ -419,9 +419,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Inside Popover</h2>
         <Popover>
-            {#snippet trigger()}
-                <Button variant="outline" leadingIcon="lucide:search">Open Command...</Button>
-            {/snippet}
+            <Button variant="outline" leadingIcon="lucide:search">Open Command...</Button>
             {#snippet content()}
                 <Command
                     groups={basicGroups}
