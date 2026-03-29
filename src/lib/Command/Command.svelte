@@ -6,7 +6,6 @@
 
 <script lang="ts">
     import { Command } from 'bits-ui'
-    import { twMerge } from 'tailwind-merge'
     import { commandVariants, commandDefaults } from './command.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
@@ -133,7 +132,11 @@
                                     keywords={cmdItem.keywords}
                                     disabled={cmdItem.disabled}
                                     onSelect={cmdItem.onSelect}
-                                    class={twMerge(classes.item, cmdItem.class)}
+                                    class={cmdItem.class
+                                        ? slots.item({
+                                              class: [config.slots.item, ui?.item, cmdItem.class]
+                                          })
+                                        : classes.item}
                                 >
                                     {#if itemLeadingSlot}
                                         {@render itemLeadingSlot({ item: cmdItem, index: i })}
