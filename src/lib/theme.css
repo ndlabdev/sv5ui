@@ -597,3 +597,21 @@
         scale: 0.95;
     }
 }
+
+@keyframes collapsible-down {
+    0% {
+        height: 0;
+    }
+    to {
+        height: var(--bits-collapsible-content-height);
+    }
+}
+
+@keyframes collapsible-up {
+    0% {
+        height: var(--bits-collapsible-content-height);
+    }
+    to {
+        height: 0;
+    }
+}
