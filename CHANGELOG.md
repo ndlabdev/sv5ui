@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Collapsible** — Expandable/collapsible content panel built on bits-ui with trigger props delegation and animated transitions
 - **Command** — Search-enabled command menu with grouped items, keyboard navigation, filtering, loading state, and custom slots
 
+### Fixed
+
+- Command: remove double border below input, use subtle selected highlight instead of solid primary
+
 ## [1.3.0] - 2026-03-28
 
 ### Added
