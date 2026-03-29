@@ -1,2 +1,2 @@
 export { default as Command } from './Command.svelte'
-export type { CommandProps, CommandItem, CommandGroup } from './command.types.js'
+export type { CommandProps } from './command.types.js'

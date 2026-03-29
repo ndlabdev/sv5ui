@@ -75,7 +75,7 @@ export interface CommandItemSlotProps {
  */
 export interface CommandProps extends Pick<
     CommandRootPropsWithoutHTML,
-    'value' | 'onValueChange' | 'filter' | 'shouldFilter' | 'loop' | 'vimBindings'
+    'value' | 'onValueChange' | 'filter' | 'shouldFilter' | 'loop' | 'vimBindings' | 'label'
 > {
     // -------------------------------------------------------------------------
     // Refs
@@ -93,6 +93,12 @@ export interface CommandProps extends Pick<
 
     /** Placeholder text for the search input. */
     placeholder?: string
+
+    /**
+     * The current search term. Use `bind:search` for two-way binding.
+     * @default ''
+     */
+    search?: string
 
     /** Loading state — shows a loading indicator instead of items. */
     loading?: boolean

@@ -3,7 +3,9 @@ import { tv, type VariantProps } from 'tailwind-variants'
 export const commandVariants = tv({
     slots: {
         root: 'flex flex-col overflow-hidden',
-        input: 'flex h-12 w-full bg-transparent px-3 text-sm outline-none placeholder:text-on-surface-variant/50 disabled:cursor-not-allowed disabled:opacity-50',
+        inputWrapper: 'flex items-center border-b border-outline-variant px-3',
+        inputIcon: 'mr-2 shrink-0 opacity-50',
+        input: 'flex h-12 w-full bg-transparent text-sm outline-none placeholder:text-on-surface-variant/50 disabled:cursor-not-allowed disabled:opacity-50',
         list: 'scroll-py-1 overflow-y-auto overflow-x-hidden',
         empty: 'py-6 text-center text-sm text-on-surface-variant',
         loading: 'py-6 text-center text-sm text-on-surface-variant',
@@ -13,14 +15,18 @@ export const commandVariants = tv({
         separator: '-mx-1 h-px bg-outline-variant',
         item: 'relative flex w-full cursor-default select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[selected]:bg-surface-container-highest',
         itemIcon: 'size-4 shrink-0',
+        itemWrapper: 'flex min-w-0 flex-1 flex-col',
         itemLabel: 'truncate',
         itemDescription: 'truncate text-xs text-on-surface-variant',
-        itemTrailing: 'ms-auto flex items-center gap-1'
+        itemTrailing: 'ms-auto flex items-center gap-1',
+        footer: 'border-t border-outline-variant p-1'
     },
     variants: {
         size: {
             xs: {
-                input: 'h-9 text-xs px-2',
+                inputIcon: 'size-3.5',
+                input: 'h-9 text-xs',
+                inputWrapper: 'px-2',
                 item: 'px-1.5 py-1 text-xs gap-1.5',
                 itemIcon: 'size-3.5',
                 groupHeading: 'px-1.5 py-1 text-[10px]',
@@ -28,7 +34,9 @@ export const commandVariants = tv({
                 loading: 'py-4 text-xs'
             },
             sm: {
-                input: 'h-10 text-xs px-2.5',
+                inputIcon: 'size-3.5',
+                input: 'h-10 text-xs',
+                inputWrapper: 'px-2.5',
                 item: 'px-1.5 py-1 text-xs gap-1.5',
                 itemIcon: 'size-4',
                 groupHeading: 'px-1.5 py-1 text-[10px]',
@@ -36,7 +44,9 @@ export const commandVariants = tv({
                 loading: 'py-5 text-xs'
             },
             md: {
-                input: 'h-12 text-sm px-3',
+                inputIcon: 'size-4',
+                input: 'h-12 text-sm',
+                inputWrapper: 'px-3',
                 item: 'px-2 py-1.5 text-sm gap-2',
                 itemIcon: 'size-4',
                 groupHeading: 'px-2 py-1.5 text-xs',
@@ -44,7 +54,9 @@ export const commandVariants = tv({
                 loading: 'py-6 text-sm'
             },
             lg: {
-                input: 'h-13 text-sm px-3.5',
+                inputIcon: 'size-5',
+                input: 'h-13 text-sm',
+                inputWrapper: 'px-3.5',
                 item: 'px-2.5 py-2 text-sm gap-2',
                 itemIcon: 'size-5',
                 groupHeading: 'px-2.5 py-2 text-xs',
@@ -52,7 +64,9 @@ export const commandVariants = tv({
                 loading: 'py-7 text-sm'
             },
             xl: {
-                input: 'h-14 text-base px-4',
+                inputIcon: 'size-5',
+                input: 'h-14 text-base',
+                inputWrapper: 'px-4',
                 item: 'px-3 py-2 text-base gap-2.5',
                 itemIcon: 'size-5',
                 groupHeading: 'px-3 py-2 text-sm',
