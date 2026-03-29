@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Collapsible** — Expandable/collapsible content panel built on bits-ui with trigger props delegation and animated transitions
 - **Command** — Search-enabled command menu with grouped items, keyboard navigation, filtering, loading state, and custom slots
+- Add `scrollbar-thin` utility for visible thin scrollbar on scrollable areas
+
+### Fixed
+
+- Select/SelectMenu/Command: add `max-h-60 overflow-y-auto scrollbar-thin` to viewport/list so long item lists scroll properly
+- Command: move hardcoded input wrapper, icon, footer, itemWrapper styles into variant slots
+- Command: use `twMerge` for item class merging instead of string concatenation
+- Command: add `bind:search` prop for external filtering support
+- Command: forward `label` prop to Root for accessibility
 
 ## [1.3.0] - 2026-03-28
 
