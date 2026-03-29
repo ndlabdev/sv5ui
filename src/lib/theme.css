@@ -598,6 +598,24 @@
     }
 }
 
+/* ==================== Scrollbar ==================== */
+
+@utility scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline-variant) transparent;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--color-outline-variant);
+        border-radius: 3px;
+    }
+}
+
 @keyframes collapsible-down {
     0% {
         height: 0;

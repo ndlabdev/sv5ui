@@ -6,7 +6,7 @@ export const commandVariants = tv({
         inputWrapper: 'flex items-center border-b border-outline-variant px-3',
         inputIcon: 'mr-2 shrink-0 opacity-50',
         input: 'flex h-12 w-full bg-transparent text-sm outline-none placeholder:text-on-surface-variant/50 disabled:cursor-not-allowed disabled:opacity-50',
-        list: 'scroll-py-1 overflow-y-auto overflow-x-hidden',
+        list: 'scroll-py-1 overflow-y-auto overflow-x-hidden scrollbar-thin',
         empty: 'py-6 text-center text-sm text-on-surface-variant',
         loading: 'py-6 text-center text-sm text-on-surface-variant',
         group: 'overflow-hidden p-1',

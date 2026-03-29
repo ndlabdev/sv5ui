@@ -27,7 +27,7 @@ export const selectVariants = tv({
             'focus:outline-none',
             'overflow-hidden'
         ],
-        viewport: 'p-1',
+        viewport: 'p-1 max-h-60 overflow-y-auto scrollbar-thin',
         group: '',
         groupLabel: 'px-2 py-1.5 text-xs font-semibold text-on-surface-variant',
         item: [
