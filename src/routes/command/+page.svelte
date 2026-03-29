@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Command, Separator, Badge, Kbd, Button, Popover } from '$lib/index.js'
+    import { Command, Separator, Badge, Kbd, Button, Popover, Modal, Drawer } from '$lib/index.js'
     import type { CommandGroup } from '$lib/index.js'
 
     // --- Basic groups ---
@@ -90,6 +90,37 @@
             ]
         }
     ]
+
+    // --- External filtering ---
+    let externalSearch = $state('')
+    const allCountries = [
+        { value: 'us', label: 'United States', icon: 'circle-flags:us' },
+        { value: 'gb', label: 'United Kingdom', icon: 'circle-flags:gb' },
+        { value: 'fr', label: 'France', icon: 'circle-flags:fr' },
+        { value: 'de', label: 'Germany', icon: 'circle-flags:de' },
+        { value: 'jp', label: 'Japan', icon: 'circle-flags:jp' },
+        { value: 'kr', label: 'South Korea', icon: 'circle-flags:kr' },
+        { value: 'vn', label: 'Vietnam', icon: 'circle-flags:vn' },
+        { value: 'br', label: 'Brazil', icon: 'circle-flags:br' },
+        { value: 'au', label: 'Australia', icon: 'circle-flags:au' },
+        { value: 'ca', label: 'Canada', icon: 'circle-flags:ca' }
+    ]
+    const filteredCountries = $derived(
+        externalSearch
+            ? allCountries.filter((c) =>
+                  c.label.toLowerCase().includes(externalSearch.toLowerCase())
+              )
+            : allCountries
+    )
+    const externalGroups = $derived<CommandGroup[]>([
+        {
+            id: 'countries',
+            label: externalSearch
+                ? `Results for "${externalSearch}" (${filteredCountries.length})`
+                : `All countries (${allCountries.length})`,
+            items: filteredCountries
+        }
+    ])
 
     // --- onSelect callback ---
     let lastSelected = $state('')
@@ -326,17 +357,15 @@
                 <p class="mb-1 text-xs font-medium text-on-surface-variant">
                     Custom background + rounded items + uppercase headings
                 </p>
-                <div class="rounded-lg border border-outline-variant shadow-md">
-                    <Command
-                        groups={basicGroups}
-                        placeholder="Styled command..."
-                        ui={{
-                            root: 'bg-surface-container-low',
-                            item: 'rounded-lg',
-                            groupHeading: 'uppercase tracking-wider text-primary'
-                        }}
-                    />
-                </div>
+                <Command
+                    groups={basicGroups}
+                    placeholder="Styled command..."
+                    ui={{
+                        root: 'rounded-lg border border-outline-variant shadow-md bg-surface-container-low',
+                        item: 'rounded-lg',
+                        groupHeading: 'uppercase tracking-wider text-primary'
+                    }}
+                />
             </div>
             <div>
                 <p class="mb-1 text-xs font-medium text-on-surface-variant">
@@ -355,14 +384,13 @@
             </div>
             <div>
                 <p class="mb-1 text-xs font-medium text-on-surface-variant">
-                    Custom input + list max height
+                    Custom list max height (scrollable)
                 </p>
                 <div class="rounded-lg border border-outline-variant shadow-md">
                     <Command
                         groups={multiGroups}
-                        placeholder="Compact list..."
+                        placeholder="Scroll to see more..."
                         ui={{
-                            input: 'font-mono',
                             list: 'max-h-48'
                         }}
                     />
@@ -403,12 +431,19 @@
 
     <!-- shouldFilter=false -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">shouldFilter=false (external filtering)</h2>
+        <h2 class="text-lg font-semibold">External Filtering (shouldFilter=false)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Built-in filter is disabled. The search term is bound via
+            <code class="rounded bg-surface-container-highest px-1 py-0.5 text-xs">bind:search</code
+            >
+            and filtering is handled externally.
+        </p>
         <div class="rounded-lg border border-outline-variant shadow-md">
             <Command
                 shouldFilter={false}
-                groups={basicGroups}
-                placeholder="Filtering disabled — all items always visible"
+                bind:search={externalSearch}
+                groups={externalGroups}
+                placeholder="Search countries..."
             />
         </div>
     </section>
@@ -429,5 +464,35 @@
                 />
             {/snippet}
         </Popover>
+    </section>
+
+    <Separator />
+
+    <!-- Inside Modal -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Inside Modal</h2>
+        <Modal>
+            <Button variant="outline" leadingIcon="lucide:search">
+                Search...
+                <Kbd value="meta" size="sm" />
+                <Kbd value="K" size="sm" />
+            </Button>
+            {#snippet content()}
+                <Command groups={multiGroups} placeholder="Search settings..." />
+            {/snippet}
+        </Modal>
+    </section>
+
+    <Separator />
+
+    <!-- Inside Drawer -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Inside Drawer</h2>
+        <Drawer handle={false}>
+            <Button variant="outline" leadingIcon="lucide:terminal">Open Command Drawer</Button>
+            {#snippet content()}
+                <Command groups={multiGroups} placeholder="Search settings..." />
+            {/snippet}
+        </Drawer>
     </section>
 </div>

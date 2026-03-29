@@ -6,6 +6,7 @@
 
 <script lang="ts">
     import { Command } from 'bits-ui'
+    import { twMerge } from 'tailwind-merge'
     import { commandVariants, commandDefaults } from './command.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
@@ -16,12 +17,14 @@
     let {
         ref = $bindable(null),
         value = $bindable(''),
+        search = $bindable(''),
         onValueChange,
         groups = [],
         placeholder = 'Type a command or search...',
         loading = false,
         emptyText = 'No results found.',
         icon,
+        label,
         filter,
         shouldFilter = true,
         loop = false,
@@ -38,13 +41,15 @@
         ...restProps
     }: Props = $props()
 
-    let search = $state('')
-
     const slots = $derived(commandVariants({ size }))
     const classes = $derived.by(() => {
         const u = ui ?? {}
         return {
             root: slots.root({ class: [config.slots.root, className, u.root] }),
+            inputWrapper: slots.inputWrapper({
+                class: [config.slots.inputWrapper, u.inputWrapper]
+            }),
+            inputIcon: slots.inputIcon({ class: [config.slots.inputIcon, u.inputIcon] }),
             input: slots.input({ class: [config.slots.input, u.input] }),
             list: slots.list({ class: [config.slots.list, u.list] }),
             empty: slots.empty({ class: [config.slots.empty, u.empty] }),
@@ -57,11 +62,15 @@
             separator: slots.separator({ class: [config.slots.separator, u.separator] }),
             item: slots.item({ class: [config.slots.item, u.item] }),
             itemIcon: slots.itemIcon({ class: [config.slots.itemIcon, u.itemIcon] }),
+            itemWrapper: slots.itemWrapper({ class: [config.slots.itemWrapper, u.itemWrapper] }),
             itemLabel: slots.itemLabel({ class: [config.slots.itemLabel, u.itemLabel] }),
             itemDescription: slots.itemDescription({
                 class: [config.slots.itemDescription, u.itemDescription]
             }),
-            itemTrailing: slots.itemTrailing({ class: [config.slots.itemTrailing, u.itemTrailing] })
+            itemTrailing: slots.itemTrailing({
+                class: [config.slots.itemTrailing, u.itemTrailing]
+            }),
+            footer: slots.footer({ class: [config.slots.footer, u.footer] })
         }
     })
 
@@ -75,6 +84,7 @@
     {...restProps}
     bind:ref
     {value}
+    {label}
     onValueChange={handleValueChange}
     {filter}
     {shouldFilter}
@@ -82,12 +92,8 @@
     {vimBindings}
     class={classes.root}
 >
-    <div class="flex items-center border-b border-outline-variant px-3">
-        {#if icon}
-            <Icon name={icon} class="mr-2 size-4 shrink-0 opacity-50" />
-        {:else}
-            <Icon name={icons.search ?? 'lucide:search'} class="mr-2 size-4 shrink-0 opacity-50" />
-        {/if}
+    <div class={classes.inputWrapper}>
+        <Icon name={icon ?? icons.search ?? 'lucide:search'} class={classes.inputIcon} />
         <Command.Input bind:value={search} {placeholder} class={classes.input} />
     </div>
 
@@ -127,7 +133,7 @@
                                     keywords={cmdItem.keywords}
                                     disabled={cmdItem.disabled}
                                     onSelect={cmdItem.onSelect}
-                                    class="{classes.item} {cmdItem.class ?? ''}"
+                                    class={twMerge(classes.item, cmdItem.class)}
                                 >
                                     {#if itemLeadingSlot}
                                         {@render itemLeadingSlot({ item: cmdItem, index: i })}
@@ -138,7 +144,7 @@
                                     {#if itemLabelSlot}
                                         {@render itemLabelSlot({ item: cmdItem, index: i })}
                                     {:else}
-                                        <div class="flex min-w-0 flex-1 flex-col">
+                                        <div class={classes.itemWrapper}>
                                             {#if cmdItem.label}
                                                 <span class={classes.itemLabel}
                                                     >{cmdItem.label}</span
@@ -167,7 +173,7 @@
     </Command.List>
 
     {#if footerSlot}
-        <div class="border-t border-outline-variant p-1">
+        <div class={classes.footer}>
             {@render footerSlot()}
         </div>
     {/if}
