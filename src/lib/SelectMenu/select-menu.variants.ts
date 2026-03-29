@@ -15,7 +15,7 @@ export const selectMenuVariants = tv({
             'flex flex-col'
         ],
         input: 'border-b border-outline-variant',
-        viewport: 'p-1 flex-1 overflow-y-auto',
+        viewport: 'p-1 flex-1 overflow-y-auto scrollbar-thin',
         empty: 'text-center text-on-surface-variant'
     },
     variants: {
