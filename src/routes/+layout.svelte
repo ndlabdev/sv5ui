@@ -53,7 +53,8 @@
         { href: '/file-upload', label: 'File Upload', icon: 'lucide:upload' },
         { href: '/slider', label: 'Slider', icon: 'lucide:sliders-horizontal' },
         { href: '/pin-input', label: 'Pin Input', icon: 'lucide:square-asterisk' },
-        { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' }
+        { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' },
+        { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' }
     ]
 
     const docItems = [
