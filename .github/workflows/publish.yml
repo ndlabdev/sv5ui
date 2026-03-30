@@ -31,8 +31,6 @@ jobs:
               run: pnpm exec svelte-kit sync && pnpm exec svelte-package
 
             - name: Publish to npm
-              run: |
-                  echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
-                  npm publish --access public --provenance
+              run: npm publish --access public --provenance
               env:
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
