@@ -70,6 +70,11 @@
         { value: 'broccoli', label: 'Broccoli' }
     ]
 
+    const manyItems: SelectItem[] = Array.from({ length: 50 }, (_, i) => ({
+        value: `item-${i + 1}`,
+        label: `Item ${i + 1}`
+    }))
+
     const disabledItems: SelectItem[] = [
         { value: 'active', label: 'Active' },
         { value: 'disabled', label: 'Disabled', disabled: true },
@@ -251,6 +256,17 @@
         <p class="text-sm text-on-surface-variant">Individual items can be disabled.</p>
         <div class="w-64">
             <Select items={disabledItems} placeholder="Select status..." />
+        </div>
+    </section>
+
+    <!-- Many Items (Scrollable) -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Many Items (Scrollable)</h2>
+        <p class="text-sm text-on-surface-variant">
+            With 50 items, the dropdown automatically scrolls within its max height.
+        </p>
+        <div class="w-64">
+            <Select items={manyItems} placeholder="Select from 50 items..." />
         </div>
     </section>
 

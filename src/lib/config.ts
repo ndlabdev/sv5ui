@@ -39,7 +39,8 @@ export const iconsDefaults = {
     upload: 'lucide:upload',
     file: 'lucide:file',
     zoomIn: 'lucide:zoom-in',
-    trash: 'lucide:trash-2'
+    trash: 'lucide:trash-2',
+    search: 'lucide:search'
 }
 
 // ==================== TYPES ====================

@@ -129,17 +129,22 @@ pnpm add sv5ui
 
 ### Form
 
-| Component                            | Description                                                                                             |
-| :----------------------------------- | :------------------------------------------------------------------------------------------------------ |
-| [**Input**](src/lib/Input)           | Text input with 5 variants, icons, avatar, loading state, and FormField integration                     |
-| [**Textarea**](src/lib/Textarea)     | Multi-line text input with 5 variants, icons, autoresize with maxrows, and FormField integration        |
-| [**Select**](src/lib/Select)         | Dropdown select with 5 variants, icons, avatars, groups, descriptions, and FormField support            |
-| [**Switch**](src/lib/Switch)         | Toggle switch with 8 colors, 5 sizes, checked/unchecked icons, loading state, and FormField integration |
-| [**Checkbox**](src/lib/Checkbox)     | Checkbox with 8 colors, 5 sizes, indeterminate state, custom icons, and FormField integration           |
-| [**RadioGroup**](src/lib/RadioGroup) | Radio group for single-selection with items API, legend, orientation, and FormField integration         |
-| [**FormField**](src/lib/FormField)   | Form control wrapper providing label, description, hint, help, and error handling                       |
-| [**FieldGroup**](src/lib/FieldGroup) | Groups buttons and inputs with seamless borders and shared size/orientation context                     |
-| [**Calendar**](src/lib/Calendar)     | Date picker calendar with single, multiple, and range selection modes                                   |
+| Component                                  | Description                                                                                             |
+| :----------------------------------------- | :------------------------------------------------------------------------------------------------------ |
+| [**Input**](src/lib/Input)                 | Text input with 5 variants, icons, avatar, loading state, and FormField integration                     |
+| [**Textarea**](src/lib/Textarea)           | Multi-line text input with 5 variants, icons, autoresize with maxrows, and FormField integration        |
+| [**Select**](src/lib/Select)               | Dropdown select with 5 variants, icons, avatars, groups, descriptions, and FormField support            |
+| [**SelectMenu**](src/lib/SelectMenu)       | Searchable multi-select menu with chips, groups, and FormField integration                              |
+| [**Switch**](src/lib/Switch)               | Toggle switch with 8 colors, 5 sizes, checked/unchecked icons, loading state, and FormField integration |
+| [**Checkbox**](src/lib/Checkbox)           | Checkbox with 8 colors, 5 sizes, indeterminate state, custom icons, and FormField integration           |
+| [**CheckboxGroup**](src/lib/CheckboxGroup) | Grouped checkboxes with single/multiple selection, per-item disabled, and FormField integration         |
+| [**RadioGroup**](src/lib/RadioGroup)       | Radio group for single-selection with items API, legend, orientation, and FormField integration         |
+| [**Slider**](src/lib/Slider)               | Range slider with single/range values, step, orientation, tooltip labels, and FormField integration     |
+| [**PinInput**](src/lib/PinInput)           | PIN/OTP input with masking, numeric filtering, OTP autocomplete, and FormField integration              |
+| [**FileUpload**](src/lib/FileUpload)       | Drag-and-drop file upload with preview list, image thumbnails, accept filter, and multiple files        |
+| [**FormField**](src/lib/FormField)         | Form control wrapper providing label, description, hint, help, and error handling                       |
+| [**FieldGroup**](src/lib/FieldGroup)       | Groups buttons and inputs with seamless borders and shared size/orientation context                     |
+| [**Calendar**](src/lib/Calendar)           | Date picker calendar with single, multiple, and range selection modes                                   |
 
 ## Theming
 

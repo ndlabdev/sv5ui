@@ -597,3 +597,39 @@
         scale: 0.95;
     }
 }
+
+/* ==================== Scrollbar ==================== */
+
+@utility scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline-variant) transparent;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--color-outline-variant);
+        border-radius: 3px;
+    }
+}
+
+@keyframes collapsible-down {
+    0% {
+        height: 0;
+    }
+    to {
+        height: var(--bits-collapsible-content-height);
+    }
+}
+
+@keyframes collapsible-up {
+    0% {
+        height: var(--bits-collapsible-content-height);
+    }
+    to {
+        height: 0;
+    }
+}

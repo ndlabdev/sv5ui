@@ -30,6 +30,8 @@
         { href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' },
         { href: '/modal', label: 'Modal', icon: 'lucide:square-stack' },
         { href: '/accordion', label: 'Accordion', icon: 'lucide:chevrons-down-up' },
+        { href: '/collapsible', label: 'Collapsible', icon: 'lucide:unfold-vertical' },
+        { href: '/command', label: 'Command', icon: 'lucide:terminal' },
         { href: '/slideover', label: 'Slideover', icon: 'lucide:panel-right' },
         { href: '/popover', label: 'Popover', icon: 'lucide:message-circle' },
         { href: '/breadcrumb', label: 'Breadcrumb', icon: 'lucide:chevrons-right' },
@@ -51,7 +53,8 @@
         { href: '/file-upload', label: 'File Upload', icon: 'lucide:upload' },
         { href: '/slider', label: 'Slider', icon: 'lucide:sliders-horizontal' },
         { href: '/pin-input', label: 'Pin Input', icon: 'lucide:square-asterisk' },
-        { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' }
+        { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' },
+        { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' }
     ]
 
     const docItems = [
