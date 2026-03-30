@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Collapsible** — Expandable/collapsible content panel built on bits-ui with trigger props delegation and animated transitions
 - **Command** — Search-enabled command menu with grouped items, keyboard navigation, filtering, `bind:search`, and custom slots
+- **Toast** — Notification toasts powered by svelte-sonner with 5 variants (outline, soft, subtle, solid, accent), 7 semantic colors, custom icon/avatar support, and deduplicated toasts
 - `scrollbar-thin` utility for visible thin scrollbar on scrollable areas
 
 ### Fixed
