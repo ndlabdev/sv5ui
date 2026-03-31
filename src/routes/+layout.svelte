@@ -54,7 +54,8 @@
         { href: '/slider', label: 'Slider', icon: 'lucide:sliders-horizontal' },
         { href: '/pin-input', label: 'Pin Input', icon: 'lucide:square-asterisk' },
         { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' },
-        { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' }
+        { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' },
+        { href: '/table', label: 'Table', icon: 'lucide:table' }
     ]
 
     const docItems = [

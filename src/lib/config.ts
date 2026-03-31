@@ -40,7 +40,10 @@ export const iconsDefaults = {
     file: 'lucide:file',
     zoomIn: 'lucide:zoom-in',
     trash: 'lucide:trash-2',
-    search: 'lucide:search'
+    search: 'lucide:search',
+    sortAsc: 'lucide:chevron-up',
+    sortDesc: 'lucide:chevron-down',
+    sortDefault: 'lucide:chevrons-up-down'
 }
 
 // ==================== TYPES ====================
