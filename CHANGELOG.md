@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **NavigationMenu** — Accessible navigation component with horizontal/vertical orientation, pill/link highlight variants, 8 semantic colors, accordion-style nested children, collapsed sidebar mode with tooltips, badges, avatars, icons, active state auto-detection via URL matching, and custom snippet slots
 - **Table** — Full-featured data table with sorting (single/multi), global & column filtering, client/server pagination, row selection (single/multiple with checkbox), column visibility, column pinning (left/right), row pinning, row expanding, column resizing (drag), loading states (replace/overlay), striped/hoverable/sticky variants, custom cell/header/footer snippets, body-top/body-bottom slots, polymorphic root (`as` prop), row hover/contextmenu callbacks, responsive (`contain: inline-size`), dark mode, and configurable sort icons via global config
 
 ## [1.4.0] - 2026-03-30
