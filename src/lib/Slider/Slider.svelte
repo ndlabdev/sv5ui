@@ -6,10 +6,9 @@
 
 <script lang="ts">
     import { Slider, useId } from 'bits-ui'
-    import { getContext } from 'svelte'
     import { sliderVariants, sliderDefaults } from './slider.variants.js'
     import { getComponentConfig } from '../config.js'
-    import type { FormFieldProps } from '../FormField/form-field.types.js'
+    import { useFormField } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('slider', sliderDefaults)
 
@@ -37,15 +36,7 @@
         ...restProps
     }: Props = $props()
 
-    const formFieldContext = getContext<
-        | {
-              name?: string
-              size: NonNullable<FormFieldProps['size']>
-              error?: string | boolean
-              ariaId: string
-          }
-        | undefined
-    >('formField')
+    const formFieldContext = useFormField()
 
     const autoId = useId()
     const hasError = $derived(

@@ -47,6 +47,9 @@ export * from './ThemeModeButton/index.js'
 export * from './Table/index.js'
 export * from './Toast/index.js'
 
+// Composables
+export * from './hooks/index.js'
+
 // Configuration
 export { defineConfig } from './config.js'
 export type { UIConfig } from './config.js'

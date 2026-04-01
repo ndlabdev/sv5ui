@@ -9,6 +9,7 @@
     import { formFieldVariants, formFieldDefaults } from './form-field.variants.js'
     import { getComponentConfig } from '../config.js'
     import { setContext } from 'svelte'
+    import type { FormFieldContext } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('formField', formFieldDefaults)
 
@@ -57,12 +58,7 @@
     const hasError = $derived(error !== undefined && error !== false)
     const errorMessage = $derived(typeof error === 'string' ? error : undefined)
 
-    setContext<{
-        name?: string
-        size: NonNullable<FormFieldProps['size']>
-        error?: string | boolean
-        ariaId: string
-    }>('formField', {
+    setContext<FormFieldContext>('formField', {
         get name() {
             return name
         },

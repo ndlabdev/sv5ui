@@ -58,6 +58,12 @@
         { href: '/table', label: 'Table', icon: 'lucide:table' }
     ]
 
+    const hookItems = [
+        { href: '/use-media-query', label: 'useMediaQuery', icon: 'lucide:monitor-smartphone' },
+        { href: '/use-clipboard', label: 'useClipboard', icon: 'lucide:clipboard' },
+        { href: '/use-form-field', label: 'useFormField', icon: 'lucide:text-cursor-input' }
+    ]
+
     const docItems = [
         { href: '/getting-started', label: 'Getting Started', icon: 'lucide:rocket' },
         { href: '/customization', label: 'Customization', icon: 'lucide:palette' },
@@ -131,6 +137,27 @@
                             href={item.href}
                             raw
                             exact={item.exact}
+                            activeClass="bg-primary-container text-on-primary-container font-medium"
+                            inactiveClass="text-on-surface-variant hover:bg-surface-container-highest"
+                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
+                            onclick={() => (sidebarOpen = false)}
+                        >
+                            <Icon name={item.icon} size="18" />
+                            {item.label}
+                        </Link>
+                    {/each}
+                </div>
+
+                <p
+                    class="mt-6 mb-2 px-3 text-xs font-semibold tracking-wider text-on-surface-variant uppercase"
+                >
+                    Hooks
+                </p>
+                <div class="flex flex-col gap-0.5">
+                    {#each hookItems as item (item.href)}
+                        <Link
+                            href={item.href}
+                            raw
                             activeClass="bg-primary-container text-on-primary-container font-medium"
                             inactiveClass="text-on-surface-variant hover:bg-surface-container-highest"
                             class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
