@@ -6,3 +6,15 @@ export type { UseClipboardOptions, UseClipboardReturn } from './useClipboard.sve
 
 export { useFormField } from './useFormField.svelte.js'
 export type { FormFieldContext } from './useFormField.svelte.js'
+
+export { useClickOutside } from './useClickOutside.svelte.js'
+export type { UseClickOutsideOptions } from './useClickOutside.svelte.js'
+
+export { useInfiniteScroll } from './useInfiniteScroll.svelte.js'
+export type {
+    UseInfiniteScrollOptions,
+    UseInfiniteScrollReturn
+} from './useInfiniteScroll.svelte.js'
+
+export { useEscapeKeydown } from './useEscapeKeydown.svelte.js'
+export type { UseEscapeKeydownOptions } from './useEscapeKeydown.svelte.js'

@@ -61,7 +61,14 @@
     const hookItems = [
         { href: '/use-media-query', label: 'useMediaQuery', icon: 'lucide:monitor-smartphone' },
         { href: '/use-clipboard', label: 'useClipboard', icon: 'lucide:clipboard' },
-        { href: '/use-form-field', label: 'useFormField', icon: 'lucide:text-cursor-input' }
+        { href: '/use-form-field', label: 'useFormField', icon: 'lucide:text-cursor-input' },
+        { href: '/use-click-outside', label: 'useClickOutside', icon: 'lucide:pointer' },
+        {
+            href: '/use-infinite-scroll',
+            label: 'useInfiniteScroll',
+            icon: 'lucide:arrow-down-to-line'
+        },
+        { href: '/use-escape-keydown', label: 'useEscapeKeydown', icon: 'lucide:keyboard' }
     ]
 
     const docItems = [
