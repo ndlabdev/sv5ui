@@ -15,9 +15,10 @@ export interface UseInfiniteScrollOptions {
 
     /**
      * Whether the hook is active. Set to `false` when all data is loaded.
+     * Supports getter function for reactive control.
      * @default true
      */
-    enabled?: boolean
+    enabled?: boolean | (() => boolean)
 }
 
 export interface UseInfiniteScrollReturn {
@@ -56,11 +57,9 @@ export interface UseInfiniteScrollReturn {
  * </div>
  * ```
  */
-export function useInfiniteScroll(options: {
-    onLoad: () => void | Promise<void>
-    threshold?: number
-    enabled?: boolean | (() => boolean)
-}): UseInfiniteScrollReturn & { action: Action<HTMLElement> } {
+export function useInfiniteScroll(
+    options: UseInfiniteScrollOptions
+): UseInfiniteScrollReturn & { action: Action<HTMLElement> } {
     const { onLoad, threshold = 100 } = options
 
     let loading = $state(false)

@@ -1,6 +1,8 @@
 <script lang="ts">
     import { useInfiniteScroll } from '$lib/index.js'
-    import { Badge, Button, Skeleton } from '$lib/index.js'
+    import { Badge, Button, Skeleton, Table, type TableColumn } from '$lib/index.js'
+
+    // ==================== Basic List ====================
 
     let items = $state<{ id: number; title: string }[]>(
         Array.from({ length: 20 }, (_, i) => ({ id: i + 1, title: `Item ${i + 1}` }))
@@ -26,11 +28,94 @@
         enabled: () => hasMore
     })
 
-    // Reset demo
     function reset() {
         items = Array.from({ length: 20 }, (_, i) => ({ id: i + 1, title: `Item ${i + 1}` }))
         hasMore = true
         loadCount = 0
+    }
+
+    // ==================== Table ====================
+
+    interface User {
+        id: number
+        name: string
+        email: string
+        role: string
+        status: 'active' | 'inactive' | 'pending'
+    }
+
+    const roles = ['Admin', 'Editor', 'Viewer', 'Moderator']
+    const statuses = ['active', 'inactive', 'pending'] as const
+    const firstNames = [
+        'Alice',
+        'Bob',
+        'Charlie',
+        'Diana',
+        'Eve',
+        'Frank',
+        'Grace',
+        'Henry',
+        'Iris',
+        'Jack'
+    ]
+    const lastNames = [
+        'Johnson',
+        'Smith',
+        'Brown',
+        'Prince',
+        'Davis',
+        'Wilson',
+        'Taylor',
+        'Clark',
+        'Lee',
+        'Hall'
+    ]
+
+    function generateUsers(start: number, count: number): User[] {
+        return Array.from({ length: count }, (_, i) => {
+            const id = start + i + 1
+            const first = firstNames[id % firstNames.length]
+            const last = lastNames[Math.floor(id / firstNames.length) % lastNames.length]
+            return {
+                id,
+                name: `${first} ${last}`,
+                email: `${first.toLowerCase()}.${last.toLowerCase()}${id}@example.com`,
+                role: roles[id % roles.length],
+                status: statuses[id % statuses.length]
+            }
+        })
+    }
+
+    let users = $state<User[]>(generateUsers(0, 30))
+    let tableHasMore = $state(true)
+    let tableLoadCount = $state(0)
+
+    async function fetchMoreUsers() {
+        await new Promise((r) => setTimeout(r, 1000))
+        const next = generateUsers(users.length, 30)
+        users.push(...next)
+        tableLoadCount++
+        if (users.length >= 150) tableHasMore = false
+    }
+
+    const tableScroll = useInfiniteScroll({
+        onLoad: fetchMoreUsers,
+        threshold: 200,
+        enabled: () => tableHasMore
+    })
+
+    const columns: TableColumn<User>[] = [
+        { key: 'id', label: '#', width: 60, align: 'center' },
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'email', label: 'Email' },
+        { key: 'role', label: 'Role' },
+        { key: 'status', label: 'Status' }
+    ]
+
+    function resetTable() {
+        users = generateUsers(0, 30)
+        tableHasMore = true
+        tableLoadCount = 0
     }
 </script>
 
@@ -43,7 +128,7 @@
         </p>
     </div>
 
-    <!-- Basic -->
+    <!-- Basic List -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Basic</h2>
         <p class="text-sm text-on-surface-variant">
@@ -86,37 +171,68 @@
         </div>
     </section>
 
-    <!-- Card Grid -->
+    <!-- Table + Infinite Scroll -->
     <section class="space-y-3">
-        <h2 class="text-lg font-semibold">Real World: Card Feed</h2>
+        <h2 class="text-lg font-semibold">Table + Infinite Scroll</h2>
         <p class="text-sm text-on-surface-variant">
-            Infinite scroll works with any scrollable container — grids, lists, feeds.
+            Combine with the Table component for paginated data loading. Scroll the table to
+            automatically load more rows. Stops at 150 users.
         </p>
-        <div
-            use:scroll.action
-            class="h-96 overflow-y-auto rounded-lg bg-surface-container-high p-4"
-        >
-            <div class="grid gap-3 sm:grid-cols-2">
-                {#each items as item (item.id)}
-                    <div class="rounded-lg border border-outline-variant bg-surface-container p-4">
-                        <div class="mb-2 flex items-center justify-between">
-                            <span class="text-sm font-medium">{item.title}</span>
-                            <Badge label="#{item.id}" color="primary" variant="soft" size="sm" />
-                        </div>
-                        <p class="text-xs text-on-surface-variant">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </p>
-                    </div>
-                {/each}
-            </div>
+        <div class="flex flex-wrap items-center gap-3">
+            <Badge label="Users: {users.length}" color="primary" variant="subtle" />
+            <Badge label="Loads: {tableLoadCount}" color="info" variant="subtle" />
+            <Badge
+                label={tableHasMore ? 'Has more' : 'All loaded'}
+                color={tableHasMore ? 'success' : 'surface'}
+                variant="subtle"
+            />
+            <Button size="xs" variant="outline" onclick={resetTable}>Reset</Button>
+        </div>
+        <div use:tableScroll.action class="h-112 overflow-y-auto rounded-lg">
+            <Table
+                data={users}
+                {columns}
+                rowKey="id"
+                manualPagination
+                total={users.length}
+                pageSize={users.length}
+                sticky="header"
+                hoverable
+                loading={tableScroll.loading}
+            >
+                {#snippet cellSlot({ column, value })}
+                    {@const cellValue = String(value ?? '')}
+                    {#if column.key === 'status'}
+                        <Badge
+                            label={cellValue}
+                            color={cellValue === 'active'
+                                ? 'success'
+                                : cellValue === 'pending'
+                                  ? 'warning'
+                                  : 'surface'}
+                            variant="soft"
+                            size="sm"
+                        />
+                    {:else if column.key === 'role'}
+                        <Badge label={cellValue} color="info" variant="subtle" size="sm" />
+                    {:else}
+                        {cellValue}
+                    {/if}
+                {/snippet}
 
-            {#if scroll.loading}
-                <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                    {#each Array.from({ length: 4 }, (__, i) => i) as i (i)}
-                        <Skeleton class="h-24 w-full rounded-lg" />
-                    {/each}
-                </div>
-            {/if}
+                {#snippet bodyBottomSlot()}
+                    {#if !tableHasMore}
+                        <tr>
+                            <td
+                                colspan={columns.length}
+                                class="py-4 text-center text-sm text-on-surface-variant"
+                            >
+                                All users loaded
+                            </td>
+                        </tr>
+                    {/if}
+                {/snippet}
+            </Table>
         </div>
     </section>
 </div>

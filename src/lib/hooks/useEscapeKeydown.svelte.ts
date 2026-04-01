@@ -31,8 +31,11 @@ export interface UseEscapeKeydownOptions {
  * {/if}
  * ```
  */
-export const useEscapeKeydown: Action<HTMLElement, UseEscapeKeydownOptions> = (node, options) => {
-    let currentOptions = options
+export const useEscapeKeydown: Action<HTMLElement, UseEscapeKeydownOptions> = (
+    _node,
+    initialOptions
+) => {
+    let currentOptions = initialOptions!
 
     function handleKeydown(event: KeyboardEvent) {
         if (currentOptions.enabled === false) return
