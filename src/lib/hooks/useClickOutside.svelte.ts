@@ -31,8 +31,11 @@ export interface UseClickOutsideOptions {
  * {/if}
  * ```
  */
-export const useClickOutside: Action<HTMLElement, UseClickOutsideOptions> = (node, options) => {
-    let currentOptions = options
+export const useClickOutside: Action<HTMLElement, UseClickOutsideOptions> = (
+    node,
+    initialOptions
+) => {
+    let currentOptions = initialOptions!
 
     function handlePointerDown(event: PointerEvent) {
         if (currentOptions.enabled === false) return
