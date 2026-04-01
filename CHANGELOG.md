@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **useMediaQuery** — Reactive media query hook for viewport breakpoints, user preferences (dark mode, reduced motion), and custom queries with SSR-safe initial value
 - **useClipboard** — Reactive clipboard hook with auto-reset copied state, configurable timeout, and error handling
 - **useFormField** — Hook to access nearest FormField context (name, size, error, ariaId) from any child component, replacing inline getContext boilerplate across 10 form components
+- **useClickOutside** — Svelte action to detect clicks outside an element, with enable/disable support
+- **useInfiniteScroll** — Reactive infinite scroll hook with Svelte action, auto loading state, configurable threshold, and enable/disable
+- **useEscapeKeydown** — Svelte action to listen for Escape key with enable/disable support
 - **Table** — Full-featured data table with sorting (single/multi), global & column filtering, client/server pagination, row selection (single/multiple with checkbox), column visibility, column pinning (left/right), row pinning, row expanding, column resizing (drag), loading states (replace/overlay), striped/hoverable/sticky variants, custom cell/header/footer snippets, body-top/body-bottom slots, polymorphic root (`as` prop), row hover/contextmenu callbacks, responsive (`contain: inline-size`), dark mode, and configurable sort icons via global config
 
 ## [1.4.0] - 2026-03-30
