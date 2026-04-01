@@ -177,6 +177,13 @@
         { label: 'Billing', icon: 'lucide:credit-card', href: '/billing' }
     ]
 
+    // ==================== Color Demo Items (first item matches current page) ====================
+    const colorDemoItems: NavigationMenuItem[] = [
+        { label: 'Navigation', icon: 'lucide:compass', href: '/navigation-menu' },
+        { label: 'Table', icon: 'lucide:table', href: '/table' },
+        { label: 'Button', icon: 'lucide:mouse-pointer-click', href: '/button' }
+    ]
+
     let isCollapsed = $state(false)
 </script>
 
@@ -201,15 +208,19 @@
         <h2 class="text-xl font-semibold text-on-surface">Variants</h2>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div class="space-y-2">
-                <p class="text-xs font-medium text-on-surface-variant">Pill (default)</p>
+                <p class="text-xs font-medium text-on-surface-variant">
+                    Pill (default) — solid background
+                </p>
                 <div class="rounded-xl border border-outline-variant/50 bg-surface p-4">
-                    <NavigationMenu items={basicItems} variant="pill" />
+                    <NavigationMenu items={colorDemoItems} variant="pill" />
                 </div>
             </div>
             <div class="space-y-2">
-                <p class="text-xs font-medium text-on-surface-variant">Link</p>
+                <p class="text-xs font-medium text-on-surface-variant">
+                    Link — subtle tint + indicator bar
+                </p>
                 <div class="rounded-xl border border-outline-variant/50 bg-surface p-4">
-                    <NavigationMenu items={basicItems} variant="link" />
+                    <NavigationMenu items={colorDemoItems} variant="link" />
                 </div>
             </div>
         </div>
@@ -223,7 +234,7 @@
                 <div class="space-y-1">
                     <p class="text-xs font-medium text-on-surface-variant">{color}</p>
                     <div class="rounded-xl border border-outline-variant/50 bg-surface p-3">
-                        <NavigationMenu items={basicItems.slice(0, 3)} color={color as 'primary'} />
+                        <NavigationMenu items={colorDemoItems} color={color as 'primary'} />
                     </div>
                 </div>
             {/each}

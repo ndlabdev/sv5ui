@@ -6,7 +6,7 @@ export const navigationMenuVariants = tv({
         list: 'flex gap-1',
         item: '',
         link: [
-            'group relative flex items-center gap-2 rounded-md font-medium',
+            'group relative flex items-center gap-2 font-medium cursor-pointer',
             'transition-colors duration-150',
             'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary',
             'disabled:cursor-not-allowed disabled:opacity-50'
@@ -35,21 +35,23 @@ export const navigationMenuVariants = tv({
                 link: 'px-3 py-2 text-sm',
                 linkLeadingIcon: 'size-4',
                 childList: 'p-2 min-w-48',
-                childLink: 'px-3 py-2',
-                separator: 'w-full'
+                childLink: 'px-3 py-2'
             },
             vertical: {
                 list: 'flex-col w-full',
                 link: 'px-3 py-2 text-sm w-full',
                 linkLeadingIcon: 'size-5',
                 childList: 'ps-6 pt-0.5',
-                childLink: 'px-3 py-1.5',
-                separator: 'w-full mx-3'
+                childLink: 'px-3 py-1.5'
             }
         },
         variant: {
-            pill: '',
-            link: ''
+            pill: {
+                link: 'rounded-lg'
+            },
+            link: {
+                link: 'rounded-sm'
+            }
         },
         color: {
             primary: '',
@@ -64,7 +66,7 @@ export const navigationMenuVariants = tv({
         active: {
             true: '',
             false: {
-                link: 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
+                link: 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/60'
             }
         },
         disabled: {
@@ -82,7 +84,7 @@ export const navigationMenuVariants = tv({
         }
     },
     compoundVariants: [
-        // ========== PILL × ACTIVE × COLOR ==========
+        // ========== PILL × ACTIVE × COLOR (solid bg) ==========
         {
             variant: 'pill',
             active: true,
@@ -127,17 +129,52 @@ export const navigationMenuVariants = tv({
             class: { link: 'bg-surface-container-highest text-on-surface' }
         },
 
-        // ========== LINK × ACTIVE × COLOR (horizontal = bottom border, vertical = left border) ==========
-        { variant: 'link', active: true, color: 'primary', class: { link: 'text-primary' } },
-        { variant: 'link', active: true, color: 'secondary', class: { link: 'text-secondary' } },
-        { variant: 'link', active: true, color: 'tertiary', class: { link: 'text-tertiary' } },
-        { variant: 'link', active: true, color: 'success', class: { link: 'text-success' } },
-        { variant: 'link', active: true, color: 'warning', class: { link: 'text-warning' } },
-        { variant: 'link', active: true, color: 'error', class: { link: 'text-error' } },
-        { variant: 'link', active: true, color: 'info', class: { link: 'text-info' } },
-        { variant: 'link', active: true, color: 'surface', class: { link: 'text-on-surface' } },
+        // ========== LINK × ACTIVE × COLOR (text color + underline bar) ==========
+        {
+            variant: 'link',
+            active: true,
+            color: 'primary',
+            class: { link: 'text-primary bg-primary/10' }
+        },
+        {
+            variant: 'link',
+            active: true,
+            color: 'secondary',
+            class: { link: 'text-secondary bg-secondary/10' }
+        },
+        {
+            variant: 'link',
+            active: true,
+            color: 'tertiary',
+            class: { link: 'text-tertiary bg-tertiary/10' }
+        },
+        {
+            variant: 'link',
+            active: true,
+            color: 'success',
+            class: { link: 'text-success bg-success/10' }
+        },
+        {
+            variant: 'link',
+            active: true,
+            color: 'warning',
+            class: { link: 'text-warning bg-warning/10' }
+        },
+        {
+            variant: 'link',
+            active: true,
+            color: 'error',
+            class: { link: 'text-error bg-error/10' }
+        },
+        { variant: 'link', active: true, color: 'info', class: { link: 'text-info bg-info/10' } },
+        {
+            variant: 'link',
+            active: true,
+            color: 'surface',
+            class: { link: 'text-on-surface bg-surface-container-high' }
+        },
 
-        // ========== LINK × ACTIVE × ORIENTATION (highlight bar position) ==========
+        // ========== LINK × ACTIVE × ORIENTATION (indicator bar) ==========
         {
             variant: 'link',
             active: true,
@@ -155,9 +192,69 @@ export const navigationMenuVariants = tv({
             }
         },
 
-        // ========== CHILD LINK ACTIVE ==========
-        { variant: 'pill', active: true, class: { childLink: 'bg-primary/10 text-primary' } },
-        { variant: 'link', active: true, class: { childLink: 'text-primary' } }
+        // ========== CHILD LINK ACTIVE (uses color prop) ==========
+        {
+            variant: 'pill',
+            active: true,
+            color: 'primary',
+            class: { childLink: 'bg-primary/10 text-primary' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'secondary',
+            class: { childLink: 'bg-secondary/10 text-secondary' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'tertiary',
+            class: { childLink: 'bg-tertiary/10 text-tertiary' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'success',
+            class: { childLink: 'bg-success/10 text-success' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'warning',
+            class: { childLink: 'bg-warning/10 text-warning' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'error',
+            class: { childLink: 'bg-error/10 text-error' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'info',
+            class: { childLink: 'bg-info/10 text-info' }
+        },
+        {
+            variant: 'pill',
+            active: true,
+            color: 'surface',
+            class: { childLink: 'bg-surface-container-highest text-on-surface' }
+        },
+
+        { variant: 'link', active: true, color: 'primary', class: { childLink: 'text-primary' } },
+        {
+            variant: 'link',
+            active: true,
+            color: 'secondary',
+            class: { childLink: 'text-secondary' }
+        },
+        { variant: 'link', active: true, color: 'tertiary', class: { childLink: 'text-tertiary' } },
+        { variant: 'link', active: true, color: 'success', class: { childLink: 'text-success' } },
+        { variant: 'link', active: true, color: 'warning', class: { childLink: 'text-warning' } },
+        { variant: 'link', active: true, color: 'error', class: { childLink: 'text-error' } },
+        { variant: 'link', active: true, color: 'info', class: { childLink: 'text-info' } },
+        { variant: 'link', active: true, color: 'surface', class: { childLink: 'text-on-surface' } }
     ],
     defaultVariants: {
         orientation: 'horizontal',
