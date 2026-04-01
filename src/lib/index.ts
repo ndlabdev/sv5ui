@@ -45,6 +45,7 @@ export * from './Slider/index.js'
 export * from './PinInput/index.js'
 export * from './ThemeModeButton/index.js'
 export * from './Table/index.js'
+export * from './NavigationMenu/index.js'
 export * from './Toast/index.js'
 
 // Configuration

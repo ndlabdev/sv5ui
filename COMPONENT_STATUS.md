@@ -66,7 +66,7 @@
 | --- | -------------- | ------------------ | ------- | ----------------- |
 | 1   | Breadcrumb     | :white_check_mark: | 1.1.0   |                   |
 | 2   | Link           | :white_check_mark: | 1.1.0   |                   |
-| 3   | NavigationMenu | :calendar:         | —       | Navbar / main nav |
+| 3   | NavigationMenu | :white_check_mark: | 1.5.0   | Horizontal/vertical, pill/link, collapsed, accordion children |
 | 4   | Pagination     | :white_check_mark: | 1.2.0   |                   |
 | 5   | Stepper        | :calendar:         | —       | Multi-step wizard |
 | 6   | Tabs           | :white_check_mark: | 1.2.0   |                   |
@@ -102,9 +102,9 @@
 
 | Status                     | Count  |
 | -------------------------- | ------ |
-| :white_check_mark: Done    | 47     |
+| :white_check_mark: Done    | 48     |
 | :construction: In Progress | 0      |
-| :calendar: Planned         | 11     |
+| :calendar: Planned         | 10     |
 | **Total**                  | **58** |
 
 ## Planned Components — Priority Order
@@ -113,12 +113,11 @@
 | -------- | -------------- | ------------------------ |
 | 1        | DatePicker     | Calendar, Input, Popover |
 | 2        | InputMenu      | Input, Popover           |
-| 3        | NavigationMenu | bits-ui                  |
-| 4        | Carousel       | —                        |
-| 5        | Stepper        | —                        |
-| 6        | InputNumber    | Input                    |
-| 7        | ToggleGroup    | bits-ui                  |
-| 8        | ColorPicker    | Input, Popover           |
-| 9        | TimePicker     | Input, Popover           |
-| 10       | Meter          | —                        |
-| 11       | Tree           | —                        |
+| 3        | Carousel       | —                        |
+| 4        | Stepper        | —                        |
+| 5        | InputNumber    | Input                    |
+| 6        | ToggleGroup    | bits-ui                  |
+| 7        | ColorPicker    | Input, Popover           |
+| 8        | TimePicker     | Input, Popover           |
+| 9        | Meter          | —                        |
+| 10       | Tree           | —                        |
