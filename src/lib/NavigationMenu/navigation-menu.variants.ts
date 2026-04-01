@@ -26,8 +26,7 @@ export const navigationMenuVariants = tv({
         ],
         childLinkIcon: 'shrink-0 size-4 text-on-surface-variant',
         childLinkLabel: 'truncate',
-        childLinkDescription: 'text-xs text-on-surface-variant/70 truncate',
-        separator: 'h-px bg-outline-variant/40 my-1.5'
+        childLinkDescription: 'text-xs text-on-surface-variant/70 truncate'
     },
     variants: {
         orientation: {

@@ -13,6 +13,8 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import Badge from '../Badge/Badge.svelte'
+    import Link from '../Link/Link.svelte'
+    import Separator from '../Separator/Separator.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
 
     const config = getComponentConfig('navigationMenu', navigationMenuDefaults)
@@ -36,7 +38,7 @@
     }: NavigationMenuProps = $props()
 
     // =========================================================================
-    // Active state detection
+    // Active state detection — needed for parent highlight when child is active
     // =========================================================================
     function isItemActive(item: NavigationMenuItem): boolean {
         if (item.disabled) return false
@@ -85,7 +87,7 @@
     }
 
     // =========================================================================
-    // Precomputed variant classes for active/inactive states
+    // Precomputed variant classes
     // =========================================================================
     const activeClasses = $derived(
         navigationMenuVariants({
@@ -173,8 +175,7 @@
         }),
         childLinkDescription: baseSlots.childLinkDescription({
             class: [config.slots.childLinkDescription, ui?.childLinkDescription]
-        }),
-        separator: baseSlots.separator({ class: [config.slots.separator, ui?.separator] })
+        })
     })
 
     // =========================================================================
@@ -187,136 +188,74 @@
         }
         return undefined
     }
+
+    function hasTrailingContent(item: NavigationMenuItem): boolean {
+        return !!trailing || !!item.badge || !!getTrailingIcon(item)
+    }
 </script>
 
-{#snippet itemLink(item: NavigationMenuItem, index: number, level: 'root' | 'child')}
-    {@const active = isItemOrChildActive(item)}
-    {@const itemClasses = level === 'root' ? getItemClasses(item, active) : null}
-    {@const trailingIcon = level === 'root' ? getTrailingIcon(item) : undefined}
-    {@const hasChildren = item.children && item.children.length > 0}
-    {@const isDisabled = item.disabled || disabled}
-    {@const slotProps = { item, index, active }}
+{#snippet itemLeading(
+    item: NavigationMenuItem,
+    index: number,
+    active: boolean,
+    cls: ReturnType<typeof getItemClasses>
+)}
+    {#if leading}
+        {@render leading({ item, index, active })}
+    {:else if item.avatar}
+        <Avatar
+            src={item.avatar.src}
+            alt={item.avatar.alt ?? item.label}
+            size="2xs"
+            class={cls.linkLeadingAvatar}
+        />
+    {:else if item.icon}
+        <Icon name={item.icon} class={cls.linkLeadingIcon} />
+    {/if}
+{/snippet}
 
-    {#if level === 'root'}
-        {#if hasChildren && orientation === 'vertical'}
-            <!-- Vertical with children: trigger to expand -->
-            <button
-                type="button"
-                class={itemClasses?.link}
-                disabled={isDisabled}
-                aria-expanded={isExpanded(item)}
-                onclick={() => toggleExpand(item)}
-            >
-                {#if leading}
-                    {@render leading(slotProps)}
-                {:else if item.avatar}
-                    <Avatar
-                        src={item.avatar.src}
-                        alt={item.avatar.alt ?? item.label}
-                        size="2xs"
-                        class={itemClasses?.linkLeadingAvatar}
-                    />
-                {:else if item.icon}
-                    <Icon name={item.icon} class={itemClasses?.linkLeadingIcon} />
-                {/if}
+{#snippet itemLabel(
+    item: NavigationMenuItem,
+    index: number,
+    active: boolean,
+    cls: ReturnType<typeof getItemClasses>
+)}
+    {#if labelSlot}
+        <span class={cls.linkLabel}>{@render labelSlot({ item, index, active })}</span>
+    {:else if item.label}
+        <span class={cls.linkLabel}>{item.label}</span>
+    {/if}
+{/snippet}
 
-                {#if labelSlot}
-                    <span class={itemClasses?.linkLabel}>{@render labelSlot(slotProps)}</span>
-                {:else}
-                    <span class={itemClasses?.linkLabel}>{item.label}</span>
-                {/if}
-
-                {#if trailing}
-                    {@render trailing(slotProps)}
-                {:else}
-                    <span class={itemClasses?.linkTrailing}>
-                        {#if item.badge}
-                            <Badge
-                                label={item.badge.label}
-                                color={item.badge.color ?? 'primary'}
-                                variant={item.badge.variant ?? 'soft'}
-                                size="xs"
-                                class={itemClasses?.linkTrailingBadge}
-                            />
-                        {/if}
-                        {#if trailingIcon}
-                            <Icon
-                                name={trailingIcon}
-                                class="{itemClasses?.linkTrailingIcon} {isExpanded(item)
-                                    ? 'rotate-90'
-                                    : ''}"
-                                size={16}
-                            />
-                        {/if}
-                    </span>
-                {/if}
-            </button>
-        {:else}
-            <!-- eslint-disable svelte/no-navigation-without-resolve -->
-            <a
-                href={isDisabled ? undefined : item.href}
-                class={itemClasses?.link}
-                aria-disabled={isDisabled || undefined}
-                aria-current={active ? 'page' : undefined}
-                tabindex={isDisabled ? -1 : undefined}
-            >
-                {#if leading}
-                    {@render leading(slotProps)}
-                {:else if item.avatar}
-                    <Avatar
-                        src={item.avatar.src}
-                        alt={item.avatar.alt ?? item.label}
-                        size="2xs"
-                        class={itemClasses?.linkLeadingAvatar}
-                    />
-                {:else if item.icon}
-                    <Icon name={item.icon} class={itemClasses?.linkLeadingIcon} />
-                {/if}
-
-                {#if labelSlot}
-                    <span class={itemClasses?.linkLabel}>{@render labelSlot(slotProps)}</span>
-                {:else}
-                    <span class={itemClasses?.linkLabel}>{item.label}</span>
-                {/if}
-
-                {#if trailing}
-                    {@render trailing(slotProps)}
-                {:else}
-                    <span class={itemClasses?.linkTrailing}>
-                        {#if item.badge}
-                            <Badge
-                                label={item.badge.label}
-                                color={item.badge.color ?? 'primary'}
-                                variant={item.badge.variant ?? 'soft'}
-                                size="xs"
-                                class={itemClasses?.linkTrailingBadge}
-                            />
-                        {/if}
-                    </span>
-                {/if}
-            </a>
-            <!-- eslint-enable svelte/no-navigation-without-resolve -->
-        {/if}
-    {:else}
-        <!-- eslint-disable svelte/no-navigation-without-resolve -->
-        <a
-            href={isDisabled ? undefined : item.href}
-            class={active && highlight ? classes.childLinkActive : classes.childLink}
-            aria-disabled={isDisabled || undefined}
-            aria-current={active ? 'page' : undefined}
-            tabindex={isDisabled ? -1 : undefined}
-        >
-            {#if item.icon}
-                <Icon name={item.icon} class={classes.childLinkIcon} />
+{#snippet itemTrailing(
+    item: NavigationMenuItem,
+    index: number,
+    active: boolean,
+    cls: ReturnType<typeof getItemClasses>,
+    expanded?: boolean
+)}
+    {@const trIcon = getTrailingIcon(item)}
+    {#if trailing}
+        {@render trailing({ item, index, active })}
+    {:else if item.badge || trIcon}
+        <span class={cls.linkTrailing}>
+            {#if item.badge}
+                <Badge
+                    label={item.badge.label}
+                    color={item.badge.color ?? 'primary'}
+                    variant={item.badge.variant ?? 'soft'}
+                    size="xs"
+                    class={cls.linkTrailingBadge}
+                />
             {/if}
-            <div class="min-w-0 flex-1">
-                <span class={classes.childLinkLabel}>{item.label}</span>
-                {#if item.description}
-                    <p class={classes.childLinkDescription}>{item.description}</p>
-                {/if}
-            </div>
-        </a>
-        <!-- eslint-enable svelte/no-navigation-without-resolve -->
+            {#if trIcon}
+                <Icon
+                    name={trIcon}
+                    class="{cls.linkTrailingIcon} {expanded ? 'rotate-90' : ''}"
+                    size={16}
+                />
+            {/if}
+        </span>
     {/if}
 {/snippet}
 
@@ -324,27 +263,102 @@
     <ul class={classes.list}>
         {#each items as item, index (item.value ?? item.label ?? String(index))}
             {#if item.type === 'separator'}
-                <li role="separator" class={classes.separator}></li>
+                <li>
+                    <Separator
+                        orientation={orientation === 'vertical' ? 'horizontal' : 'vertical'}
+                    />
+                </li>
             {:else}
+                {@const active = isItemOrChildActive(item)}
+                {@const cls = getItemClasses(item, active)}
+                {@const hasChildren = item.children && item.children.length > 0}
+                {@const isDisabled = item.disabled || disabled}
+
                 <li class={classes.item}>
-                    {#if collapsed && orientation === 'vertical'}
-                        <!-- Collapsed: icon + tooltip -->
-                        <Tooltip text={item.label} side="right">
-                            {@render itemLink(item, index, 'root')}
-                        </Tooltip>
+                    {#if hasChildren && orientation === 'vertical'}
+                        <!-- Vertical parent with children: button trigger -->
+                        {#if collapsed}
+                            <Tooltip text={item.label} side="right">
+                                <button
+                                    type="button"
+                                    class={cls.link}
+                                    disabled={isDisabled}
+                                    aria-expanded={isExpanded(item)}
+                                    onclick={() => toggleExpand(item)}
+                                >
+                                    {@render itemLeading(item, index, active, cls)}
+                                    {@render itemLabel(item, index, active, cls)}
+                                </button>
+                            </Tooltip>
+                        {:else}
+                            <button
+                                type="button"
+                                class={cls.link}
+                                disabled={isDisabled}
+                                aria-expanded={isExpanded(item)}
+                                onclick={() => toggleExpand(item)}
+                            >
+                                {@render itemLeading(item, index, active, cls)}
+                                {@render itemLabel(item, index, active, cls)}
+                                {@render itemTrailing(item, index, active, cls, isExpanded(item))}
+                            </button>
+                        {/if}
                     {:else}
-                        {@render itemLink(item, index, 'root')}
+                        <!-- Leaf item: Link component -->
+                        {#if collapsed && orientation === 'vertical'}
+                            <Tooltip text={item.label} side="right">
+                                <Link href={item.href} disabled={isDisabled} raw class={cls.link}>
+                                    {@render itemLeading(item, index, active, cls)}
+                                    {@render itemLabel(item, index, active, cls)}
+                                </Link>
+                            </Tooltip>
+                        {:else}
+                            <Link href={item.href} disabled={isDisabled} raw class={cls.link}>
+                                {@render itemLeading(item, index, active, cls)}
+                                {@render itemLabel(item, index, active, cls)}
+                                {#if hasTrailingContent(item)}
+                                    {@render itemTrailing(item, index, active, cls)}
+                                {/if}
+                            </Link>
+                        {/if}
                     {/if}
 
-                    <!-- Vertical children: accordion expand -->
-                    {#if item.children && item.children.length > 0 && orientation === 'vertical' && !collapsed && isExpanded(item)}
+                    <!-- Vertical children: accordion -->
+                    {#if hasChildren && orientation === 'vertical' && !collapsed && isExpanded(item)}
                         <ul class={classes.childList}>
                             {#each item.children as child, childIdx (child.value ?? child.label ?? String(childIdx))}
                                 {#if child.type === 'separator'}
-                                    <li role="separator" class={classes.separator}></li>
-                                {:else}
                                     <li>
-                                        {@render itemLink(child, childIdx, 'child')}
+                                        <Separator />
+                                    </li>
+                                {:else}
+                                    {@const childActive = isItemActive(child)}
+                                    <li>
+                                        <Link
+                                            href={child.href}
+                                            disabled={child.disabled || disabled}
+                                            raw
+                                            class={childActive && highlight
+                                                ? classes.childLinkActive
+                                                : classes.childLink}
+                                        >
+                                            {#if child.icon}
+                                                <Icon
+                                                    name={child.icon}
+                                                    class={classes.childLinkIcon}
+                                                />
+                                            {/if}
+                                            <div class="min-w-0 flex-1">
+                                                <span class={classes.childLinkLabel}
+                                                    >{child.label}</span
+                                                >
+                                                {#if child.description}
+                                                    <p class={classes.childLinkDescription}>
+                                                        {child.description}
+                                                    </p>
+                                                {/if}
+                                            </div>
+                                        </Link>
                                     </li>
                                 {/if}
                             {/each}
