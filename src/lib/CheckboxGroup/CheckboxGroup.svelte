@@ -8,9 +8,8 @@
     import { Checkbox, Label, useId } from 'bits-ui'
     import { checkboxGroupVariants, checkboxGroupDefaults } from './checkbox-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
-    import { getContext } from 'svelte'
     import Icon from '../Icon/Icon.svelte'
-    import type { FormFieldProps } from '../FormField/form-field.types.js'
+    import { useFormField } from '../hooks/useFormField.svelte.js'
     import type { CheckboxGroupItem } from './checkbox-group.types.js'
 
     const config = getComponentConfig('checkboxGroup', checkboxGroupDefaults)
@@ -42,15 +41,7 @@
         ...restProps
     }: Props = $props()
 
-    const formFieldContext = getContext<
-        | {
-              name?: string
-              size: NonNullable<FormFieldProps['size']>
-              error?: string | boolean
-              ariaId: string
-          }
-        | undefined
-    >('formField')
+    const formFieldContext = useFormField()
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false

@@ -6,10 +6,9 @@
 
 <script lang="ts">
     import { PinInput, useId } from 'bits-ui'
-    import { getContext } from 'svelte'
     import { pinInputVariants, pinInputDefaults } from './pin-input.variants.js'
     import { getComponentConfig } from '../config.js'
-    import type { FormFieldProps } from '../FormField/form-field.types.js'
+    import { useFormField } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('pinInput', pinInputDefaults)
 
@@ -43,15 +42,7 @@
         ...restProps
     }: Props = $props()
 
-    const formFieldContext = getContext<
-        | {
-              name?: string
-              size: NonNullable<FormFieldProps['size']>
-              error?: string | boolean
-              ariaId: string
-          }
-        | undefined
-    >('formField')
+    const formFieldContext = useFormField()
 
     const autoInputId = useId()
     const hasError = $derived(
