@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Snippet } from 'svelte'
+import type { Action } from 'svelte/action'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { TableVariantProps, TableSlots } from './table.variants.js'
@@ -279,6 +280,9 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
 
     /** Sticky header/footer. @default false */
     sticky?: boolean | 'header' | 'footer'
+
+    /** Svelte action to apply on the root scroll container (e.g. infinite scroll). */
+    action?: Action<HTMLElement>
 
     // ---- Callbacks ----
 

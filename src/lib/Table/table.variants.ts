@@ -2,7 +2,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 export const tableVariants = tv({
     slots: {
-        root: 'relative w-full overflow-x-auto rounded-xl border border-outline-variant/50 bg-surface [contain:inline-size]',
+        root: 'relative w-full overflow-x-auto scrollbar-thin rounded-xl border border-outline-variant/50 bg-surface [contain:inline-size]',
         base: 'min-w-full',
         caption: 'sr-only',
         thead: 'relative bg-surface-container-low',
@@ -41,14 +41,14 @@ export const tableVariants = tv({
         },
         sticky: {
             true: {
-                thead: 'sticky top-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10',
-                tfoot: 'sticky bottom-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10'
+                thead: 'sticky top-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10 rounded-t-xl',
+                tfoot: 'sticky bottom-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10 rounded-b-xl'
             },
             header: {
-                thead: 'sticky top-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10'
+                thead: 'sticky top-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10 rounded-t-xl'
             },
             footer: {
-                tfoot: 'sticky bottom-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10'
+                tfoot: 'sticky bottom-0 inset-x-0 bg-surface-container-low/95 backdrop-blur-sm z-10 rounded-b-xl'
             }
         },
         striped: {

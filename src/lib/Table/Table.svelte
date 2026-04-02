@@ -89,6 +89,7 @@
         striped = false,
         hoverable = config.defaultVariants.hoverable ?? true,
         sticky = false,
+        action,
 
         // Callbacks
         onRowClick,
@@ -111,6 +112,16 @@
 
         ...restProps
     }: TableProps<T> = $props()
+
+    // =========================================================================
+    // Apply Svelte action on root element
+    // =========================================================================
+    $effect(() => {
+        if (ref && action) {
+            const result = action(ref)
+            return () => result?.destroy?.()
+        }
+    })
 
     // =========================================================================
     // Change notifications — skip initial mount, fire only on subsequent changes
