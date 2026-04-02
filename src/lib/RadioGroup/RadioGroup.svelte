@@ -8,9 +8,8 @@
     import { RadioGroup, Label, useId } from 'bits-ui'
     import { radioGroupVariants, radioGroupDefaults } from './radio-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
-    import { getContext } from 'svelte'
     import Icon from '../Icon/Icon.svelte'
-    import type { FormFieldProps } from '../FormField/form-field.types.js'
+    import { useFormField } from '../hooks/useFormField.svelte.js'
     import type { RadioGroupItem } from './radio-group.types.js'
 
     const config = getComponentConfig('radioGroup', radioGroupDefaults)
@@ -43,15 +42,7 @@
         ...restProps
     }: Props = $props()
 
-    const formFieldContext = getContext<
-        | {
-              name?: string
-              size: NonNullable<FormFieldProps['size']>
-              error?: string | boolean
-              ariaId: string
-          }
-        | undefined
-    >('formField')
+    const formFieldContext = useFormField()
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false

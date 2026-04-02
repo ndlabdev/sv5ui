@@ -16,7 +16,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
-    import type { FormFieldProps } from '../FormField/form-field.types.js'
+    import { useFormField } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('select', selectDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -68,15 +68,7 @@
     }: Props = $props()
 
     // ---- Form context ----
-    const formFieldContext = getContext<
-        | {
-              name?: string
-              size: NonNullable<FormFieldProps['size']>
-              error?: string | boolean
-              ariaId: string
-          }
-        | undefined
-    >('formField')
+    const formFieldContext = useFormField()
 
     const fieldGroupContext = getContext<
         | {
