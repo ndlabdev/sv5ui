@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-04-02
+
 ### Added
 
 - **Table** — `action` prop for applying Svelte actions (e.g. `useInfiniteScroll`) directly on the root element, eliminating the need for a wrapper div
@@ -134,7 +136,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/ndlabdev/sv5ui/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/ndlabdev/sv5ui/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/ndlabdev/sv5ui/compare/v1.2.0...v1.3.0
