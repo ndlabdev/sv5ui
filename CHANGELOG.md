@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Table** — `action` prop for applying Svelte actions (e.g. `useInfiniteScroll`) directly on the root element, eliminating the need for a wrapper div
+- **Table** — `scrollbar-thin` on root wrapper for thinner scrollbar styling
+
+### Fixed
+
+- **Table** — Sticky header/footer `backdrop-blur-sm` causing rounded corners to be lost (added matching `rounded-t-xl`/`rounded-b-xl`)
+
 ## [1.5.0] - 2026-04-02
 
 ### Added

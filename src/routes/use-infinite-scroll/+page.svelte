@@ -188,51 +188,51 @@
             />
             <Button size="xs" variant="outline" onclick={resetTable}>Reset</Button>
         </div>
-        <div use:tableScroll.action class="h-112 overflow-y-auto rounded-lg">
-            <Table
-                data={users}
-                {columns}
-                rowKey="id"
-                manualPagination
-                total={users.length}
-                pageSize={users.length}
-                sticky="header"
-                hoverable
-                loading={tableScroll.loading}
-            >
-                {#snippet cellSlot({ column, value })}
-                    {@const cellValue = String(value ?? '')}
-                    {#if column.key === 'status'}
-                        <Badge
-                            label={cellValue}
-                            color={cellValue === 'active'
-                                ? 'success'
-                                : cellValue === 'pending'
-                                  ? 'warning'
-                                  : 'surface'}
-                            variant="soft"
-                            size="sm"
-                        />
-                    {:else if column.key === 'role'}
-                        <Badge label={cellValue} color="info" variant="subtle" size="sm" />
-                    {:else}
-                        {cellValue}
-                    {/if}
-                {/snippet}
+        <Table
+            data={users}
+            {columns}
+            rowKey="id"
+            manualPagination
+            total={users.length}
+            pageSize={users.length}
+            sticky="header"
+            hoverable
+            loading={tableScroll.loading}
+            action={tableScroll.action}
+            class="h-112 overflow-y-auto"
+        >
+            {#snippet cellSlot({ column, value })}
+                {@const cellValue = String(value ?? '')}
+                {#if column.key === 'status'}
+                    <Badge
+                        label={cellValue}
+                        color={cellValue === 'active'
+                            ? 'success'
+                            : cellValue === 'pending'
+                              ? 'warning'
+                              : 'surface'}
+                        variant="soft"
+                        size="sm"
+                    />
+                {:else if column.key === 'role'}
+                    <Badge label={cellValue} color="info" variant="subtle" size="sm" />
+                {:else}
+                    {cellValue}
+                {/if}
+            {/snippet}
 
-                {#snippet bodyBottomSlot()}
-                    {#if !tableHasMore}
-                        <tr>
-                            <td
-                                colspan={columns.length}
-                                class="py-4 text-center text-sm text-on-surface-variant"
-                            >
-                                All users loaded
-                            </td>
-                        </tr>
-                    {/if}
-                {/snippet}
-            </Table>
-        </div>
+            {#snippet bodyBottomSlot()}
+                {#if !tableHasMore}
+                    <tr>
+                        <td
+                            colspan={columns.length}
+                            class="py-4 text-center text-sm text-on-surface-variant"
+                        >
+                            All users loaded
+                        </td>
+                    </tr>
+                {/if}
+            {/snippet}
+        </Table>
     </section>
 </div>
