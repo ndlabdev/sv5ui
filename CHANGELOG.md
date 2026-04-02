@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-04-02
+
 ### Added
 
 - **useMediaQuery** — Reactive media query hook for viewport breakpoints, user preferences (dark mode, reduced motion), and custom queries with SSR-safe initial value
@@ -123,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/ndlabdev/sv5ui/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/ndlabdev/sv5ui/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/ndlabdev/sv5ui/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/ndlabdev/sv5ui/compare/v1.1.0...v1.2.0
