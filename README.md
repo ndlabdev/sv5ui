@@ -1,239 +1,116 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/sv5ui-Svelte_5_UI-ff3e00?style=for-the-badge&logo=svelte&logoColor=white" alt="SV5UI" />
+  <img src="https://img.shields.io/badge/SV5UI-ff3e00?style=for-the-badge&logo=svelte&logoColor=white" alt="SV5UI" />
 </p>
 
 <h1 align="center">SV5UI</h1>
 
 <p align="center">
-  A modern, fully-typed UI component library for Svelte 5.<br/>
-  Built with Tailwind CSS 4, OKLCH color tokens, and accessible headless primitives.
+  <strong>Modern UI component library for Svelte 5</strong><br/>
+  Tailwind CSS 4 &middot; OKLCH Color Tokens &middot; Fully Typed &middot; 50+ Components &middot; 7 Hooks
 </p>
 
 <p align="center">
-  <a href="https://sv5ui.vercel.app/docs"><strong>Documentation</strong></a> · <a href="https://sv5ui.vercel.app"><strong>Live Demo</strong></a>
+  <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/v/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm" /></a>
+  <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/dm/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="downloads" /></a>
+  <a href="https://github.com/ndlabdev/sv5ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="license" /></a>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/v/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm version" /></a>
-  <a href="https://github.com/ndlabdev/sv5ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="license" /></a>
-  <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/dm/sv5ui.svg?style=flat-square&colorA=18181b&colorB=ff3e00" alt="downloads" /></a>
-  <a href="https://svelte.dev"><img src="https://img.shields.io/badge/svelte-5-ff3e00?style=flat-square&logo=svelte&logoColor=white" alt="Svelte 5" /></a>
-  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/types-TypeScript-blue?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  <a href="https://sv5ui.vercel.app"><strong>Live Demo</strong></a> &middot;
+  <a href="https://sv5ui.vercel.app/getting-started"><strong>Getting Started</strong></a> &middot;
+  <a href="https://github.com/ndlabdev/sv5ui/blob/main/CHANGELOG.md"><strong>Changelog</strong></a>
 </p>
 
 ---
 
-## Highlights
-
-- **Svelte 5** — Built with runes, snippets, and the latest reactivity model
-- **Tailwind CSS 4** — Utility-first styling with [Tailwind Variants](https://www.tailwind-variants.org/) for type-safe, composable variants
-- **Fully Typed** — Strict TypeScript with exported prop types for every component
-- **Accessible** — Built on [Bits UI](https://bits-ui.com) and [Vaul Svelte](https://vaul-svelte.com) headless primitives
-- **200,000+ Icons** — First-class [Iconify](https://iconify.design) integration
-- **Customizable** — Global config system + per-instance slot overrides
-
-## Installation
+## Install
 
 ```bash
 npm install sv5ui
-# or
-pnpm add sv5ui
+# pnpm add sv5ui
+# yarn add sv5ui
+# bun add sv5ui
 ```
-
-**Peer dependencies:** `svelte >= 5.0.0`, `tailwindcss >= 4.0.0`
-
-## Quick Start
-
-**1. Import the theme**
 
 ```css
 /* layout.css */
 @import 'sv5ui/theme.css';
 ```
 
-**2. Use components**
+```svelte
+<script>
+    import { Button, Avatar, toast } from 'sv5ui'
+</script>
+
+<Button variant="soft" color="primary" leadingIcon="lucide:edit">Edit</Button>
+<Avatar src="/photo.jpg" alt="Jane" size="lg" />
+```
+
+## Features
+
+- **Svelte 5** — Runes, snippets, latest reactivity
+- **Tailwind CSS 4** — Utility-first with [Tailwind Variants](https://www.tailwind-variants.org/)
+- **Fully Typed** — Strict TypeScript, exported prop types
+- **Accessible** — Built on [Bits UI](https://bits-ui.com) & [Vaul Svelte](https://vaul-svelte.com)
+- **200,000+ Icons** — [Iconify](https://iconify.design) integration
+- **Themeable** — OKLCH color tokens, light/dark mode, global config
+- **Hooks** — 7 reactive hooks for common UI patterns
+
+## Hooks
+
+Reactive hooks built on Svelte 5 runes and actions.
 
 ```svelte
 <script>
-    import { Button, Avatar, Badge, Tooltip } from 'sv5ui'
+    import { useMediaQuery, useClipboard, useDebounce } from 'sv5ui'
+
+    const isMobile = useMediaQuery('(max-width: 640px)')
+    const clipboard = useClipboard()
+    const debounce = useDebounce({ delay: 500 })
 </script>
 
-<Tooltip text="Edit profile">
-    <Button variant="soft" color="primary" leadingIcon="lucide:edit">Edit</Button>
-</Tooltip>
+{#if isMobile.matches}
+    <MobileLayout />
+{/if}
 
-<Avatar src="/photo.jpg" alt="Jane Doe" size="lg" />
-<Badge label="Online" color="success" variant="soft" />
+<Button onclick={() => clipboard.copy('Hello!')}>
+    {clipboard.copied ? 'Copied!' : 'Copy'}
+</Button>
 ```
 
-## Components
-
-### General
-
-| Component                                      | Description                                                                        |
-| :--------------------------------------------- | :--------------------------------------------------------------------------------- |
-| [**Button**](src/lib/Button)                   | Versatile button with 6 variants, loading state, icons, and avatar support         |
-| [**Link**](src/lib/Link)                       | Smart anchor with automatic active-state detection based on current route          |
-| [**Icon**](src/lib/Icon)                       | Iconify wrapper — render any of 200,000+ icons by name                             |
-| [**Kbd**](src/lib/Kbd)                         | Keyboard shortcut display with OS-aware symbol mapping                             |
-| [**ThemeModeButton**](src/lib/ThemeModeButton) | Light/dark mode toggle button with customizable icons and mode-watcher integration |
-
-### Layout
-
-| Component                          | Description                                                      |
-| :--------------------------------- | :--------------------------------------------------------------- |
-| [**Card**](src/lib/Card)           | Content container with header, body, and footer slots            |
-| [**Container**](src/lib/Container) | Responsive max-width wrapper for page content                    |
-| [**Separator**](src/lib/Separator) | Horizontal/vertical divider with optional label, icon, or avatar |
-
-### Data Display
-
-| Component                              | Description                                                            |
-| :------------------------------------- | :--------------------------------------------------------------------- |
-| [**Avatar**](src/lib/Avatar)           | Profile image with auto-generated initials fallback                    |
-| [**AvatarGroup**](src/lib/AvatarGroup) | Stacked avatars with overflow count                                    |
-| [**Badge**](src/lib/Badge)             | Status indicators and tags in 4 variants and 8 colors                  |
-| [**Chip**](src/lib/Chip)               | Notification dot indicator with configurable positioning               |
-| [**User**](src/lib/User)               | User profile display combining avatar, name, and description           |
-| [**Timeline**](src/lib/Timeline)       | Step/sequence visualization with completed, active, and pending states |
-| [**Skeleton**](src/lib/Skeleton)       | Animated loading placeholder                                           |
-| [**Empty**](src/lib/Empty)             | Empty state with icon, description, and action slots                   |
-
-### Feedback
-
-| Component                        | Description                                                          |
-| :------------------------------- | :------------------------------------------------------------------- |
-| [**Alert**](src/lib/Alert)       | Notification banner with icon, actions, and dismissible support      |
-| [**Progress**](src/lib/Progress) | Determinate/indeterminate progress bar with step mode and animations |
-
-### Navigation
-
-| Component                            | Description                                                                    |
-| :----------------------------------- | :----------------------------------------------------------------------------- |
-| [**Breadcrumb**](src/lib/Breadcrumb) | Hierarchical navigation trail with icons, custom separators, and snippet slots |
-| [**Tabs**](src/lib/Tabs)             | Tabbed interface with content panels and configurable orientation              |
-| [**Pagination**](src/lib/Pagination) | Page navigation with first/prev/next/last controls and ellipsis                |
-
-### Overlay
-
-| Component                                | Description                                                               |
-| :--------------------------------------- | :------------------------------------------------------------------------ |
-| [**Modal**](src/lib/Modal)               | Accessible dialog with overlay, focus trap, and scroll lock               |
-| [**Slideover**](src/lib/Slideover)       | Side panel sliding from any edge with inset mode                          |
-| [**Drawer**](src/lib/Drawer)             | Draggable bottom/side sheet with snap points                              |
-| [**Tooltip**](src/lib/Tooltip)           | Hover tooltip with arrow, keyboard shortcut display, and portal rendering |
-| [**Popover**](src/lib/Popover)           | Floating interactive content panel with focus management                  |
-| [**Accordion**](src/lib/Accordion)       | Expandable sections with single or multiple open modes                    |
-| [**DropdownMenu**](src/lib/DropdownMenu) | Triggered floating menu with items, groups, separators, and sub-menus     |
-| [**ContextMenu**](src/lib/ContextMenu)   | Right-click context menu with items, colors, and keyboard navigation      |
-
-### Form
-
-| Component                                  | Description                                                                                             |
-| :----------------------------------------- | :------------------------------------------------------------------------------------------------------ |
-| [**Input**](src/lib/Input)                 | Text input with 5 variants, icons, avatar, loading state, and FormField integration                     |
-| [**Textarea**](src/lib/Textarea)           | Multi-line text input with 5 variants, icons, autoresize with maxrows, and FormField integration        |
-| [**Select**](src/lib/Select)               | Dropdown select with 5 variants, icons, avatars, groups, descriptions, and FormField support            |
-| [**SelectMenu**](src/lib/SelectMenu)       | Searchable multi-select menu with chips, groups, and FormField integration                              |
-| [**Switch**](src/lib/Switch)               | Toggle switch with 8 colors, 5 sizes, checked/unchecked icons, loading state, and FormField integration |
-| [**Checkbox**](src/lib/Checkbox)           | Checkbox with 8 colors, 5 sizes, indeterminate state, custom icons, and FormField integration           |
-| [**CheckboxGroup**](src/lib/CheckboxGroup) | Grouped checkboxes with single/multiple selection, per-item disabled, and FormField integration         |
-| [**RadioGroup**](src/lib/RadioGroup)       | Radio group for single-selection with items API, legend, orientation, and FormField integration         |
-| [**Slider**](src/lib/Slider)               | Range slider with single/range values, step, orientation, tooltip labels, and FormField integration     |
-| [**PinInput**](src/lib/PinInput)           | PIN/OTP input with masking, numeric filtering, OTP autocomplete, and FormField integration              |
-| [**FileUpload**](src/lib/FileUpload)       | Drag-and-drop file upload with preview list, image thumbnails, accept filter, and multiple files        |
-| [**FormField**](src/lib/FormField)         | Form control wrapper providing label, description, hint, help, and error handling                       |
-| [**FieldGroup**](src/lib/FieldGroup)       | Groups buttons and inputs with seamless borders and shared size/orientation context                     |
-| [**Calendar**](src/lib/Calendar)           | Date picker calendar with single, multiple, and range selection modes                                   |
-
-## Theming
-
-SV5UI uses **OKLCH color space** with semantic tokens. Light and dark modes work out of the box.
-
-### Color Tokens
-
-Each color provides a set of related tokens for surfaces, text, and containers:
-
-```
---color-{name}                  Main color
---color-on-{name}               Contrast text on main color
---color-{name}-container        Lighter background variant
---color-on-{name}-container     Text on container background
-```
-
-**Available colors:** `primary` · `secondary` · `tertiary` · `success` · `warning` · `error` · `info` · `surface`
-
-### Dark Mode
-
-Supported via `.dark` class on `<html>` or `prefers-color-scheme` media query, managed with [mode-watcher](https://github.com/svecosystem/mode-watcher).
-
-### Custom Colors
-
-Override any token with CSS variables:
-
-```css
-:root {
-    --color-primary: oklch(0.55 0.25 270);
-    --color-secondary: oklch(0.45 0.15 240);
-}
-```
+| Hook                | Type           | Description                                    |
+| ------------------- | -------------- | ---------------------------------------------- |
+| `useMediaQuery`     | Runes          | Reactive CSS media query tracking              |
+| `useClipboard`      | Runes          | Copy text with auto-reset state                |
+| `useFormField`      | Context        | Access FormField context from child components |
+| `useDebounce`       | Runes          | Debounce with pending, cancel, flush           |
+| `useClickOutside`   | Action         | Detect clicks outside an element               |
+| `useInfiniteScroll` | Runes + Action | Auto-load on scroll with loading state         |
+| `useEscapeKeydown`  | Action         | Listen for Escape key                          |
 
 ## Customization
 
-### Per-instance — `ui` prop
-
-Override slot classes directly on any component:
-
 ```svelte
-<Button ui={{ base: 'rounded-full shadow-lg', label: 'font-bold uppercase' }}>Custom</Button>
+<!-- Per-instance -->
+<Button ui={{ base: 'rounded-full shadow-lg' }}>Custom</Button>
 ```
 
-### Global — `defineConfig`
-
-Set library-wide defaults for variants, slots, and icons:
-
-```typescript
+```ts
+// Global defaults
 import { defineConfig } from 'sv5ui'
 
 defineConfig({
-    button: {
-        defaultVariants: { variant: 'outline', size: 'lg' },
-        slots: { base: 'shadow-md' }
-    },
-    avatar: {
-        defaultVariants: { size: 'lg' },
-        slots: { root: 'ring-2 ring-primary' }
-    },
-    icons: {
-        loading: 'lucide:loader',
-        close: 'lucide:x'
-    }
+    button: { defaultVariants: { variant: 'outline' } },
+    icons: { loading: 'lucide:loader' }
 })
 ```
 
-## Development
-
-```bash
-pnpm install          # Install dependencies
-pnpm dev              # Dev server at localhost:5173
-pnpm test             # Run unit tests
-pnpm check            # TypeScript check
-pnpm prepack          # Build library package
-pnpm lint             # Lint
-pnpm format           # Format code
+```css
+/* Custom colors */
+:root {
+    --color-primary: oklch(0.55 0.25 270);
+}
 ```
-
-> Run `pnpm dev` and open [localhost:5173](http://localhost:5173) to browse the interactive component demos.
-
-## Tech Stack
-
-| Layer      | Technology                                                                                          |
-| :--------- | :-------------------------------------------------------------------------------------------------- |
-| Framework  | [Svelte 5](https://svelte.dev) + [SvelteKit](https://svelte.dev/docs/kit)                           |
-| Styling    | [Tailwind CSS 4](https://tailwindcss.com) + [Tailwind Variants](https://www.tailwind-variants.org/) |
-| Primitives | [Bits UI](https://bits-ui.com) · [Vaul Svelte](https://vaul-svelte.com)                             |
-| Icons      | [Iconify](https://iconify.design) (200,000+ icons)                                                  |
-| Testing    | [Vitest](https://vitest.dev) + [Playwright](https://playwright.dev)                                 |
 
 ## License
 
