@@ -4,7 +4,26 @@ import type { ClassNameValue } from 'tailwind-merge'
 import type { InputVariantProps, InputSlots } from './input.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
 
-export type InputProps = Omit<HTMLInputAttributes, 'class' | 'size'> & {
+/**
+ * Valid value types for `<Input bind:value>`.
+ *
+ * Covers every HTML input `type` except `"file"` (which uses `FileList` and is
+ * typically handled via `onchange` events, not `bind:value`). Pattern borrowed
+ * from Nuxt UI v4's `AcceptableValue` — it's the minimum union that covers
+ * real-world usage while still giving TypeScript enough to catch mistakes.
+ *
+ * Use with the component generic for strict typing:
+ * ```ts
+ * let age = $state<number | undefined>(undefined)
+ * <Input type="number" bind:value={age} />   // age stays number
+ * ```
+ */
+export type InputValue = string | number | bigint | boolean | null | undefined
+
+export type InputProps<T extends InputValue = InputValue> = Omit<
+    HTMLInputAttributes,
+    'class' | 'size' | 'value'
+> & {
     /**
      * Bind a reference to the underlying HTMLInputElement.
      */
@@ -12,8 +31,14 @@ export type InputProps = Omit<HTMLInputAttributes, 'class' | 'size'> & {
 
     /**
      * The current value of the input. Supports two-way binding with `bind:value`.
+     *
+     * The type is inferred from the bound variable — Svelte's `bind:value`
+     * coerces based on the `type` attribute automatically:
+     * - `string` for `text | email | password | url | search | tel | date | time | color` etc.
+     * - `number` for `type="number" | "range"`
+     * - `boolean` for hidden boolean state (rare)
      */
-    value?: string
+    value?: T
 
     /**
      * Controls the visual style of the input.

@@ -1,10 +1,10 @@
 <script lang="ts" module>
-    import type { InputProps } from './input.types.js'
+    import type { InputProps, InputValue } from './input.types.js'
 
-    export type Props = InputProps
+    export type Props<T extends InputValue = InputValue> = InputProps<T>
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T extends InputValue = InputValue">
     import { inputVariants, inputDefaults } from './input.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import { getContext } from 'svelte'
@@ -15,7 +15,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('input', inputDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -42,10 +42,32 @@
         leadingSlot,
         trailingSlot,
         class: className,
+        onblur,
+        oninput,
+        onchange,
+        onfocus,
         ...restProps
-    }: Props = $props()
+    }: Props<T> = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
+
+    function handleBlur(event: FocusEvent & { currentTarget: HTMLInputElement }) {
+        emit.onBlur()
+        onblur?.(event)
+    }
+    function handleInput(event: Event & { currentTarget: HTMLInputElement }) {
+        emit.onInput()
+        oninput?.(event)
+    }
+    function handleChange(event: Event & { currentTarget: HTMLInputElement }) {
+        emit.onChange()
+        onchange?.(event)
+    }
+    function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }) {
+        emit.onFocus()
+        onfocus?.(event)
+    }
 
     const fieldGroupContext = getContext<
         | {
@@ -153,6 +175,10 @@
         aria-describedby={ariaDescribedBy}
         aria-invalid={resolvedHighlight ? true : undefined}
         class={classes.base}
+        onblur={handleBlur}
+        oninput={handleInput}
+        onchange={handleChange}
+        onfocus={handleFocus}
     />
 
     {#if trailingSlot}

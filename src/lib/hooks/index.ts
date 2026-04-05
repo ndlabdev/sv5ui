@@ -4,7 +4,7 @@ export type { UseMediaQueryOptions } from './useMediaQuery.svelte.js'
 export { useClipboard } from './useClipboard.svelte.js'
 export type { UseClipboardOptions } from './useClipboard.svelte.js'
 
-export { useFormField } from './useFormField.svelte.js'
+export { useFormField, useFormFieldEmit } from './useFormField.svelte.js'
 export type { FormFieldContext } from './useFormField.svelte.js'
 
 export { useClickOutside } from './useClickOutside.svelte.js'

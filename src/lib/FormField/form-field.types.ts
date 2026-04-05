@@ -59,6 +59,24 @@ export type FormFieldProps = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
     orientation?: NonNullable<FormFieldVariantProps['orientation']>
 
     /**
+     * When `true`, input events validate this field before first blur.
+     * By default, `input`-triggered validation only runs after the field has
+     * been blurred at least once.
+     */
+    eagerValidation?: boolean
+
+    /**
+     * Per-field override for the form's `validateOnInputDelay` (debounce in ms).
+     */
+    validateOnInputDelay?: number
+
+    /**
+     * Regex pattern to match form errors for this field (in addition to exact name match).
+     * Useful for array-style fields like `items.0.name`, `items.1.name`, etc.
+     */
+    errorPattern?: RegExp
+
+    /**
      * Additional CSS classes for the root element.
      */
     class?: ClassNameValue

@@ -9,7 +9,7 @@
     import { checkboxGroupVariants, checkboxGroupDefaults } from './checkbox-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
     import type { CheckboxGroupItem } from './checkbox-group.types.js'
 
     const config = getComponentConfig('checkboxGroup', checkboxGroupDefaults)
@@ -42,6 +42,7 @@
     }: Props = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false
@@ -97,6 +98,7 @@
         } else {
             value = value.filter((v) => v !== itemValue)
         }
+        emit.onChange()
         onValueChange?.(value)
     }
 

@@ -21,7 +21,7 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import Input from '../Input/Input.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('selectMenu', selectMenuDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -78,6 +78,7 @@
 
     // ---- Form context ----
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const fieldGroupContext = getContext<
         | {
@@ -257,6 +258,9 @@
     function onUpdateOpen(val: boolean) {
         if (!val) {
             searchTerm = ''
+            emit.onBlur()
+        } else {
+            emit.onFocus()
         }
         onOpenChange?.(val)
     }
@@ -366,7 +370,10 @@
     {disabled}
     {required}
     {value}
-    onValueChange={(val) => (value = val)}
+    onValueChange={(val) => {
+        value = val
+        emit.onChange()
+    }}
     name={resolvedName}
 >
     <div bind:this={ref} class={rootClass}>

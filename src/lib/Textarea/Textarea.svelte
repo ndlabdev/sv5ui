@@ -13,7 +13,7 @@
         type FieldGroupVariantProps
     } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('textarea', textareaDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -41,10 +41,32 @@
         rows = 3,
         maxrows = 0,
         class: className,
+        onblur,
+        oninput,
+        onchange,
+        onfocus,
         ...restProps
     }: Props = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
+
+    function handleBlur(event: FocusEvent & { currentTarget: HTMLTextAreaElement }) {
+        emit.onBlur()
+        onblur?.(event)
+    }
+    function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }) {
+        emit.onInput()
+        oninput?.(event)
+    }
+    function handleChange(event: Event & { currentTarget: HTMLTextAreaElement }) {
+        emit.onChange()
+        onchange?.(event)
+    }
+    function handleFocus(event: FocusEvent & { currentTarget: HTMLTextAreaElement }) {
+        emit.onFocus()
+        onfocus?.(event)
+    }
 
     const fieldGroupContext = getContext<
         | {
@@ -175,6 +197,10 @@
         aria-describedby={ariaDescribedBy}
         aria-invalid={resolvedHighlight ? true : undefined}
         class={classes.base}
+        onblur={handleBlur}
+        oninput={handleInput}
+        onchange={handleChange}
+        onfocus={handleFocus}
     ></textarea>
 
     {#if trailingSlot}
