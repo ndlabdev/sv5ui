@@ -171,7 +171,18 @@
 {/snippet}
 
 <div {...restProps} bind:this={ref} class={layoutClasses.root}>
-    <fieldset class={layoutClasses.fieldset} aria-describedby={ariaDescribedBy}>
+    <fieldset
+        class={layoutClasses.fieldset}
+        aria-describedby={ariaDescribedBy}
+        onfocusin={() => emit.onFocus()}
+        onfocusout={(e) => {
+            // Only emit blur when focus leaves the fieldset entirely, not when
+            // moving between checkboxes within the group.
+            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                emit.onBlur()
+            }
+        }}
+    >
         {#if legend || legendSlot}
             {#if legendSlot}
                 {@render legendSlot({ legend })}

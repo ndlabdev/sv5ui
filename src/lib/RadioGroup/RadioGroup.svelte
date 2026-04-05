@@ -160,7 +160,17 @@
     {/if}
 {/snippet}
 
-<div {...restProps} bind:this={ref} class={layoutClasses.root}>
+<div
+    {...restProps}
+    bind:this={ref}
+    class={layoutClasses.root}
+    onfocusin={() => emit.onFocus()}
+    onfocusout={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+            emit.onBlur()
+        }
+    }}
+>
     <RadioGroup.Root
         bind:value
         onValueChange={(val) => {
