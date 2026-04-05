@@ -105,6 +105,7 @@ export interface NestedFormEntry {
     validate: (opts?: FormValidateOpts) => Promise<unknown | false>
     clear: (name?: string | RegExp) => void
     reset: () => void
+    setErrors: (errs: FormError[], name?: string | RegExp) => void
 }
 
 // ==================== VALIDATE OPTIONS ====================

@@ -8,8 +8,8 @@
     import { Label, useId } from 'bits-ui'
     import { formFieldVariants, formFieldDefaults } from './form-field.variants.js'
     import { getComponentConfig } from '../config.js'
-    import { setContext, onDestroy } from 'svelte'
-    import type { FormFieldContext } from '../hooks/useFormField.svelte.js'
+    import { setContext, untrack } from 'svelte'
+    import { type FormFieldContext, FORM_FIELD_CONTEXT_KEY } from '../hooks/useFormField.svelte.js'
     import { getFormContext } from '../Form/form.context.svelte.js'
 
     const config = getComponentConfig('formField', formFieldDefaults)
@@ -54,8 +54,34 @@
         return errs[0]?.message
     })
 
-    // Register this field with the form so the form can resolve error ids and
-    // per-field validation options.
+    // Register this field with the form. Split into two effects:
+    //
+    // 1. Lifecycle effect — tracks only `name`. Handles the initial registration
+    //    and cleanup on unmount / rename. Reads other entry fields via `untrack`
+    //    so they don't retrigger the lifecycle.
+    // 2. Update effect — tracks ariaId / errorPattern / eagerValidation /
+    //    validateOnInputDelay and rewrites the entry via `.set()`. No cleanup —
+    //    a single atomic overwrite, so no window where the registry is empty.
+    //
+    // Without this split, changing an unrelated prop (e.g. errorPattern) would
+    // cause cleanup→re-register, briefly leaving `#fieldRegistry.get(name)`
+    // undefined for any concurrent `#resolveErrorIds` call.
+    $effect(() => {
+        if (!formCtx || !name) return
+        const registeredName = name
+        untrack(() => {
+            formCtx.registerField(registeredName, {
+                id: ariaId,
+                pattern: errorPattern,
+                eagerValidation,
+                validateOnInputDelay
+            })
+        })
+        return () => {
+            formCtx.unregisterField(registeredName)
+        }
+    })
+
     $effect(() => {
         if (!formCtx || !name) return
         formCtx.registerField(name, {
@@ -64,9 +90,6 @@
             eagerValidation,
             validateOnInputDelay
         })
-        return () => {
-            formCtx.unregisterField(name)
-        }
     })
 
     const variantSlots = $derived(formFieldVariants({ size, required, orientation }))
@@ -89,7 +112,7 @@
     const hasError = $derived(resolvedError !== undefined && resolvedError !== false)
     const errorMessage = $derived(typeof resolvedError === 'string' ? resolvedError : undefined)
 
-    setContext<FormFieldContext>('formField', {
+    setContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY, {
         get name() {
             return name
         },
@@ -111,12 +134,6 @@
         get errorPattern() {
             return errorPattern
         }
-    })
-
-    // Ensure cleanup even when `name` changes at runtime (the $effect above clears
-    // the previous name on its return; this handles full-destroy as well).
-    onDestroy(() => {
-        if (formCtx && name) formCtx.unregisterField(name)
     })
 </script>
 

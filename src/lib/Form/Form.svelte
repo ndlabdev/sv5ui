@@ -146,7 +146,8 @@
                 name: name as string | undefined,
                 validate: (opts) => ctx.validate(opts) as Promise<unknown | false>,
                 clear: (n) => ctx.clear(n),
-                reset: () => ctx.reset()
+                reset: () => ctx.reset(),
+                setErrors: (errs, n) => ctx.setErrors(errs, n)
             })
         }
     })

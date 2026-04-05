@@ -89,6 +89,14 @@ export class FormContext<T = unknown> {
      * concurrently run the validation pipeline and double-count submitCount.
      */
     #submitting = false
+    /**
+     * Cached Set view of `validateOn` for O(1) membership lookup on every
+     * event handler (onBlur / onInput / onChange / onFocus). Rebuilt lazily
+     * when the underlying array reference changes.
+     */
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity
+    #validateOnSet = new Set<FormInputEvents>()
+    #validateOnRef: FormInputEvents[] | null = null
 
     constructor(opts: FormContextOptions<T>, formId: string | number, parentCtx?: FormContext) {
         this.#opts = opts
@@ -131,10 +139,24 @@ export class FormContext<T = unknown> {
         const resolved = this.#resolveErrorIds(errs)
         if (!name) {
             this.errors = resolved
-            return
+        } else {
+            const kept = this.errors.filter((e) => !matchesTarget(e.name, name))
+            this.errors = [...kept, ...resolved]
         }
-        const kept = this.errors.filter((e) => !matchesTarget(e.name, name))
-        this.errors = [...kept, ...resolved]
+        // Cascade to nested forms so errors set on the parent propagate to the
+        // child's own `errors` array. Each child receives only the errors whose
+        // names fall under its path, with the path prefix stripped.
+        for (const form of this.#nestedForms.values()) {
+            if (!form.name) continue
+            if (name && !matchesTarget(form.name, name)) continue
+            const childErrs: FormError[] = errs
+                .filter((e) => e.name && matchesName(e.name, form.name!))
+                .map((e) => ({
+                    ...e,
+                    name: e.name!.slice(form.name!.length + 1) || undefined
+                }))
+            form.setErrors(childErrs)
+        }
     }
 
     clear(name?: string | RegExp): void {
@@ -198,7 +220,7 @@ export class FormContext<T = unknown> {
 
     onFocus(name: string): void {
         this.touchedFields.add(name)
-        if (this.#opts.getValidateOn().includes('focus')) {
+        if (this.#getValidateOnSet().has('focus')) {
             void this.#validateField(name)
         }
     }
@@ -206,7 +228,7 @@ export class FormContext<T = unknown> {
     onBlur(name: string): void {
         this.touchedFields.add(name)
         this.blurredFields.add(name)
-        if (this.#opts.getValidateOn().includes('blur')) {
+        if (this.#getValidateOnSet().has('blur')) {
             void this.#validateField(name)
         }
     }
@@ -214,7 +236,7 @@ export class FormContext<T = unknown> {
     onChange(name: string): void {
         this.touchedFields.add(name)
         this.dirtyFields.add(name)
-        if (this.#opts.getValidateOn().includes('change')) {
+        if (this.#getValidateOnSet().has('change')) {
             void this.#validateField(name)
         }
     }
@@ -222,10 +244,25 @@ export class FormContext<T = unknown> {
     onInput(name: string, eager = false): void {
         this.touchedFields.add(name)
         this.dirtyFields.add(name)
-        if (!this.#opts.getValidateOn().includes('input')) return
+        if (!this.#getValidateOnSet().has('input')) return
         const entryEager = this.#fieldRegistry.get(name)?.eagerValidation
         if (!eager && !entryEager && !this.blurredFields.has(name)) return
         this.#debounceField(name)
+    }
+
+    /**
+     * Returns a cached Set for validateOn lookups. Invalidates the cache when
+     * the underlying array reference from `getValidateOn()` changes, so prop
+     * updates still take effect.
+     */
+    #getValidateOnSet(): Set<FormInputEvents> {
+        const arr = this.#opts.getValidateOn()
+        if (arr !== this.#validateOnRef) {
+            this.#validateOnRef = arr
+            // eslint-disable-next-line svelte/prefer-svelte-reactivity
+            this.#validateOnSet = new Set(arr)
+        }
+        return this.#validateOnSet
     }
 
     // ==================== VALIDATION CORE ====================
@@ -235,21 +272,52 @@ export class FormContext<T = unknown> {
     // further would fragment the logic across helpers without reducing real complexity.
     // eslint-disable-next-line complexity
     async validate(opts: FormValidateOpts = {}): Promise<T | false> {
-        // Reset transformed state from any previous run — otherwise a failed
-        // validation would leak the previous successful transform into stage 6.
-        this.#transformedState = null
-        const state = this.state as T
+        const state = this.state
         const names = opts.name ? (Array.isArray(opts.name) ? opts.name : [opts.name]) : undefined
 
-        // 1. Nested forms validation (only when full-form validate)
+        // 1. Nested forms validation (when opts.nested is true). Runs in two modes:
+        //
+        //    (a) Full-form validate — `names` is undefined: every child validates
+        //        everything it owns, results contribute to `nestedResults` for
+        //        merging into the transformed state in stage 6.
+        //
+        //    (b) Field-scoped validate — `names` has values: only children whose
+        //        path is a prefix of, or equals, any requested name are called,
+        //        and they receive only the matching sub-name(s). E.g. parent
+        //        validate({ name: 'address.street', nested: true }) reaches a
+        //        child form named 'address' and calls child.validate({ name:
+        //        'street', nested: true }).
         let nestedErrors: FormError[] = []
         const nestedResults: Array<{ name?: string; value: unknown }> = []
-        if (!names && opts.nested) {
+        if (opts.nested) {
             for (const form of this.#nestedForms.values()) {
+                // Figure out which of the requested names belong to this child.
+                let childNames: string[] | undefined
+                if (names) {
+                    if (!form.name) continue
+                    const formPath = form.name
+                    const matched: string[] = []
+                    for (const n of names) {
+                        if (n === formPath) {
+                            // targeting whole child — pass undefined (full)
+                            matched.length = 0
+                            matched.push('')
+                            break
+                        }
+                        if (matchesName(n, formPath)) {
+                            matched.push(n.slice(formPath.length + 1))
+                        }
+                    }
+                    if (matched.length === 0) continue
+                    childNames = matched[0] === '' ? undefined : matched
+                }
+
                 try {
                     const result = await form.validate({
-                        ...opts,
-                        silent: false
+                        name: childNames,
+                        silent: false,
+                        nested: true,
+                        transform: opts.transform
                     })
                     if (result !== false) {
                         nestedResults.push({ name: form.name, value: result })
@@ -282,10 +350,13 @@ export class FormContext<T = unknown> {
             }
         }
 
-        // 3. Schema validation
+        // 3. Schema validation. Reset transformed state first — a previous
+        // successful run may have populated it, and we don't want that leaking
+        // into stage 6 if the current run fails validation.
         let schemaErrors: FormError[] = []
         const schema = this.#opts.getSchema()
         if (schema) {
+            this.#transformedState = null
             try {
                 const result = await validateSchema<Record<string, unknown>>(
                     state as unknown,
@@ -303,6 +374,8 @@ export class FormContext<T = unknown> {
                     }
                 ]
             }
+        } else {
+            this.#transformedState = null
         }
 
         // 4. Merge and resolve error ids
@@ -326,7 +399,10 @@ export class FormContext<T = unknown> {
             }
         }
 
-        // 6. Apply transform (merge nested results)
+        // 6. Apply transform (merge nested results into either the schema-
+        // transformed state or a shallow clone of the current state). Runs for
+        // both full-form and field-scoped validation so that a field-level
+        // validate of a nested path still produces a transformed payload.
         if (opts.transform) {
             const base =
                 (this.#transformedState as Record<string, unknown>) ??
@@ -399,6 +475,16 @@ export class FormContext<T = unknown> {
         this.#timers.clear()
         this.#fieldRegistry.clear()
         this.#nestedForms.clear()
+        // Clear reactive state too — handles the edge case where a consumer
+        // retains a reference to the context after component unmount.
+        this.errors = []
+        this.loading = false
+        this.submitCount = 0
+        this.dirtyFields.clear()
+        this.touchedFields.clear()
+        this.blurredFields.clear()
+        this.#transformedState = null
+        this.#submitting = false
     }
 
     // ==================== PRIVATE: VALIDATION HELPERS ====================
@@ -408,10 +494,14 @@ export class FormContext<T = unknown> {
     }
 
     #resolveErrorIds(errs: FormError[]): FormErrorWithId[] {
-        return errs.map((err) => ({
-            ...err,
-            id: err.name ? this.#fieldRegistry.get(err.name)?.id : undefined
-        }))
+        // Skip allocation when there's nothing to enrich — most FormErrorWithId
+        // upgrades are no-ops because the error's name isn't in the registry.
+        return errs.map((err) => {
+            if (!err.name) return err
+            const id = this.#fieldRegistry.get(err.name)?.id
+            if (id === undefined) return err
+            return { ...err, id }
+        })
     }
 
     #matchesAnyName(error: FormErrorWithId, names: string[]): boolean {
