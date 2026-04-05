@@ -9,7 +9,7 @@
     import { checkboxVariants, checkboxDefaults } from './checkbox.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('checkbox', checkboxDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -43,6 +43,7 @@
     }: Props = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false
@@ -107,9 +108,14 @@
     <div bind:this={containerRef} class={classes.container}>
         <Checkbox.Root
             bind:checked
-            {onCheckedChange}
+            onCheckedChange={(val) => {
+                emit.onChange()
+                onCheckedChange?.(val)
+            }}
             bind:indeterminate
             {onIndeterminateChange}
+            onblur={() => emit.onBlur()}
+            onfocus={() => emit.onFocus()}
             id={resolvedId}
             name={resolvedName}
             {value}

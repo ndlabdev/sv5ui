@@ -9,7 +9,7 @@
     import { radioGroupVariants, radioGroupDefaults } from './radio-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
     import type { RadioGroupItem } from './radio-group.types.js'
 
     const config = getComponentConfig('radioGroup', radioGroupDefaults)
@@ -43,6 +43,7 @@
     }: Props = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false
@@ -162,7 +163,10 @@
 <div {...restProps} bind:this={ref} class={layoutClasses.root}>
     <RadioGroup.Root
         bind:value
-        {onValueChange}
+        onValueChange={(val) => {
+            emit.onChange()
+            onValueChange?.(val)
+        }}
         id={resolvedId}
         name={resolvedName}
         disabled={isDisabled}

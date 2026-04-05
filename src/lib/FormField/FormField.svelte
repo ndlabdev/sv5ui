@@ -8,8 +8,9 @@
     import { Label, useId } from 'bits-ui'
     import { formFieldVariants, formFieldDefaults } from './form-field.variants.js'
     import { getComponentConfig } from '../config.js'
-    import { setContext } from 'svelte'
+    import { setContext, onDestroy } from 'svelte'
     import type { FormFieldContext } from '../hooks/useFormField.svelte.js'
+    import { getFormContext } from '../Form/form.context.svelte.js'
 
     const config = getComponentConfig('formField', formFieldDefaults)
 
@@ -25,6 +26,9 @@
         size = config.defaultVariants.size ?? 'md',
         required = false,
         orientation = config.defaultVariants.orientation ?? 'vertical',
+        eagerValidation,
+        validateOnInputDelay,
+        errorPattern,
         class: className,
         children,
         labelSlot,
@@ -37,6 +41,33 @@
 
     const id = useId()
     const ariaId = $derived(name ? `form-field-${name}` : id)
+
+    // Form-level context (undefined when FormField is used standalone).
+    const formCtx = getFormContext()
+
+    // Resolve error: explicit `error` prop always wins; otherwise ask the Form for
+    // errors matching this field's name (or errorPattern regex, if provided).
+    const resolvedError = $derived.by<string | boolean | undefined>(() => {
+        if (error !== undefined) return error
+        if (!formCtx || !name) return undefined
+        const errs = errorPattern ? formCtx.getErrors(errorPattern) : formCtx.getErrors(name)
+        return errs[0]?.message
+    })
+
+    // Register this field with the form so the form can resolve error ids and
+    // per-field validation options.
+    $effect(() => {
+        if (!formCtx || !name) return
+        formCtx.registerField(name, {
+            id: ariaId,
+            pattern: errorPattern,
+            eagerValidation,
+            validateOnInputDelay
+        })
+        return () => {
+            formCtx.unregisterField(name)
+        }
+    })
 
     const variantSlots = $derived(formFieldVariants({ size, required, orientation }))
     const classes = $derived({
@@ -55,8 +86,8 @@
         help: variantSlots.help({ class: [config.slots.help, ui?.help] })
     })
 
-    const hasError = $derived(error !== undefined && error !== false)
-    const errorMessage = $derived(typeof error === 'string' ? error : undefined)
+    const hasError = $derived(resolvedError !== undefined && resolvedError !== false)
+    const errorMessage = $derived(typeof resolvedError === 'string' ? resolvedError : undefined)
 
     setContext<FormFieldContext>('formField', {
         get name() {
@@ -66,11 +97,26 @@
             return size
         },
         get error() {
-            return error
+            return resolvedError
         },
         get ariaId() {
             return ariaId
+        },
+        get eagerValidation() {
+            return eagerValidation
+        },
+        get validateOnInputDelay() {
+            return validateOnInputDelay
+        },
+        get errorPattern() {
+            return errorPattern
         }
+    })
+
+    // Ensure cleanup even when `name` changes at runtime (the $effect above clears
+    // the previous name on its return; this handles full-destroy as well).
+    onDestroy(() => {
+        if (formCtx && name) formCtx.unregisterField(name)
     })
 </script>
 
@@ -103,12 +149,12 @@
 
     <div class={classes.container}>
         {#if children}
-            {@render children({ error })}
+            {@render children({ error: resolvedError })}
         {/if}
 
         {#if hasError && (errorMessage || errorSlot)}
             {#if errorSlot}
-                {@render errorSlot({ error })}
+                {@render errorSlot({ error: resolvedError })}
             {:else if errorMessage}
                 <p id="{ariaId}-error" class={classes.error}>{errorMessage}</p>
             {/if}
