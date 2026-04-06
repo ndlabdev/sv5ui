@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-04-06
+
 ### Added
 
 - **Form** — Centralized form validation and submission component with full parity to Nuxt UI v4's Form. Supports Zod 3.24+, Valibot 1.0+, Yup 1.7+ (via Standard Schema) and Joi 17+ (dedicated adapter). Features: custom validate function (sync/async), field-level validation on blur/input/change/focus with per-field debounce and eager-after-first-blur semantics, dirty/touched/blurred field tracking, loading auto-disable, nested forms with cascading validation/setErrors/clear/reset and state merging (full-form and field-scoped), schema transform output, full programmatic API via `bind:api` (submit, validate, clear, reset, setErrors, getErrors, errors, loading, dirty, submitCount)
@@ -148,7 +150,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/ndlabdev/sv5ui/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/ndlabdev/sv5ui/compare/v1.3.0...v1.4.0
