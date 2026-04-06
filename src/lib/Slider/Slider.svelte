@@ -8,7 +8,7 @@
     import { Slider, useId } from 'bits-ui'
     import { sliderVariants, sliderDefaults } from './slider.variants.js'
     import { getComponentConfig } from '../config.js'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('slider', sliderDefaults)
 
@@ -37,6 +37,7 @@
     }: Props = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const autoId = useId()
     const hasError = $derived(
@@ -59,10 +60,12 @@
 
     function handleValueChange(v: number[]) {
         value = isMultiple ? v : (v[0] ?? min)
+        emit.onInput()
         onValueChange?.(value)
     }
 
     function handleValueCommit(v: number[]) {
+        emit.onChange()
         onValueCommit?.(isMultiple ? v : (v[0] ?? min))
     }
 

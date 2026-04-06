@@ -16,7 +16,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('select', selectDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -69,6 +69,7 @@
 
     // ---- Form context ----
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const fieldGroupContext = getContext<
         | {
@@ -317,12 +318,22 @@
 <Select.Root
     type="single"
     bind:open
-    onOpenChange={(val) => onOpenChange?.(val)}
+    onOpenChange={(val) => {
+        if (val) {
+            emit.onFocus()
+        } else {
+            emit.onBlur()
+        }
+        onOpenChange?.(val)
+    }}
     {disabled}
     {required}
     items={bitsItems}
     {value}
-    onValueChange={(val) => (value = val)}
+    onValueChange={(val) => {
+        value = val
+        emit.onChange()
+    }}
 >
     <div bind:this={ref} class={rootClass}>
         {#if leadingSlot}

@@ -8,7 +8,7 @@
     import { PinInput, useId } from 'bits-ui'
     import { pinInputVariants, pinInputDefaults } from './pin-input.variants.js'
     import { getComponentConfig } from '../config.js'
-    import { useFormField } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('pinInput', pinInputDefaults)
 
@@ -43,6 +43,7 @@
     }: Props = $props()
 
     const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
 
     const autoInputId = useId()
     const hasError = $derived(
@@ -69,7 +70,13 @@
     function handleValueChange(v: string) {
         const filtered = type === 'number' ? v.replace(/\D/g, '') : v
         value = filtered
+        emit.onInput()
         onValueChange?.(filtered)
+    }
+
+    function handleComplete(v: string) {
+        emit.onChange()
+        onComplete?.(v)
     }
 
     const slots = $derived(
@@ -110,7 +117,7 @@
         maxlength={length}
         {disabled}
         {textalign}
-        {onComplete}
+        onComplete={handleComplete}
         pasteTransformer={resolvedPasteTransformer}
         {pushPasswordManagerStrategy}
         inputId={resolvedInputId}
