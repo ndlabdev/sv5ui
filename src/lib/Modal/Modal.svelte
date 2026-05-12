@@ -28,8 +28,9 @@
         description,
         overlay: showOverlay = config.defaultVariants.overlay ?? true,
         scrollable = config.defaultVariants.scrollable ?? false,
-        transition = config.defaultVariants.transition ?? true,
-        fullscreen = config.defaultVariants.fullscreen ?? false,
+        transition = config.defaultVariants.transition ?? 'scale',
+        size = config.defaultVariants.size ?? 'md',
+        fullscreen = false,
         portal = true,
         close: closeProp = true,
         dismissible = true,
@@ -46,6 +47,11 @@
         closeSlot
     }: Props = $props()
 
+    const resolvedSize = $derived(fullscreen ? 'full' : size)
+    const resolvedTransition = $derived(
+        transition === false ? 'none' : transition === true ? 'scale' : transition
+    )
+
     const showClose = $derived(!!closeProp)
     const closeProps = $derived(typeof closeProp === 'object' ? closeProp : {})
 
@@ -57,7 +63,12 @@
     )
 
     const variantSlots = $derived(
-        modalVariants({ transition, fullscreen, overlay: showOverlay, scrollable })
+        modalVariants({
+            transition: resolvedTransition,
+            size: resolvedSize,
+            overlay: showOverlay,
+            scrollable
+        })
     )
 
     const classes = $derived({

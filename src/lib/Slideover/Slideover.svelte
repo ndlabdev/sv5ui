@@ -28,7 +28,8 @@
         description,
         side = config.defaultVariants.side ?? 'right',
         overlay: showOverlay = config.defaultVariants.overlay ?? true,
-        transition = config.defaultVariants.transition ?? true,
+        transition = config.defaultVariants.transition ?? 'slide',
+        size = config.defaultVariants.size ?? 'md',
         inset = config.defaultVariants.inset ?? false,
         portal = true,
         close: closeProp = true,
@@ -56,8 +57,18 @@
         !!headerSlot || hasHeading || !!actionsSlot || showClose || !!closeSlot
     )
 
+    const resolvedTransition = $derived(
+        transition === false ? 'none' : transition === true ? 'slide' : transition
+    )
+
     const variantSlots = $derived(
-        slideoverVariants({ transition, side, inset, overlay: showOverlay })
+        slideoverVariants({
+            transition: resolvedTransition,
+            side,
+            size,
+            inset,
+            overlay: showOverlay
+        })
     )
 
     const classes = $derived({

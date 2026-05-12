@@ -22,6 +22,20 @@
     let alertOpen = $state(false)
     let imageOpen = $state(false)
 
+    let sizeOpens = $state<Record<string, boolean>>({
+        sm: false,
+        md: false,
+        lg: false,
+        xl: false,
+        full: false
+    })
+    let transitionOpens = $state<Record<string, boolean>>({
+        scale: false,
+        fade: false,
+        slide: false,
+        none: false
+    })
+
     function logCallback(name: string) {
         callbackLog = [...callbackLog.slice(-4), `${new Date().toLocaleTimeString()} — ${name}`]
     }
@@ -589,6 +603,58 @@
                     {/snippet}
                 </Modal>
             </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Size</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Use <code>size</code> to control the modal width: <code>sm</code> /
+            <code>md</code> (default) / <code>lg</code> / <code>xl</code> /
+            <code>full</code>. The legacy <code>fullscreen</code> prop is kept as an alias for
+            <code>size="full"</code>.
+        </p>
+        <div class="flex flex-wrap gap-2">
+            {#each ['sm', 'md', 'lg', 'xl', 'full'] as const as s (s)}
+                <Modal
+                    bind:open={sizeOpens[s]}
+                    size={s}
+                    title={`Size: ${s}`}
+                    description="Resize your browser to see how the modal width scales."
+                >
+                    <Button variant="outline" label={`size="${s}"`} />
+                    {#snippet body()}
+                        <p class="text-sm text-on-surface-variant">
+                            Current size is <code>{s}</code>.
+                        </p>
+                    {/snippet}
+                </Modal>
+            {/each}
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Transition</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Pick how the modal animates in and out. Default is <code>scale</code>; pass
+            <code>fade</code>, <code>slide</code>, or <code>none</code> to override. Boolean
+            <code>true</code> / <code>false</code> still work as legacy aliases.
+        </p>
+        <div class="flex flex-wrap gap-2">
+            {#each ['scale', 'fade', 'slide', 'none'] as const as t (t)}
+                <Modal
+                    bind:open={transitionOpens[t]}
+                    transition={t}
+                    title={`Transition: ${t}`}
+                    description="Open and close to see the animation."
+                >
+                    <Button variant="outline" label={`transition="${t}"`} />
+                </Modal>
+            {/each}
         </div>
     </section>
 </div>
