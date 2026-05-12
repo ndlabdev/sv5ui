@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Select / SelectMenu** — `multiple` prop for selecting more than one option. When `true`, `value` becomes `string[]` and the dropdown stays open after each selection. The trigger displays selected labels joined by `separator` (default `, `), and a new `selected` snippet receives `{ items, remove, clear }` for custom rendering such as chips/tags.
+- **SelectMenu** — `createItem` prop (`boolean | 'always' | 'lazy'`) lets users add values not present in `items` by typing in the search box. Defaults to `'lazy'` (offered only when no item matches); `'always'` keeps the create option visible. Companion props: `createItemLabel` (string or `(value) => string`), `createItemIcon`, and `onCreate(value)` callback. Created values are tracked internally so the trigger renders their label even if the caller does not push them into `items`. Pressing <kbd>Enter</kbd> from the search input creates when there are no matches.
 
 ## [1.6.0] - 2026-04-06
 
