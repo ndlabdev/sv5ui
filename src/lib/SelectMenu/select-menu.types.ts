@@ -87,6 +87,18 @@ export interface SelectMenuItemSlotProps {
     selected?: boolean
 }
 
+/**
+ * Props passed to the `selected` snippet when `multiple` is true.
+ */
+export interface SelectMenuSelectedSlotProps {
+    /** The full list of currently selected items resolved from values. */
+    items: SelectMenuItem[]
+    /** Remove a value from the current selection. */
+    remove: (value: string) => void
+    /** Clear all selected values. */
+    clear: () => void
+}
+
 // ============================================================================
 // Component Props
 // ============================================================================
@@ -129,8 +141,27 @@ export interface SelectMenuProps extends ContentProps {
 
     /**
      * The currently selected value. Supports two-way binding with `bind:value`.
+     *
+     * - When `multiple` is `false`/omitted, this is a `string`.
+     * - When `multiple` is `true`, this is a `string[]`.
      */
-    value?: string
+    value?: string | string[]
+
+    /**
+     * Whether multiple items can be selected at once.
+     * When `true`, `value` becomes a `string[]` and the dropdown stays open
+     * after each selection. The trigger displays a comma-separated list of
+     * selected labels by default; use the `selected` snippet for chips/tags.
+     * @default false
+     */
+    multiple?: boolean
+
+    /**
+     * Separator used to join selected labels in the trigger when `multiple` is `true`.
+     * Ignored when the `selected` snippet is provided.
+     * @default ', '
+     */
+    separator?: string
 
     /**
      * Whether the dropdown is open. Supports two-way binding with `bind:open`.
@@ -323,6 +354,13 @@ export interface SelectMenuProps extends ContentProps {
      * Takes precedence over `trailingIcon`.
      */
     trailingSlot?: Snippet
+
+    /**
+     * Custom rendering for the selected value(s) displayed in the trigger.
+     * Useful in `multiple` mode to render chips/tags instead of the default
+     * comma-separated label list.
+     */
+    selected?: Snippet<[SelectMenuSelectedSlotProps]>
 
     /**
      * Custom snippet for rendering individual items in the dropdown.

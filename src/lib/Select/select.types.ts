@@ -4,6 +4,15 @@ import type { SelectVariantProps, SelectSlots } from './select.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
 import type { SelectRootPropsWithoutHTML, SelectContentPropsWithoutHTML } from 'bits-ui'
 
+/**
+ * The value shape for the Select.
+ * - When `multiple` is `false` (or omitted), the value is a single string (or undefined).
+ * - When `multiple` is `true`, the value is an array of strings.
+ */
+export type SelectValue<Multiple extends boolean = false> = Multiple extends true
+    ? string[]
+    : string | undefined
+
 // ============================================================================
 // Item Types
 // ============================================================================
@@ -87,6 +96,18 @@ export interface SelectItemSlotProps {
     selected?: boolean
 }
 
+/**
+ * Props passed to the `selected` snippet when `multiple` is true.
+ */
+export interface SelectSelectedSlotProps {
+    /** The full list of currently selected items resolved from values. */
+    items: SelectItem[]
+    /** Remove a value from the current selection. */
+    remove: (value: string) => void
+    /** Clear all selected values. */
+    clear: () => void
+}
+
 // ============================================================================
 // Component Props
 // ============================================================================
@@ -143,13 +164,34 @@ export interface SelectProps extends RootProps, ContentProps {
 
     /**
      * The currently selected value. Supports two-way binding with `bind:value`.
+     *
+     * - When `multiple` is `false`/omitted, this is a `string`.
+     * - When `multiple` is `true`, this is a `string[]`.
      */
-    value?: string
+    value?: string | string[]
 
     /**
      * The default selected value when uncontrolled.
+     *
+     * - When `multiple` is `false`/omitted, this is a `string`.
+     * - When `multiple` is `true`, this is a `string[]`.
      */
-    defaultValue?: string
+    defaultValue?: string | string[]
+
+    /**
+     * Whether multiple items can be selected at once.
+     * When `true`, `value` becomes a `string[]` and the trigger displays
+     * a comma-separated list of selected labels by default.
+     * @default false
+     */
+    multiple?: boolean
+
+    /**
+     * Separator used to join selected labels in the trigger when `multiple` is `true`.
+     * Ignored when the `selected` snippet is provided.
+     * @default ', '
+     */
+    separator?: string
 
     /**
      * Array of items to display in the select dropdown.
@@ -286,6 +328,13 @@ export interface SelectProps extends RootProps, ContentProps {
      * Takes precedence over `trailingIcon`.
      */
     trailingSlot?: Snippet
+
+    /**
+     * Custom rendering for the selected value(s) displayed in the trigger.
+     * Useful in `multiple` mode to render chips/tags instead of the default
+     * comma-separated label list.
+     */
+    selected?: Snippet<[SelectSelectedSlotProps]>
 
     /**
      * Custom snippet for rendering individual items in the dropdown.

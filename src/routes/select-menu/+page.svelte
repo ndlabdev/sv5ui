@@ -16,6 +16,8 @@
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     let bindValue = $state('')
+    let multipleValue = $state<string[]>(['apple', 'banana'])
+    let chipValue = $state<string[]>(['alice'])
 
     const fruits: SelectMenuItem[] = [
         { value: 'apple', label: 'Apple' },
@@ -693,6 +695,76 @@
                         leadingIcon="lucide:search"
                     />
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Multiple selection</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Pass <code>multiple</code> to allow selecting more than one option. The dropdown stays
+            open after each click so users can pick several items in a row. Use the
+            <code>selected</code> snippet to render chips/tags instead of the default comma-separated
+            labels.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">Default (comma-separated)</p>
+                <div class="max-w-sm">
+                    <SelectMenu
+                        multiple
+                        bind:value={multipleValue}
+                        items={fruits}
+                        placeholder="Pick fruits..."
+                    />
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Selected: {JSON.stringify(multipleValue)}
+                </p>
+            </div>
+
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    With chips via `selected` snippet
+                </p>
+                <div class="max-w-sm">
+                    <SelectMenu
+                        multiple
+                        bind:value={chipValue}
+                        items={avatarItems}
+                        placeholder="Add members..."
+                        leadingIcon="lucide:users"
+                    >
+                        {#snippet selected({ items, remove })}
+                            <span class="flex flex-wrap items-center gap-1">
+                                {#each items as item (item.value)}
+                                    <span
+                                        class="inline-flex items-center gap-1 rounded-full bg-primary-container px-2 py-0.5 text-xs text-on-primary-container"
+                                    >
+                                        {item.label ?? item.value}
+                                        <button
+                                            type="button"
+                                            aria-label={`Remove ${item.label ?? item.value}`}
+                                            class="-mr-0.5 inline-flex size-3 items-center justify-center rounded-full hover:bg-on-primary-container/20"
+                                            onclick={(e) => {
+                                                e.stopPropagation()
+                                                remove(item.value)
+                                            }}
+                                        >
+                                            <Icon name="lucide:x" class="size-2.5" />
+                                        </button>
+                                    </span>
+                                {/each}
+                            </span>
+                        {/snippet}
+                    </SelectMenu>
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Selected: {JSON.stringify(chipValue)}
+                </p>
             </div>
         </div>
     </section>

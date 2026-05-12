@@ -31,6 +31,8 @@
         name,
         required = false,
         disabled = false,
+        multiple = false,
+        separator = ', ',
         ui,
         id,
         color = config.defaultVariants.color,
@@ -64,6 +66,7 @@
         itemLeading,
         itemLabel: itemLabelSlot,
         itemTrailing,
+        selected: selectedSlot,
         content: contentSlot
     }: Props = $props()
 
@@ -113,12 +116,44 @@
         )
     )
 
-    const selectedItem = $derived(value ? itemsMap.get(value) : undefined)
-    const displayLabel = $derived(selectedItem?.label ?? selectedItem?.value ?? '')
+    // ---- Selection (single + multiple) ----
+    const selectedValues = $derived(
+        multiple
+            ? Array.isArray(value)
+                ? (value as string[])
+                : []
+            : typeof value === 'string' && value !== ''
+              ? [value]
+              : []
+    )
+    const selectedItems = $derived(
+        selectedValues.map((v) => itemsMap.get(v)).filter((i): i is SelectItem => i !== undefined)
+    )
+    const hasSelection = $derived(selectedValues.length > 0)
+    const singleSelectedItem = $derived(multiple ? undefined : selectedItems[0])
+    const displayLabel = $derived(
+        multiple
+            ? selectedItems.map((i) => i.label ?? i.value).join(separator)
+            : (singleSelectedItem?.label ?? singleSelectedItem?.value ?? '')
+    )
+
+    function removeValue(val: string) {
+        if (!multiple) return
+        value = selectedValues.filter((v) => v !== val)
+        emit.onChange()
+    }
+
+    function clearSelection() {
+        if (!multiple) return
+        value = []
+        emit.onChange()
+    }
 
     // ---- Leading / trailing ----
-    const displayAvatar = $derived(selectedItem?.avatar ?? avatar)
-    const displayIcon = $derived(selectedItem?.icon ?? leadingIcon ?? icon)
+    const displayAvatar = $derived(multiple ? avatar : (singleSelectedItem?.avatar ?? avatar))
+    const displayIcon = $derived(
+        multiple ? (leadingIcon ?? icon) : (singleSelectedItem?.icon ?? leadingIcon ?? icon)
+    )
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
     const leadingIconName = $derived(
         loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
@@ -236,7 +271,7 @@
 </script>
 
 {#snippet renderItem(item: SelectItem, index: number)}
-    {@const isSelected = value === item.value}
+    {@const isSelected = selectedValues.includes(item.value)}
     <Select.Item
         value={item.value}
         label={item.label ?? item.value}
@@ -303,7 +338,7 @@
                             {@render itemSlot({
                                 item: selectItem,
                                 index,
-                                selected: value === selectItem.value
+                                selected: selectedValues.includes(selectItem.value)
                             })}
                         {:else}
                             {@render renderItem(selectItem, index)}
@@ -315,26 +350,7 @@
     </Select.Content>
 {/snippet}
 
-<Select.Root
-    type="single"
-    bind:open
-    onOpenChange={(val) => {
-        if (val) {
-            emit.onFocus()
-        } else {
-            emit.onBlur()
-        }
-        onOpenChange?.(val)
-    }}
-    {disabled}
-    {required}
-    items={bitsItems}
-    {value}
-    onValueChange={(val) => {
-        value = val
-        emit.onChange()
-    }}
->
+{#snippet rootChildren()}
     <div bind:this={ref} class={rootClass}>
         {#if leadingSlot}
             <span class={leadingClass}>
@@ -361,7 +377,13 @@
             aria-invalid={resolvedHighlight ? true : undefined}
             class={baseClass}
         >
-            {#if value && displayLabel}
+            {#if selectedSlot && hasSelection}
+                {@render selectedSlot({
+                    items: selectedItems,
+                    remove: removeValue,
+                    clear: clearSelection
+                })}
+            {:else if hasSelection && displayLabel}
                 <span class={valueClass}>{displayLabel}</span>
             {:else if placeholder}
                 <span class={placeholderClass}>{placeholder}</span>
@@ -386,4 +408,52 @@
     {:else}
         {@render selectContentEl()}
     {/if}
-</Select.Root>
+{/snippet}
+
+{#if multiple}
+    <Select.Root
+        type="multiple"
+        bind:open
+        onOpenChange={(val) => {
+            if (val) {
+                emit.onFocus()
+            } else {
+                emit.onBlur()
+            }
+            onOpenChange?.(val)
+        }}
+        {disabled}
+        {required}
+        items={bitsItems}
+        value={selectedValues}
+        onValueChange={(val) => {
+            value = val
+            emit.onChange()
+        }}
+    >
+        {@render rootChildren()}
+    </Select.Root>
+{:else}
+    <Select.Root
+        type="single"
+        bind:open
+        onOpenChange={(val) => {
+            if (val) {
+                emit.onFocus()
+            } else {
+                emit.onBlur()
+            }
+            onOpenChange?.(val)
+        }}
+        {disabled}
+        {required}
+        items={bitsItems}
+        value={selectedValues[0] ?? ''}
+        onValueChange={(val) => {
+            value = val
+            emit.onChange()
+        }}
+    >
+        {@render rootChildren()}
+    </Select.Root>
+{/if}

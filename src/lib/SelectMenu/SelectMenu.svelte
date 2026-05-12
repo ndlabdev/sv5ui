@@ -37,6 +37,8 @@
         name,
         required = false,
         disabled = false,
+        multiple = false,
+        separator = ', ',
         ui,
         id,
         color = config.defaultVariants.color,
@@ -72,6 +74,7 @@
         itemLeading,
         itemLabel: itemLabelSlot,
         itemTrailing,
+        selected: selectedSlot,
         empty: emptySlot,
         content: contentSlot
     }: Props = $props()
@@ -122,8 +125,40 @@
         )
     )
 
-    const selectedItem = $derived(value ? itemsMap.get(value) : undefined)
-    const displayLabel = $derived(selectedItem?.label ?? selectedItem?.value ?? '')
+    // ---- Selection (single + multiple) ----
+    const selectedValues = $derived(
+        multiple
+            ? Array.isArray(value)
+                ? (value as string[])
+                : []
+            : typeof value === 'string' && value !== ''
+              ? [value]
+              : []
+    )
+    const selectedItems = $derived(
+        selectedValues
+            .map((v) => itemsMap.get(v))
+            .filter((i): i is SelectMenuItem => i !== undefined)
+    )
+    const hasSelection = $derived(selectedValues.length > 0)
+    const singleSelectedItem = $derived(multiple ? undefined : selectedItems[0])
+    const displayLabel = $derived(
+        multiple
+            ? selectedItems.map((i) => i.label ?? i.value).join(separator)
+            : (singleSelectedItem?.label ?? singleSelectedItem?.value ?? '')
+    )
+
+    function removeValue(val: string) {
+        if (!multiple) return
+        value = selectedValues.filter((v) => v !== val)
+        emit.onChange()
+    }
+
+    function clearSelection() {
+        if (!multiple) return
+        value = []
+        emit.onChange()
+    }
 
     // ---- Search & filtering ----
     let searchTerm = $state('')
@@ -144,8 +179,10 @@
     const hasFilteredSelectItems = $derived(filteredItems.some((item) => !('type' in item)))
 
     // ---- Leading / trailing ----
-    const displayAvatar = $derived(selectedItem?.avatar ?? avatar)
-    const displayIcon = $derived(selectedItem?.icon ?? leadingIcon ?? icon)
+    const displayAvatar = $derived(multiple ? avatar : (singleSelectedItem?.avatar ?? avatar))
+    const displayIcon = $derived(
+        multiple ? (leadingIcon ?? icon) : (singleSelectedItem?.icon ?? leadingIcon ?? icon)
+    )
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
     const leadingIconName = $derived(
         loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
@@ -267,7 +304,7 @@
 </script>
 
 {#snippet renderItem(item: SelectMenuItem, index: number)}
-    {@const isSelected = value === item.value}
+    {@const isSelected = selectedValues.includes(item.value)}
     <Combobox.Item
         value={item.value}
         label={item.label ?? item.value}
@@ -343,7 +380,7 @@
                             {@render itemSlot({
                                 item: selectItem,
                                 index,
-                                selected: value === selectItem.value
+                                selected: selectedValues.includes(selectItem.value)
                             })}
                         {:else}
                             {@render renderItem(selectItem, index)}
@@ -363,19 +400,7 @@
     </Combobox.Content>
 {/snippet}
 
-<Combobox.Root
-    type="single"
-    bind:open
-    onOpenChange={onUpdateOpen}
-    {disabled}
-    {required}
-    {value}
-    onValueChange={(val) => {
-        value = val
-        emit.onChange()
-    }}
-    name={resolvedName}
->
+{#snippet rootChildren()}
     <div bind:this={ref} class={rootClass}>
         {#if leadingSlot}
             <span class={leadingClass}>
@@ -407,7 +432,13 @@
             aria-invalid={resolvedHighlight ? true : undefined}
             class={baseClass}
         >
-            {#if value && displayLabel}
+            {#if selectedSlot && hasSelection}
+                {@render selectedSlot({
+                    items: selectedItems,
+                    remove: removeValue,
+                    clear: clearSelection
+                })}
+            {:else if hasSelection && displayLabel}
                 <span class={valueClass}>{displayLabel}</span>
             {:else if placeholder}
                 <span class={placeholderClass}>{placeholder}</span>
@@ -432,4 +463,38 @@
     {:else}
         {@render contentEl()}
     {/if}
-</Combobox.Root>
+{/snippet}
+
+{#if multiple}
+    <Combobox.Root
+        type="multiple"
+        bind:open
+        onOpenChange={onUpdateOpen}
+        {disabled}
+        {required}
+        value={selectedValues}
+        onValueChange={(val) => {
+            value = val
+            emit.onChange()
+        }}
+        name={resolvedName}
+    >
+        {@render rootChildren()}
+    </Combobox.Root>
+{:else}
+    <Combobox.Root
+        type="single"
+        bind:open
+        onOpenChange={onUpdateOpen}
+        {disabled}
+        {required}
+        value={selectedValues[0] ?? ''}
+        onValueChange={(val) => {
+            value = val
+            emit.onChange()
+        }}
+        name={resolvedName}
+    >
+        {@render rootChildren()}
+    </Combobox.Root>
+{/if}

@@ -507,4 +507,67 @@ describe('SelectMenu', () => {
             expect(trigger.className).toMatch(/ring-error/)
         })
     })
+
+    // ==================== MULTIPLE ====================
+
+    describe('multiple', () => {
+        it('should display comma-separated labels when multiple values selected', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple', 'banana']
+            })
+            await expect.element(page.getByText('Apple, Banana')).toBeInTheDocument()
+        })
+
+        it('should use custom separator when provided', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple', 'cherry'],
+                separator: ' / '
+            })
+            await expect.element(page.getByText('Apple / Cherry')).toBeInTheDocument()
+        })
+
+        it('should show placeholder when no values are selected', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: [],
+                placeholder: 'Pick fruits'
+            })
+            await expect.element(page.getByText('Pick fruits')).toBeInTheDocument()
+        })
+
+        it('should keep dropdown open after selecting an item', async () => {
+            const { container } = render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: [],
+                open: true,
+                portal: false
+            })
+            await vi.waitFor(async () => {
+                const option = page.getByRole('option', { name: 'Apple' })
+                await expect.element(option).toBeInTheDocument()
+            })
+            await page.getByRole('option', { name: 'Apple' }).click()
+            expect(getTrigger(container)!.getAttribute('data-state')).toBe('open')
+        })
+
+        it('should mark all selected items in dropdown', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple', 'cherry'],
+                open: true,
+                portal: false
+            })
+            await vi.waitFor(() => {
+                const selected = document.querySelectorAll('[role="option"][data-selected]')
+                expect(selected.length).toBe(2)
+            })
+        })
+    })
 })
