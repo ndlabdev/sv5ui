@@ -602,4 +602,37 @@ describe('FileUpload', () => {
             expect(reasons).toContain('maxFiles')
         })
     })
+
+    // ==================== FORMFIELD / ARIA ====================
+
+    describe('formfield + aria', () => {
+        it('should put id on the focusable area (variant=area)', () => {
+            render(FileUpload, { id: 'upload-1' })
+            const area = getArea()
+            expect(area?.id).toBe('upload-1')
+        })
+
+        it('should put id on the button (variant=button)', () => {
+            render(FileUpload, { id: 'upload-btn', variant: 'button', label: 'Upload' })
+            const btn = document.querySelector('button[id="upload-btn"]')
+            expect(btn).not.toBeNull()
+        })
+
+        it('should set aria-invalid when highlight is true', () => {
+            render(FileUpload, { highlight: true })
+            const area = getArea()
+            expect(area?.getAttribute('aria-invalid')).toBe('true')
+        })
+
+        it('should not set aria-invalid when highlight is false', () => {
+            render(FileUpload, {})
+            const area = getArea()
+            expect(area?.getAttribute('aria-invalid')).toBeNull()
+        })
+
+        it('should pass name through to hidden file input', () => {
+            render(FileUpload, { name: 'avatar' })
+            expect(getInput().name).toBe('avatar')
+        })
+    })
 })

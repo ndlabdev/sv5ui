@@ -12,6 +12,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Button from '../Button/Button.svelte'
     import Modal from '../Modal/Modal.svelte'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('fileUpload', fileUploadDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -42,6 +43,7 @@
         required = false,
         fileIcon = icons.file,
         imagePreview = true,
+        id,
         name,
         leadingSlot,
         labelSlot,
@@ -62,6 +64,9 @@
     let previewOpen = $state(false)
     let previewFile = $state<File | null>(null)
 
+    const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
+
     // Stable file identity key with separator to avoid collisions
     const fileKey = (f: File) => `${f.name}:${f.size}:${f.lastModified}`
 
@@ -69,6 +74,20 @@
     // state. SvelteMap mutations would cascade re-renders every time a URL is cached/evicted.
     // eslint-disable-next-line svelte/prefer-svelte-reactivity
     const urlCache = new Map<string, string>()
+
+    const hasError = $derived(
+        formFieldContext?.error !== undefined && formFieldContext?.error !== false
+    )
+    const resolvedHighlight = $derived(highlight || hasError)
+    const resolvedId = $derived(id ?? formFieldContext?.ariaId)
+    const resolvedName = $derived(name ?? formFieldContext?.name)
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
 
     const isDisabled = $derived(disabled || loading)
     const isDragging = $derived(dragCounter > 0)
@@ -80,13 +99,13 @@
     // Pass booleans directly so compound variants with `false` values match correctly
     const slots = $derived(
         fileUploadVariants({
-            color,
+            color: hasError ? 'error' : color,
             size,
             variant,
             layout,
             dropzone,
             interactive: interactive && !isDisabled,
-            highlight,
+            highlight: resolvedHighlight,
             multiple,
             disabled: isDisabled
         })
@@ -198,6 +217,7 @@
         if (accepted.length) {
             value = multiple ? [...value, ...accepted] : accepted
             onValueChange?.(value)
+            emit.onChange()
         }
         if (rejected.length) onReject?.(rejected)
     }
@@ -215,6 +235,7 @@
         }
         value = value.filter((_, i) => i !== index)
         onValueChange?.(value)
+        emit.onChange()
     }
 
     export function clearAll() {
@@ -224,6 +245,7 @@
         urlCache.clear()
         value = []
         onValueChange?.(value)
+        emit.onChange()
     }
 
     function handleInputChange(e: Event) {
@@ -299,7 +321,7 @@
         bind:this={inputRef}
         type="file"
         id={autoId}
-        {name}
+        name={resolvedName}
         {accept}
         {multiple}
         {required}
@@ -314,18 +336,23 @@
         <!-- Area / Dropzone -->
         <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
         <div
+            id={resolvedId}
             class={classes.base}
             data-dragging={isDragging ? '' : undefined}
             role={interactive ? 'button' : undefined}
             tabindex={interactive && !isDisabled ? 0 : undefined}
             aria-disabled={isDisabled || undefined}
             aria-label={interactive ? label : undefined}
+            aria-invalid={resolvedHighlight ? true : undefined}
+            aria-describedby={ariaDescribedBy}
             onclick={handleAreaClick}
             ondragenter={handleDragEnter}
             ondragover={handleDragOver}
             ondragleave={handleDragLeave}
             ondrop={handleDrop}
             onkeydown={handleKeydown}
+            onfocus={() => emit.onFocus()}
+            onblur={() => emit.onBlur()}
         >
             {#if showFilesInside}
                 <!-- Grid single: file fills the area as overlay -->
@@ -429,6 +456,7 @@
     {:else}
         <!-- Button variant -->
         <Button
+            id={resolvedId}
             {color}
             {size}
             disabled={isDisabled}
@@ -436,7 +464,11 @@
             {loadingIcon}
             leadingIcon={loading ? undefined : icon}
             {label}
+            aria-invalid={resolvedHighlight ? true : undefined}
+            aria-describedby={ariaDescribedBy}
             onclick={handleAreaClick}
+            onfocus={() => emit.onFocus()}
+            onblur={() => emit.onBlur()}
         />
     {/if}
 

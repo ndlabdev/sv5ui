@@ -16,6 +16,7 @@
     import Icon from '../Icon/Icon.svelte'
     import type { DateValue } from '@internationalized/date'
     import type { Month } from 'bits-ui'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('calendar', calendarDefaults)
 
@@ -25,6 +26,8 @@
         onValueChange,
         placeholder = $bindable(),
         onPlaceholderChange,
+        id,
+        name,
         range = false,
         prevMonthIcon = 'lucide:chevron-left',
         nextMonthIcon = 'lucide:chevron-right',
@@ -60,11 +63,31 @@
         ...restProps
     }: Props = $props()
 
+    const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
+
+    const hasError = $derived(
+        formFieldContext?.error !== undefined && formFieldContext?.error !== false
+    )
+    const resolvedColor = $derived(hasError ? 'error' : color)
+    const resolvedSize = $derived(size ?? formFieldContext?.size)
+    const resolvedId = $derived(id ?? formFieldContext?.ariaId)
+    const resolvedName = $derived(name ?? formFieldContext?.name)
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
+
     // Only Cell and Day differ between Calendar & RangeCalendar
     const CalCell = $derived(range ? RangeCalendar.Cell : Calendar.Cell)
     const CalDay = $derived(range ? RangeCalendar.Day : Calendar.Day)
 
-    const variantSlots = $derived(calendarVariants({ color, size, variant, weekNumbers }))
+    const variantSlots = $derived(
+        calendarVariants({ color: resolvedColor, size: resolvedSize, variant, weekNumbers })
+    )
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className, ui?.root] }),
         header: variantSlots.header({ class: [config.slots.header, ui?.header] }),
@@ -96,6 +119,7 @@
     }
 
     const commonProps = $derived({
+        id: resolvedId,
         placeholder,
         onPlaceholderChange: (val: DateValue) => {
             placeholder = val
@@ -115,8 +139,18 @@
         calendarLabel,
         locale,
         readonly,
-        disableDaysOutsideMonth
+        disableDaysOutsideMonth,
+        'aria-describedby': ariaDescribedBy,
+        'aria-invalid': hasError ? true : undefined,
+        'data-name': resolvedName,
+        onfocusin: () => emit.onFocus(),
+        onfocusout: () => emit.onBlur()
     })
+
+    function handleValueChange(val: unknown) {
+        ;(onValueChange as ((value: unknown) => void) | undefined)?.(val)
+        emit.onChange()
+    }
 </script>
 
 {#snippet calendarContent(months: Month<DateValue>[], weekdays: string[])}
@@ -254,7 +288,7 @@
     <RangeCalendar.Root
         bind:ref
         bind:value={value as CalendarRangeProps['value']}
-        onValueChange={onValueChange as CalendarRangeProps['onValueChange']}
+        onValueChange={handleValueChange as CalendarRangeProps['onValueChange']}
         {...commonProps}
         minDays={rp.minDays}
         maxDays={rp.maxDays}
@@ -275,7 +309,7 @@
         <Calendar.Root
             bind:ref
             bind:value={value as CalendarMultipleProps['value']}
-            onValueChange={onValueChange as CalendarMultipleProps['onValueChange']}
+            onValueChange={handleValueChange as CalendarMultipleProps['onValueChange']}
             {...commonProps}
             type="multiple"
             maxDays={calMaxDays}
@@ -290,7 +324,7 @@
         <Calendar.Root
             bind:ref
             bind:value={value as CalendarSingleProps['value']}
-            onValueChange={onValueChange as CalendarSingleProps['onValueChange']}
+            onValueChange={handleValueChange as CalendarSingleProps['onValueChange']}
             {...commonProps}
             type="single"
             initialFocus={calInitialFocus}

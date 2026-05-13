@@ -93,6 +93,19 @@ export type PinInputProps = Pick<
         highlight?: boolean
 
         /**
+         * Show a loading spinner over the cells and disable interaction.
+         * Useful when verifying an OTP code against a backend.
+         * @default false
+         */
+        loading?: boolean
+
+        /**
+         * Icon displayed as the loading indicator. Defaults to `icons.loading`
+         * from the global app config (`lucide:loader-circle`).
+         */
+        loadingIcon?: string
+
+        /**
          * Prevent responsive text size changes on mobile.
          * @default false
          */

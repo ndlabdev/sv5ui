@@ -369,4 +369,41 @@ describe('PinInput', () => {
             expect(cell.className).toMatch(/ring-success/)
         })
     })
+
+    // ==================== LOADING ====================
+
+    describe('loading', () => {
+        it('should not show spinner overlay by default', () => {
+            render(PinInput)
+            expect(document.querySelector('[aria-hidden="true"] .animate-spin')).toBeNull()
+        })
+
+        it('should show spinner overlay when loading is true', async () => {
+            render(PinInput, { loading: true })
+            await vi.waitFor(() => {
+                const overlay = document.querySelector(
+                    'span[aria-hidden="true"].pointer-events-none'
+                )
+                expect(overlay).not.toBeNull()
+                expect(overlay!.querySelector('svg')).not.toBeNull()
+            })
+        })
+
+        it('should disable the hidden input when loading is true', () => {
+            render(PinInput, { loading: true })
+            const input = getInput()
+            expect(input?.disabled).toBe(true)
+        })
+
+        it('should accept custom loadingIcon', async () => {
+            render(PinInput, { loading: true, loadingIcon: 'lucide:loader-2' })
+            await vi.waitFor(() => {
+                const overlay = document.querySelector(
+                    'span[aria-hidden="true"].pointer-events-none'
+                )
+                expect(overlay).not.toBeNull()
+                expect(overlay!.querySelector('svg')).not.toBeNull()
+            })
+        })
+    })
 })

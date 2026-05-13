@@ -238,4 +238,23 @@
             </div>
         </div>
     </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold text-on-surface">Loading</h2>
+        <p class="text-sm text-on-surface-variant">
+            Pass <code>loading</code> to overlay a spinner and disable input while verifying the
+            code (e.g. checking an OTP against the backend). Use <code>loadingIcon</code> to customize
+            the spinner.
+        </p>
+        <div class="flex flex-wrap items-center gap-6 rounded-lg bg-surface-container-high p-4">
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Loading</p>
+                <PinInput loading length={6} />
+            </div>
+            <div class="space-y-2">
+                <p class="text-sm font-medium text-on-surface-variant">Loading + masked</p>
+                <PinInput loading mask color="primary" length={4} />
+            </div>
+        </div>
+    </section>
 </div>

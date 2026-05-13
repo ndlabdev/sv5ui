@@ -629,9 +629,6 @@ describe('Calendar', () => {
                 isDateHighlightable: (d: DateValue) => d.day === 1 || d.day === 15 || d.day === 28
             })
             await vi.waitFor(() => {
-                // The visible grid contains the target month plus padding from
-                // adjacent months; the predicate matches by day-of-month so it
-                // can fire more than 3 times. Just assert ≥ 3.
                 expect(markedDaysInCalendar().length).toBeGreaterThanOrEqual(3)
             })
         })
@@ -648,6 +645,31 @@ describe('Calendar', () => {
                 expect(root).not.toBeNull()
                 const el = root!.querySelector('[data-calendar-day][data-selected][data-marked]')
                 expect(el).not.toBeNull()
+            })
+        })
+    })
+
+    // ==================== FORMFIELD / ARIA ====================
+
+    describe('formfield + aria', () => {
+        it('should apply id prop to the calendar root', async () => {
+            render(Calendar, { id: 'my-cal' })
+            await vi.waitFor(() => {
+                expect(getRoot()?.id).toBe('my-cal')
+            })
+        })
+
+        it('should expose data-name when name prop is set', async () => {
+            render(Calendar, { name: 'dob' })
+            await vi.waitFor(() => {
+                expect(getRoot()?.getAttribute('data-name')).toBe('dob')
+            })
+        })
+
+        it('should not set aria-invalid when no FormField error is present', async () => {
+            render(Calendar)
+            await vi.waitFor(() => {
+                expect(getRoot()?.getAttribute('aria-invalid')).toBeNull()
             })
         })
     })
