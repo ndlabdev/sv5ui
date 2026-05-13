@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { Calendar, Button, Popover, Icon } from '$lib/index.js'
+    import { Calendar, Button, Popover, Icon, Form, FormField } from '$lib/index.js'
+    import type { FormApi } from '$lib/index.js'
+    import { z } from 'zod'
     import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
     import type { DateValue } from '@internationalized/date'
     import type { DateRange } from 'bits-ui'
@@ -25,6 +27,20 @@
     const todayDate = today(getLocalTimeZone())
     const markedDays = new Set([1, 7, 14, 23])
     const isDayMarked = (d: DateValue) => markedDays.has(d.day)
+
+    const calendarFormSchema = z.object({
+        birthday: z.custom<DateValue>((v) => v !== null && v !== undefined, {
+            message: 'Birthday is required'
+        })
+    })
+
+    let calendarFormState = $state<{ birthday: DateValue | undefined }>({ birthday: undefined })
+    let calendarFormApi = $state<FormApi<unknown>>()
+    let calendarSubmitted = $state<string | null>(null)
+
+    function handleCalendarSubmit(event: { data: unknown }) {
+        calendarSubmitted = JSON.stringify(event.data, null, 2)
+    }
 
     function formatDate(date: DateValue | undefined): string {
         if (!date) return 'Pick a date'
@@ -365,6 +381,50 @@
             <p class="mt-3 text-sm text-on-surface-variant">
                 Highlighted: days {Array.from(markedDays).join(', ')} of the visible month.
             </p>
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold text-on-surface">Inside a Form (Zod schema)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Calendar reads the parent <code>FormField</code> + <code>Form</code> context. Try
+            submitting without picking a date — the Zod schema fails and the calendar switches to
+            error color with <code>aria-invalid</code>. Pick any date and the error clears
+            automatically as the schema re-runs on the value change.
+        </p>
+        <div class="rounded-lg border border-outline-variant bg-surface-container p-6">
+            <Form
+                bind:api={calendarFormApi}
+                bind:state={calendarFormState}
+                schema={calendarFormSchema}
+                onsubmit={handleCalendarSubmit}
+                class="max-w-md space-y-4"
+            >
+                <FormField name="birthday" label="Birthday" required>
+                    <Calendar bind:value={calendarFormState.birthday} />
+                </FormField>
+
+                <div class="flex items-center gap-3">
+                    <Button type="submit" loading={calendarFormApi?.loading}>Submit</Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        color="secondary"
+                        onclick={() => calendarFormApi?.clear()}
+                    >
+                        Clear errors
+                    </Button>
+                </div>
+            </Form>
+
+            {#if calendarSubmitted}
+                <div
+                    class="mt-4 rounded-md border border-primary/20 bg-primary-container p-3 text-sm text-on-primary-container"
+                >
+                    <p class="font-medium">Submitted:</p>
+                    <pre class="mt-1 text-xs">{calendarSubmitted}</pre>
+                </div>
+            {/if}
         </div>
     </section>
 </div>

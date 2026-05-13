@@ -63,6 +63,16 @@ type BaseCalendarProps = {
      * Bindable reference to the root DOM element.
      */
     ref?: HTMLElement | null
+    /**
+     * The HTML `id` attribute for the root element. Used by a parent
+     * `<FormField>` so the label's `for` attribute can target the calendar.
+     */
+    id?: string
+    /**
+     * The field name. Used by a parent `<Form>` to look up validation state
+     * for this calendar when wrapped in `<FormField>`.
+     */
+    name?: string
     /** @default 'lucide:chevron-left' */
     prevMonthIcon?: string
     /** @default 'lucide:chevron-right' */

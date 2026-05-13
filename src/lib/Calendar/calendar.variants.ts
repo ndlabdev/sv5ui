@@ -2,7 +2,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 export const calendarVariants = tv({
     slots: {
-        root: '',
+        root: 'w-fit',
         header: 'flex items-center justify-between',
         body: 'flex flex-col space-y-4 pt-4 sm:flex-row sm:space-x-4 sm:space-y-0',
         heading: 'text-center font-medium truncate mx-auto',

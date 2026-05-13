@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { FileUpload, Button } from '$lib/index.js'
-    import type { FileUploadRejection } from '$lib/index.js'
+    import { FileUpload, Button, Form, FormField } from '$lib/index.js'
+    import type { FileUploadRejection, FormApi } from '$lib/index.js'
+    import { z } from 'zod'
 
     const colors = [
         'primary',
@@ -36,6 +37,30 @@
         if (reason === 'maxSize') return 'too large'
         if (reason === 'maxFiles') return 'too many'
         return 'wrong type'
+    }
+
+    const fileUploadSchema = z.object({
+        avatar: z.array(z.instanceof(File)).min(1, 'Avatar is required'),
+        gallery: z.array(z.instanceof(File)).min(2, 'Pick at least 2 images')
+    })
+
+    let fileUploadFormState = $state<{ avatar: File[]; gallery: File[] }>({
+        avatar: [],
+        gallery: []
+    })
+    let fileUploadFormApi = $state<FormApi<unknown>>()
+    let fileUploadSubmitted = $state<string | null>(null)
+
+    function handleFileUploadSubmit(event: { data: unknown }) {
+        const data = event.data as { avatar: File[]; gallery: File[] }
+        fileUploadSubmitted = JSON.stringify(
+            {
+                avatar: data.avatar.map((f) => f.name),
+                gallery: data.gallery.map((f) => f.name)
+            },
+            null,
+            2
+        )
     }
 </script>
 
@@ -505,6 +530,64 @@
                         </li>
                     {/each}
                 </ul>
+            {/if}
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Inside a Form (Zod schema)</h2>
+        <p class="text-sm text-on-surface-variant">
+            FileUpload reads the parent <code>FormField</code> + <code>Form</code> context. When the
+            Zod schema fails, the FormField shows the error and FileUpload picks up
+            <code>aria-invalid</code> + the error highlight color. Once you pick the required number of
+            files, the schema passes and the error clears automatically — no manual error state.
+        </p>
+        <div class="rounded-lg border border-outline-variant bg-surface-container p-6">
+            <Form
+                bind:api={fileUploadFormApi}
+                bind:state={fileUploadFormState}
+                schema={fileUploadSchema}
+                onsubmit={handleFileUploadSubmit}
+                class="max-w-md space-y-4"
+            >
+                <FormField name="avatar" label="Avatar" description="JPG or PNG, max 5 MB" required>
+                    <FileUpload
+                        bind:value={fileUploadFormState.avatar}
+                        accept="image/*"
+                        label="Drop avatar here"
+                    />
+                </FormField>
+
+                <FormField name="gallery" label="Gallery" required>
+                    <FileUpload
+                        bind:value={fileUploadFormState.gallery}
+                        multiple
+                        layout="grid"
+                        accept="image/*"
+                        label="Drop at least 2 images"
+                    />
+                </FormField>
+
+                <div class="flex items-center gap-3">
+                    <Button type="submit" loading={fileUploadFormApi?.loading}>Submit</Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        color="secondary"
+                        onclick={() => fileUploadFormApi?.clear()}
+                    >
+                        Clear errors
+                    </Button>
+                </div>
+            </Form>
+
+            {#if fileUploadSubmitted}
+                <div
+                    class="mt-4 rounded-md border border-primary/20 bg-primary-container p-3 text-sm text-on-primary-container"
+                >
+                    <p class="font-medium">Submitted:</p>
+                    <pre class="mt-1 text-xs">{fileUploadSubmitted}</pre>
+                </div>
             {/if}
         </div>
     </section>
