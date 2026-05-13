@@ -30,6 +30,20 @@
     let cartOpen = $state(false)
     let notificationsOpen = $state(false)
 
+    let sizeOpens = $state<Record<string, boolean>>({
+        sm: false,
+        md: false,
+        lg: false,
+        xl: false,
+        full: false
+    })
+    let transitionOpens = $state<Record<string, boolean>>({
+        slide: false,
+        fade: false,
+        scale: false,
+        none: false
+    })
+
     function logCallback(name: string) {
         callbackLog = [...callbackLog.slice(-4), `${new Date().toLocaleTimeString()} — ${name}`]
     }
@@ -954,6 +968,60 @@
                     {/snippet}
                 </Slideover>
             </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Size</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Use <code>size</code> to control the panel along its axis.
+            <code>left</code> / <code>right</code> change <code>max-width</code>;
+            <code>top</code> / <code>bottom</code> change <code>max-height</code>. Available values:
+            <code>sm</code>
+            / <code>md</code> (default) / <code>lg</code> /
+            <code>xl</code> / <code>full</code>.
+        </p>
+        <div class="flex flex-wrap gap-2">
+            {#each ['sm', 'md', 'lg', 'xl', 'full'] as const as s (s)}
+                <Slideover
+                    bind:open={sizeOpens[s]}
+                    size={s}
+                    title={`Size: ${s}`}
+                    description={`right side, size="${s}"`}
+                >
+                    <Button variant="outline" label={`size="${s}"`} />
+                    {#snippet body()}
+                        <p class="text-sm text-on-surface-variant">
+                            Current size is <code>{s}</code>.
+                        </p>
+                    {/snippet}
+                </Slideover>
+            {/each}
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Transition</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Pick the entrance/exit animation. Default is <code>slide</code> (side-aware); pass
+            <code>fade</code>, <code>scale</code>, or <code>none</code> to override. Boolean
+            <code>true</code> / <code>false</code> still work as legacy aliases.
+        </p>
+        <div class="flex flex-wrap gap-2">
+            {#each ['slide', 'fade', 'scale', 'none'] as const as t (t)}
+                <Slideover
+                    bind:open={transitionOpens[t]}
+                    transition={t}
+                    title={`Transition: ${t}`}
+                    description="Open and close to see the animation."
+                >
+                    <Button variant="outline" label={`transition="${t}"`} />
+                </Slideover>
+            {/each}
         </div>
     </section>
 </div>
