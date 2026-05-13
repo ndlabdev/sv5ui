@@ -56,7 +56,8 @@
         { href: '/pin-input', label: 'Pin Input', icon: 'lucide:square-asterisk' },
         { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' },
         { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' },
-        { href: '/table', label: 'Table', icon: 'lucide:table' }
+        { href: '/table', label: 'Table', icon: 'lucide:table' },
+        { href: '/carousel', label: 'Carousel', icon: 'lucide:gallery-horizontal' }
     ]
 
     const hookItems = [

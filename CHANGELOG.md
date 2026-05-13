@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PinInput** — `loading` and `loadingIcon` props. When `loading` is true, a spinner overlays the cells and the input is disabled, ideal for OTP verification flows.
 - **FileUpload** — `id` is now applied to the focusable element (the dropzone area, or the `Button` when `variant="button"`) so a parent `<FormField>`'s label can target it.
 - **Calendar** — new `id` and `name` props on the root. `id` flows to bits-ui's root for label association; `name` is exposed as `data-name` for downstream consumers.
+- **Carousel** — Slideshow / carousel component built on [Embla Carousel](https://www.embla-carousel.com). Supports arrows, dots, looping, autoplay (with pause-on-hover/focus/interaction/last-snap), fade transitions, multiple slides per view (`slidesToShow`, `slidesToScroll`), drag-free scrolling, horizontal & vertical orientations, responsive breakpoints, custom `slide`/`dot`/`prevSlot`/`nextSlot` snippets, full `bind:index` + `bind:api` controlled mode, `onIndexChange` / `onSettle` callbacks, size/color/variant tokens, and per-slot `ui` overrides
 
 ### Changed
 
