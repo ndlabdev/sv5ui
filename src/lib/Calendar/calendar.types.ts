@@ -36,6 +36,15 @@ type SharedCalendarRootProps = {
     weekdayFormat?: Intl.DateTimeFormatOptions['weekday']
     isDateDisabled?: DateMatcher
     isDateUnavailable?: DateMatcher
+    /**
+     * Predicate that returns `true` for dates that should be visually marked
+     * (e.g. holidays, events). Marked dates remain selectable; only their
+     * appearance changes. The cell trigger gets a `data-marked` attribute
+     * which the variants render as a small dot indicator.
+     *
+     * Called for every visible cell, so keep it cheap and pure.
+     */
+    isDateHighlightable?: DateMatcher
     /** @default true */
     fixedWeeks?: boolean
     /** @default 1 */
