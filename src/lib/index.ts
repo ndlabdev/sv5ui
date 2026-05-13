@@ -47,6 +47,7 @@ export * from './PinInput/index.js'
 export * from './ThemeModeButton/index.js'
 export * from './Table/index.js'
 export * from './Toast/index.js'
+export * from './Carousel/index.js'
 
 // Composables
 export * from './hooks/index.js'
