@@ -19,6 +19,13 @@
         end: new CalendarDate(2024, 3, 20)
     })
 
+    let capValues: DateValue[] | undefined = $state([])
+    let markedValue: DateValue | undefined = $state(undefined)
+
+    const todayDate = today(getLocalTimeZone())
+    const markedDays = new Set([1, 7, 14, 23])
+    const isDayMarked = (d: DateValue) => markedDays.has(d.day)
+
     function formatDate(date: DateValue | undefined): string {
         if (!date) return 'Pick a date'
         return date.toDate('UTC').toLocaleDateString('en-US', {
@@ -323,6 +330,41 @@
                     headCell: 'text-primary/60'
                 }}
             />
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold text-on-surface">Max days (multiple)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Cap how many dates can be selected in <code>type="multiple"</code> via
+            <code>maxDays</code>. The same prop is available on range calendars (and
+            <code>minDays</code> too).
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <Calendar type="multiple" bind:value={capValues} maxDays={3} placeholder={todayDate} />
+            <p class="mt-3 text-sm text-on-surface-variant">
+                {capValues?.length ?? 0} / 3 selected
+            </p>
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold text-on-surface">Highlight specific dates</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code>isDateHighlightable</code> to mark special dates (holidays, events) with a
+            small dot indicator. Marked dates remain selectable; only their appearance changes.
+            Style overrides via <code>ui.cellTrigger</code> with the <code>data-[marked]:</code>
+            modifier.
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <Calendar
+                bind:value={markedValue}
+                isDateHighlightable={isDayMarked}
+                placeholder={todayDate}
+            />
+            <p class="mt-3 text-sm text-on-surface-variant">
+                Highlighted: days {Array.from(markedDays).join(', ')} of the visible month.
+            </p>
         </div>
     </section>
 </div>

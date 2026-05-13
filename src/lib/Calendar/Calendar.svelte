@@ -42,6 +42,7 @@
         weekdayFormat = 'short',
         isDateDisabled,
         isDateUnavailable,
+        isDateHighlightable,
         fixedWeeks = true,
         numberOfMonths = 1,
         calendarLabel,
@@ -203,7 +204,12 @@
                                 <CalCell {date} month={month.value} class={classes.cell}>
                                     <CalDay class={classes.cellTrigger}>
                                         {#snippet child({ props })}
-                                            <span {...props}>
+                                            <span
+                                                {...props}
+                                                data-marked={isDateHighlightable?.(date)
+                                                    ? ''
+                                                    : undefined}
+                                            >
                                                 {#if daySlot}
                                                     {@render daySlot({ day: date })}
                                                 {:else}
@@ -265,12 +271,14 @@
     {@const calType = (restProps as { type?: 'single' | 'multiple' }).type ?? 'single'}
     {@const calInitialFocus = (restProps as { initialFocus?: boolean }).initialFocus}
     {#if calType === 'multiple'}
+        {@const calMaxDays = (restProps as { maxDays?: number }).maxDays}
         <Calendar.Root
             bind:ref
             bind:value={value as CalendarMultipleProps['value']}
             onValueChange={onValueChange as CalendarMultipleProps['onValueChange']}
             {...commonProps}
             type="multiple"
+            maxDays={calMaxDays}
             initialFocus={calInitialFocus}
             class={classes.root}
         >

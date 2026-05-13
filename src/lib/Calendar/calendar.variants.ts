@@ -20,6 +20,7 @@ export const calendarVariants = tv({
             'data-unavailable:line-through data-unavailable:text-on-surface-variant data-unavailable:pointer-events-none',
             'data-today:font-semibold',
             'data-[outside-month]:text-on-surface-variant',
+            'data-[marked]:after:content-[""] data-[marked]:after:absolute data-[marked]:after:bottom-0.5 data-[marked]:after:left-1/2 data-[marked]:after:-translate-x-1/2 data-[marked]:after:size-1 data-[marked]:after:rounded-full data-[marked]:after:bg-current',
             'transition'
         ],
         cellWeek: 'relative text-center text-on-surface-variant',
