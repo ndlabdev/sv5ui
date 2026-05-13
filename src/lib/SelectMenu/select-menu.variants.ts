@@ -16,15 +16,43 @@ export const selectMenuVariants = tv({
         ],
         input: 'border-b border-outline-variant',
         viewport: 'p-1 flex-1 overflow-y-auto scrollbar-thin',
-        empty: 'text-center text-on-surface-variant'
+        empty: 'text-center text-on-surface-variant',
+        createItem: [
+            'group relative flex items-center gap-2 w-full rounded-sm px-2 cursor-pointer select-none',
+            'focus:outline-none',
+            'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+            'data-[highlighted]:bg-surface-container-highest'
+        ],
+        createItemIcon: 'shrink-0 text-primary',
+        createItemLabel: 'flex-1 truncate text-on-surface'
     },
     variants: {
         size: {
-            xs: { empty: 'p-2 text-xs' },
-            sm: { empty: 'p-2.5 text-xs' },
-            md: { empty: 'p-2.5 text-sm' },
-            lg: { empty: 'p-3 text-sm' },
-            xl: { empty: 'p-3 text-base' }
+            xs: {
+                empty: 'p-2 text-xs',
+                createItem: 'py-1 text-xs',
+                createItemIcon: 'size-3'
+            },
+            sm: {
+                empty: 'p-2.5 text-xs',
+                createItem: 'py-1.5 text-xs',
+                createItemIcon: 'size-3.5'
+            },
+            md: {
+                empty: 'p-2.5 text-sm',
+                createItem: 'py-1.5 text-sm',
+                createItemIcon: 'size-4'
+            },
+            lg: {
+                empty: 'p-3 text-sm',
+                createItem: 'py-2 text-sm',
+                createItemIcon: 'size-5'
+            },
+            xl: {
+                empty: 'p-3 text-base',
+                createItem: 'py-2.5 text-base',
+                createItemIcon: 'size-5'
+            }
         }
     }
 })

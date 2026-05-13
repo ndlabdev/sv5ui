@@ -305,6 +305,41 @@ export interface SelectMenuProps extends ContentProps {
     emptyText?: string
 
     // -------------------------------------------------------------------------
+    // Create item
+    // -------------------------------------------------------------------------
+
+    /**
+     * Allow the user to create a new item by typing in the search input.
+     * - `false` (default): the feature is disabled.
+     * - `true` / `'lazy'`: the create option only appears when no existing item
+     *   matches the current search term (case-insensitive on `value` or `label`).
+     * - `'always'`: the create option is shown whenever the search term is
+     *   non-empty, regardless of existing matches.
+     * @default false
+     */
+    createItem?: boolean | 'always' | 'lazy'
+
+    /**
+     * Label rendered on the "create" option. Receives the trimmed search term.
+     * @default (value) => `Create "${value}"`
+     */
+    createItemLabel?: string | ((value: string) => string)
+
+    /**
+     * Icon shown before the create option label. Pass `false` (or omit) to
+     * render no icon.
+     * @default undefined
+     */
+    createItemIcon?: string | false
+
+    /**
+     * Called when the user picks the "create" option. The new value is also
+     * tracked internally so the trigger can render its label even if the
+     * caller does not push it into `items`.
+     */
+    onCreate?: (value: string) => void
+
+    // -------------------------------------------------------------------------
     // Behavior
     // -------------------------------------------------------------------------
 

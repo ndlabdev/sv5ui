@@ -6,6 +6,8 @@
     } from './select-menu.types.js'
 
     export type Props = SelectMenuProps
+
+    const CREATE_ITEM_VALUE = '@@sv5ui/select-menu/create-item'
 </script>
 
 <script lang="ts">
@@ -55,6 +57,10 @@
         filterFields = ['label', 'value'] as string[],
         ignoreFilter = false,
         emptyText = 'No results found.',
+        createItem = false,
+        createItemLabel = (value: string) => `Create "${value}"`,
+        createItemIcon,
+        onCreate,
         transition = config.defaultVariants.transition ?? true,
         portal = true,
         side = config.defaultVariants.side ?? 'bottom',
@@ -116,10 +122,23 @@
               : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
     )
 
+    // ---- Created items (internal state for createItem) ----
+    let createdItems = $state<SelectMenuItem[]>([])
+
+    const combinedItems = $derived.by(() => {
+        const propValues = new Set(
+            (items as SelectMenuItemType[])
+                .filter((i): i is SelectMenuItem => !('type' in i))
+                .map((i) => i.value)
+        )
+        const extras = createdItems.filter((c) => !propValues.has(c.value))
+        return [...(items as SelectMenuItemType[]), ...extras]
+    })
+
     // ---- Items lookup (O(1) via Map) ----
     const itemsMap = $derived(
         new Map(
-            (items as SelectMenuItemType[])
+            combinedItems
                 .filter((i): i is SelectMenuItem => !('type' in i))
                 .map((i) => [i.value, i])
         )
@@ -165,8 +184,8 @@
 
     const filteredItems = $derived(
         ignoreFilter || !searchTerm.trim()
-            ? items
-            : items.filter((item) => {
+            ? combinedItems
+            : combinedItems.filter((item) => {
                   if ('type' in item) return true
                   const query = searchTerm.toLowerCase()
                   return filterFields.some((field) => {
@@ -177,6 +196,68 @@
     )
 
     const hasFilteredSelectItems = $derived(filteredItems.some((item) => !('type' in item)))
+
+    // ---- Create item ----
+    const trimmedSearch = $derived(searchTerm.trim())
+    const exactMatchExists = $derived.by(() => {
+        if (!trimmedSearch) return false
+        const query = trimmedSearch.toLowerCase()
+        for (const i of combinedItems) {
+            if ('type' in i) continue
+            if (i.value.toLowerCase() === query || (i.label ?? i.value).toLowerCase() === query) {
+                return true
+            }
+        }
+        return false
+    })
+    const showCreateItem = $derived.by(() => {
+        if (!createItem) return false
+        if (!trimmedSearch) return false
+        const mode = createItem === true ? 'lazy' : createItem
+        if (mode === 'always') return true
+        return !exactMatchExists
+    })
+    const resolvedCreateLabel = $derived(
+        typeof createItemLabel === 'function' ? createItemLabel(trimmedSearch) : createItemLabel
+    )
+
+    function findItemByCaseInsensitive(query: string): SelectMenuItem | undefined {
+        const q = query.toLowerCase()
+        for (const it of itemsMap.values()) {
+            if (it.value.toLowerCase() === q || (it.label ?? it.value).toLowerCase() === q) {
+                return it
+            }
+        }
+        return undefined
+    }
+
+    function selectValue(val: string) {
+        if (multiple) {
+            if (!selectedValues.includes(val)) {
+                value = [...selectedValues, val]
+            }
+        } else {
+            value = val
+        }
+    }
+
+    function handleCreate() {
+        if (!showCreateItem) return
+        const newValue = trimmedSearch
+        if (!newValue) return
+
+        const existing = findItemByCaseInsensitive(newValue)
+        if (existing) {
+            selectValue(existing.value)
+        } else {
+            createdItems = [...createdItems, { value: newValue, label: newValue }]
+            selectValue(newValue)
+            onCreate?.(newValue)
+        }
+
+        emit.onChange()
+        searchTerm = ''
+    }
 
     // ---- Leading / trailing ----
     const displayAvatar = $derived(multiple ? avatar : (singleSelectedItem?.avatar ?? avatar))
@@ -256,6 +337,17 @@
         variantSlots.separator({ class: [config.slots.separator, ui?.separator] })
     )
     const emptyClass = $derived(variantSlots.empty({ class: [config.slots.empty, ui?.empty] }))
+    const createItemClass = $derived(
+        variantSlots.createItem({ class: [config.slots.createItem, ui?.createItem] })
+    )
+    const createItemIconClass = $derived(
+        variantSlots.createItemIcon({ class: [config.slots.createItemIcon, ui?.createItemIcon] })
+    )
+    const createItemLabelClass = $derived(
+        variantSlots.createItemLabel({
+            class: [config.slots.createItemLabel, ui?.createItemLabel]
+        })
+    )
 
     // ---- Item classes ----
     const itemClass = $derived(variantSlots.item({ class: [config.slots.item, ui?.item] }))
@@ -357,6 +449,12 @@
             placeholder={searchPlaceholder}
             value={searchTerm}
             oninput={(e) => (searchTerm = (e.currentTarget as HTMLInputElement).value)}
+            onkeydown={(e: KeyboardEvent) => {
+                if (e.key !== 'Enter') return
+                if (!showCreateItem) return
+                e.preventDefault()
+                handleCreate()
+            }}
             variant="none"
             size={resolvedSize}
             class={inputClass}
@@ -388,12 +486,26 @@
                     {/if}
                 {/each}
 
-                {#if !hasFilteredSelectItems}
+                {#if !hasFilteredSelectItems && !showCreateItem}
                     {#if emptySlot}
                         {@render emptySlot({ searchTerm })}
                     {:else}
                         <div class={emptyClass}>{emptyText}</div>
                     {/if}
+                {/if}
+
+                {#if showCreateItem}
+                    <Combobox.Item
+                        value={CREATE_ITEM_VALUE}
+                        label={resolvedCreateLabel}
+                        {disabled}
+                        class={createItemClass}
+                    >
+                        {#if createItemIcon}
+                            <Icon name={createItemIcon} class={createItemIconClass} />
+                        {/if}
+                        <span class={createItemLabelClass}>{resolvedCreateLabel}</span>
+                    </Combobox.Item>
                 {/if}
             </div>
         {/if}
@@ -474,6 +586,10 @@
         {required}
         value={selectedValues}
         onValueChange={(val) => {
+            if (Array.isArray(val) && val.includes(CREATE_ITEM_VALUE)) {
+                handleCreate()
+                return
+            }
             value = val
             emit.onChange()
         }}
@@ -490,6 +606,10 @@
         {required}
         value={selectedValues[0] ?? ''}
         onValueChange={(val) => {
+            if (val === CREATE_ITEM_VALUE) {
+                handleCreate()
+                return
+            }
             value = val
             emit.onChange()
         }}
