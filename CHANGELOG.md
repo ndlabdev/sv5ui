@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **SelectMenu** — `createItem` prop (`boolean | 'always' | 'lazy'`) lets users add values not present in `items` by typing in the search box. Defaults to `'lazy'` (offered only when no item matches); `'always'` keeps the create option visible. Companion props: `createItemLabel` (string or `(value) => string`), `createItemIcon`, and `onCreate(value)` callback. Created values are tracked internally so the trigger renders their label even if the caller does not push them into `items`. Pressing <kbd>Enter</kbd> from the search input creates when there are no matches.
 - **Modal / Slideover** — `size` prop standardizing dimensions to `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` (default `'md'`). For Slideover, `size` controls `max-width` for `left`/`right` sides and `max-height` for `top`/`bottom` sides.
 - **Modal / Slideover** — `transition` prop accepts string values `'none' \| 'fade' \| 'slide' \| 'scale'` in addition to the legacy `boolean`. Modal defaults to `'scale'`; Slideover defaults to `'slide'` (side-aware). `true` keeps mapping to the previous default; `false` maps to `'none'`.
+- **FileUpload** — `maxSize` (bytes per file) and `maxFiles` (count cap) validation props. Files exceeding either limit are rejected without entering `value`. The root element exposes `data-full` when the `maxFiles` limit is reached.
+- **FileUpload** — `onReject(rejected)` callback fires with the list of files that were filtered out by `accept`, `maxSize`, or `maxFiles` during a single drop or input change. New `FileUploadRejection` type exported.
+
+### Changed
+
+- **FileUpload** — `accept` rejections now also surface through `onReject` (previously silent). No behavior change unless an `onReject` callback is provided.
 
 ### Deprecated
 

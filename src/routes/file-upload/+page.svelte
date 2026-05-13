@@ -1,5 +1,6 @@
 <script lang="ts">
     import { FileUpload, Button } from '$lib/index.js'
+    import type { FileUploadRejection } from '$lib/index.js'
 
     const colors = [
         'primary',
@@ -24,6 +25,18 @@
     let noDropzoneFiles = $state<File[]>([])
     let noPreviewFiles = $state<File[]>([])
     let imageFiles = $state<File[]>([])
+
+    let maxSizeFiles = $state<File[]>([])
+    let maxFilesFiles = $state<File[]>([])
+    let validationFiles = $state<File[]>([])
+    let rejections = $state<FileUploadRejection[]>([])
+    let combinedRejections = $state<FileUploadRejection[]>([])
+
+    function reasonLabel(reason: FileUploadRejection['reason']): string {
+        if (reason === 'maxSize') return 'too large'
+        if (reason === 'maxFiles') return 'too many'
+        return 'wrong type'
+    }
 </script>
 
 <div class="space-y-8">
@@ -414,6 +427,85 @@
                     color="tertiary"
                 />
             </div>
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Max size per file</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code>maxSize</code> (bytes) to reject files above a threshold. Rejections are
+            reported through <code>onReject</code>.
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <FileUpload
+                bind:value={maxSizeFiles}
+                multiple
+                maxSize={1024 * 1024}
+                label="Max 1 MB per file"
+                description="Try a small text file vs. a high-res image"
+                onReject={(r) => (rejections = r)}
+            />
+            {#if rejections.length}
+                <ul class="mt-3 space-y-1 text-sm text-error">
+                    {#each rejections as r (`${r.file.name}-${r.reason}`)}
+                        <li>
+                            {r.file.name} — {reasonLabel(r.reason)}
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Max files count</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use <code>maxFiles</code> to cap the number of files in the selection. When the cap is
+            reached, the root element exposes <code>data-full</code> so CSS can style the area as inactive.
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <FileUpload
+                bind:value={maxFilesFiles}
+                multiple
+                maxFiles={3}
+                label="Up to 3 files"
+                description="Try selecting 4 — the 4th is rejected"
+                ui={{
+                    base: 'data-[full]:opacity-60 data-[full]:pointer-events-none'
+                }}
+            />
+            <p class="mt-3 text-sm text-on-surface-variant">
+                {maxFilesFiles.length} / 3 selected
+            </p>
+        </div>
+    </section>
+
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Combined validation</h2>
+        <p class="text-sm text-on-surface-variant">
+            All three rules (<code>accept</code>, <code>maxSize</code>, <code>maxFiles</code>) work
+            together. <code>onReject</code> reports every rejected file in one call with its reason.
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <FileUpload
+                bind:value={validationFiles}
+                multiple
+                accept="image/*"
+                maxSize={2 * 1024 * 1024}
+                maxFiles={5}
+                label="Up to 5 images, max 2 MB each"
+                description="image/* — up to 5 files — max 2 MB"
+                onReject={(r) => (combinedRejections = r)}
+            />
+            {#if combinedRejections.length}
+                <ul class="mt-3 space-y-1 text-sm text-error">
+                    {#each combinedRejections as r (`${r.file.name}-${r.reason}`)}
+                        <li>
+                            {r.file.name} — {reasonLabel(r.reason)}
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
         </div>
     </section>
 </div>
