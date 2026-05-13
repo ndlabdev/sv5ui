@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { FileUploadProps } from './file-upload.types.js'
+    import type { FileUploadProps, FileUploadRejection } from './file-upload.types.js'
 
     export type Props = FileUploadProps
 </script>
@@ -22,6 +22,9 @@
         onValueChange,
         multiple = false,
         accept,
+        maxSize,
+        maxFiles,
+        onReject,
         dropzone = true,
         interactive = true,
         label = 'Drop files here or click to upload',
@@ -69,6 +72,7 @@
 
     const isDisabled = $derived(disabled || loading)
     const isDragging = $derived(dragCounter > 0)
+    const isFull = $derived(maxFiles !== undefined && value.length >= maxFiles)
     const showFilesInside = $derived(
         layout === 'grid' && !multiple && value.length > 0 && preview && variant === 'area'
     )
@@ -150,17 +154,52 @@
             })
     }
 
+    function validateIngress(file: File): FileUploadRejection['reason'] | null {
+        if (accept && !isFileAccepted(file)) return 'accept'
+        if (maxSize !== undefined && file.size > maxSize) return 'maxSize'
+        return null
+    }
+
+    function applyMaxFiles(candidates: File[]): {
+        accepted: File[]
+        rejected: FileUploadRejection[]
+    } {
+        if (maxFiles === undefined) return { accepted: candidates, rejected: [] }
+        const remaining = Math.max(0, maxFiles - value.length)
+        if (candidates.length <= remaining) return { accepted: candidates, rejected: [] }
+        return {
+            accepted: candidates.slice(0, remaining),
+            rejected: candidates.slice(remaining).map((file) => ({ file, reason: 'maxFiles' }))
+        }
+    }
+
     function addFiles(newFiles: File[]) {
         if (isDisabled) return
-        const filtered = accept ? newFiles.filter(isFileAccepted) : newFiles
-        if (!filtered.length) return
+
+        const rejected: FileUploadRejection[] = []
+        const passed: File[] = []
+        for (const file of newFiles) {
+            const reason = validateIngress(file)
+            if (reason) rejected.push({ file, reason })
+            else passed.push(file)
+        }
+
+        let accepted: File[]
         if (!multiple) {
-            value = [filtered[0]]
+            accepted = passed.slice(0, 1)
         } else {
             const existing = new Set(value.map(fileKey))
-            value = [...value, ...filtered.filter((f) => !existing.has(fileKey(f)))]
+            const deduped = passed.filter((f) => !existing.has(fileKey(f)))
+            const result = applyMaxFiles(deduped)
+            accepted = result.accepted
+            rejected.push(...result.rejected)
         }
-        onValueChange?.(value)
+
+        if (accepted.length) {
+            value = multiple ? [...value, ...accepted] : accepted
+            onValueChange?.(value)
+        }
+        if (rejected.length) onReject?.(rejected)
     }
 
     function removeFile(index: number) {
@@ -254,7 +293,7 @@
     }
 </script>
 
-<div {...restProps} bind:this={ref} class={classes.root}>
+<div {...restProps} bind:this={ref} class={classes.root} data-full={isFull ? '' : undefined}>
     <!-- Hidden file input — uses auto-generated id internally -->
     <input
         bind:this={inputRef}
