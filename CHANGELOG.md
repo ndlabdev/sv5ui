@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-05-14
+
 ### Added
 
 - **Select / SelectMenu** — `multiple` prop for selecting more than one option. When `true`, `value` becomes `string[]` and the dropdown stays open after each selection. The trigger displays selected labels joined by `separator` (default `, `), and a new `selected` snippet receives `{ items, remove, clear }` for custom rendering such as chips/tags.
