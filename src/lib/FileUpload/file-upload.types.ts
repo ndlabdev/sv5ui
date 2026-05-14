@@ -3,6 +3,23 @@ import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { FileUploadVariantProps, FileUploadSlots } from './file-upload.variants.js'
 
+/**
+ * Reason a file was rejected by FileUpload.
+ *
+ * - `accept`: file did not match the `accept` MIME/extension filter
+ * - `maxSize`: file exceeded the `maxSize` byte limit
+ * - `maxFiles`: file would have pushed the selection past `maxFiles`
+ */
+export type FileUploadRejectionReason = 'accept' | 'maxSize' | 'maxFiles'
+
+/**
+ * A single rejected file along with the reason it was rejected.
+ */
+export interface FileUploadRejection {
+    file: File
+    reason: FileUploadRejectionReason
+}
+
 export type FileUploadProps = Omit<HTMLAttributes<HTMLElement>, 'class' | 'children'> & {
     /**
      * Bindable reference to the root DOM element.
@@ -30,6 +47,33 @@ export type FileUploadProps = Omit<HTMLAttributes<HTMLElement>, 'class' | 'child
      * Accepted file types as MIME types or extensions (e.g. "image/*,.pdf").
      */
     accept?: string
+
+    /**
+     * Maximum allowed size per file, in bytes. Files exceeding this are
+     * rejected and reported through `onReject`.
+     *
+     * @example
+     * ```svelte
+     * <FileUpload maxSize={5 * 1024 * 1024} /> <!-- 5 MB -->
+     * ```
+     */
+    maxSize?: number
+
+    /**
+     * Maximum number of files that can be selected. When the current
+     * selection plus the incoming files would exceed this, the excess
+     * files are rejected and reported through `onReject`. The root element
+     * exposes a `data-full` attribute when the limit is reached, so the
+     * upload area can be styled accordingly.
+     */
+    maxFiles?: number
+
+    /**
+     * Called when one or more incoming files are rejected by `accept`,
+     * `maxSize`, or `maxFiles`. Receives the full rejection list for a
+     * single user action (one drop or one input change).
+     */
+    onReject?: (rejected: FileUploadRejection[]) => void
 
     /**
      * Enable drag-and-drop file upload.

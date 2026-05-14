@@ -449,4 +449,190 @@ describe('FileUpload', () => {
             expect(document.querySelector('[aria-label^="Remove"]')).toBeNull()
         })
     })
+
+    // ==================== MAX SIZE ====================
+
+    describe('maxSize', () => {
+        it('should accept files at or below the limit', async () => {
+            const onValueChange = vi.fn()
+            render(FileUpload, { multiple: true, maxSize: 1024, onValueChange })
+            await simulateFileInput([makeFile('ok.txt', 'text/plain', 1024)])
+            expect(onValueChange).toHaveBeenCalledTimes(1)
+            expect(onValueChange.mock.calls[0][0]).toHaveLength(1)
+        })
+
+        it('should reject files larger than the limit', async () => {
+            const onValueChange = vi.fn()
+            const onReject = vi.fn()
+            render(FileUpload, { multiple: true, maxSize: 1024, onValueChange, onReject })
+            await simulateFileInput([makeFile('big.txt', 'text/plain', 2048)])
+            expect(onValueChange).not.toHaveBeenCalled()
+            expect(onReject).toHaveBeenCalledTimes(1)
+            expect(onReject.mock.calls[0][0]).toEqual([
+                expect.objectContaining({ reason: 'maxSize' })
+            ])
+        })
+
+        it('should accept files when maxSize is undefined (no limit)', async () => {
+            const onValueChange = vi.fn()
+            render(FileUpload, { multiple: true, onValueChange })
+            await simulateFileInput([makeFile('huge.bin', 'application/octet-stream', 10_000_000)])
+            expect(onValueChange).toHaveBeenCalledTimes(1)
+        })
+
+        it('should mix accepted and rejected files in one input', async () => {
+            const onValueChange = vi.fn()
+            const onReject = vi.fn()
+            render(FileUpload, { multiple: true, maxSize: 1024, onValueChange, onReject })
+            await simulateFileInput([
+                makeFile('ok.txt', 'text/plain', 512),
+                makeFile('big.txt', 'text/plain', 4096)
+            ])
+            expect(onValueChange).toHaveBeenCalledTimes(1)
+            expect(onValueChange.mock.calls[0][0]).toHaveLength(1)
+            expect(onValueChange.mock.calls[0][0][0].name).toBe('ok.txt')
+            expect(onReject).toHaveBeenCalledTimes(1)
+            expect(onReject.mock.calls[0][0]).toHaveLength(1)
+            expect(onReject.mock.calls[0][0][0].file.name).toBe('big.txt')
+        })
+    })
+
+    // ==================== MAX FILES ====================
+
+    describe('maxFiles', () => {
+        it('should accept files within the limit', async () => {
+            const onValueChange = vi.fn()
+            render(FileUpload, { multiple: true, maxFiles: 3, onValueChange })
+            await simulateFileInput([makeFile('a.txt'), makeFile('b.txt')])
+            expect(onValueChange).toHaveBeenCalledTimes(1)
+            expect(onValueChange.mock.calls[0][0]).toHaveLength(2)
+        })
+
+        it('should reject files exceeding the limit', async () => {
+            const onReject = vi.fn()
+            const onValueChange = vi.fn()
+            render(FileUpload, { multiple: true, maxFiles: 2, onReject, onValueChange })
+            await simulateFileInput([makeFile('a.txt'), makeFile('b.txt'), makeFile('c.txt')])
+            expect(onValueChange.mock.calls[0][0]).toHaveLength(2)
+            expect(onReject).toHaveBeenCalledTimes(1)
+            expect(onReject.mock.calls[0][0]).toHaveLength(1)
+            expect(onReject.mock.calls[0][0][0]).toEqual(
+                expect.objectContaining({ reason: 'maxFiles' })
+            )
+            expect(onReject.mock.calls[0][0][0].file.name).toBe('c.txt')
+        })
+
+        it('should reject everything when value is already at the limit', async () => {
+            const onReject = vi.fn()
+            const onValueChange = vi.fn()
+            render(FileUpload, {
+                multiple: true,
+                maxFiles: 2,
+                value: [makeFile('a.txt'), makeFile('b.txt')],
+                onReject,
+                onValueChange
+            })
+            await simulateFileInput([makeFile('c.txt')])
+            expect(onValueChange).not.toHaveBeenCalled()
+            expect(onReject).toHaveBeenCalledTimes(1)
+            expect(onReject.mock.calls[0][0]).toEqual([
+                expect.objectContaining({ reason: 'maxFiles' })
+            ])
+        })
+
+        it('should expose data-full attribute when limit is reached', async () => {
+            const { container } = render(FileUpload, {
+                multiple: true,
+                maxFiles: 2,
+                value: [makeFile('a.txt'), makeFile('b.txt')]
+            })
+            const root = container.querySelector('[data-full]') as HTMLElement
+            expect(root).not.toBeNull()
+        })
+
+        it('should not expose data-full attribute below the limit', async () => {
+            const { container } = render(FileUpload, {
+                multiple: true,
+                maxFiles: 5,
+                value: [makeFile('a.txt')]
+            })
+            expect(container.querySelector('[data-full]')).toBeNull()
+        })
+    })
+
+    // ==================== ON REJECT ====================
+
+    describe('onReject', () => {
+        it('should not fire when no files are rejected', async () => {
+            const onReject = vi.fn()
+            render(FileUpload, { multiple: true, onReject })
+            await simulateFileInput([makeFile('a.txt')])
+            expect(onReject).not.toHaveBeenCalled()
+        })
+
+        it('should report accept rejection reason', async () => {
+            const onReject = vi.fn()
+            render(FileUpload, { multiple: true, accept: 'image/*', onReject })
+            await simulateFileInput([makeFile('a.txt', 'text/plain')])
+            expect(onReject).toHaveBeenCalledTimes(1)
+            expect(onReject.mock.calls[0][0]).toEqual([
+                expect.objectContaining({ reason: 'accept' })
+            ])
+        })
+
+        it('should mix multiple rejection reasons in a single call', async () => {
+            const onReject = vi.fn()
+            render(FileUpload, {
+                multiple: true,
+                accept: 'image/*',
+                maxSize: 1024,
+                maxFiles: 1,
+                onReject
+            })
+            await simulateFileInput([
+                makeFile('text.txt', 'text/plain', 100),
+                makeFile('big.png', 'image/png', 4096),
+                makeFile('small1.png', 'image/png', 500),
+                makeFile('small2.png', 'image/png', 500)
+            ])
+            expect(onReject).toHaveBeenCalledTimes(1)
+            const reasons = onReject.mock.calls[0][0].map((r: { reason: string }) => r.reason)
+            expect(reasons).toContain('accept')
+            expect(reasons).toContain('maxSize')
+            expect(reasons).toContain('maxFiles')
+        })
+    })
+
+    // ==================== FORMFIELD / ARIA ====================
+
+    describe('formfield + aria', () => {
+        it('should put id on the focusable area (variant=area)', () => {
+            render(FileUpload, { id: 'upload-1' })
+            const area = getArea()
+            expect(area?.id).toBe('upload-1')
+        })
+
+        it('should put id on the button (variant=button)', () => {
+            render(FileUpload, { id: 'upload-btn', variant: 'button', label: 'Upload' })
+            const btn = document.querySelector('button[id="upload-btn"]')
+            expect(btn).not.toBeNull()
+        })
+
+        it('should set aria-invalid when highlight is true', () => {
+            render(FileUpload, { highlight: true })
+            const area = getArea()
+            expect(area?.getAttribute('aria-invalid')).toBe('true')
+        })
+
+        it('should not set aria-invalid when highlight is false', () => {
+            render(FileUpload, {})
+            const area = getArea()
+            expect(area?.getAttribute('aria-invalid')).toBeNull()
+        })
+
+        it('should pass name through to hidden file input', () => {
+            render(FileUpload, { name: 'avatar' })
+            expect(getInput().name).toBe('avatar')
+        })
+    })
 })

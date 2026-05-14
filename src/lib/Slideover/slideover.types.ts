@@ -64,10 +64,22 @@ export interface SlideoverProps extends RootProps, ContentProps {
     overlay?: SlideoverVariantProps['overlay']
 
     /**
-     * Animate the slideover on open and close.
-     * @default true
+     * Controls the entrance/exit animation.
+     * - `'none'` / `false`: no animation
+     * - `'fade'`: overlay + content fade
+     * - `'slide'` / `true`: overlay fade + content slide-in from the chosen side (default)
+     * - `'scale'`: overlay fade + content scale-in
+     * @default 'slide'
      */
-    transition?: SlideoverVariantProps['transition']
+    transition?: SlideoverVariantProps['transition'] | boolean
+
+    /**
+     * Controls the panel dimension along its axis. For `side="left"` /
+     * `side="right"` this sets `max-width`; for `side="top"` / `side="bottom"`
+     * this sets `max-height`.
+     * @default 'md'
+     */
+    size?: SlideoverVariantProps['size']
 
     /**
      * Display the slideover with inset margins and rounded corners.

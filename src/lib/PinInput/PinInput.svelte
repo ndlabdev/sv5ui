@@ -7,10 +7,12 @@
 <script lang="ts">
     import { PinInput, useId } from 'bits-ui'
     import { pinInputVariants, pinInputDefaults } from './pin-input.variants.js'
-    import { getComponentConfig } from '../config.js'
+    import { getComponentConfig, iconsDefaults } from '../config.js'
     import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import Icon from '../Icon/Icon.svelte'
 
     const config = getComponentConfig('pinInput', pinInputDefaults)
+    const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
         ref = $bindable(null),
@@ -33,6 +35,8 @@
         autofocus = false,
         autofocusDelay = 0,
         highlight = false,
+        loading = false,
+        loadingIcon = icons.loading,
         fixed = false,
         color = config.defaultVariants.color,
         size,
@@ -44,6 +48,8 @@
 
     const formFieldContext = useFormField()
     const emit = useFormFieldEmit()
+
+    const isDisabled = $derived(disabled || loading)
 
     const autoInputId = useId()
     const hasError = $derived(
@@ -86,7 +92,7 @@
             size: resolvedSize,
             highlight: resolvedHighlight,
             fixed,
-            disabled
+            disabled: isDisabled
         })
     )
 
@@ -107,15 +113,23 @@
     })
 </script>
 
-<div class="contents" {...restProps}>
+<div class="relative inline-flex" {...restProps}>
     {#if resolvedName}
         <input type="hidden" name={resolvedName} {value} />
+    {/if}
+    {#if loading}
+        <span
+            class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-surface/60"
+            aria-hidden="true"
+        >
+            <Icon name={loadingIcon} class="size-5 animate-spin text-on-surface-variant" />
+        </span>
     {/if}
     <PinInput.Root
         bind:ref
         {value}
         maxlength={length}
-        {disabled}
+        disabled={isDisabled}
         {textalign}
         onComplete={handleComplete}
         pasteTransformer={resolvedPasteTransformer}

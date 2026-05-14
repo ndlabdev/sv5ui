@@ -6,6 +6,8 @@
     } from './select-menu.types.js'
 
     export type Props = SelectMenuProps
+
+    const CREATE_ITEM_VALUE = '@@sv5ui/select-menu/create-item'
 </script>
 
 <script lang="ts">
@@ -37,6 +39,8 @@
         name,
         required = false,
         disabled = false,
+        multiple = false,
+        separator = ', ',
         ui,
         id,
         color = config.defaultVariants.color,
@@ -53,6 +57,10 @@
         filterFields = ['label', 'value'] as string[],
         ignoreFilter = false,
         emptyText = 'No results found.',
+        createItem = false,
+        createItemLabel = (value: string) => `Create "${value}"`,
+        createItemIcon,
+        onCreate,
         transition = config.defaultVariants.transition ?? true,
         portal = true,
         side = config.defaultVariants.side ?? 'bottom',
@@ -72,6 +80,7 @@
         itemLeading,
         itemLabel: itemLabelSlot,
         itemTrailing,
+        selected: selectedSlot,
         empty: emptySlot,
         content: contentSlot
     }: Props = $props()
@@ -113,25 +122,70 @@
               : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
     )
 
+    // ---- Created items (internal state for createItem) ----
+    let createdItems = $state<SelectMenuItem[]>([])
+
+    const combinedItems = $derived.by(() => {
+        const propValues = new Set(
+            (items as SelectMenuItemType[])
+                .filter((i): i is SelectMenuItem => !('type' in i))
+                .map((i) => i.value)
+        )
+        const extras = createdItems.filter((c) => !propValues.has(c.value))
+        return [...(items as SelectMenuItemType[]), ...extras]
+    })
+
     // ---- Items lookup (O(1) via Map) ----
     const itemsMap = $derived(
         new Map(
-            (items as SelectMenuItemType[])
+            combinedItems
                 .filter((i): i is SelectMenuItem => !('type' in i))
                 .map((i) => [i.value, i])
         )
     )
 
-    const selectedItem = $derived(value ? itemsMap.get(value) : undefined)
-    const displayLabel = $derived(selectedItem?.label ?? selectedItem?.value ?? '')
+    // ---- Selection (single + multiple) ----
+    const selectedValues = $derived(
+        multiple
+            ? Array.isArray(value)
+                ? (value as string[])
+                : []
+            : typeof value === 'string' && value !== ''
+              ? [value]
+              : []
+    )
+    const selectedItems = $derived(
+        selectedValues
+            .map((v) => itemsMap.get(v))
+            .filter((i): i is SelectMenuItem => i !== undefined)
+    )
+    const hasSelection = $derived(selectedValues.length > 0)
+    const singleSelectedItem = $derived(multiple ? undefined : selectedItems[0])
+    const displayLabel = $derived(
+        multiple
+            ? selectedItems.map((i) => i.label ?? i.value).join(separator)
+            : (singleSelectedItem?.label ?? singleSelectedItem?.value ?? '')
+    )
+
+    function removeValue(val: string) {
+        if (!multiple) return
+        value = selectedValues.filter((v) => v !== val)
+        emit.onChange()
+    }
+
+    function clearSelection() {
+        if (!multiple) return
+        value = []
+        emit.onChange()
+    }
 
     // ---- Search & filtering ----
     let searchTerm = $state('')
 
     const filteredItems = $derived(
         ignoreFilter || !searchTerm.trim()
-            ? items
-            : items.filter((item) => {
+            ? combinedItems
+            : combinedItems.filter((item) => {
                   if ('type' in item) return true
                   const query = searchTerm.toLowerCase()
                   return filterFields.some((field) => {
@@ -143,9 +197,73 @@
 
     const hasFilteredSelectItems = $derived(filteredItems.some((item) => !('type' in item)))
 
+    // ---- Create item ----
+    const trimmedSearch = $derived(searchTerm.trim())
+    const exactMatchExists = $derived.by(() => {
+        if (!trimmedSearch) return false
+        const query = trimmedSearch.toLowerCase()
+        for (const i of combinedItems) {
+            if ('type' in i) continue
+            if (i.value.toLowerCase() === query || (i.label ?? i.value).toLowerCase() === query) {
+                return true
+            }
+        }
+        return false
+    })
+    const showCreateItem = $derived.by(() => {
+        if (!createItem) return false
+        if (!trimmedSearch) return false
+        const mode = createItem === true ? 'lazy' : createItem
+        if (mode === 'always') return true
+        return !exactMatchExists
+    })
+    const resolvedCreateLabel = $derived(
+        typeof createItemLabel === 'function' ? createItemLabel(trimmedSearch) : createItemLabel
+    )
+
+    function findItemByCaseInsensitive(query: string): SelectMenuItem | undefined {
+        const q = query.toLowerCase()
+        for (const it of itemsMap.values()) {
+            if (it.value.toLowerCase() === q || (it.label ?? it.value).toLowerCase() === q) {
+                return it
+            }
+        }
+        return undefined
+    }
+
+    function selectValue(val: string) {
+        if (multiple) {
+            if (!selectedValues.includes(val)) {
+                value = [...selectedValues, val]
+            }
+        } else {
+            value = val
+        }
+    }
+
+    function handleCreate() {
+        if (!showCreateItem) return
+        const newValue = trimmedSearch
+        if (!newValue) return
+
+        const existing = findItemByCaseInsensitive(newValue)
+        if (existing) {
+            selectValue(existing.value)
+        } else {
+            createdItems = [...createdItems, { value: newValue, label: newValue }]
+            selectValue(newValue)
+            onCreate?.(newValue)
+        }
+
+        emit.onChange()
+        searchTerm = ''
+    }
+
     // ---- Leading / trailing ----
-    const displayAvatar = $derived(selectedItem?.avatar ?? avatar)
-    const displayIcon = $derived(selectedItem?.icon ?? leadingIcon ?? icon)
+    const displayAvatar = $derived(multiple ? avatar : (singleSelectedItem?.avatar ?? avatar))
+    const displayIcon = $derived(
+        multiple ? (leadingIcon ?? icon) : (singleSelectedItem?.icon ?? leadingIcon ?? icon)
+    )
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
     const leadingIconName = $derived(
         loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
@@ -219,6 +337,17 @@
         variantSlots.separator({ class: [config.slots.separator, ui?.separator] })
     )
     const emptyClass = $derived(variantSlots.empty({ class: [config.slots.empty, ui?.empty] }))
+    const createItemClass = $derived(
+        variantSlots.createItem({ class: [config.slots.createItem, ui?.createItem] })
+    )
+    const createItemIconClass = $derived(
+        variantSlots.createItemIcon({ class: [config.slots.createItemIcon, ui?.createItemIcon] })
+    )
+    const createItemLabelClass = $derived(
+        variantSlots.createItemLabel({
+            class: [config.slots.createItemLabel, ui?.createItemLabel]
+        })
+    )
 
     // ---- Item classes ----
     const itemClass = $derived(variantSlots.item({ class: [config.slots.item, ui?.item] }))
@@ -267,7 +396,7 @@
 </script>
 
 {#snippet renderItem(item: SelectMenuItem, index: number)}
-    {@const isSelected = value === item.value}
+    {@const isSelected = selectedValues.includes(item.value)}
     <Combobox.Item
         value={item.value}
         label={item.label ?? item.value}
@@ -320,6 +449,12 @@
             placeholder={searchPlaceholder}
             value={searchTerm}
             oninput={(e) => (searchTerm = (e.currentTarget as HTMLInputElement).value)}
+            onkeydown={(e: KeyboardEvent) => {
+                if (e.key !== 'Enter') return
+                if (!showCreateItem) return
+                e.preventDefault()
+                handleCreate()
+            }}
             variant="none"
             size={resolvedSize}
             class={inputClass}
@@ -343,7 +478,7 @@
                             {@render itemSlot({
                                 item: selectItem,
                                 index,
-                                selected: value === selectItem.value
+                                selected: selectedValues.includes(selectItem.value)
                             })}
                         {:else}
                             {@render renderItem(selectItem, index)}
@@ -351,31 +486,33 @@
                     {/if}
                 {/each}
 
-                {#if !hasFilteredSelectItems}
+                {#if !hasFilteredSelectItems && !showCreateItem}
                     {#if emptySlot}
                         {@render emptySlot({ searchTerm })}
                     {:else}
                         <div class={emptyClass}>{emptyText}</div>
                     {/if}
                 {/if}
+
+                {#if showCreateItem}
+                    <Combobox.Item
+                        value={CREATE_ITEM_VALUE}
+                        label={resolvedCreateLabel}
+                        {disabled}
+                        class={createItemClass}
+                    >
+                        {#if createItemIcon}
+                            <Icon name={createItemIcon} class={createItemIconClass} />
+                        {/if}
+                        <span class={createItemLabelClass}>{resolvedCreateLabel}</span>
+                    </Combobox.Item>
+                {/if}
             </div>
         {/if}
     </Combobox.Content>
 {/snippet}
 
-<Combobox.Root
-    type="single"
-    bind:open
-    onOpenChange={onUpdateOpen}
-    {disabled}
-    {required}
-    {value}
-    onValueChange={(val) => {
-        value = val
-        emit.onChange()
-    }}
-    name={resolvedName}
->
+{#snippet rootChildren()}
     <div bind:this={ref} class={rootClass}>
         {#if leadingSlot}
             <span class={leadingClass}>
@@ -407,7 +544,13 @@
             aria-invalid={resolvedHighlight ? true : undefined}
             class={baseClass}
         >
-            {#if value && displayLabel}
+            {#if selectedSlot && hasSelection}
+                {@render selectedSlot({
+                    items: selectedItems,
+                    remove: removeValue,
+                    clear: clearSelection
+                })}
+            {:else if hasSelection && displayLabel}
                 <span class={valueClass}>{displayLabel}</span>
             {:else if placeholder}
                 <span class={placeholderClass}>{placeholder}</span>
@@ -432,4 +575,46 @@
     {:else}
         {@render contentEl()}
     {/if}
-</Combobox.Root>
+{/snippet}
+
+{#if multiple}
+    <Combobox.Root
+        type="multiple"
+        bind:open
+        onOpenChange={onUpdateOpen}
+        {disabled}
+        {required}
+        value={selectedValues}
+        onValueChange={(val) => {
+            if (Array.isArray(val) && val.includes(CREATE_ITEM_VALUE)) {
+                handleCreate()
+                return
+            }
+            value = val
+            emit.onChange()
+        }}
+        name={resolvedName}
+    >
+        {@render rootChildren()}
+    </Combobox.Root>
+{:else}
+    <Combobox.Root
+        type="single"
+        bind:open
+        onOpenChange={onUpdateOpen}
+        {disabled}
+        {required}
+        value={selectedValues[0] ?? ''}
+        onValueChange={(val) => {
+            if (val === CREATE_ITEM_VALUE) {
+                handleCreate()
+                return
+            }
+            value = val
+            emit.onChange()
+        }}
+        name={resolvedName}
+    >
+        {@render rootChildren()}
+    </Combobox.Root>
+{/if}

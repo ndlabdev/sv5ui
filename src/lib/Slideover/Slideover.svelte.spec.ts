@@ -500,4 +500,120 @@ describe('Slideover', () => {
             })
         })
     })
+
+    // ==================== SIZE ====================
+
+    describe('size', () => {
+        const widthSizes: Array<[string, RegExp]> = [
+            ['sm', /max-w-sm/],
+            ['md', /max-w-md/],
+            ['lg', /max-w-lg/],
+            ['xl', /max-w-xl/]
+        ]
+        const heightSizes: Array<[string, RegExp]> = [
+            ['sm', /max-h-\[40dvh\]/],
+            ['md', /max-h-\[60dvh\]/],
+            ['lg', /max-h-\[75dvh\]/],
+            ['xl', /max-h-\[90dvh\]/]
+        ]
+
+        for (const [size, expected] of widthSizes) {
+            it(`should apply max-width for side="right" + size="${size}"`, async () => {
+                render(Slideover, { open: true, title: 'Test', side: 'right', size: size as 'sm' })
+                await vi.waitFor(() => {
+                    const content = getContent()
+                    expect(content!.className).toMatch(expected)
+                })
+            })
+        }
+
+        for (const [size, expected] of heightSizes) {
+            it(`should apply max-height for side="bottom" + size="${size}"`, async () => {
+                render(Slideover, { open: true, title: 'Test', side: 'bottom', size: size as 'sm' })
+                await vi.waitFor(() => {
+                    const content = getContent()
+                    expect(content!.className).toMatch(expected)
+                })
+            })
+        }
+
+        it('should apply max-w-full for left/right + size="full"', async () => {
+            render(Slideover, { open: true, title: 'Test', side: 'right', size: 'full' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/max-w-full/)
+            })
+        })
+
+        it('should apply max-h-full for top/bottom + size="full"', async () => {
+            render(Slideover, { open: true, title: 'Test', side: 'top', size: 'full' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/max-h-full/)
+            })
+        })
+
+        it('should default to size="md" (max-w-md for right side)', async () => {
+            render(Slideover, { open: true, title: 'Test' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/max-w-md/)
+            })
+        })
+    })
+
+    // ==================== TRANSITION VARIANTS ====================
+
+    describe('transition variants', () => {
+        it('should apply slide animation by default (right side)', async () => {
+            render(Slideover, { open: true, title: 'Test' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/slide-in-full-right/)
+            })
+        })
+
+        it('should apply fade-only animation for transition="fade"', async () => {
+            render(Slideover, { open: true, title: 'Test', transition: 'fade' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/fade-in/)
+                expect(content!.className).not.toMatch(/slide-in/)
+                expect(content!.className).not.toMatch(/scale-in/)
+            })
+        })
+
+        it('should apply scale animation for transition="scale"', async () => {
+            render(Slideover, { open: true, title: 'Test', transition: 'scale' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/scale-in/)
+                expect(content!.className).not.toMatch(/slide-in/)
+            })
+        })
+
+        it('should apply no animation for transition="none"', async () => {
+            render(Slideover, { open: true, title: 'Test', transition: 'none' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).not.toMatch(/scale-in|fade-in|slide-in/)
+            })
+        })
+
+        it('transition={true} maps to slide (legacy default)', async () => {
+            render(Slideover, { open: true, title: 'Test', transition: true })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/slide-in-full-right/)
+            })
+        })
+
+        it('should apply side-specific slide for left when transition="slide"', async () => {
+            render(Slideover, { open: true, title: 'Test', side: 'left', transition: 'slide' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/slide-in-full-left/)
+            })
+        })
+    })
 })

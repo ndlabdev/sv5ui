@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-05-14
+
+### Added
+
+- **Select / SelectMenu** — `multiple` prop for selecting more than one option. When `true`, `value` becomes `string[]` and the dropdown stays open after each selection. The trigger displays selected labels joined by `separator` (default `, `), and a new `selected` snippet receives `{ items, remove, clear }` for custom rendering such as chips/tags.
+- **SelectMenu** — `createItem` prop (`boolean | 'always' | 'lazy'`) lets users add values not present in `items` by typing in the search box. Defaults to `'lazy'` (offered only when no item matches); `'always'` keeps the create option visible. Companion props: `createItemLabel` (string or `(value) => string`), `createItemIcon`, and `onCreate(value)` callback. Created values are tracked internally so the trigger renders their label even if the caller does not push them into `items`. Pressing <kbd>Enter</kbd> from the search input creates when there are no matches.
+- **Modal / Slideover** — `size` prop standardizing dimensions to `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` (default `'md'`). For Slideover, `size` controls `max-width` for `left`/`right` sides and `max-height` for `top`/`bottom` sides.
+- **Modal / Slideover** — `transition` prop accepts string values `'none' \| 'fade' \| 'slide' \| 'scale'` in addition to the legacy `boolean`. Modal defaults to `'scale'`; Slideover defaults to `'slide'` (side-aware). `true` keeps mapping to the previous default; `false` maps to `'none'`.
+- **FileUpload** — `maxSize` (bytes per file) and `maxFiles` (count cap) validation props. Files exceeding either limit are rejected without entering `value`. The root element exposes `data-full` when the `maxFiles` limit is reached.
+- **FileUpload** — `onReject(rejected)` callback fires with the list of files that were filtered out by `accept`, `maxSize`, or `maxFiles` during a single drop or input change. New `FileUploadRejection` type exported.
+- **Calendar** — `isDateHighlightable` predicate prop for visually marking special dates (holidays, events) without affecting selection or disabled state. Matched cells receive a `data-marked` attribute and render a small dot indicator under the day number; override via the `cellTrigger` slot or `ui.cellTrigger` with the `data-[marked]:` modifier.
+- **Calendar** — `maxDays` is now wired through to bits-ui in `type="multiple"` mode (it was already wired for `range`). Set it to cap how many dates the user can pick.
+- **PinInput** — `loading` and `loadingIcon` props. When `loading` is true, a spinner overlays the cells and the input is disabled, ideal for OTP verification flows.
+- **FileUpload** — `id` is now applied to the focusable element (the dropzone area, or the `Button` when `variant="button"`) so a parent `<FormField>`'s label can target it.
+- **Calendar** — new `id` and `name` props on the root. `id` flows to bits-ui's root for label association; `name` is exposed as `data-name` for downstream consumers.
+- **Carousel** — Slideshow / carousel component built on [Embla Carousel](https://www.embla-carousel.com). Supports arrows, dots, looping, autoplay (with pause-on-hover/focus/interaction/last-snap), fade transitions, multiple slides per view (`slidesToShow`, `slidesToScroll`), drag-free scrolling, horizontal & vertical orientations, responsive breakpoints, custom `slide`/`dot`/`prevSlot`/`nextSlot` snippets, full `bind:index` + `bind:api` controlled mode, `onIndexChange` / `onSettle` callbacks, size/color/variant tokens, and per-slot `ui` overrides
+
+### Changed
+
+- **FileUpload** — `accept` rejections now also surface through `onReject` (previously silent). No behavior change unless an `onReject` callback is provided.
+- **FileUpload / Calendar** — now read the parent `<FormField>` context. Errors propagate to `aria-invalid` + visual highlight (FileUpload) or error color (Calendar), and `aria-describedby` wires up to the FormField's description and error text. Focus, blur, and change events are emitted to the parent `<Form>` when wrapped in a FormField.
+
+### Deprecated
+
+- **Modal** — `fullscreen` prop is now an alias for `size="full"`. Existing code keeps working unchanged; new code should prefer `size="full"`.
+
 ## [1.6.0] - 2026-04-06
 
 ### Added

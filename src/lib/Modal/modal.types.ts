@@ -65,16 +65,28 @@ export interface ModalProps extends RootProps, ContentProps {
     scrollable?: ModalVariantProps['scrollable']
 
     /**
-     * Animate the modal on open and close.
-     * @default true
+     * Controls the entrance/exit animation.
+     * - `'none'` / `false`: no animation
+     * - `'fade'`: overlay + content fade
+     * - `'slide'`: overlay fade + content slide-in from top
+     * - `'scale'` / `true`: overlay fade + content scale-in (default)
+     * @default 'scale'
      */
-    transition?: ModalVariantProps['transition']
+    transition?: ModalVariantProps['transition'] | boolean
+
+    /**
+     * Controls the modal width. The `'full'` value expands to fill the
+     * entire viewport (replaces the deprecated `fullscreen` prop).
+     * @default 'md'
+     */
+    size?: ModalVariantProps['size']
 
     /**
      * Expand the modal to fill the entire viewport.
+     * @deprecated Use `size="full"` instead. Retained as an alias for backward compatibility.
      * @default false
      */
-    fullscreen?: ModalVariantProps['fullscreen']
+    fullscreen?: boolean
 
     // --- Behavior ---
 

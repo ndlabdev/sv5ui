@@ -507,4 +507,303 @@ describe('SelectMenu', () => {
             expect(trigger.className).toMatch(/ring-error/)
         })
     })
+
+    // ==================== MULTIPLE ====================
+
+    describe('multiple', () => {
+        it('should display comma-separated labels when multiple values selected', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple', 'banana']
+            })
+            await expect.element(page.getByText('Apple, Banana')).toBeInTheDocument()
+        })
+
+        it('should use custom separator when provided', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple', 'cherry'],
+                separator: ' / '
+            })
+            await expect.element(page.getByText('Apple / Cherry')).toBeInTheDocument()
+        })
+
+        it('should show placeholder when no values are selected', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: [],
+                placeholder: 'Pick fruits'
+            })
+            await expect.element(page.getByText('Pick fruits')).toBeInTheDocument()
+        })
+
+        it('should keep dropdown open after selecting an item', async () => {
+            const { container } = render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: [],
+                open: true,
+                portal: false
+            })
+            await vi.waitFor(async () => {
+                const option = page.getByRole('option', { name: 'Apple' })
+                await expect.element(option).toBeInTheDocument()
+            })
+            await page.getByRole('option', { name: 'Apple' }).click()
+            expect(getTrigger(container)!.getAttribute('data-state')).toBe('open')
+        })
+
+        it('should mark all selected items in dropdown', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple', 'cherry'],
+                open: true,
+                portal: false
+            })
+            await vi.waitFor(() => {
+                const selected = document.querySelectorAll('[role="option"][data-selected]')
+                expect(selected.length).toBe(2)
+            })
+        })
+    })
+
+    // ==================== CREATE ITEM ====================
+
+    describe('createItem', () => {
+        const findCreateOption = (
+            predicate: (txt: string) => boolean = (t) => /^Create\s+"/.test(t)
+        ) =>
+            Array.from(document.querySelectorAll('[role="option"]')).find((el) =>
+                predicate((el.textContent ?? '').trim())
+            ) as HTMLElement | undefined
+
+        const typeSearch = (value: string) => {
+            const input = Array.from(document.querySelectorAll('input')).find(
+                (i) => i.getAttribute('aria-hidden') !== 'true'
+            ) as HTMLInputElement | undefined
+            if (!input) throw new Error('Search input not found')
+            input.focus()
+            input.value = value
+            input.dispatchEvent(new Event('input', { bubbles: true }))
+        }
+
+        it('should not show create option when createItem is false', async () => {
+            render(SelectMenu, { items: defaultItems, open: true, portal: false })
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeUndefined()
+            })
+        })
+
+        it('should show create option when no item matches (lazy mode)', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                open: true,
+                portal: false
+            })
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption()?.textContent).toContain('Create "mango"')
+            })
+        })
+
+        it('should hide create option when search exactly matches an existing item', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                open: true,
+                portal: false
+            })
+            typeSearch('Apple')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeUndefined()
+            })
+        })
+
+        it("should always show create option in 'always' mode even with matches", async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: 'always',
+                open: true,
+                portal: false
+            })
+            typeSearch('app')
+            await vi.waitFor(() => {
+                expect(findCreateOption()?.textContent).toContain('Create "app"')
+            })
+        })
+
+        it('should call onCreate callback with the trimmed value', async () => {
+            const onCreate = vi.fn()
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                onCreate,
+                open: true,
+                portal: false
+            })
+            typeSearch('  mango  ')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            await page.getByRole('option', { name: /Create "mango"/ }).click()
+            await vi.waitFor(() => {
+                expect(onCreate).toHaveBeenCalledWith('mango')
+            })
+        })
+
+        it('should append to value in multiple mode and keep dropdown open', async () => {
+            const { container } = render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: ['apple'],
+                createItem: true,
+                open: true,
+                portal: false
+            })
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            await page.getByRole('option', { name: /Create "mango"/ }).click()
+            const trigger = container.querySelector('button[aria-haspopup]') as HTMLButtonElement
+            expect(trigger.getAttribute('data-state')).toBe('open')
+        })
+
+        it('should render custom createItemLabel from function', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                createItemLabel: (v: string) => `Add ${v} now`,
+                open: true,
+                portal: false
+            })
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption((t) => /Add mango now/.test(t))).toBeDefined()
+            })
+        })
+
+        it('should hide empty state when create option is shown', async () => {
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                emptyText: 'No results found.',
+                open: true,
+                portal: false
+            })
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            expect(document.body.textContent).not.toContain('No results found.')
+        })
+
+        it('should not fire onCreate twice for the same value in always mode', async () => {
+            const onCreate = vi.fn()
+            render(SelectMenu, {
+                items: defaultItems,
+                multiple: true,
+                value: [],
+                createItem: 'always',
+                onCreate,
+                open: true,
+                portal: false
+            })
+
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            await page.getByRole('option', { name: /Create "mango"/ }).click()
+            await vi.waitFor(() => {
+                expect(onCreate).toHaveBeenCalledTimes(1)
+            })
+
+            typeSearch('mango')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            await page.getByRole('option', { name: /Create "mango"/ }).click()
+            await new Promise((r) => setTimeout(r, 50))
+            expect(onCreate).toHaveBeenCalledTimes(1)
+        })
+
+        it('should create on Enter from search input', async () => {
+            const onCreate = vi.fn()
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                onCreate,
+                open: true,
+                portal: false
+            })
+            const input = Array.from(document.querySelectorAll('input')).find(
+                (i) => i.getAttribute('aria-hidden') !== 'true'
+            ) as HTMLInputElement
+            input.focus()
+            input.value = 'mango'
+            input.dispatchEvent(new Event('input', { bubbles: true }))
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            input.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
+            )
+            await vi.waitFor(() => {
+                expect(onCreate).toHaveBeenCalledWith('mango')
+            })
+        })
+
+        it('should not create on Enter when no create option is offered', async () => {
+            const onCreate = vi.fn()
+            render(SelectMenu, {
+                items: defaultItems,
+                createItem: true,
+                onCreate,
+                open: true,
+                portal: false
+            })
+            const input = Array.from(document.querySelectorAll('input')).find(
+                (i) => i.getAttribute('aria-hidden') !== 'true'
+            ) as HTMLInputElement
+            input.focus()
+            input.value = 'Apple'
+            input.dispatchEvent(new Event('input', { bubbles: true }))
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeUndefined()
+            })
+            input.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
+            )
+            await new Promise((r) => setTimeout(r, 50))
+            expect(onCreate).not.toHaveBeenCalled()
+        })
+
+        it('should select existing item (not create) when search matches case-insensitively', async () => {
+            const onCreate = vi.fn()
+            const items: SelectMenuItem[] = [{ value: 'React', label: 'React' }]
+            render(SelectMenu, {
+                items,
+                multiple: true,
+                value: [],
+                createItem: 'always',
+                onCreate,
+                open: true,
+                portal: false
+            })
+            typeSearch('react')
+            await vi.waitFor(() => {
+                expect(findCreateOption()).toBeDefined()
+            })
+            await page.getByRole('option', { name: /Create "react"/ }).click()
+            await new Promise((r) => setTimeout(r, 50))
+            expect(onCreate).not.toHaveBeenCalled()
+        })
+    })
 })

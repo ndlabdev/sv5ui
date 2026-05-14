@@ -557,4 +557,120 @@ describe('Calendar', () => {
             })
         })
     })
+
+    // ==================== MAX DAYS (multiple) ====================
+
+    describe('maxDays (multiple)', () => {
+        it('should forward maxDays to bits-ui Calendar.Root', async () => {
+            render(Calendar, {
+                type: 'multiple',
+                maxDays: 3,
+                placeholder: new CalendarDate(2026, 5, 1)
+            })
+            await vi.waitFor(() => {
+                expect(getRoot()).not.toBeNull()
+            })
+        })
+
+        it('should not allow selecting more than maxDays dates', async () => {
+            const value: DateValue[] = []
+            render(Calendar, {
+                type: 'multiple',
+                maxDays: 2,
+                value,
+                placeholder: new CalendarDate(2026, 5, 1)
+            })
+            await vi.waitFor(() => expect(getDays().length).toBeGreaterThan(0))
+
+            // Click three different in-month dates
+            const inMonth = Array.from(getDays()).filter(
+                (d) => !d.hasAttribute('data-outside-month') && !d.hasAttribute('data-disabled')
+            ) as HTMLElement[]
+            inMonth[0]?.click()
+            inMonth[1]?.click()
+            inMonth[2]?.click()
+
+            await vi.waitFor(() => {
+                const selected = document.querySelectorAll('[data-calendar-day][data-selected]')
+                expect(selected.length).toBeLessThanOrEqual(2)
+            })
+        })
+    })
+
+    // ==================== IS DATE HIGHLIGHTABLE ====================
+
+    describe('isDateHighlightable', () => {
+        const markedDaysInCalendar = () => {
+            const root = getRoot()
+            if (!root) return []
+            return Array.from(root.querySelectorAll('[data-calendar-day][data-marked]'))
+        }
+
+        it('should not mark any cell when prop is undefined', async () => {
+            render(Calendar, { placeholder: new CalendarDate(2026, 5, 1) })
+            await vi.waitFor(() => expect(getDays().length).toBeGreaterThan(0))
+            expect(markedDaysInCalendar().length).toBe(0)
+        })
+
+        it('should mark cells where the predicate returns true', async () => {
+            const target = new CalendarDate(2026, 5, 15)
+            render(Calendar, {
+                placeholder: new CalendarDate(2026, 5, 1),
+                isDateHighlightable: (d: DateValue) => d.compare(target) === 0
+            })
+            await vi.waitFor(() => {
+                expect(markedDaysInCalendar().length).toBe(1)
+            })
+        })
+
+        it('should mark multiple cells across the visible month', async () => {
+            render(Calendar, {
+                placeholder: new CalendarDate(2026, 5, 1),
+                isDateHighlightable: (d: DateValue) => d.day === 1 || d.day === 15 || d.day === 28
+            })
+            await vi.waitFor(() => {
+                expect(markedDaysInCalendar().length).toBeGreaterThanOrEqual(3)
+            })
+        })
+
+        it('should keep data-marked alongside data-selected on the same cell', async () => {
+            const target = new CalendarDate(2026, 5, 10)
+            render(Calendar, {
+                placeholder: new CalendarDate(2026, 5, 1),
+                value: target,
+                isDateHighlightable: (d: DateValue) => d.compare(target) === 0
+            })
+            await vi.waitFor(() => {
+                const root = getRoot()
+                expect(root).not.toBeNull()
+                const el = root!.querySelector('[data-calendar-day][data-selected][data-marked]')
+                expect(el).not.toBeNull()
+            })
+        })
+    })
+
+    // ==================== FORMFIELD / ARIA ====================
+
+    describe('formfield + aria', () => {
+        it('should apply id prop to the calendar root', async () => {
+            render(Calendar, { id: 'my-cal' })
+            await vi.waitFor(() => {
+                expect(getRoot()?.id).toBe('my-cal')
+            })
+        })
+
+        it('should expose data-name when name prop is set', async () => {
+            render(Calendar, { name: 'dob' })
+            await vi.waitFor(() => {
+                expect(getRoot()?.getAttribute('data-name')).toBe('dob')
+            })
+        })
+
+        it('should not set aria-invalid when no FormField error is present', async () => {
+            render(Calendar)
+            await vi.waitFor(() => {
+                expect(getRoot()?.getAttribute('aria-invalid')).toBeNull()
+            })
+        })
+    })
 })

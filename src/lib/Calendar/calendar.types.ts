@@ -36,6 +36,15 @@ type SharedCalendarRootProps = {
     weekdayFormat?: Intl.DateTimeFormatOptions['weekday']
     isDateDisabled?: DateMatcher
     isDateUnavailable?: DateMatcher
+    /**
+     * Predicate that returns `true` for dates that should be visually marked
+     * (e.g. holidays, events). Marked dates remain selectable; only their
+     * appearance changes. The cell trigger gets a `data-marked` attribute
+     * which the variants render as a small dot indicator.
+     *
+     * Called for every visible cell, so keep it cheap and pure.
+     */
+    isDateHighlightable?: DateMatcher
     /** @default true */
     fixedWeeks?: boolean
     /** @default 1 */
@@ -54,6 +63,16 @@ type BaseCalendarProps = {
      * Bindable reference to the root DOM element.
      */
     ref?: HTMLElement | null
+    /**
+     * The HTML `id` attribute for the root element. Used by a parent
+     * `<FormField>` so the label's `for` attribute can target the calendar.
+     */
+    id?: string
+    /**
+     * The field name. Used by a parent `<Form>` to look up validation state
+     * for this calendar when wrapped in `<FormField>`.
+     */
+    name?: string
     /** @default 'lucide:chevron-left' */
     prevMonthIcon?: string
     /** @default 'lucide:chevron-right' */

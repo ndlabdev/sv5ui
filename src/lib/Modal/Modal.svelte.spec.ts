@@ -435,4 +435,116 @@ describe('Modal', () => {
             })
         })
     })
+
+    // ==================== SIZE ====================
+
+    describe('size', () => {
+        const sizes: Array<[NonNullable<import('./modal.types.js').ModalProps['size']>, RegExp]> = [
+            ['sm', /max-w-md/],
+            ['md', /max-w-lg/],
+            ['lg', /max-w-2xl/],
+            ['xl', /max-w-4xl/]
+        ]
+
+        for (const [size, expected] of sizes) {
+            it(`should apply size="${size}" width class`, async () => {
+                render(Modal, { open: true, title: 'Test', size })
+                await vi.waitFor(() => {
+                    const content = getContent()
+                    expect(content).not.toBeNull()
+                    expect(content!.className).toMatch(expected)
+                })
+            })
+        }
+
+        it('should apply inset-0 when size="full"', async () => {
+            render(Modal, { open: true, title: 'Test', size: 'full' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content).not.toBeNull()
+                expect(content!.className).toContain('inset-0')
+                expect(content!.className).not.toMatch(/rounded-lg/)
+            })
+        })
+
+        it('should default to size="md" (max-w-lg)', async () => {
+            render(Modal, { open: true, title: 'Test' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/max-w-lg/)
+            })
+        })
+
+        it('fullscreen prop maps to size="full" for backwards compat', async () => {
+            render(Modal, { open: true, title: 'Test', fullscreen: true })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toContain('inset-0')
+            })
+        })
+
+        it('fullscreen overrides explicit size', async () => {
+            render(Modal, { open: true, title: 'Test', fullscreen: true, size: 'sm' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toContain('inset-0')
+                expect(content!.className).not.toMatch(/max-w-md/)
+            })
+        })
+    })
+
+    // ==================== TRANSITION VARIANTS ====================
+
+    describe('transition variants', () => {
+        it('should apply scale animation by default', async () => {
+            render(Modal, { open: true, title: 'Test' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/scale-in/)
+            })
+        })
+
+        it('should apply scale animation for transition="scale"', async () => {
+            render(Modal, { open: true, title: 'Test', transition: 'scale' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/scale-in/)
+            })
+        })
+
+        it('should apply fade-only animation for transition="fade"', async () => {
+            render(Modal, { open: true, title: 'Test', transition: 'fade' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/fade-in/)
+                expect(content!.className).not.toMatch(/scale-in/)
+                expect(content!.className).not.toMatch(/slide-in/)
+            })
+        })
+
+        it('should apply slide animation for transition="slide"', async () => {
+            render(Modal, { open: true, title: 'Test', transition: 'slide' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/slide-in-from-top/)
+                expect(content!.className).not.toMatch(/scale-in/)
+            })
+        })
+
+        it('should apply no animation for transition="none"', async () => {
+            render(Modal, { open: true, title: 'Test', transition: 'none' })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).not.toMatch(/scale-in|fade-in|slide-in/)
+            })
+        })
+
+        it('transition={true} maps to scale (legacy default)', async () => {
+            render(Modal, { open: true, title: 'Test', transition: true })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content!.className).toMatch(/scale-in/)
+            })
+        })
+    })
 })

@@ -16,24 +16,44 @@ export const slideoverVariants = tv({
     },
     variants: {
         transition: {
-            true: {
+            none: {},
+            fade: {
+                overlay:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                content:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]'
+            },
+            slide: {
                 overlay:
                     'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]'
+            },
+            scale: {
+                overlay:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                content:
+                    'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)]'
             }
         },
         side: {
             top: {
-                content: 'fixed top-0 inset-x-0 max-h-[90dvh]'
+                content: 'fixed top-0 inset-x-0'
             },
             right: {
-                content: 'fixed right-0 inset-y-0 w-full max-w-md'
+                content: 'fixed right-0 inset-y-0 w-full'
             },
             bottom: {
-                content: 'fixed bottom-0 inset-x-0 max-h-[90dvh]'
+                content: 'fixed bottom-0 inset-x-0'
             },
             left: {
-                content: 'fixed left-0 inset-y-0 w-full max-w-md'
+                content: 'fixed left-0 inset-y-0 w-full'
             }
+        },
+        size: {
+            sm: {},
+            md: {},
+            lg: {},
+            xl: {},
+            full: {}
         },
         inset: {
             true: {},
@@ -48,8 +68,9 @@ export const slideoverVariants = tv({
         }
     },
     compoundVariants: [
+        // Side-specific slide animations
         {
-            transition: true,
+            transition: 'slide',
             side: 'top',
             class: {
                 content:
@@ -57,7 +78,7 @@ export const slideoverVariants = tv({
             }
         },
         {
-            transition: true,
+            transition: 'slide',
             side: 'right',
             class: {
                 content:
@@ -65,7 +86,7 @@ export const slideoverVariants = tv({
             }
         },
         {
-            transition: true,
+            transition: 'slide',
             side: 'bottom',
             class: {
                 content:
@@ -73,19 +94,30 @@ export const slideoverVariants = tv({
             }
         },
         {
-            transition: true,
+            transition: 'slide',
             side: 'left',
             class: {
                 content:
                     'data-[state=open]:animate-[slide-in-full-left_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-left_150ms_ease-in,fade-out_150ms_ease-in]'
             }
         },
+        // Sizes — left/right control width, top/bottom control height
+        { side: ['left', 'right'], size: 'sm', class: { content: 'max-w-sm' } },
+        { side: ['left', 'right'], size: 'md', class: { content: 'max-w-md' } },
+        { side: ['left', 'right'], size: 'lg', class: { content: 'max-w-lg' } },
+        { side: ['left', 'right'], size: 'xl', class: { content: 'max-w-xl' } },
+        { side: ['left', 'right'], size: 'full', class: { content: 'max-w-full' } },
+        { side: ['top', 'bottom'], size: 'sm', class: { content: 'max-h-[40dvh]' } },
+        { side: ['top', 'bottom'], size: 'md', class: { content: 'max-h-[60dvh]' } },
+        { side: ['top', 'bottom'], size: 'lg', class: { content: 'max-h-[75dvh]' } },
+        { side: ['top', 'bottom'], size: 'xl', class: { content: 'max-h-[90dvh]' } },
+        { side: ['top', 'bottom'], size: 'full', class: { content: 'max-h-full' } },
+        // Inset positioning + rounded corners + shadow ring per side
         {
             inset: true,
             side: 'top',
             class: {
-                content:
-                    'top-4 inset-x-4 max-h-[calc(90dvh-2rem)] rounded-xl shadow-lg ring ring-outline-variant'
+                content: 'top-4 inset-x-4 rounded-xl shadow-lg ring ring-outline-variant'
             }
         },
         {
@@ -99,8 +131,7 @@ export const slideoverVariants = tv({
             inset: true,
             side: 'bottom',
             class: {
-                content:
-                    'bottom-4 inset-x-4 max-h-[calc(90dvh-2rem)] rounded-xl shadow-lg ring ring-outline-variant'
+                content: 'bottom-4 inset-x-4 rounded-xl shadow-lg ring ring-outline-variant'
             }
         },
         {
@@ -112,8 +143,9 @@ export const slideoverVariants = tv({
         }
     ],
     defaultVariants: {
-        transition: true,
+        transition: 'slide',
         side: 'right',
+        size: 'md',
         inset: false,
         overlay: true
     }

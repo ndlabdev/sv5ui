@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { FileUploadProps } from './file-upload.types.js'
+    import type { FileUploadProps, FileUploadRejection } from './file-upload.types.js'
 
     export type Props = FileUploadProps
 </script>
@@ -12,6 +12,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Button from '../Button/Button.svelte'
     import Modal from '../Modal/Modal.svelte'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
     const config = getComponentConfig('fileUpload', fileUploadDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -22,6 +23,9 @@
         onValueChange,
         multiple = false,
         accept,
+        maxSize,
+        maxFiles,
+        onReject,
         dropzone = true,
         interactive = true,
         label = 'Drop files here or click to upload',
@@ -39,6 +43,7 @@
         required = false,
         fileIcon = icons.file,
         imagePreview = true,
+        id,
         name,
         leadingSlot,
         labelSlot,
@@ -59,6 +64,9 @@
     let previewOpen = $state(false)
     let previewFile = $state<File | null>(null)
 
+    const formFieldContext = useFormField()
+    const emit = useFormFieldEmit()
+
     // Stable file identity key with separator to avoid collisions
     const fileKey = (f: File) => `${f.name}:${f.size}:${f.lastModified}`
 
@@ -67,8 +75,23 @@
     // eslint-disable-next-line svelte/prefer-svelte-reactivity
     const urlCache = new Map<string, string>()
 
+    const hasError = $derived(
+        formFieldContext?.error !== undefined && formFieldContext?.error !== false
+    )
+    const resolvedHighlight = $derived(highlight || hasError)
+    const resolvedId = $derived(id ?? formFieldContext?.ariaId)
+    const resolvedName = $derived(name ?? formFieldContext?.name)
+    const ariaDescribedBy = $derived(
+        !formFieldContext
+            ? undefined
+            : hasError
+              ? `${formFieldContext.ariaId}-error`
+              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    )
+
     const isDisabled = $derived(disabled || loading)
     const isDragging = $derived(dragCounter > 0)
+    const isFull = $derived(maxFiles !== undefined && value.length >= maxFiles)
     const showFilesInside = $derived(
         layout === 'grid' && !multiple && value.length > 0 && preview && variant === 'area'
     )
@@ -76,13 +99,13 @@
     // Pass booleans directly so compound variants with `false` values match correctly
     const slots = $derived(
         fileUploadVariants({
-            color,
+            color: hasError ? 'error' : color,
             size,
             variant,
             layout,
             dropzone,
             interactive: interactive && !isDisabled,
-            highlight,
+            highlight: resolvedHighlight,
             multiple,
             disabled: isDisabled
         })
@@ -150,17 +173,53 @@
             })
     }
 
+    function validateIngress(file: File): FileUploadRejection['reason'] | null {
+        if (accept && !isFileAccepted(file)) return 'accept'
+        if (maxSize !== undefined && file.size > maxSize) return 'maxSize'
+        return null
+    }
+
+    function applyMaxFiles(candidates: File[]): {
+        accepted: File[]
+        rejected: FileUploadRejection[]
+    } {
+        if (maxFiles === undefined) return { accepted: candidates, rejected: [] }
+        const remaining = Math.max(0, maxFiles - value.length)
+        if (candidates.length <= remaining) return { accepted: candidates, rejected: [] }
+        return {
+            accepted: candidates.slice(0, remaining),
+            rejected: candidates.slice(remaining).map((file) => ({ file, reason: 'maxFiles' }))
+        }
+    }
+
     function addFiles(newFiles: File[]) {
         if (isDisabled) return
-        const filtered = accept ? newFiles.filter(isFileAccepted) : newFiles
-        if (!filtered.length) return
+
+        const rejected: FileUploadRejection[] = []
+        const passed: File[] = []
+        for (const file of newFiles) {
+            const reason = validateIngress(file)
+            if (reason) rejected.push({ file, reason })
+            else passed.push(file)
+        }
+
+        let accepted: File[]
         if (!multiple) {
-            value = [filtered[0]]
+            accepted = passed.slice(0, 1)
         } else {
             const existing = new Set(value.map(fileKey))
-            value = [...value, ...filtered.filter((f) => !existing.has(fileKey(f)))]
+            const deduped = passed.filter((f) => !existing.has(fileKey(f)))
+            const result = applyMaxFiles(deduped)
+            accepted = result.accepted
+            rejected.push(...result.rejected)
         }
-        onValueChange?.(value)
+
+        if (accepted.length) {
+            value = multiple ? [...value, ...accepted] : accepted
+            onValueChange?.(value)
+            emit.onChange()
+        }
+        if (rejected.length) onReject?.(rejected)
     }
 
     function removeFile(index: number) {
@@ -176,6 +235,7 @@
         }
         value = value.filter((_, i) => i !== index)
         onValueChange?.(value)
+        emit.onChange()
     }
 
     export function clearAll() {
@@ -185,6 +245,7 @@
         urlCache.clear()
         value = []
         onValueChange?.(value)
+        emit.onChange()
     }
 
     function handleInputChange(e: Event) {
@@ -254,13 +315,13 @@
     }
 </script>
 
-<div {...restProps} bind:this={ref} class={classes.root}>
+<div {...restProps} bind:this={ref} class={classes.root} data-full={isFull ? '' : undefined}>
     <!-- Hidden file input — uses auto-generated id internally -->
     <input
         bind:this={inputRef}
         type="file"
         id={autoId}
-        {name}
+        name={resolvedName}
         {accept}
         {multiple}
         {required}
@@ -275,18 +336,23 @@
         <!-- Area / Dropzone -->
         <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
         <div
+            id={resolvedId}
             class={classes.base}
             data-dragging={isDragging ? '' : undefined}
             role={interactive ? 'button' : undefined}
             tabindex={interactive && !isDisabled ? 0 : undefined}
             aria-disabled={isDisabled || undefined}
             aria-label={interactive ? label : undefined}
+            aria-invalid={resolvedHighlight ? true : undefined}
+            aria-describedby={ariaDescribedBy}
             onclick={handleAreaClick}
             ondragenter={handleDragEnter}
             ondragover={handleDragOver}
             ondragleave={handleDragLeave}
             ondrop={handleDrop}
             onkeydown={handleKeydown}
+            onfocus={() => emit.onFocus()}
+            onblur={() => emit.onBlur()}
         >
             {#if showFilesInside}
                 <!-- Grid single: file fills the area as overlay -->
@@ -390,6 +456,7 @@
     {:else}
         <!-- Button variant -->
         <Button
+            id={resolvedId}
             {color}
             {size}
             disabled={isDisabled}
@@ -397,7 +464,11 @@
             {loadingIcon}
             leadingIcon={loading ? undefined : icon}
             {label}
+            aria-invalid={resolvedHighlight ? true : undefined}
+            aria-describedby={ariaDescribedBy}
             onclick={handleAreaClick}
+            onfocus={() => emit.onFocus()}
+            onblur={() => emit.onBlur()}
         />
     {/if}
 

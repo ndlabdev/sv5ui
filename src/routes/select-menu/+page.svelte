@@ -16,6 +16,16 @@
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     let bindValue = $state('')
+    let multipleValue = $state<string[]>(['apple', 'banana'])
+    let chipValue = $state<string[]>(['alice'])
+    let createValue = $state('')
+    let createLastEvent = $state('')
+    let createTags = $state<string[]>(['svelte', 'tailwind'])
+    let createTagItems = $state<SelectMenuItem[]>([
+        { value: 'svelte', label: 'Svelte' },
+        { value: 'tailwind', label: 'Tailwind' },
+        { value: 'vite', label: 'Vite' }
+    ])
 
     const fruits: SelectMenuItem[] = [
         { value: 'apple', label: 'Apple' },
@@ -693,6 +703,141 @@
                         leadingIcon="lucide:search"
                     />
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Multiple selection</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Pass <code>multiple</code> to allow selecting more than one option. The dropdown stays
+            open after each click so users can pick several items in a row. Use the
+            <code>selected</code> snippet to render chips/tags instead of the default comma-separated
+            labels.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">Default (comma-separated)</p>
+                <div class="max-w-sm">
+                    <SelectMenu
+                        multiple
+                        bind:value={multipleValue}
+                        items={fruits}
+                        placeholder="Pick fruits..."
+                    />
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Selected: {JSON.stringify(multipleValue)}
+                </p>
+            </div>
+
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    With chips via `selected` snippet
+                </p>
+                <div class="max-w-sm">
+                    <SelectMenu
+                        multiple
+                        bind:value={chipValue}
+                        items={avatarItems}
+                        placeholder="Add members..."
+                        leadingIcon="lucide:users"
+                    >
+                        {#snippet selected({ items, remove })}
+                            <span class="flex flex-wrap items-center gap-1">
+                                {#each items as item (item.value)}
+                                    <span
+                                        class="inline-flex items-center gap-1 rounded-full bg-primary-container px-2 py-0.5 text-xs text-on-primary-container"
+                                    >
+                                        {item.label ?? item.value}
+                                        <button
+                                            type="button"
+                                            aria-label={`Remove ${item.label ?? item.value}`}
+                                            class="-mr-0.5 inline-flex size-3 items-center justify-center rounded-full hover:bg-on-primary-container/20"
+                                            onclick={(e) => {
+                                                e.stopPropagation()
+                                                remove(item.value)
+                                            }}
+                                        >
+                                            <Icon name="lucide:x" class="size-2.5" />
+                                        </button>
+                                    </span>
+                                {/each}
+                            </span>
+                        {/snippet}
+                    </SelectMenu>
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Selected: {JSON.stringify(chipValue)}
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Create new items on the fly</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Pass <code>createItem</code> to let users add values that are not in the original
+            <code>items</code> list. Use <code>'lazy'</code> (default when <code>true</code>) to
+            only offer the create option when no item matches the search; use
+            <code>'always'</code> to keep it visible. The <code>onCreate</code> callback fires with
+            the trimmed search term, and the component internally tracks the new value so the
+            trigger can render its label even if the caller does not push it into
+            <code>items</code>. Press <kbd>Enter</kbd> when there are no matches to create.
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">Single mode (lazy)</p>
+                <div class="max-w-sm">
+                    <SelectMenu
+                        bind:value={createValue}
+                        items={fruits}
+                        createItem
+                        placeholder="Pick or create a fruit..."
+                        leadingIcon="lucide:apple"
+                        onCreate={(v) => (createLastEvent = v)}
+                    />
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Value: <span class="font-mono text-on-surface">{createValue || '(empty)'}</span>
+                </p>
+                {#if createLastEvent}
+                    <p class="mt-1 text-xs text-on-surface-variant">
+                        Last <code>onCreate</code>:
+                        <span class="font-mono text-on-surface">{createLastEvent}</span>
+                    </p>
+                {/if}
+            </div>
+
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">
+                    Multiple + always + caller-managed items
+                </p>
+                <div class="max-w-sm">
+                    <SelectMenu
+                        multiple
+                        bind:value={createTags}
+                        items={createTagItems}
+                        createItem="always"
+                        placeholder="Add tags..."
+                        leadingIcon="lucide:tag"
+                        createItemLabel={(v) => `Add tag "${v}"`}
+                        onCreate={(v) =>
+                            (createTagItems = [...createTagItems, { value: v, label: v }])}
+                    />
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Tags: {JSON.stringify(createTags)}
+                </p>
+                <p class="mt-1 text-xs text-on-surface-variant">
+                    Items ({createTagItems.length}): {createTagItems.map((i) => i.label).join(', ')}
+                </p>
             </div>
         </div>
     </section>

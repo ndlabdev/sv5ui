@@ -16,20 +16,45 @@ export const modalVariants = tv({
     },
     variants: {
         transition: {
-            true: {
+            none: {},
+            fade: {
+                overlay:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                content:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]'
+            },
+            slide: {
+                overlay:
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                content:
+                    'data-[state=open]:animate-[slide-in-from-top_200ms_ease-out] data-[state=closed]:animate-[slide-out-to-top_150ms_ease-in]'
+            },
+            scale: {
                 overlay:
                     'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
                 content:
                     'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)]'
             }
         },
-        fullscreen: {
-            true: {
-                content: 'inset-0'
+        size: {
+            sm: {
+                content:
+                    'w-[calc(100vw-2rem)] max-w-md rounded-lg shadow-lg ring ring-outline-variant'
             },
-            false: {
+            md: {
                 content:
                     'w-[calc(100vw-2rem)] max-w-lg rounded-lg shadow-lg ring ring-outline-variant'
+            },
+            lg: {
+                content:
+                    'w-[calc(100vw-2rem)] max-w-2xl rounded-lg shadow-lg ring ring-outline-variant'
+            },
+            xl: {
+                content:
+                    'w-[calc(100vw-2rem)] max-w-4xl rounded-lg shadow-lg ring ring-outline-variant'
+            },
+            full: {
+                content: 'inset-0'
             }
         },
         overlay: {
@@ -51,14 +76,14 @@ export const modalVariants = tv({
     compoundVariants: [
         {
             scrollable: true,
-            fullscreen: false,
+            size: ['sm', 'md', 'lg', 'xl'],
             class: {
                 overlay: 'grid place-items-center p-4 sm:py-8'
             }
         },
         {
             scrollable: false,
-            fullscreen: false,
+            size: ['sm', 'md', 'lg', 'xl'],
             class: {
                 content:
                     'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden'
@@ -66,8 +91,8 @@ export const modalVariants = tv({
         }
     ],
     defaultVariants: {
-        transition: true,
-        fullscreen: false,
+        transition: 'scale',
+        size: 'md',
         overlay: true,
         scrollable: false
     }

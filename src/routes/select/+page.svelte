@@ -16,6 +16,7 @@
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
 
     let bindValue = $state('')
+    let multipleValue = $state<string[]>(['apple', 'banana'])
 
     const fruits: SelectItem[] = [
         { value: 'apple', label: 'Apple' },
@@ -419,6 +420,47 @@
                         items={groupedItems}
                         placeholder="Select category..."
                         leadingIcon="lucide:tag"
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <Separator />
+
+    <section>
+        <h2 class="mb-3 text-lg font-semibold">Multiple selection</h2>
+        <p class="mb-4 text-sm text-on-surface-variant">
+            Set <code>multiple</code> to allow selecting more than one option. The
+            <code>value</code> becomes a <code>string[]</code> and selected labels are joined with
+            <code>separator</code> (default <code>, </code>).
+        </p>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">Default (comma-separated)</p>
+                <div class="max-w-sm">
+                    <Select
+                        multiple
+                        bind:value={multipleValue}
+                        items={fruits}
+                        placeholder="Pick fruits..."
+                    />
+                </div>
+                <p class="mt-2 text-xs text-on-surface-variant">
+                    Selected: {JSON.stringify(multipleValue)}
+                </p>
+            </div>
+
+            <div>
+                <p class="mb-2 text-xs text-on-surface-variant">Custom separator + leading icon</p>
+                <div class="max-w-sm">
+                    <Select
+                        multiple
+                        items={iconItems}
+                        separator=" • "
+                        leadingIcon="lucide:list-checks"
+                        placeholder="Pick sections..."
                     />
                 </div>
             </div>
