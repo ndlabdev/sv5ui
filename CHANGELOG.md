@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Stepper** — Multi-step wizard/progress component. Horizontal or vertical orientation, 5 sizes, 8 colors, `pending`/`active`/`completed` states with `linear` gating (default), bindable imperative `api` (`next` / `prev` / `goTo` / `hasNext` / `hasPrev`) for external Back/Next buttons, roving keyboard navigation, and per-slot `ui` overrides. Pure custom build — no bits-ui primitive.
+
 ## [1.7.0] - 2026-05-14
 
 ### Added
