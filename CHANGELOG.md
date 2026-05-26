@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Banner** — Full-width announcement bar typically rendered at the top of a page or layout. 8 colors, optional `icon`, `title`, inline `actions`, dismiss button (`close`), and clickable mode via `to`/`target` (root becomes `<a>`). When given an `id`, dismissal persists across reloads via `localStorage` (key: `sv5ui-banner-{id}`); without an `id`, dismissal is session-only. Snippets: `leading`, `titleSlot`, `actionsSlot`, `closeSlot`. Per-slot `ui` overrides.
+
 ## [1.7.0] - 2026-05-14
 
 ### Added
