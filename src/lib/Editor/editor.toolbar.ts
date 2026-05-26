@@ -156,6 +156,27 @@ export const TOOLBAR_ACTIONS: Record<ToolbarAction, ToolbarActionDef> = {
         icon: 'lucide:remove-formatting',
         label: 'Clear formatting',
         run: (ed) => ed.chain().focus().unsetAllMarks().clearNodes().run()
+    },
+    image: {
+        icon: 'lucide:image',
+        label: 'Insert image',
+        // Run is provided externally by Editor.svelte (needs access to upload
+        // handler / file input). Default falls back to URL prompt.
+        run: (ed) => {
+            if (typeof window === 'undefined') return
+            const url = window.prompt('Image URL', 'https://')
+            if (!url) return
+            ed.chain().focus().setImage({ src: url }).run()
+        }
+    },
+    table: {
+        icon: 'lucide:table',
+        label: 'Insert table',
+        // Default 3x3 table. Editor.svelte overrides this with a dimension
+        // picker popover for richer UX.
+        run: (ed) => {
+            ed.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+        }
     }
 }
 

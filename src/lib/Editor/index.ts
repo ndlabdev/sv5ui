@@ -5,6 +5,7 @@ export type {
     EditorJSON,
     EditorOutput,
     EditorReactiveState,
+    MentionItem,
     ToolbarAction,
     ToolbarConfig
 } from './editor.types.js'

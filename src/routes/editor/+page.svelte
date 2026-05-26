@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Editor } from '$lib/Editor/index.js'
-    import type { EditorApi, EditorJSON } from '$lib/Editor/index.js'
-    import { Button, Badge, Separator, Card, Icon } from '$lib/index.js'
+    import type { EditorApi, EditorJSON, MentionItem } from '$lib/Editor/index.js'
+    import { Button, Badge, Separator, Card, Icon, Form, FormField, Input } from '$lib/index.js'
 
     let basicHtml = $state('<p>Start writing here…</p>')
 
@@ -23,6 +23,51 @@
     let limitedValue = $state('<p>Type here…</p>')
 
     let bubbleValue = $state('<p>Select any text to see the floating menu.</p>')
+
+    // ----- Phase 2 demos -----
+
+    let markdownValue = $state('# Hello\n\nThis editor outputs **Markdown**.')
+
+    let imageValue = $state('<p>Click the image button to upload.</p>')
+    async function fakeUploadImage(file: File): Promise<string> {
+        // Demo: convert to data URL. Real apps would upload to a backend.
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = () => resolve(String(reader.result))
+            reader.onerror = () => reject(new Error('FileReader failed'))
+            reader.readAsDataURL(file)
+        })
+    }
+
+    let tableValue = $state('<p>Click the table button → pick dimensions → insert.</p>')
+
+    let mentionValue = $state('<p>Type @ to mention someone…</p>')
+    const teamMembers: MentionItem[] = [
+        { id: 'alice', label: 'Alice Nguyen' },
+        { id: 'bob', label: 'Bob Tran' },
+        { id: 'charlie', label: 'Charlie Le' },
+        { id: 'diana', label: 'Diana Pham' },
+        { id: 'evan', label: 'Evan Vo' }
+    ]
+    async function searchMembers(query: string): Promise<MentionItem[]> {
+        await new Promise((r) => setTimeout(r, 50))
+        const q = query.toLowerCase()
+        return teamMembers.filter((m) => m.label.toLowerCase().includes(q))
+    }
+
+    const articleState = $state({ title: '', body: '<p></p>' })
+    let articleSubmitted = $state<string | null>(null)
+    function validateArticle(values: object) {
+        const v = values as { title: string; body: string }
+        const errors: { name: string; message: string }[] = []
+        if (!v.title.trim()) errors.push({ name: 'title', message: 'Title is required' })
+        if (v.body === '<p></p>' || !v.body.trim())
+            errors.push({ name: 'body', message: 'Body cannot be empty' })
+        return errors
+    }
+    function submitArticle(e: { data: unknown }) {
+        articleSubmitted = JSON.stringify(e.data, null, 2)
+    }
 
     const colors = [
         'primary',
@@ -279,6 +324,153 @@
 
     <Separator />
 
+    <!-- Phase 2: Markdown output -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Markdown output (Phase 2)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >output="markdown"</code
+            >
+            to bind a Markdown string. Powered by the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >tiptap-markdown</code
+            > extension — paste markdown is also recognized.
+        </p>
+        <Editor
+            bind:value={markdownValue}
+            output="markdown"
+            placeholder="Type or paste markdown…"
+        />
+        <details class="text-sm">
+            <summary class="cursor-pointer text-on-surface-variant hover:text-on-surface"
+                >Show raw markdown</summary
+            >
+            <pre
+                class="mt-2 overflow-x-auto rounded bg-surface-container-highest p-3 text-xs">{markdownValue}</pre>
+        </details>
+    </section>
+
+    <!-- Phase 2: Image upload -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Image upload (Phase 2)</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">image</code>
+            toolbar action opens a file picker → calls
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >onImageUpload(file)</code
+            >
+            → inserts the returned URL. Demo here converts to a data URL client-side.
+        </p>
+        <Editor
+            bind:value={imageValue}
+            image
+            onImageUpload={fakeUploadImage}
+            toolbar={[
+                'bold',
+                'italic',
+                '|',
+                'h1',
+                'h2',
+                '|',
+                'image',
+                '|',
+                'bulletList',
+                'orderedList',
+                '|',
+                'undo',
+                'redo'
+            ]}
+        />
+    </section>
+
+    <!-- Phase 2: Tables -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Tables (Phase 2)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Enable with <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >tables</code
+            >
+            and add the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">table</code> toolbar
+            action. Click → hover the grid → pick dimensions → click to insert.
+        </p>
+        <Editor
+            bind:value={tableValue}
+            tables
+            toolbar={['bold', 'italic', '|', 'h2', 'h3', '|', 'table', '|', 'undo', 'redo']}
+        />
+    </section>
+
+    <!-- Phase 2: Mentions -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Mentions (Phase 2)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Provide <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >onMention(query)</code
+            >
+            to enable @-style suggestions. Type
+            <kbd
+                class="rounded border border-outline-variant bg-surface-container-high px-1.5 py-0.5 text-xs"
+                >@</kbd
+            >
+            inside the editor — a popup will open with matching items. Arrow keys to navigate, Enter to
+            select.
+        </p>
+        <Editor bind:value={mentionValue} onMention={searchMembers} placeholder="Try typing @al…" />
+    </section>
+
+    <Separator />
+
+    <!-- Phase 2: Form integration -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Form integration (Phase 2)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Wrap in <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >&lt;FormField&gt;</code
+            > to get error highlighting, label association, and per-field validation events.
+        </p>
+        <Card class="space-y-3 p-4">
+            <Form state={articleState} validate={validateArticle} onsubmit={submitArticle}>
+                <div class="space-y-4">
+                    <FormField name="title" label="Title" required>
+                        <Input bind:value={articleState.title} placeholder="Article title…" />
+                    </FormField>
+                    <FormField name="body" label="Body" required>
+                        <Editor
+                            bind:value={articleState.body}
+                            placeholder="Write your article…"
+                            toolbar={[
+                                'bold',
+                                'italic',
+                                '|',
+                                'h2',
+                                'h3',
+                                '|',
+                                'bulletList',
+                                'orderedList',
+                                'blockquote',
+                                '|',
+                                'link',
+                                '|',
+                                'undo',
+                                'redo'
+                            ]}
+                        />
+                    </FormField>
+                    <div class="flex justify-end">
+                        <Button type="submit" color="primary" size="sm" label="Submit article" />
+                    </div>
+                </div>
+            </Form>
+            {#if articleSubmitted}
+                <pre
+                    class="mt-2 max-h-60 overflow-auto rounded bg-surface-container-highest p-3 text-xs">{articleSubmitted}</pre>
+            {/if}
+        </Card>
+    </section>
+
+    <Separator />
+
     <!-- Real-world: comment box -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Real-world — Comment box</h2>
@@ -306,8 +498,7 @@
                 <Icon name="lucide:package" size="18" class="text-primary" />
                 Editor is opt-in via a separate entry point
             </p>
-            <pre
-                class="mt-2 overflow-x-auto rounded bg-surface-container-highest p-3 text-xs"><code
+            <pre class="mt-2 overflow-x-auto rounded bg-surface-container-highest p-3 text-xs"><code
                     >{importExample}</code
                 ></pre>
             <p class="mt-3 text-on-surface-variant">
