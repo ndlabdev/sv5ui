@@ -145,8 +145,12 @@ export type ToolbarConfig = boolean | (ToolbarAction | ToolbarSeparator)[]
  * on every selection / transaction.
  */
 export interface EditorReactiveState {
-    /** Which marks / nodes / alignments are active at the current selection. */
-    active: Record<ToolbarAction, boolean>
+    /**
+     * Which marks / nodes / alignments are active at the current selection.
+     * Actions without a meaningful "active" state (e.g. `horizontalRule`,
+     * `clearFormatting`, `unlink`, `undo`, `redo`) are omitted.
+     */
+    active: Partial<Record<ToolbarAction, boolean>>
     /** Whether each command is currently runnable. */
     can: { undo: boolean; redo: boolean }
     /** Total character count (from `@tiptap/extension-character-count`). */
@@ -209,6 +213,14 @@ export interface EditorApi {
  * toolbar (configurable or hidden) and a content area. Bindable `value` in
  * HTML or JSON format. Imperative control via `bind:api`.
  *
+ * @remarks
+ * Extension config props (`image`, `tables`, `youtube`, `dragHandle`,
+ * `bubbleMenu`, `headingLevels`, `placeholder`, `maxLength`, `autolink`,
+ * `linkOpenInNewTab`, `mentionTrigger`, `slash`, `slashTrigger`, `extensions`,
+ * `extensionsOverride`, `output`) are read once at mount. Changing them
+ * after mount does NOT rebuild the editor. To switch configurations, key
+ * the `<Editor>` on the relevant prop so Svelte recreates it.
+ *
  * @example
  * ```svelte
  * <script>
@@ -258,6 +270,16 @@ export interface EditorProps extends Omit<
      */
     output?: EditorOutput
 
+    /**
+     * Allow raw HTML inside Markdown input/output. Off by default — raw HTML
+     * is escaped on serialize and stripped on parse. Turn on only when you
+     * trust the source and your downstream renderer sanitizes HTML.
+     *
+     * Only applies when `output: 'markdown'`.
+     * @default false
+     */
+    markdownAllowHtml?: boolean
+
     /** Placeholder shown when the editor is empty. */
     placeholder?: string
 
@@ -277,7 +299,7 @@ export interface EditorProps extends Omit<
     /** Visually disable and prevent editing. @default false */
     disabled?: boolean
     /** Focus the editor on mount. Pass position to control caret placement. @default false */
-    autofocus?: boolean | 'start' | 'end'
+    autofocus?: boolean | 'start' | 'end' | number
 
     // ------------------------------------------------------------------------
     // Limits

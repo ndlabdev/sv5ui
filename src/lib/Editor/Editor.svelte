@@ -23,6 +23,8 @@
     } from './editor.types.js'
     import Icon from '../Icon/Icon.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
+    import EditorUrlPrompt from './EditorUrlPrompt.svelte'
+    import { httpUrlSchema, youtubeUrlSchema, type UrlSchema } from './editor.schemas.js'
 
     const config = getComponentConfig('editor', editorDefaults)
 
@@ -48,6 +50,7 @@
         headingLevels = [1, 2, 3],
         autolink = true,
         linkOpenInNewTab = true,
+        markdownAllowHtml = false,
         image = false,
         onImageUpload,
         tables = false,
@@ -80,8 +83,6 @@
     const resolvedColor = $derived(hasError ? 'error' : color)
     const resolvedId = $derived(id ?? formFieldContext?.ariaId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
-    const resolvedDisabled = $derived(disabled)
-    const resolvedSize = $derived(size)
     const ariaDescribedBy = $derived(
         !formFieldContext
             ? undefined
@@ -94,24 +95,18 @@
     let bubbleElement: HTMLDivElement | null = $state(null)
     let editor: Editor | null = $state(null)
 
-    let editorState = $state<EditorReactiveState>(makeEmptyState())
-
-    function makeEmptyState(): EditorReactiveState {
-        const empty = Object.fromEntries(
-            (Object.keys(TOOLBAR_ACTIONS) as ToolbarAction[]).map((k) => [k, false])
-        ) as Record<ToolbarAction, boolean>
-        return {
-            active: empty,
-            can: { undo: false, redo: false },
-            charCount: 0,
-            wordCount: 0,
-            isEmpty: true,
-            isFocused: false
-        }
-    }
+    let editorState = $state<EditorReactiveState>({
+        active: {},
+        can: { undo: false, redo: false },
+        charCount: 0,
+        wordCount: 0,
+        isEmpty: true,
+        isFocused: false
+    })
 
     function syncState(ed: Editor): void {
         const cc = ed.storage.characterCount
+        const can = ed.can()
         editorState = {
             active: {
                 bold: ed.isActive('bold'),
@@ -127,23 +122,18 @@
                 orderedList: ed.isActive('orderedList'),
                 blockquote: ed.isActive('blockquote'),
                 codeBlock: ed.isActive('codeBlock'),
-                horizontalRule: false,
                 link: ed.isActive('link'),
-                unlink: ed.isActive('link'),
                 alignLeft: ed.isActive({ textAlign: 'left' }),
                 alignCenter: ed.isActive({ textAlign: 'center' }),
                 alignRight: ed.isActive({ textAlign: 'right' }),
                 alignJustify: ed.isActive({ textAlign: 'justify' }),
-                undo: ed.can().undo(),
-                redo: ed.can().redo(),
-                clearFormatting: false,
                 image: ed.isActive('image'),
                 table: ed.isActive('table'),
                 youtube: ed.isActive('youtube')
             },
             can: {
-                undo: ed.can().undo(),
-                redo: ed.can().redo()
+                undo: can.undo(),
+                redo: can.redo()
             },
             charCount: typeof cc?.characters === 'function' ? cc.characters() : 0,
             wordCount: typeof cc?.words === 'function' ? cc.words() : 0,
@@ -180,7 +170,25 @@
     function resolveSlashCommands() {
         if (slashCommands) return slashCommands
         if (!slash) return undefined
-        return buildDefaultSlashCommands({ image, tables, youtube })
+        return buildDefaultSlashCommands({
+            image,
+            tables,
+            youtube,
+            promptUrl: (opts) =>
+                new Promise<string | null>((resolve) => {
+                    let done = false
+                    const settle = (value: string | null): void => {
+                        if (done) return
+                        done = true
+                        resolve(value)
+                    }
+                    openUrlPrompt({
+                        ...opts,
+                        onConfirm: (value) => settle(value),
+                        onCancel: () => settle(null)
+                    })
+                })
+        })
     }
 
     function resolveExtensions() {
@@ -196,6 +204,7 @@
             youtube,
             dragHandle,
             markdown: output === 'markdown',
+            markdownAllowHtml,
             mentionTrigger,
             mentionSuggestion: onMention
                 ? buildMentionSuggestion({ onQuery: onMention })
@@ -228,7 +237,7 @@
         // → cursor lost → can only type 1 char). value sync is handled by a
         // dedicated effect below; disabled/readonly toggle via setEditable.
         const initialContent = untrack(() => value ?? '')
-        const initialEditable = untrack(() => !resolvedDisabled && !readonly)
+        const initialEditable = untrack(() => !disabled && !readonly)
         const initialAutofocus = untrack(() => autofocus)
         const initialAttrs = untrack(() => ({
             id: resolvedId,
@@ -257,7 +266,6 @@
                 onValueChange?.(serialized)
             },
             onSelectionUpdate: ({ editor: e }) => syncState(e),
-            onTransaction: ({ editor: e }) => syncState(e),
             onFocus: ({ editor: e }) => {
                 syncState(e)
                 emit.onFocus()
@@ -280,7 +288,7 @@
 
     $effect(() => {
         if (!editor) return
-        const target = !resolvedDisabled && !readonly
+        const target = !disabled && !readonly
         if (editor.isEditable !== target) {
             editor.setEditable(target)
         }
@@ -357,9 +365,7 @@
         }
     }
 
-    $effect.pre(() => {
-        api = apiInstance
-    })
+    api = apiInstance
 
     const resolvedToolbar = $derived.by<(ToolbarAction | '|')[]>(() => {
         if (toolbar === false) return []
@@ -369,7 +375,7 @@
 
     const classes = $derived.by(() => {
         const slots = editorVariants({
-            size: resolvedSize,
+            size,
             color: resolvedColor,
             sticky: stickyToolbar
         })
@@ -389,6 +395,50 @@
             bubbleMenu: slots.bubbleMenu({ class: [c.bubbleMenu, u.bubbleMenu] })
         }
     })
+
+    // ----- URL prompt modal (shared by YouTube/Image/Link toolbar + slash) -----
+    interface UrlPromptState {
+        open: boolean
+        title: string
+        description?: string
+        placeholder: string
+        initialValue: string
+        confirmLabel: string
+        schema?: UrlSchema
+        onConfirm?: (url: string) => void
+        onCancel?: () => void
+    }
+
+    let urlPrompt = $state<UrlPromptState>({
+        open: false,
+        title: 'Enter URL',
+        placeholder: 'https://',
+        initialValue: '',
+        confirmLabel: 'Insert'
+    })
+
+    function openUrlPrompt(opts: {
+        title: string
+        description?: string
+        placeholder?: string
+        initialValue?: string
+        confirmLabel?: string
+        schema?: UrlSchema
+        onConfirm: (url: string) => void
+        onCancel?: () => void
+    }): void {
+        urlPrompt = {
+            open: true,
+            title: opts.title,
+            description: opts.description,
+            placeholder: opts.placeholder ?? 'https://',
+            initialValue: opts.initialValue ?? '',
+            confirmLabel: opts.confirmLabel ?? 'Insert',
+            schema: opts.schema,
+            onConfirm: opts.onConfirm,
+            onCancel: opts.onCancel
+        }
+    }
 
     // ----- Image upload via hidden file input -----
     let fileInput: HTMLInputElement | null = $state(null)
@@ -412,20 +462,53 @@
     function openImagePicker(): void {
         if (!editor) return
         if (!onImageUpload) {
-            // Fallback: prompt for URL when no upload handler provided
-            if (typeof window === 'undefined') return
-            const url = window.prompt('Image URL', 'https://')
-            if (!url) return
-            editor.chain().focus().setImage({ src: url }).run()
+            openUrlPrompt({
+                title: 'Image URL',
+                placeholder: 'https://example.com/image.png',
+                schema: httpUrlSchema,
+                onConfirm: (url) => {
+                    editor?.chain().focus().setImage({ src: url }).run()
+                }
+            })
             return
         }
         fileInput?.click()
+    }
+
+    function openYoutubePrompt(): void {
+        if (!editor) return
+        openUrlPrompt({
+            title: 'Embed YouTube video',
+            description: 'Paste the share link or full URL.',
+            placeholder: 'https://youtu.be/...',
+            confirmLabel: 'Embed',
+            schema: youtubeUrlSchema,
+            onConfirm: (url) => {
+                editor?.commands.setYoutubeVideo({ src: url })
+            }
+        })
+    }
+
+    function openLinkPrompt(): void {
+        if (!editor) return
+        const previous = (editor.getAttributes('link').href as string | undefined) ?? ''
+        openUrlPrompt({
+            title: 'Insert link',
+            placeholder: 'https://',
+            initialValue: previous,
+            schema: httpUrlSchema,
+            onConfirm: (url) => {
+                editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+            }
+        })
     }
 
     // ----- Table dimension picker -----
     let tableMenuOpen = $state(false)
     let tablePickerRows = $state(0)
     let tablePickerCols = $state(0)
+    let tablePickerEl: HTMLDivElement | null = $state(null)
+    let tableButtonEl: HTMLButtonElement | null = $state(null)
     const TABLE_MAX_ROWS = 8
     const TABLE_MAX_COLS = 8
 
@@ -437,10 +520,33 @@
         tablePickerCols = 0
     }
 
+    $effect(() => {
+        if (!tableMenuOpen) return
+        function onDocPointerDown(event: PointerEvent): void {
+            const target = event.target as Node | null
+            if (!target) return
+            if (tablePickerEl?.contains(target)) return
+            if (tableButtonEl?.contains(target)) return
+            tableMenuOpen = false
+            tablePickerRows = 0
+            tablePickerCols = 0
+        }
+        document.addEventListener('pointerdown', onDocPointerDown, true)
+        return () => document.removeEventListener('pointerdown', onDocPointerDown, true)
+    })
+
     function runAction(def: ToolbarActionDef, id: ToolbarAction): void {
         if (!editor) return
         if (id === 'image') {
             openImagePicker()
+            return
+        }
+        if (id === 'youtube') {
+            openYoutubePrompt()
+            return
+        }
+        if (id === 'link') {
+            openLinkPrompt()
             return
         }
         if (id === 'table') {
@@ -454,7 +560,7 @@
 <div
     bind:this={ref}
     class={classes.root}
-    data-disabled={resolvedDisabled}
+    data-disabled={disabled}
     data-readonly={readonly}
     data-error={hasError ? '' : undefined}
     {...restProps}
@@ -470,62 +576,86 @@
                     {@const def = TOOLBAR_ACTIONS[item]}
                     {@const active = def.isActive?.(editorState) ?? false}
                     {@const inactive = def.isDisabled?.(editorState) ?? false}
-                    <Tooltip text={def.label}>
-                        <span class="relative inline-flex">
+                    {#if item === 'table'}
+                        <Tooltip text={def.label}>
+                            <span class="relative inline-flex">
+                                <button
+                                    bind:this={tableButtonEl}
+                                    type="button"
+                                    class={classes.toolbarButton}
+                                    data-active={active || tableMenuOpen}
+                                    data-action={item}
+                                    disabled={disabled || readonly || inactive}
+                                    aria-label={def.label}
+                                    aria-expanded={tableMenuOpen}
+                                    aria-haspopup="dialog"
+                                    onclick={() => runAction(def, item)}
+                                >
+                                    <Icon name={def.icon} />
+                                </button>
+                                {#if tableMenuOpen}
+                                    <div
+                                        bind:this={tablePickerEl}
+                                        class="absolute top-full left-0 z-30 mt-1 w-max rounded-lg border border-outline-variant bg-surface p-2 shadow-md"
+                                        data-editor-table-picker
+                                        role="dialog"
+                                        aria-label="Insert table"
+                                    >
+                                        <div
+                                            class="mb-2 text-center text-xs text-on-surface-variant"
+                                        >
+                                            {tablePickerRows || 1} × {tablePickerCols || 1}
+                                        </div>
+                                        <div
+                                            class="grid grid-cols-8 gap-0.5"
+                                            role="presentation"
+                                            onmouseleave={() => {
+                                                tablePickerRows = 0
+                                                tablePickerCols = 0
+                                            }}
+                                        >
+                                            {#each Array.from({ length: TABLE_MAX_ROWS * TABLE_MAX_COLS }, (_v, i) => i) as idx (idx)}
+                                                {@const r = Math.floor(idx / TABLE_MAX_COLS) + 1}
+                                                {@const c = (idx % TABLE_MAX_COLS) + 1}
+                                                {@const on =
+                                                    r <= tablePickerRows && c <= tablePickerCols}
+                                                <button
+                                                    type="button"
+                                                    class="size-5 rounded border border-outline-variant {on
+                                                        ? 'border-primary bg-primary'
+                                                        : 'bg-surface-container hover:border-primary/50'}"
+                                                    aria-label={`Insert ${r}×${c} table`}
+                                                    onmouseenter={() => {
+                                                        tablePickerRows = r
+                                                        tablePickerCols = c
+                                                    }}
+                                                    onmousedown={(e) => {
+                                                        e.preventDefault()
+                                                        insertTable(r, c)
+                                                    }}
+                                                ></button>
+                                            {/each}
+                                        </div>
+                                    </div>
+                                {/if}
+                            </span>
+                        </Tooltip>
+                    {:else}
+                        <Tooltip text={def.label}>
                             <button
                                 type="button"
                                 class={classes.toolbarButton}
-                                data-active={active || (item === 'table' && tableMenuOpen)}
+                                data-active={active}
                                 data-action={item}
-                                disabled={disabled || inactive}
+                                disabled={disabled || readonly || inactive}
                                 aria-label={def.label}
                                 aria-pressed={def.isActive ? active : undefined}
                                 onclick={() => runAction(def, item)}
                             >
                                 <Icon name={def.icon} />
                             </button>
-                            {#if item === 'table' && tableMenuOpen}
-                                <div
-                                    class="absolute top-full left-0 z-30 mt-1 w-max rounded-lg border border-outline-variant bg-surface p-2 shadow-md"
-                                    data-editor-table-picker
-                                >
-                                    <div class="mb-2 text-center text-xs text-on-surface-variant">
-                                        {tablePickerRows || 1} × {tablePickerCols || 1}
-                                    </div>
-                                    <div
-                                        class="grid grid-cols-8 gap-0.5"
-                                        role="presentation"
-                                        onmouseleave={() => {
-                                            tablePickerRows = 0
-                                            tablePickerCols = 0
-                                        }}
-                                    >
-                                        {#each Array.from({ length: TABLE_MAX_ROWS * TABLE_MAX_COLS }, (_v, i) => i) as idx (idx)}
-                                            {@const r = Math.floor(idx / TABLE_MAX_COLS) + 1}
-                                            {@const c = (idx % TABLE_MAX_COLS) + 1}
-                                            {@const on =
-                                                r <= tablePickerRows && c <= tablePickerCols}
-                                            <button
-                                                type="button"
-                                                class="size-5 rounded border border-outline-variant {on
-                                                    ? 'border-primary bg-primary'
-                                                    : 'bg-surface-container hover:border-primary/50'}"
-                                                aria-label={`Insert ${r}×${c} table`}
-                                                onmouseenter={() => {
-                                                    tablePickerRows = r
-                                                    tablePickerCols = c
-                                                }}
-                                                onmousedown={(e) => {
-                                                    e.preventDefault()
-                                                    insertTable(r, c)
-                                                }}
-                                            ></button>
-                                        {/each}
-                                    </div>
-                                </div>
-                            {/if}
-                        </span>
-                    </Tooltip>
+                        </Tooltip>
+                    {/if}
                 {/if}
             {/each}
         </div>
@@ -542,7 +672,7 @@
         role="textbox"
         aria-multiline="true"
         aria-readonly={readonly}
-        aria-disabled={resolvedDisabled}
+        aria-disabled={disabled}
     ></div>
 
     {#if footer}
@@ -594,3 +724,15 @@
         </div>
     {/if}
 </div>
+
+<EditorUrlPrompt
+    bind:open={urlPrompt.open}
+    title={urlPrompt.title}
+    description={urlPrompt.description}
+    placeholder={urlPrompt.placeholder}
+    initialValue={urlPrompt.initialValue}
+    confirmLabel={urlPrompt.confirmLabel}
+    schema={urlPrompt.schema}
+    onConfirm={(url) => urlPrompt.onConfirm?.(url)}
+    onCancel={() => urlPrompt.onCancel?.()}
+/>

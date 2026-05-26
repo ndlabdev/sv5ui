@@ -4,12 +4,33 @@ import type { Editor, Range } from '@tiptap/core'
 import { Suggestion, type SuggestionOptions } from '@tiptap/suggestion'
 import { computePosition, flip, shift, offset, autoUpdate } from '@floating-ui/dom'
 import type { SlashCommand } from './editor.types.js'
+import { httpUrlSchema, youtubeUrlSchema, type UrlSchema } from './editor.schemas.js'
 import SlashPopup from './SlashPopup.svelte'
+
+export interface UrlPromptOptions {
+    title: string
+    description?: string
+    placeholder?: string
+    initialValue?: string
+    confirmLabel?: string
+    schema?: UrlSchema
+}
 
 interface SlashCommandsContext {
     image?: boolean
     tables?: boolean
     youtube?: boolean
+    /**
+     * Override for the URL prompt used by image/youtube commands. Pass an
+     * async function that resolves to a URL string, or `null`/empty string
+     * to cancel. When omitted, falls back to `window.prompt`.
+     */
+    promptUrl?: (opts: UrlPromptOptions) => Promise<string | null>
+}
+
+function defaultPromptUrl(opts: UrlPromptOptions): Promise<string | null> {
+    if (typeof window === 'undefined') return Promise.resolve(null)
+    return Promise.resolve(window.prompt(opts.title, opts.initialValue ?? opts.placeholder ?? ''))
 }
 
 /**
@@ -92,6 +113,8 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
         }
     ]
 
+    const promptUrl = ctx.promptUrl ?? defaultPromptUrl
+
     if (ctx.image) {
         commands.push({
             id: 'image',
@@ -99,9 +122,12 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
             description: 'Insert an image from URL',
             icon: 'lucide:image',
             keywords: ['image', 'picture', 'photo'],
-            run: ({ editor }) => {
-                if (typeof window === 'undefined') return
-                const url = window.prompt('Image URL', 'https://')
+            run: async ({ editor }) => {
+                const url = await promptUrl({
+                    title: 'Image URL',
+                    placeholder: 'https://example.com/image.png',
+                    schema: httpUrlSchema
+                })
                 if (!url) return
                 editor.chain().focus().setImage({ src: url }).run()
             }
@@ -128,9 +154,14 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
             description: 'Embed a YouTube video',
             icon: 'lucide:youtube',
             keywords: ['youtube', 'video', 'embed'],
-            run: ({ editor }) => {
-                if (typeof window === 'undefined') return
-                const url = window.prompt('YouTube URL', 'https://youtu.be/')
+            run: async ({ editor }) => {
+                const url = await promptUrl({
+                    title: 'Embed YouTube video',
+                    description: 'Paste the share link or full URL.',
+                    placeholder: 'https://youtu.be/...',
+                    confirmLabel: 'Embed',
+                    schema: youtubeUrlSchema
+                })
                 if (!url) return
                 editor.commands.setYoutubeVideo({ src: url })
             }
@@ -154,7 +185,7 @@ interface PopupHandle {
     cleanup: (() => void) | null
 }
 
-function fuzzyFilter(commands: SlashCommand[], query: string): SlashCommand[] {
+function substringFilter(commands: SlashCommand[], query: string): SlashCommand[] {
     const q = query.trim().toLowerCase()
     if (!q) return commands
     return commands.filter((cmd) => {
@@ -236,7 +267,6 @@ function buildSuggestionRender() {
                 handle.state.onPick(handle.state.selectedIndex)
                 return true
             }
-            if (props.event.key === 'Escape') return true
             return false
         },
 
@@ -291,7 +321,7 @@ export function buildSlashExtension(commands: SlashCommand[], trigger: string = 
             char: trigger,
             startOfLine: false,
             allowSpaces: false,
-            items: ({ query }: { query: string }) => fuzzyFilter(commands, query),
+            items: ({ query }: { query: string }) => substringFilter(commands, query),
             render: buildSuggestionRender as unknown as SuggestionOptions['render'],
             // Tiptap merges `suggestion` shallowly when an extension is .configure()'d,
             // so the command default in addOptions gets overwritten. Include it here.

@@ -26,6 +26,7 @@ interface BuildExtensionsOptions {
     image?: boolean
     tables?: boolean
     markdown?: boolean
+    markdownAllowHtml?: boolean
     mentionSuggestion?: Omit<SuggestionOptions, 'editor'>
     mentionTrigger?: string
     slashCommands?: SlashCommand[]
@@ -79,9 +80,9 @@ function buildTableExts(): AnyExtension[] {
     ]
 }
 
-function buildMarkdownExt(): AnyExtension {
+function buildMarkdownExt(allowHtml: boolean): AnyExtension {
     return Markdown.configure({
-        html: true,
+        html: allowHtml,
         tightLists: true,
         bulletListMarker: '-',
         linkify: true,
@@ -139,7 +140,7 @@ const OPTIONAL_BUILDERS: OptionalBuilder[] = [
     (o) => (o.image ? buildImageExt() : null),
     (o) => (o.tables ? buildTableExts() : null),
     (o) => (o.youtube ? buildYoutubeExt() : null),
-    (o) => (o.markdown ? buildMarkdownExt() : null),
+    (o) => (o.markdown ? buildMarkdownExt(o.markdownAllowHtml ?? false) : null),
     (o) =>
         o.mentionSuggestion ? buildMentionExt(o.mentionSuggestion, o.mentionTrigger ?? '@') : null,
     (o) =>
