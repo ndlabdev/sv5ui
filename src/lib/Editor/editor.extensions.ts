@@ -109,6 +109,11 @@ function buildYoutubeExt(): AnyExtension {
     })
 }
 
+// lucide:grip-vertical inline SVG. Used directly because @iconify/svelte
+// component would need to be mounted via Svelte; this is a vanilla DOM helper.
+const GRIP_VERTICAL_SVG =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>'
+
 function buildDragHandleExt(): AnyExtension {
     return DragHandle.configure({
         render() {
@@ -121,12 +126,7 @@ function buildDragHandleExt(): AnyExtension {
                 'hover:bg-surface-container-high hover:text-on-surface',
                 'cursor-grab active:cursor-grabbing select-none transition-colors'
             ].join(' ')
-            const icon = document.createElement('iconify-icon')
-            icon.setAttribute('icon', 'lucide:grip-vertical')
-            icon.setAttribute('width', '16')
-            icon.setAttribute('height', '16')
-            icon.setAttribute('aria-hidden', 'true')
-            handle.appendChild(icon)
+            handle.innerHTML = GRIP_VERTICAL_SVG
             return handle
         }
     })

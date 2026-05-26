@@ -1,8 +1,10 @@
+import { mount, unmount } from 'svelte'
 import { Extension } from '@tiptap/core'
 import type { Editor, Range } from '@tiptap/core'
 import { Suggestion, type SuggestionOptions } from '@tiptap/suggestion'
 import { computePosition, flip, shift, offset, autoUpdate } from '@floating-ui/dom'
 import type { SlashCommand } from './editor.types.js'
+import SlashPopup from './SlashPopup.svelte'
 
 interface SlashCommandsContext {
     image?: boolean
@@ -113,8 +115,9 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
             description: 'Insert a 3×3 table',
             icon: 'lucide:table',
             keywords: ['table', 'grid'],
-            run: ({ editor }) =>
+            run: ({ editor }) => {
                 editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+            }
         })
     }
 
@@ -138,93 +141,17 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
 }
 
 // ----------------------------------------------------------------------------
-// Suggestion popup (vanilla DOM + Floating UI) for the slash menu.
+// Suggestion popup — mounts the SlashPopup Svelte component imperatively
+// (Tiptap's Suggestion render API expects DOM-level lifecycle hooks).
 // ----------------------------------------------------------------------------
 
-interface SlashState {
-    items: SlashCommand[]
-    selectedIndex: number
-    popupEl: HTMLElement
-    listEl: HTMLElement
+type MountedComponent = ReturnType<typeof mount>
+
+interface PopupHandle {
+    container: HTMLElement
+    component: MountedComponent
+    state: { items: SlashCommand[]; selectedIndex: number; onPick: (i: number) => void }
     cleanup: (() => void) | null
-    pick: (i: number) => void
-}
-
-function createPopup(): HTMLElement {
-    const popup = document.createElement('div')
-    popup.setAttribute('data-editor-slash-popup', '')
-    popup.className = [
-        'absolute z-50 min-w-64 max-w-80 overflow-hidden',
-        'rounded-lg border border-outline-variant bg-surface shadow-lg',
-        'py-1 max-h-72 overflow-y-auto'
-    ].join(' ')
-    return popup
-}
-
-function renderItems(state: SlashState): void {
-    state.listEl.innerHTML = ''
-    if (state.items.length === 0) {
-        const empty = document.createElement('div')
-        empty.className = 'px-3 py-2 text-sm text-on-surface-variant'
-        empty.textContent = 'No matches'
-        state.listEl.appendChild(empty)
-        return
-    }
-    let activeRow: HTMLButtonElement | null = null
-    state.items.forEach((cmd, i) => {
-        const row = document.createElement('button')
-        row.type = 'button'
-        row.setAttribute('data-slash-item', '')
-        row.setAttribute('data-id', cmd.id)
-        row.setAttribute('data-index', String(i))
-        const isActive = i === state.selectedIndex
-        if (isActive) activeRow = row
-        row.className = [
-            'flex w-full items-start gap-3 px-3 py-2 text-start',
-            'hover:bg-surface-container-high',
-            isActive ? 'bg-primary-container text-on-primary-container' : 'text-on-surface'
-        ].join(' ')
-
-        if (cmd.icon) {
-            const iconWrap = document.createElement('span')
-            iconWrap.className =
-                'flex size-7 shrink-0 items-center justify-center rounded border border-outline-variant'
-            const icon = document.createElement('iconify-icon')
-            icon.setAttribute('icon', cmd.icon)
-            icon.className = 'size-4'
-            iconWrap.appendChild(icon)
-            row.appendChild(iconWrap)
-        }
-
-        const textWrap = document.createElement('span')
-        textWrap.className = 'flex flex-col min-w-0'
-        const label = document.createElement('span')
-        label.className = 'text-sm font-medium truncate'
-        label.textContent = cmd.label
-        textWrap.appendChild(label)
-        if (cmd.description) {
-            const desc = document.createElement('span')
-            desc.className = 'text-xs text-on-surface-variant truncate'
-            desc.textContent = cmd.description
-            textWrap.appendChild(desc)
-        }
-        row.appendChild(textWrap)
-
-        row.addEventListener('mousedown', (e) => {
-            e.preventDefault()
-            state.pick(i)
-        })
-        state.listEl.appendChild(row)
-    })
-    // Defer to next frame so DOM is laid out before measuring scroll position
-    if (activeRow) {
-        requestAnimationFrame(() => {
-            ;(activeRow as HTMLElement | null)?.scrollIntoView({
-                block: 'nearest',
-                behavior: 'instant' as ScrollBehavior
-            })
-        })
-    }
 }
 
 function fuzzyFilter(commands: SlashCommand[], query: string): SlashCommand[] {
@@ -239,7 +166,7 @@ function fuzzyFilter(commands: SlashCommand[], query: string): SlashCommand[] {
 }
 
 function buildSuggestionRender() {
-    let state: SlashState | null = null
+    let handle: PopupHandle | null = null
 
     return {
         onStart: (props: {
@@ -250,63 +177,63 @@ function buildSuggestionRender() {
             command: (cmd: SlashCommand) => void
         }) => {
             if (typeof document === 'undefined') return
-            const popupEl = createPopup()
-            const listEl = document.createElement('div')
-            listEl.setAttribute('role', 'listbox')
-            popupEl.appendChild(listEl)
-            document.body.appendChild(popupEl)
 
-            state = {
+            const container = document.createElement('div')
+            container.setAttribute('data-editor-slash-container', '')
+            container.style.cssText = 'position:absolute;top:0;left:0;z-index:50;'
+            document.body.appendChild(container)
+
+            const state = $state({
                 items: props.items,
                 selectedIndex: 0,
-                popupEl,
-                listEl,
-                cleanup: null,
-                pick: (i: number) => {
-                    const cmd = state?.items[i]
+                onPick: (i: number) => {
+                    const cmd = state.items[i]
                     if (!cmd) return
                     props.command(cmd)
                 }
-            }
-            renderItems(state)
+            })
+
+            const component = mount(SlashPopup, {
+                target: container,
+                props: state
+            })
+
+            handle = { container, component, state, cleanup: null }
 
             const rect = props.clientRect?.()
             if (rect) {
                 const virtualEl = { getBoundingClientRect: () => rect as DOMRect }
-                state.cleanup = autoUpdate(virtualEl, popupEl, () => {
-                    void computePosition(virtualEl, popupEl, {
+                handle.cleanup = autoUpdate(virtualEl, container, () => {
+                    void computePosition(virtualEl, container, {
                         placement: 'bottom-start',
                         middleware: [offset(6), flip(), shift({ padding: 8 })]
                     }).then(({ x, y }: { x: number; y: number }) => {
-                        popupEl.style.left = `${x}px`
-                        popupEl.style.top = `${y}px`
+                        container.style.left = `${x}px`
+                        container.style.top = `${y}px`
                     })
                 })
             }
         },
 
         onUpdate: (props: { items: SlashCommand[] }) => {
-            if (!state) return
-            state.items = props.items
-            state.selectedIndex = 0
-            renderItems(state)
+            if (!handle) return
+            handle.state.items = props.items
+            handle.state.selectedIndex = 0
         },
 
         onKeyDown: (props: { event: KeyboardEvent }) => {
-            if (!state) return false
-            const len = Math.max(state.items.length, 1)
+            if (!handle) return false
+            const len = Math.max(handle.state.items.length, 1)
             if (props.event.key === 'ArrowDown') {
-                state.selectedIndex = (state.selectedIndex + 1) % len
-                renderItems(state)
+                handle.state.selectedIndex = (handle.state.selectedIndex + 1) % len
                 return true
             }
             if (props.event.key === 'ArrowUp') {
-                state.selectedIndex = (state.selectedIndex + len - 1) % len
-                renderItems(state)
+                handle.state.selectedIndex = (handle.state.selectedIndex + len - 1) % len
                 return true
             }
             if (props.event.key === 'Enter') {
-                state.pick(state.selectedIndex)
+                handle.state.onPick(handle.state.selectedIndex)
                 return true
             }
             if (props.event.key === 'Escape') return true
@@ -314,9 +241,11 @@ function buildSuggestionRender() {
         },
 
         onExit: () => {
-            state?.cleanup?.()
-            state?.popupEl.remove()
-            state = null
+            if (!handle) return
+            handle.cleanup?.()
+            unmount(handle.component)
+            handle.container.remove()
+            handle = null
         }
     }
 }
@@ -326,8 +255,6 @@ function buildSuggestionRender() {
 // ----------------------------------------------------------------------------
 
 interface SlashExtensionOptions {
-    // Tiptap's SuggestionOptions generics are awkward to fully type here;
-    // we widen to allow our shape (items=SlashCommand[], render functions).
     suggestion: Partial<SuggestionOptions>
 }
 

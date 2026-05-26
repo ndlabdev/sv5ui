@@ -486,7 +486,7 @@
                             </button>
                             {#if item === 'table' && tableMenuOpen}
                                 <div
-                                    class="absolute top-full left-0 z-30 mt-1 rounded-lg border border-outline-variant bg-surface p-2 shadow-md"
+                                    class="absolute top-full left-0 z-30 mt-1 w-max rounded-lg border border-outline-variant bg-surface p-2 shadow-md"
                                     data-editor-table-picker
                                 >
                                     <div class="mb-2 text-center text-xs text-on-surface-variant">
@@ -515,7 +515,10 @@
                                                     tablePickerRows = r
                                                     tablePickerCols = c
                                                 }}
-                                                onclick={() => insertTable(r, c)}
+                                                onmousedown={(e) => {
+                                                    e.preventDefault()
+                                                    insertTable(r, c)
+                                                }}
                                             ></button>
                                         {/each}
                                     </div>

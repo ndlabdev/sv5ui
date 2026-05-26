@@ -465,6 +465,55 @@ describe('Editor', () => {
                 expect(container.querySelector('[data-editor-table-picker]')).not.toBeNull()
             })
         })
+
+        it('clicking a dimension cell button inserts a table (UI flow)', async () => {
+            const { container } = render(Editor, { tables: true, toolbar: ['table'] })
+            await vi.waitFor(() => {
+                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+            })
+            const tableBtn = container.querySelector(
+                'button[data-action="table"]'
+            ) as HTMLButtonElement
+            await tableBtn.click()
+            await vi.waitFor(() => {
+                expect(container.querySelector('[data-editor-table-picker]')).not.toBeNull()
+            })
+            const cell = container.querySelector(
+                '[data-editor-table-picker] button[aria-label="Insert 2×2 table"]'
+            ) as HTMLButtonElement
+            expect(cell).not.toBeNull()
+            cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }))
+            await vi.waitFor(
+                () => {
+                    expect(container.querySelector('table')).not.toBeNull()
+                },
+                { timeout: 1500 }
+            )
+        })
+
+        it('insertTable command actually inserts a table when tables={true}', async () => {
+            let api: EditorApi | undefined
+            const props = {
+                tables: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            }
+            const { container } = render(Editor, props)
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const result = api!
+                .editor!.chain()
+                .focus()
+                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                .run()
+            expect(result).toBe(true)
+            await vi.waitFor(() => {
+                expect(container.querySelector('table')).not.toBeNull()
+            })
+        })
     })
 
     // ==================== PHASE 2: MARKDOWN ====================
