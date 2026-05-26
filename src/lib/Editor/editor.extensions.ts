@@ -11,7 +11,11 @@ import { TableRow } from '@tiptap/extension-table-row'
 import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
 import { Markdown } from 'tiptap-markdown'
+import Youtube from '@tiptap/extension-youtube'
+import { DragHandle } from '@tiptap/extension-drag-handle'
 import type { SuggestionOptions } from '@tiptap/suggestion'
+import type { SlashCommand } from './editor.types.js'
+import { buildSlashExtension } from './editor.slash.js'
 
 interface BuildExtensionsOptions {
     headingLevels?: (1 | 2 | 3 | 4 | 5 | 6)[]
@@ -24,11 +28,20 @@ interface BuildExtensionsOptions {
     markdown?: boolean
     mentionSuggestion?: Omit<SuggestionOptions, 'editor'>
     mentionTrigger?: string
+    slashCommands?: SlashCommand[]
+    slashTrigger?: string
+    youtube?: boolean
+    dragHandle?: boolean
     extra?: AnyExtension[]
 }
 
 function buildCore(options: BuildExtensionsOptions): AnyExtension[] {
-    const { headingLevels = [1, 2, 3], autolink = true, linkOpenInNewTab = true, maxLength } = options
+    const {
+        headingLevels = [1, 2, 3],
+        autolink = true,
+        linkOpenInNewTab = true,
+        maxLength
+    } = options
     return [
         StarterKit.configure({
             heading: { levels: headingLevels },
@@ -88,14 +101,55 @@ function buildMentionExt(
     })
 }
 
+function buildYoutubeExt(): AnyExtension {
+    return Youtube.configure({
+        controls: true,
+        nocookie: true,
+        HTMLAttributes: { class: 'sv5ui-editor-youtube' }
+    })
+}
+
+function buildDragHandleExt(): AnyExtension {
+    return DragHandle.configure({
+        render() {
+            const handle = document.createElement('div')
+            handle.setAttribute('data-editor-drag-handle', '')
+            handle.className = [
+                'inline-flex size-5 items-center justify-center',
+                'rounded text-on-surface-variant hover:bg-surface-container-high',
+                'cursor-grab active:cursor-grabbing select-none'
+            ].join(' ')
+            handle.innerHTML =
+                '<svg viewBox="0 0 16 16" fill="currentColor" class="size-3"><circle cx="5" cy="3.5" r="1.2"/><circle cx="11" cy="3.5" r="1.2"/><circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/><circle cx="5" cy="12.5" r="1.2"/><circle cx="11" cy="12.5" r="1.2"/></svg>'
+            return handle
+        }
+    })
+}
+
+type OptionalBuilder = (o: BuildExtensionsOptions) => AnyExtension | AnyExtension[] | null
+
+const OPTIONAL_BUILDERS: OptionalBuilder[] = [
+    (o) => (o.placeholder ? Placeholder.configure({ placeholder: o.placeholder }) : null),
+    (o) => (o.image ? buildImageExt() : null),
+    (o) => (o.tables ? buildTableExts() : null),
+    (o) => (o.youtube ? buildYoutubeExt() : null),
+    (o) => (o.markdown ? buildMarkdownExt() : null),
+    (o) =>
+        o.mentionSuggestion ? buildMentionExt(o.mentionSuggestion, o.mentionTrigger ?? '@') : null,
+    (o) =>
+        o.slashCommands && o.slashCommands.length > 0
+            ? buildSlashExtension(o.slashCommands, o.slashTrigger ?? '/')
+            : null,
+    (o) => (o.dragHandle ? buildDragHandleExt() : null)
+]
+
 function collectOptionalExts(options: BuildExtensionsOptions): AnyExtension[] {
     const acc: AnyExtension[] = []
-    if (options.placeholder) acc.push(Placeholder.configure({ placeholder: options.placeholder }))
-    if (options.image) acc.push(buildImageExt())
-    if (options.tables) acc.push(...buildTableExts())
-    if (options.markdown) acc.push(buildMarkdownExt())
-    if (options.mentionSuggestion) {
-        acc.push(buildMentionExt(options.mentionSuggestion, options.mentionTrigger ?? '@'))
+    for (const build of OPTIONAL_BUILDERS) {
+        const result = build(options)
+        if (result === null) continue
+        if (Array.isArray(result)) acc.push(...result)
+        else acc.push(result)
     }
     return acc
 }

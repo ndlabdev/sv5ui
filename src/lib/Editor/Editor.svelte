@@ -14,6 +14,7 @@
     import { TOOLBAR_ACTIONS, DEFAULT_TOOLBAR, type ToolbarActionDef } from './editor.toolbar.js'
     import { buildExtensions } from './editor.extensions.js'
     import { buildMentionSuggestion } from './editor.suggestion.js'
+    import { buildDefaultSlashCommands } from './editor.slash.js'
     import type {
         EditorApi,
         EditorJSON,
@@ -52,6 +53,11 @@
         tables = false,
         onMention,
         mentionTrigger = '@',
+        slash = false,
+        slashCommands,
+        slashTrigger = '/',
+        youtube = false,
+        dragHandle = false,
         extensions: extraExtensions,
         extensionsOverride,
         size = config.defaultVariants.size ?? 'md',
@@ -132,7 +138,8 @@
                 redo: ed.can().redo(),
                 clearFormatting: false,
                 image: ed.isActive('image'),
-                table: ed.isActive('table')
+                table: ed.isActive('table'),
+                youtube: ed.isActive('youtube')
             },
             can: {
                 undo: ed.can().undo(),
@@ -170,6 +177,12 @@
         }
     }
 
+    function resolveSlashCommands() {
+        if (slashCommands) return slashCommands
+        if (!slash) return undefined
+        return buildDefaultSlashCommands({ image, tables, youtube })
+    }
+
     function resolveExtensions() {
         if (extensionsOverride) return extensionsOverride
         return buildExtensions({
@@ -180,11 +193,15 @@
             maxLength,
             image,
             tables,
+            youtube,
+            dragHandle,
             markdown: output === 'markdown',
             mentionTrigger,
             mentionSuggestion: onMention
                 ? buildMentionSuggestion({ onQuery: onMention })
                 : undefined,
+            slashCommands: resolveSlashCommands(),
+            slashTrigger,
             extra: [
                 ...(extraExtensions ?? []),
                 ...(bubbleMenu && bubbleElement

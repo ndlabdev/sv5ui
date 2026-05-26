@@ -177,6 +177,16 @@ export const TOOLBAR_ACTIONS: Record<ToolbarAction, ToolbarActionDef> = {
         run: (ed) => {
             ed.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
         }
+    },
+    youtube: {
+        icon: 'lucide:youtube',
+        label: 'Insert YouTube video',
+        run: (ed) => {
+            if (typeof window === 'undefined') return
+            const url = window.prompt('YouTube URL', 'https://youtu.be/')
+            if (!url) return
+            ed.commands.setYoutubeVideo({ src: url })
+        }
     }
 }
 

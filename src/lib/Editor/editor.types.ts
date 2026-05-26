@@ -46,6 +46,44 @@ export interface MentionItem {
 }
 
 // ============================================================================
+// Slash command types
+// ============================================================================
+
+/**
+ * A single command that appears in the slash menu (triggered by typing `/`).
+ *
+ * @example
+ * ```ts
+ * const heading1: SlashCommand = {
+ *   id: 'h1',
+ *   label: 'Heading 1',
+ *   description: 'Big section heading',
+ *   icon: 'lucide:heading-1',
+ *   keywords: ['h1', 'header', 'title'],
+ *   run: ({ editor }) => editor.chain().focus().toggleHeading({ level: 1 }).run()
+ * }
+ * ```
+ */
+export interface SlashCommand {
+    /** Unique key for this command. */
+    id: string
+    /** Display name in the suggestion popup. */
+    label: string
+    /** Optional second-line subtitle. */
+    description?: string
+    /** Iconify icon name. */
+    icon?: string
+    /** Extra terms used for fuzzy matching. */
+    keywords?: string[]
+    /**
+     * Invoked when the user picks this item. Receives the editor instance —
+     * use Tiptap chains to mutate content. Trigger range is auto-removed
+     * before this fires.
+     */
+    run: (props: { editor: TiptapEditor }) => void
+}
+
+// ============================================================================
 // Toolbar action types
 // ============================================================================
 
@@ -84,6 +122,7 @@ export type ToolbarAction =
     | 'clearFormatting'
     | 'image'
     | 'table'
+    | 'youtube'
 
 /** Vertical divider between toolbar groups. */
 export type ToolbarSeparator = '|'
@@ -307,6 +346,54 @@ export interface EditorProps extends Omit<
      * @default false
      */
     tables?: boolean
+
+    // ------------------------------------------------------------------------
+    // Slash commands (Phase 3)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Enable slash commands. Typing `/` (or `slashTrigger`) opens a command
+     * palette with built-in actions (headings, lists, blockquote, code block,
+     * horizontal rule, plus image/table/youtube if their respective flags are
+     * enabled). Extend or replace via `slashCommands`.
+     * @default false
+     */
+    slash?: boolean
+
+    /**
+     * Customize the slash command list. When provided, replaces the default
+     * commands entirely. Use spread + `buildDefaultSlashCommands(opts)` to
+     * extend rather than replace.
+     */
+    slashCommands?: SlashCommand[]
+
+    /**
+     * Trigger character for the slash menu.
+     * @default '/'
+     */
+    slashTrigger?: string
+
+    // ------------------------------------------------------------------------
+    // Embeds (Phase 3)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Enable YouTube video embeds. Adds a `youtube` toolbar action that
+     * prompts for a video URL and inserts a responsive embed.
+     * @default false
+     */
+    youtube?: boolean
+
+    // ------------------------------------------------------------------------
+    // Drag handle (Phase 3)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Show a drag handle on the left side of each block when hovered. Lets
+     * users reorder paragraphs, headings, lists, tables, etc. by drag-and-drop.
+     * @default false
+     */
+    dragHandle?: boolean
 
     // ------------------------------------------------------------------------
     // Mentions (Phase 2)

@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Editor** — Rich-text WYSIWYG editor built on Tiptap v3 + ProseMirror. Available via the sub-export `sv5ui/editor` so Tiptap (~120 KB gzipped) is tree-shaken out of the bundle when not used. Features: 23 toolbar actions (bold/italic/underline/strike/code, h1-h3, lists, blockquote, code block, link, text alignment, undo/redo), config-driven toolbar (`toolbar={['bold', '|', 'h1']}` or `true`/`false`), HTML or JSON output, bindable `value` + imperative `bind:api` (`focus`/`run`/`getValue`/`setValue`/`clear`/`insert`), bubble menu on text selection, `maxLength` + character/word counter, readonly/disabled, autofocus, sticky toolbar, custom snippets (`toolbarSlot`/`bubbleMenuSlot`/`header`/`footer`), and escape-hatch `extensions` / `extensionsOverride` props for arbitrary Tiptap extensions. SSR-safe (Tiptap mounts client-side in `$effect`).
+- **Editor (Phase 3a)** — Three more features layered on top of Phase 2:
+    - **Slash commands** — Enable via `slash` prop. Typing `/` opens a command palette with built-in actions (paragraph/h1-h3/bullet/ordered/quote/code/divider, plus image/table/YouTube when those flags are on). Customize via `slashCommands={[...]}` and `slashTrigger`. Helper export `buildDefaultSlashCommands({ image, tables, youtube })` for extending defaults.
+    - **YouTube embeds** — `youtube` prop enables `@tiptap/extension-youtube` and registers the `youtube` toolbar action (prompts for URL → inserts responsive iframe with `nocookie` mode).
+    - **Drag handle** — `dragHandle` prop enables `@tiptap/extension-drag-handle`. Hover any block (paragraph/heading/list/table) → a grip appears on the left → drag to reorder.
+
+    New props: `slash`, `slashCommands`, `slashTrigger`, `youtube`, `dragHandle`. New toolbar action: `youtube`. New exported helper: `buildDefaultSlashCommands`. New exported type: `SlashCommand`. 7 additional tests bringing total to 52.
+
 - **Editor (Phase 2)** — Five new feature sets layered on top:
     - **Form integration** — Wires `useFormFieldEmit` so events bubble to `<Form>` for per-field validation; reads `<FormField>` context for `id`/`name`/`error`/`aria-describedby` so a label `for=` targets the inner contenteditable; error state flips the focus ring to `error` color and sets `aria-invalid` on the ProseMirror element.
     - **Image upload** — `image` prop enables the `image` toolbar action and a hidden file input. Pair with `onImageUpload(file) => Promise<url>` to wire your backend upload; falls back to a URL prompt when no handler is provided.

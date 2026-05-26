@@ -41,6 +41,14 @@
 
     let tableValue = $state('<p>Click the table button → pick dimensions → insert.</p>')
 
+    let slashValue = $state('<p>Type / to open the command menu…</p>')
+    let youtubeValue = $state(
+        '<p>Click the YouTube button or use / → YouTube to embed a video.</p>'
+    )
+    let dragHandleValue = $state(
+        '<h2>Drag me!</h2><p>Hover any block to see the drag handle appear on the left. Drag to reorder.</p><ul><li>First item</li><li>Second item</li><li>Third item</li></ul>'
+    )
+
     let mentionValue = $state('<p>Type @ to mention someone…</p>')
     const teamMembers: MentionItem[] = [
         { id: 'alice', label: 'Alice Nguyen' },
@@ -417,6 +425,57 @@
             select.
         </p>
         <Editor bind:value={mentionValue} onMention={searchMembers} placeholder="Try typing @al…" />
+    </section>
+
+    <Separator />
+
+    <!-- Phase 3: Slash commands -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Slash commands (Phase 3)</h2>
+        <p class="text-sm text-on-surface-variant">
+            Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">slash</code
+            >
+            to enable. Inside the editor, type
+            <kbd
+                class="rounded border border-outline-variant bg-surface-container-high px-1.5 py-0.5 text-xs"
+                >/</kbd
+            >
+            to open the command menu — fuzzy filter by typing, Arrow keys to navigate, Enter to run.
+            Pass
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >slashCommands</code
+            > to customize.
+        </p>
+        <Editor bind:value={slashValue} slash image tables youtube />
+    </section>
+
+    <!-- Phase 3: YouTube embed -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">YouTube embeds (Phase 3)</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">youtube</code>
+            enables the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">youtube</code> toolbar
+            action which prompts for a URL and inserts a responsive embed.
+        </p>
+        <Editor
+            bind:value={youtubeValue}
+            youtube
+            toolbar={['bold', 'italic', '|', 'h2', 'h3', '|', 'youtube', '|', 'undo', 'redo']}
+        />
+    </section>
+
+    <!-- Phase 3: Drag handle -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Drag handle (Phase 3)</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >dragHandle</code
+            >
+            shows a draggable handle on the left of each block on hover. Drag to reorder paragraphs, headings,
+            lists, etc.
+        </p>
+        <Editor bind:value={dragHandleValue} dragHandle />
     </section>
 
     <Separator />
