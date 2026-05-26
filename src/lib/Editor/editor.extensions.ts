@@ -15,7 +15,7 @@ import Youtube from '@tiptap/extension-youtube'
 import { DragHandle } from '@tiptap/extension-drag-handle'
 import type { SuggestionOptions } from '@tiptap/suggestion'
 import type { SlashCommand } from './editor.types.js'
-import { buildSlashExtension } from './editor.slash.js'
+import { buildSlashExtension } from './editor.slash.svelte.js'
 
 interface BuildExtensionsOptions {
     headingLevels?: (1 | 2 | 3 | 4 | 5 | 6)[]

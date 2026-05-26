@@ -14,7 +14,7 @@
     import { TOOLBAR_ACTIONS, DEFAULT_TOOLBAR, type ToolbarActionDef } from './editor.toolbar.js'
     import { buildExtensions } from './editor.extensions.js'
     import { buildMentionSuggestion } from './editor.suggestion.js'
-    import { buildDefaultSlashCommands } from './editor.slash.js'
+    import { buildDefaultSlashCommands } from './editor.slash.svelte.js'
     import type {
         EditorApi,
         EditorJSON,
