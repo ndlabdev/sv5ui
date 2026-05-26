@@ -57,6 +57,32 @@ export const editorVariants = tv({
             '[&_hr]:border-outline-variant [&_hr]:my-4',
             '[&_strong]:font-semibold',
             '[&_em]:italic',
+            // ----- Image -----
+            '[&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-2',
+            // ----- YouTube embed (responsive 16:9) -----
+            '[&_iframe[src*="youtube"]]:aspect-video [&_iframe[src*="youtube"]]:w-full [&_iframe[src*="youtube"]]:rounded-md [&_iframe[src*="youtube"]]:my-3 [&_iframe[src*="youtube"]]:border-0',
+            // ----- Mention chip -----
+            '[&_.sv5ui-editor-mention]:inline-flex [&_.sv5ui-editor-mention]:items-center',
+            '[&_.sv5ui-editor-mention]:rounded [&_.sv5ui-editor-mention]:bg-primary-container/60',
+            '[&_.sv5ui-editor-mention]:text-on-primary-container',
+            '[&_.sv5ui-editor-mention]:px-1.5 [&_.sv5ui-editor-mention]:py-0.5',
+            '[&_.sv5ui-editor-mention]:text-sm [&_.sv5ui-editor-mention]:font-medium',
+            // ----- Table -----
+            '[&_.tableWrapper]:my-3 [&_.tableWrapper]:overflow-x-auto',
+            '[&_table]:w-full [&_table]:border-collapse [&_table]:table-fixed',
+            '[&_table]:border [&_table]:border-outline-variant [&_table]:rounded-md',
+            '[&_th]:border [&_th]:border-outline-variant',
+            '[&_th]:bg-surface-container-low [&_th]:px-2 [&_th]:py-1.5',
+            '[&_th]:font-semibold [&_th]:text-start [&_th]:align-top',
+            '[&_th]:relative [&_th]:min-w-16',
+            '[&_td]:border [&_td]:border-outline-variant',
+            '[&_td]:px-2 [&_td]:py-1.5 [&_td]:align-top',
+            '[&_td]:relative [&_td]:min-w-16',
+            // Tiptap selectedCell highlight + column resize handle
+            '[&_.selectedCell]:bg-primary/10',
+            '[&_.column-resize-handle]:absolute [&_.column-resize-handle]:top-0 [&_.column-resize-handle]:bottom-[-2px]',
+            '[&_.column-resize-handle]:-right-0.5 [&_.column-resize-handle]:w-1',
+            '[&_.column-resize-handle]:bg-primary/40 [&_.column-resize-handle]:pointer-events-none',
             // ----- Selection styling -----
             '[&_::selection]:bg-primary/20'
         ],
