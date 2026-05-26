@@ -170,17 +170,19 @@ function renderItems(state: SlashState): void {
         state.listEl.appendChild(empty)
         return
     }
+    let activeRow: HTMLButtonElement | null = null
     state.items.forEach((cmd, i) => {
         const row = document.createElement('button')
         row.type = 'button'
         row.setAttribute('data-slash-item', '')
         row.setAttribute('data-id', cmd.id)
+        row.setAttribute('data-index', String(i))
+        const isActive = i === state.selectedIndex
+        if (isActive) activeRow = row
         row.className = [
             'flex w-full items-start gap-3 px-3 py-2 text-start',
             'hover:bg-surface-container-high',
-            i === state.selectedIndex
-                ? 'bg-primary-container text-on-primary-container'
-                : 'text-on-surface'
+            isActive ? 'bg-primary-container text-on-primary-container' : 'text-on-surface'
         ].join(' ')
 
         if (cmd.icon) {
@@ -214,6 +216,15 @@ function renderItems(state: SlashState): void {
         })
         state.listEl.appendChild(row)
     })
+    // Defer to next frame so DOM is laid out before measuring scroll position
+    if (activeRow) {
+        requestAnimationFrame(() => {
+            ;(activeRow as HTMLElement | null)?.scrollIntoView({
+                block: 'nearest',
+                behavior: 'instant' as ScrollBehavior
+            })
+        })
+    }
 }
 
 function fuzzyFilter(commands: SlashCommand[], query: string): SlashCommand[] {
@@ -351,8 +362,16 @@ export function buildSlashExtension(commands: SlashCommand[], trigger: string = 
     return SlashCommandsExtension.configure({
         suggestion: {
             char: trigger,
+            startOfLine: false,
+            allowSpaces: false,
             items: ({ query }: { query: string }) => fuzzyFilter(commands, query),
-            render: buildSuggestionRender as unknown as SuggestionOptions['render']
+            render: buildSuggestionRender as unknown as SuggestionOptions['render'],
+            // Tiptap merges `suggestion` shallowly when an extension is .configure()'d,
+            // so the command default in addOptions gets overwritten. Include it here.
+            command: ({ editor, range, props }) => {
+                editor.chain().focus().deleteRange(range).run()
+                ;(props as SlashCommand).run({ editor })
+            }
         }
     })
 }

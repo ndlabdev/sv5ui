@@ -114,13 +114,19 @@ function buildDragHandleExt(): AnyExtension {
         render() {
             const handle = document.createElement('div')
             handle.setAttribute('data-editor-drag-handle', '')
+            handle.setAttribute('aria-label', 'Drag to reorder')
             handle.className = [
-                'inline-flex size-5 items-center justify-center',
-                'rounded text-on-surface-variant hover:bg-surface-container-high',
-                'cursor-grab active:cursor-grabbing select-none'
+                'inline-flex size-6 items-center justify-center',
+                'rounded text-on-surface-variant/70',
+                'hover:bg-surface-container-high hover:text-on-surface',
+                'cursor-grab active:cursor-grabbing select-none transition-colors'
             ].join(' ')
-            handle.innerHTML =
-                '<svg viewBox="0 0 16 16" fill="currentColor" class="size-3"><circle cx="5" cy="3.5" r="1.2"/><circle cx="11" cy="3.5" r="1.2"/><circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/><circle cx="5" cy="12.5" r="1.2"/><circle cx="11" cy="12.5" r="1.2"/></svg>'
+            const icon = document.createElement('iconify-icon')
+            icon.setAttribute('icon', 'lucide:grip-vertical')
+            icon.setAttribute('width', '16')
+            icon.setAttribute('height', '16')
+            icon.setAttribute('aria-hidden', 'true')
+            handle.appendChild(icon)
             return handle
         }
     })

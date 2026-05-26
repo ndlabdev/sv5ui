@@ -493,8 +493,7 @@
                                         {tablePickerRows || 1} × {tablePickerCols || 1}
                                     </div>
                                     <div
-                                        class="grid"
-                                        style="grid-template-columns: repeat({TABLE_MAX_COLS}, minmax(0, 1fr));"
+                                        class="grid grid-cols-8 gap-0.5"
                                         role="presentation"
                                         onmouseleave={() => {
                                             tablePickerRows = 0
@@ -508,7 +507,7 @@
                                                 r <= tablePickerRows && c <= tablePickerCols}
                                             <button
                                                 type="button"
-                                                class="m-0.5 size-5 rounded border border-outline-variant {on
+                                                class="size-5 rounded border border-outline-variant {on
                                                     ? 'border-primary bg-primary'
                                                     : 'bg-surface-container hover:border-primary/50'}"
                                                 aria-label={`Insert ${r}×${c} table`}
