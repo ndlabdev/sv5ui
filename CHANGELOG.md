@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Banner** — Full-width announcement bar typically rendered at the top of a page or layout. 8 colors, optional `icon`, `title`, inline `actions`, dismiss button (`close`), and clickable mode via `to`/`target` (root becomes `<a>`). When given an `id`, dismissal persists across reloads via `localStorage` (key: `sv5ui-banner-{id}`); without an `id`, dismissal is session-only. Snippets: `leading`, `titleSlot`, `actionsSlot`, `closeSlot`. Per-slot `ui` overrides.
+- **Stepper** — Multi-step wizard/progress component. Horizontal or vertical orientation, 5 sizes, 8 colors, `pending`/`active`/`completed` states with `linear` gating (default), bindable imperative `api` (`next` / `prev` / `goTo` / `hasNext` / `hasPrev`) for external Back/Next buttons, roving keyboard navigation, and per-slot `ui` overrides. Pure custom build — no bits-ui primitive.
 
 ## [1.7.0] - 2026-05-14
 

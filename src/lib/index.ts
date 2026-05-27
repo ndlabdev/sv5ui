@@ -49,6 +49,7 @@ export * from './Table/index.js'
 export * from './Toast/index.js'
 export * from './Carousel/index.js'
 export * from './Banner/index.js'
+export * from './Stepper/index.js'
 
 // Composables
 export * from './hooks/index.js'
