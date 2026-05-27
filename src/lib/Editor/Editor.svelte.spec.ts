@@ -416,6 +416,98 @@ describe('Editor', () => {
         })
     })
 
+    // ==================== PHASE 2: IMAGE ====================
+
+    describe('image extension (Phase 2)', () => {
+        it('renders hidden file input when image={true}', async () => {
+            const { container } = render(Editor, { image: true })
+            await vi.waitFor(() => {
+                expect(container.querySelector('[data-editor-image-input]')).not.toBeNull()
+            })
+        })
+
+        it('omits file input when image={false}', async () => {
+            const { container } = render(Editor, {})
+            await vi.waitFor(() => {
+                expect(getContent(container)).not.toBeNull()
+            })
+            expect(container.querySelector('[data-editor-image-input]')).toBeNull()
+        })
+
+        it('image toolbar action renders when configured', async () => {
+            const { container } = render(Editor, { image: true, toolbar: ['image'] })
+            await vi.waitFor(() => {
+                const btn = container.querySelector('button[data-action="image"]')
+                expect(btn).not.toBeNull()
+            })
+        })
+    })
+
+    // ==================== PHASE 2: TABLES ====================
+
+    describe('table extension (Phase 2)', () => {
+        it('table toolbar action renders when configured', async () => {
+            const { container } = render(Editor, { tables: true, toolbar: ['table'] })
+            await vi.waitFor(() => {
+                const btn = container.querySelector('button[data-action="table"]')
+                expect(btn).not.toBeNull()
+            })
+        })
+
+        it('clicking table button opens dimension picker', async () => {
+            const { container } = render(Editor, { tables: true, toolbar: ['table'] })
+            await vi.waitFor(() => {
+                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+            })
+            const btn = container.querySelector('button[data-action="table"]') as HTMLButtonElement
+            await btn.click()
+            await vi.waitFor(() => {
+                expect(container.querySelector('[data-editor-table-picker]')).not.toBeNull()
+            })
+        })
+    })
+
+    // ==================== PHASE 2: MARKDOWN ====================
+
+    describe('markdown output (Phase 2)', () => {
+        it('serializes content as markdown when output="markdown"', async () => {
+            let api: EditorApi | undefined
+            const props = {
+                value: '# Hello',
+                output: 'markdown' as const,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            }
+            render(Editor, props)
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const md = api!.getValue() as string
+            expect(md).toContain('# Hello')
+        })
+    })
+
+    // ==================== PHASE 2: FORM INTEGRATION ====================
+
+    describe('form integration (Phase 2)', () => {
+        it('accepts custom id and forwards to ProseMirror', async () => {
+            const { container } = render(Editor, { id: 'my-editor' })
+            await vi.waitFor(() => {
+                const pm = getProseMirror(container)
+                expect(pm?.id).toBe('my-editor')
+            })
+        })
+
+        it('exposes data attributes for form state hooks', async () => {
+            const { container } = render(Editor, { disabled: true })
+            await vi.waitFor(() => {
+                expect(getRoot(container).getAttribute('data-disabled')).toBe('true')
+            })
+        })
+    })
+
     // ==================== UI OVERRIDES ====================
 
     describe('ui overrides', () => {

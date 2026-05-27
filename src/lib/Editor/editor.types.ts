@@ -24,8 +24,26 @@ export interface EditorJSON {
  * Serialization format for the bindable `value`.
  * - `'html'` — string of HTML (e.g. `<p><strong>Hi</strong></p>`)
  * - `'json'` — Tiptap structured document
+ * - `'markdown'` — Markdown string (via `tiptap-markdown` extension)
  */
-export type EditorOutput = 'html' | 'json'
+export type EditorOutput = 'html' | 'json' | 'markdown'
+
+// ============================================================================
+// Mention types
+// ============================================================================
+
+/**
+ * Item shown in the mention suggestion popup. The `id` is what gets stored
+ * (e.g. user id); `label` is the visible name displayed inline.
+ */
+export interface MentionItem {
+    id: string
+    label: string
+    /** Optional avatar URL or icon name for the suggestion item. */
+    avatar?: string
+    /** Free-form metadata available in `attrs.data`. */
+    data?: Record<string, unknown>
+}
 
 // ============================================================================
 // Toolbar action types
@@ -64,6 +82,8 @@ export type ToolbarAction =
     | 'undo'
     | 'redo'
     | 'clearFormatting'
+    | 'image'
+    | 'table'
 
 /** Vertical divider between toolbar groups. */
 export type ToolbarSeparator = '|'
@@ -160,11 +180,27 @@ export interface EditorApi {
  * <Editor bind:value={content} placeholder="Write something…" />
  * ```
  */
-export interface EditorProps extends Omit<HTMLAttributes<HTMLElement>, 'class' | 'autofocus'> {
+export interface EditorProps extends Omit<
+    HTMLAttributes<HTMLElement>,
+    'class' | 'autofocus' | 'id'
+> {
     /** Bindable reference to the root DOM element. */
     ref?: HTMLElement | null
     /** Bindable imperative controller. */
     api?: EditorApi
+
+    /**
+     * `id` applied to the inner contenteditable element so an enclosing
+     * `<FormField>` label can target it via `for=`. When inside a FormField,
+     * this defaults to the FormField's `ariaId` automatically.
+     */
+    id?: string
+
+    /**
+     * Form field name. When inside a `<FormField>`, defaults to the
+     * FormField's `name`.
+     */
+    name?: string
 
     // ------------------------------------------------------------------------
     // Content
@@ -240,6 +276,54 @@ export interface EditorProps extends Omit<HTMLAttributes<HTMLElement>, 'class' |
     autolink?: boolean
     /** Open links in new tab in readonly mode. @default true */
     linkOpenInNewTab?: boolean
+
+    // ------------------------------------------------------------------------
+    // Media (Phase 2)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Enable image insertion. Adds the `image` toolbar action (opens a file
+     * picker). Also accepts pasted/dropped image files when `onImageUpload`
+     * is provided.
+     * @default false
+     */
+    image?: boolean
+
+    /**
+     * Async upload handler. Called with the selected/pasted/dropped file;
+     * must return the resolved URL to insert as `<img src=...>`. When
+     * omitted and `image` is `true`, images can only be inserted via URL
+     * prompt (toolbar).
+     */
+    onImageUpload?: (file: File) => Promise<string>
+
+    // ------------------------------------------------------------------------
+    // Tables (Phase 2)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Enable tables. Adds the `table` toolbar action which opens a
+     * dimension picker (rows × columns) and inserts a new table.
+     * @default false
+     */
+    tables?: boolean
+
+    // ------------------------------------------------------------------------
+    // Mentions (Phase 2)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Async lookup for `@`-style mentions. When provided, typing `@` opens
+     * a suggestion popup. Receives the current query string after `@`;
+     * must return matching items.
+     */
+    onMention?: (query: string) => Promise<MentionItem[]>
+
+    /**
+     * Trigger character for the suggestion popup.
+     * @default '@'
+     */
+    mentionTrigger?: string
 
     // ------------------------------------------------------------------------
     // Extension escape hatches

@@ -123,17 +123,25 @@
         "accessible"
     ],
     "dependencies": {
+        "@floating-ui/dom": "^1.7.4",
         "@iconify/svelte": "^5.2.1",
         "@internationalized/date": "^3.11.0",
         "@standard-schema/spec": "^1.1.0",
         "@tiptap/core": "^3.23.6",
         "@tiptap/extension-bubble-menu": "^3.23.6",
         "@tiptap/extension-character-count": "^3.23.6",
+        "@tiptap/extension-image": "^3.23.6",
+        "@tiptap/extension-mention": "^3.23.6",
         "@tiptap/extension-placeholder": "^3.23.6",
+        "@tiptap/extension-table": "^3.23.6",
+        "@tiptap/extension-table-cell": "^3.23.6",
+        "@tiptap/extension-table-header": "^3.23.6",
+        "@tiptap/extension-table-row": "^3.23.6",
         "@tiptap/extension-text-align": "^3.23.6",
         "@tiptap/extension-typography": "^3.23.6",
         "@tiptap/pm": "^3.23.6",
         "@tiptap/starter-kit": "^3.23.6",
+        "@tiptap/suggestion": "^3.23.6",
         "bits-ui": "^2.15.4",
         "embla-carousel": "^8.6.0",
         "embla-carousel-autoplay": "^8.6.0",
@@ -143,6 +151,7 @@
         "svelte-sonner": "^1.1.0",
         "tailwind-merge": "^3.4.0",
         "tailwind-variants": "^3.2.2",
+        "tiptap-markdown": "^0.9.0",
         "vaul-svelte": "1.0.0-next.7"
     }
 }
