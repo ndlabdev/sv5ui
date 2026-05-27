@@ -9,14 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Editor** — Rich-text WYSIWYG editor built on Tiptap v3 + ProseMirror. Available via the sub-export `sv5ui/editor` so Tiptap (~120 KB gzipped) is tree-shaken out of the bundle when not used. Features: 23 toolbar actions (bold/italic/underline/strike/code, h1-h3, lists, blockquote, code block, link, text alignment, undo/redo), config-driven toolbar (`toolbar={['bold', '|', 'h1']}` or `true`/`false`), HTML or JSON output, bindable `value` + imperative `bind:api` (`focus`/`run`/`getValue`/`setValue`/`clear`/`insert`), bubble menu on text selection, `maxLength` + character/word counter, readonly/disabled, autofocus, sticky toolbar, custom snippets (`toolbarSlot`/`bubbleMenuSlot`/`header`/`footer`), and escape-hatch `extensions` / `extensionsOverride` props for arbitrary Tiptap extensions. SSR-safe (Tiptap mounts client-side in `$effect`).
-- **Editor (Phase 3a)** — Three more features layered on top of Phase 2:
-    - **Slash commands** — Enable via `slash` prop. Typing `/` opens a command palette with built-in actions (paragraph/h1-h3/bullet/ordered/quote/code/divider, plus image/table/YouTube when those flags are on). Customize via `slashCommands={[...]}` and `slashTrigger`. Helper export `buildDefaultSlashCommands({ image, tables, youtube })` for extending defaults.
-    - **YouTube embeds** — `youtube` prop enables `@tiptap/extension-youtube` and registers the `youtube` toolbar action (prompts for URL → inserts responsive iframe with `nocookie` mode).
-    - **Drag handle** — `dragHandle` prop enables `@tiptap/extension-drag-handle`. Hover any block (paragraph/heading/list/table) → a grip appears on the left → drag to reorder.
-
-    New props: `slash`, `slashCommands`, `slashTrigger`, `youtube`, `dragHandle`. New toolbar action: `youtube`. New exported helper: `buildDefaultSlashCommands`. New exported type: `SlashCommand`. 7 additional tests bringing total to 52.
-
+- **Editor** — Rich-text WYSIWYG editor built on Tiptap v3 + ProseMirror. Available via the sub-export `sv5ui/editor` so Tiptap (~120 KB gzipped) is tree-shaken out of the bundle when not used. Features: 23 toolbar actions (bold/italic/underline/strike/code, h1-h3, lists, blockquote, code block, link, text alignment, undo/redo), config-driven toolbar (`toolbar={['bold', '|', 'h1']}` or `true`/`false`), HTML or JSON output, bindable `value` + imperative `bind:api` (`focus`/`run`/`getValue`/`setValue`/`clear`/`insert`), bubble menu on text selection, `maxLength` + character/word counter, readonly/disabled, autofocus, sticky toolbar, custom snippets (`toolbarSlot`/`bubbleMenuSlot`/`header`/`footer`), and escape-hatch `extensions` / `extensionsOverride` props for arbitrary Tiptap extensions. SSR-safe (Tiptap mounts client-side in `$effect`). 36 tests covering rendering, content I/O, toolbar interactions, imperative API, and variants.
 - **Editor (Phase 2)** — Five new feature sets layered on top:
     - **Form integration** — Wires `useFormFieldEmit` so events bubble to `<Form>` for per-field validation; reads `<FormField>` context for `id`/`name`/`error`/`aria-describedby` so a label `for=` targets the inner contenteditable; error state flips the focus ring to `error` color and sets `aria-invalid` on the ProseMirror element.
     - **Image upload** — `image` prop enables the `image` toolbar action and a hidden file input. Pair with `onImageUpload(file) => Promise<url>` to wire your backend upload; falls back to a URL prompt when no handler is provided.
@@ -25,6 +18,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - **Markdown output** — `output="markdown"` serializes via `tiptap-markdown` and accepts pasted markdown.
 
     New props: `image`, `onImageUpload`, `tables`, `onMention`, `mentionTrigger`, `id`, `name`. New toolbar actions: `image`, `table`. New `EditorOutput` value `'markdown'`. Exports new `MentionItem` type. 8 additional tests bringing total to 45.
+- **Editor (Phase 3a)** — Three more features layered on top of Phase 2 plus a security/quality pass:
+    - **Slash commands** — Enable via `slash` prop. Typing `/` opens a command palette with built-in actions (paragraph/h1-h3/bullet/ordered/quote/code/divider, plus image/table/YouTube when those flags are on). Customize via `slashCommands={[...]}` and `slashTrigger`. Helper export `buildDefaultSlashCommands({ image, tables, youtube })` for extending defaults.
+    - **YouTube embeds** — `youtube` prop enables `@tiptap/extension-youtube` and registers the `youtube` toolbar action.
+    - **Drag handle** — `dragHandle` prop enables `@tiptap/extension-drag-handle`. Hover any block (paragraph/heading/list/table) → a grip appears on the left → drag to reorder.
+    - **URL prompt modal** — Image / YouTube / Link toolbar actions and slash commands now open a sv5ui `<Modal>` with `<Form>` + `<FormField>` for validation, loading state, and inline errors. Default URL schema enforces `http(s)://`; YouTube actions also enforce a YouTube-host regex.
+    - **`markdownAllowHtml` prop** (default `false`) — raw HTML is escaped on markdown serialize/parse unless explicitly opted in.
+    - Tiptap moved from `dependencies` → optional `peerDependencies` so non-Editor users pay zero install/bundle cost.
+
+    New props: `slash`, `slashCommands`, `slashTrigger`, `youtube`, `dragHandle`, `markdownAllowHtml`. New toolbar action: `youtube`. New exported helper: `buildDefaultSlashCommands`. New exported type: `SlashCommand`. 9 additional tests bringing total to 54.
+- **Banner** — Full-width announcement bar typically rendered at the top of a page or layout. 8 colors, optional `icon`, `title`, inline `actions`, dismiss button (`close`), and clickable mode via `to`/`target` (root becomes `<a>`). When given an `id`, dismissal persists across reloads via `localStorage` (key: `sv5ui-banner-{id}`); without an `id`, dismissal is session-only. Snippets: `leading`, `titleSlot`, `actionsSlot`, `closeSlot`. Per-slot `ui` overrides.
+- **Stepper** — Multi-step wizard/progress component. Horizontal or vertical orientation, 5 sizes, 8 colors, `pending`/`active`/`completed` states with `linear` gating (default), bindable imperative `api` (`next` / `prev` / `goTo` / `hasNext` / `hasPrev`) for external Back/Next buttons, roving keyboard navigation, and per-slot `ui` overrides. Pure custom build — no bits-ui primitive.
 
 ## [1.7.0] - 2026-05-14
 
