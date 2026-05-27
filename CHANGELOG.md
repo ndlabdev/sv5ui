@@ -18,6 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - **Markdown output** — `output="markdown"` serializes via `tiptap-markdown` and accepts pasted markdown.
 
     New props: `image`, `onImageUpload`, `tables`, `onMention`, `mentionTrigger`, `id`, `name`. New toolbar actions: `image`, `table`. New `EditorOutput` value `'markdown'`. Exports new `MentionItem` type. 8 additional tests bringing total to 45.
+- **Editor (Phase 3a)** — Three more features layered on top of Phase 2 plus a security/quality pass:
+    - **Slash commands** — Enable via `slash` prop. Typing `/` opens a command palette with built-in actions (paragraph/h1-h3/bullet/ordered/quote/code/divider, plus image/table/YouTube when those flags are on). Customize via `slashCommands={[...]}` and `slashTrigger`. Helper export `buildDefaultSlashCommands({ image, tables, youtube })` for extending defaults.
+    - **YouTube embeds** — `youtube` prop enables `@tiptap/extension-youtube` and registers the `youtube` toolbar action.
+    - **Drag handle** — `dragHandle` prop enables `@tiptap/extension-drag-handle`. Hover any block (paragraph/heading/list/table) → a grip appears on the left → drag to reorder.
+    - **URL prompt modal** — Image / YouTube / Link toolbar actions and slash commands now open a sv5ui `<Modal>` with `<Form>` + `<FormField>` for validation, loading state, and inline errors. Default URL schema enforces `http(s)://`; YouTube actions also enforce a YouTube-host regex.
+    - **`markdownAllowHtml` prop** (default `false`) — raw HTML is escaped on markdown serialize/parse unless explicitly opted in.
+    - Tiptap moved from `dependencies` → optional `peerDependencies` so non-Editor users pay zero install/bundle cost.
+
+    New props: `slash`, `slashCommands`, `slashTrigger`, `youtube`, `dragHandle`, `markdownAllowHtml`. New toolbar action: `youtube`. New exported helper: `buildDefaultSlashCommands`. New exported type: `SlashCommand`. 9 additional tests bringing total to 54.
 - **Banner** — Full-width announcement bar typically rendered at the top of a page or layout. 8 colors, optional `icon`, `title`, inline `actions`, dismiss button (`close`), and clickable mode via `to`/`target` (root becomes `<a>`). When given an `id`, dismissal persists across reloads via `localStorage` (key: `sv5ui-banner-{id}`); without an `id`, dismissal is session-only. Snippets: `leading`, `titleSlot`, `actionsSlot`, `closeSlot`. Per-slot `ui` overrides.
 - **Stepper** — Multi-step wizard/progress component. Horizontal or vertical orientation, 5 sizes, 8 colors, `pending`/`active`/`completed` states with `linear` gating (default), bindable imperative `api` (`next` / `prev` / `goTo` / `hasNext` / `hasPrev`) for external Back/Next buttons, roving keyboard navigation, and per-slot `ui` overrides. Pure custom build — no bits-ui primitive.
 

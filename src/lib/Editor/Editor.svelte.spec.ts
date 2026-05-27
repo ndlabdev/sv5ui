@@ -465,6 +465,55 @@ describe('Editor', () => {
                 expect(container.querySelector('[data-editor-table-picker]')).not.toBeNull()
             })
         })
+
+        it('clicking a dimension cell button inserts a table (UI flow)', async () => {
+            const { container } = render(Editor, { tables: true, toolbar: ['table'] })
+            await vi.waitFor(() => {
+                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+            })
+            const tableBtn = container.querySelector(
+                'button[data-action="table"]'
+            ) as HTMLButtonElement
+            await tableBtn.click()
+            await vi.waitFor(() => {
+                expect(container.querySelector('[data-editor-table-picker]')).not.toBeNull()
+            })
+            const cell = container.querySelector(
+                '[data-editor-table-picker] button[aria-label="Insert 2×2 table"]'
+            ) as HTMLButtonElement
+            expect(cell).not.toBeNull()
+            cell.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }))
+            await vi.waitFor(
+                () => {
+                    expect(container.querySelector('table')).not.toBeNull()
+                },
+                { timeout: 1500 }
+            )
+        })
+
+        it('insertTable command actually inserts a table when tables={true}', async () => {
+            let api: EditorApi | undefined
+            const props = {
+                tables: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            }
+            const { container } = render(Editor, props)
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const result = api!
+                .editor!.chain()
+                .focus()
+                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+                .run()
+            expect(result).toBe(true)
+            await vi.waitFor(() => {
+                expect(container.querySelector('table')).not.toBeNull()
+            })
+        })
     })
 
     // ==================== PHASE 2: MARKDOWN ====================
@@ -505,6 +554,137 @@ describe('Editor', () => {
             await vi.waitFor(() => {
                 expect(getRoot(container).getAttribute('data-disabled')).toBe('true')
             })
+        })
+    })
+
+    // ==================== PHASE 3: SLASH COMMANDS ====================
+
+    describe('slash commands (Phase 3)', () => {
+        it('adds slash extension when slash={true}', async () => {
+            let api: EditorApi | undefined
+            render(Editor, {
+                slash: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const hasExt = api!.editor!.extensionManager.extensions.some(
+                (e) => e.name === 'slashCommands'
+            )
+            expect(hasExt).toBe(true)
+        })
+
+        it('omits slash extension when slash={false}', async () => {
+            let api: EditorApi | undefined
+            render(Editor, {
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const hasExt = api!.editor!.extensionManager.extensions.some(
+                (e) => e.name === 'slashCommands'
+            )
+            expect(hasExt).toBe(false)
+        })
+
+        it('accepts custom slashCommands array (no slash flag needed)', async () => {
+            let api: EditorApi | undefined
+            render(Editor, {
+                slashCommands: [
+                    {
+                        id: 'custom',
+                        label: 'Custom',
+                        run: () => {}
+                    }
+                ],
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const hasExt = api!.editor!.extensionManager.extensions.some(
+                (e) => e.name === 'slashCommands'
+            )
+            expect(hasExt).toBe(true)
+        })
+    })
+
+    // ==================== PHASE 3: YOUTUBE ====================
+
+    describe('youtube embed (Phase 3)', () => {
+        it('youtube toolbar action renders when configured', async () => {
+            const { container } = render(Editor, { youtube: true, toolbar: ['youtube'] })
+            await vi.waitFor(() => {
+                expect(container.querySelector('button[data-action="youtube"]')).not.toBeNull()
+            })
+        })
+
+        it('adds youtube extension when youtube={true}', async () => {
+            let api: EditorApi | undefined
+            render(Editor, {
+                youtube: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const hasExt = api!.editor!.extensionManager.extensions.some(
+                (e) => e.name === 'youtube'
+            )
+            expect(hasExt).toBe(true)
+        })
+    })
+
+    // ==================== PHASE 3: DRAG HANDLE ====================
+
+    describe('drag handle (Phase 3)', () => {
+        it('adds dragHandle extension when dragHandle={true}', async () => {
+            let api: EditorApi | undefined
+            render(Editor, {
+                dragHandle: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const hasExt = api!.editor!.extensionManager.extensions.some(
+                (e) => e.name === 'dragHandle'
+            )
+            expect(hasExt).toBe(true)
+        })
+
+        it('omits dragHandle extension by default', async () => {
+            let api: EditorApi | undefined
+            render(Editor, {
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            const hasExt = api!.editor!.extensionManager.extensions.some(
+                (e) => e.name === 'dragHandle'
+            )
+            expect(hasExt).toBe(false)
         })
     })
 

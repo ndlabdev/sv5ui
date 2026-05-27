@@ -4,11 +4,19 @@ import type { EditorReactiveState, ToolbarAction } from './editor.types.js'
 export interface ToolbarActionDef {
     icon: string
     label: string
-    isActive?: (state: EditorReactiveState) => boolean
-    isDisabled?: (state: EditorReactiveState) => boolean
+    isActive?: (state: EditorReactiveState) => boolean | undefined
+    isDisabled?: (state: EditorReactiveState) => boolean | undefined
     run: (editor: Editor) => void
 }
 
+// ---------------------------------------------------------------------------
+// Fallback `run` handlers below (link/image/youtube) use window.prompt because
+// they need to gather a URL. Editor.svelte intercepts these actions and routes
+// them through the EditorUrlPrompt modal instead. The fallbacks only execute
+// when a consumer calls `api.run('link'|'image'|'youtube')` directly — at
+// which point we have no modal mount point, so window.prompt is the simplest
+// non-UI fallback.
+// ---------------------------------------------------------------------------
 function promptForLink(editor: Editor): void {
     const previous = (editor.getAttributes('link').href as string | undefined) ?? 'https://'
     const url = typeof window === 'undefined' ? null : window.prompt('URL', previous)
@@ -160,8 +168,6 @@ export const TOOLBAR_ACTIONS: Record<ToolbarAction, ToolbarActionDef> = {
     image: {
         icon: 'lucide:image',
         label: 'Insert image',
-        // Run is provided externally by Editor.svelte (needs access to upload
-        // handler / file input). Default falls back to URL prompt.
         run: (ed) => {
             if (typeof window === 'undefined') return
             const url = window.prompt('Image URL', 'https://')
@@ -172,10 +178,18 @@ export const TOOLBAR_ACTIONS: Record<ToolbarAction, ToolbarActionDef> = {
     table: {
         icon: 'lucide:table',
         label: 'Insert table',
-        // Default 3x3 table. Editor.svelte overrides this with a dimension
-        // picker popover for richer UX.
         run: (ed) => {
             ed.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+        }
+    },
+    youtube: {
+        icon: 'lucide:youtube',
+        label: 'Insert YouTube video',
+        run: (ed) => {
+            if (typeof window === 'undefined') return
+            const url = window.prompt('YouTube URL', 'https://youtu.be/')
+            if (!url) return
+            ed.commands.setYoutubeVideo({ src: url })
         }
     }
 }

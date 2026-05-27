@@ -104,7 +104,7 @@ export function buildMentionSuggestion(
                         pickItem: (i: number) => {
                             const it = state?.items[i]
                             if (!it) return
-                            props.command({ id: it.id, label: it.label })
+                            props.command({ ...it })
                         }
                     }
 
@@ -152,9 +152,6 @@ export function buildMentionSuggestion(
                     }
                     if (event.key === 'Enter') {
                         state.pickItem(state.selectedIndex)
-                        return true
-                    }
-                    if (event.key === 'Escape') {
                         return true
                     }
                     return false

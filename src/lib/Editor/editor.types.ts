@@ -46,6 +46,44 @@ export interface MentionItem {
 }
 
 // ============================================================================
+// Slash command types
+// ============================================================================
+
+/**
+ * A single command that appears in the slash menu (triggered by typing `/`).
+ *
+ * @example
+ * ```ts
+ * const heading1: SlashCommand = {
+ *   id: 'h1',
+ *   label: 'Heading 1',
+ *   description: 'Big section heading',
+ *   icon: 'lucide:heading-1',
+ *   keywords: ['h1', 'header', 'title'],
+ *   run: ({ editor }) => editor.chain().focus().toggleHeading({ level: 1 }).run()
+ * }
+ * ```
+ */
+export interface SlashCommand {
+    /** Unique key for this command. */
+    id: string
+    /** Display name in the suggestion popup. */
+    label: string
+    /** Optional second-line subtitle. */
+    description?: string
+    /** Iconify icon name. */
+    icon?: string
+    /** Extra terms used for fuzzy matching. */
+    keywords?: string[]
+    /**
+     * Invoked when the user picks this item. Receives the editor instance —
+     * use Tiptap chains to mutate content. Trigger range is auto-removed
+     * before this fires.
+     */
+    run: (props: { editor: TiptapEditor }) => void
+}
+
+// ============================================================================
 // Toolbar action types
 // ============================================================================
 
@@ -84,6 +122,7 @@ export type ToolbarAction =
     | 'clearFormatting'
     | 'image'
     | 'table'
+    | 'youtube'
 
 /** Vertical divider between toolbar groups. */
 export type ToolbarSeparator = '|'
@@ -106,8 +145,12 @@ export type ToolbarConfig = boolean | (ToolbarAction | ToolbarSeparator)[]
  * on every selection / transaction.
  */
 export interface EditorReactiveState {
-    /** Which marks / nodes / alignments are active at the current selection. */
-    active: Record<ToolbarAction, boolean>
+    /**
+     * Which marks / nodes / alignments are active at the current selection.
+     * Actions without a meaningful "active" state (e.g. `horizontalRule`,
+     * `clearFormatting`, `unlink`, `undo`, `redo`) are omitted.
+     */
+    active: Partial<Record<ToolbarAction, boolean>>
     /** Whether each command is currently runnable. */
     can: { undo: boolean; redo: boolean }
     /** Total character count (from `@tiptap/extension-character-count`). */
@@ -170,6 +213,14 @@ export interface EditorApi {
  * toolbar (configurable or hidden) and a content area. Bindable `value` in
  * HTML or JSON format. Imperative control via `bind:api`.
  *
+ * @remarks
+ * Extension config props (`image`, `tables`, `youtube`, `dragHandle`,
+ * `bubbleMenu`, `headingLevels`, `placeholder`, `maxLength`, `autolink`,
+ * `linkOpenInNewTab`, `mentionTrigger`, `slash`, `slashTrigger`, `extensions`,
+ * `extensionsOverride`, `output`) are read once at mount. Changing them
+ * after mount does NOT rebuild the editor. To switch configurations, key
+ * the `<Editor>` on the relevant prop so Svelte recreates it.
+ *
  * @example
  * ```svelte
  * <script>
@@ -219,6 +270,16 @@ export interface EditorProps extends Omit<
      */
     output?: EditorOutput
 
+    /**
+     * Allow raw HTML inside Markdown input/output. Off by default — raw HTML
+     * is escaped on serialize and stripped on parse. Turn on only when you
+     * trust the source and your downstream renderer sanitizes HTML.
+     *
+     * Only applies when `output: 'markdown'`.
+     * @default false
+     */
+    markdownAllowHtml?: boolean
+
     /** Placeholder shown when the editor is empty. */
     placeholder?: string
 
@@ -238,7 +299,7 @@ export interface EditorProps extends Omit<
     /** Visually disable and prevent editing. @default false */
     disabled?: boolean
     /** Focus the editor on mount. Pass position to control caret placement. @default false */
-    autofocus?: boolean | 'start' | 'end'
+    autofocus?: boolean | 'start' | 'end' | number
 
     // ------------------------------------------------------------------------
     // Limits
@@ -307,6 +368,54 @@ export interface EditorProps extends Omit<
      * @default false
      */
     tables?: boolean
+
+    // ------------------------------------------------------------------------
+    // Slash commands (Phase 3)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Enable slash commands. Typing `/` (or `slashTrigger`) opens a command
+     * palette with built-in actions (headings, lists, blockquote, code block,
+     * horizontal rule, plus image/table/youtube if their respective flags are
+     * enabled). Extend or replace via `slashCommands`.
+     * @default false
+     */
+    slash?: boolean
+
+    /**
+     * Customize the slash command list. When provided, replaces the default
+     * commands entirely. Use spread + `buildDefaultSlashCommands(opts)` to
+     * extend rather than replace.
+     */
+    slashCommands?: SlashCommand[]
+
+    /**
+     * Trigger character for the slash menu.
+     * @default '/'
+     */
+    slashTrigger?: string
+
+    // ------------------------------------------------------------------------
+    // Embeds (Phase 3)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Enable YouTube video embeds. Adds a `youtube` toolbar action that
+     * prompts for a video URL and inserts a responsive embed.
+     * @default false
+     */
+    youtube?: boolean
+
+    // ------------------------------------------------------------------------
+    // Drag handle (Phase 3)
+    // ------------------------------------------------------------------------
+
+    /**
+     * Show a drag handle on the left side of each block when hovered. Lets
+     * users reorder paragraphs, headings, lists, tables, etc. by drag-and-drop.
+     * @default false
+     */
+    dragHandle?: boolean
 
     // ------------------------------------------------------------------------
     // Mentions (Phase 2)
