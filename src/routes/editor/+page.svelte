@@ -440,8 +440,7 @@
                 class="rounded border border-outline-variant bg-surface-container-high px-1.5 py-0.5 text-xs"
                 >/</kbd
             >
-            to open the command menu — fuzzy filter by typing, Arrow keys to navigate, Enter to run.
-            Pass
+            to open the command menu — fuzzy filter by typing, Arrow keys to navigate, Enter to run. Pass
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
                 >slashCommands</code
             > to customize.
