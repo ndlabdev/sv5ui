@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-05-28
+
 ### Added
 
 - **Editor** — Rich-text WYSIWYG editor built on Tiptap v3 + ProseMirror. Available via the sub-export `sv5ui/editor` so Tiptap (~120 KB gzipped) is tree-shaken out of the bundle when not used. Features: 23 toolbar actions (bold/italic/underline/strike/code, h1-h3, lists, blockquote, code block, link, text alignment, undo/redo), config-driven toolbar (`toolbar={['bold', '|', 'h1']}` or `true`/`false`), HTML or JSON output, bindable `value` + imperative `bind:api` (`focus`/`run`/`getValue`/`setValue`/`clear`/`insert`), bubble menu on text selection, `maxLength` + character/word counter, readonly/disabled, autofocus, sticky toolbar, custom snippets (`toolbarSlot`/`bubbleMenuSlot`/`header`/`footer`), and escape-hatch `extensions` / `extensionsOverride` props for arbitrary Tiptap extensions. SSR-safe (Tiptap mounts client-side in `$effect`). 36 tests covering rendering, content I/O, toolbar interactions, imperative API, and variants.
