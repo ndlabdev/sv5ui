@@ -485,4 +485,85 @@ describe('Button', () => {
             await expect.element(link).toHaveClass(/ring-success/)
         })
     })
+
+    // ==================== NATIVE ATTRIBUTES ====================
+
+    describe('native attributes', () => {
+        it('should forward button form attributes (name, value, formaction)', async () => {
+            render(Button, {
+                label: 'Save',
+                type: 'submit',
+                name: 'action',
+                value: 'save',
+                formaction: '/save'
+            })
+            const btn = page.getByRole('button', { name: 'Save' })
+            await expect.element(btn).toHaveAttribute('name', 'action')
+            await expect.element(btn).toHaveAttribute('value', 'save')
+            await expect.element(btn).toHaveAttribute('formaction', '/save')
+        })
+
+        it('should forward anchor attributes (download, hreflang) on a link', async () => {
+            render(Button, {
+                label: 'Download',
+                href: '/file.pdf',
+                download: 'report.pdf',
+                hreflang: 'en'
+            })
+            const link = page.getByRole('link', { name: 'Download' })
+            await expect.element(link).toHaveAttribute('download', 'report.pdf')
+            await expect.element(link).toHaveAttribute('hreflang', 'en')
+        })
+    })
+
+    // ==================== LOADING ICON PLACEMENT ====================
+
+    describe('loading icon placement', () => {
+        it('should spin only the leading icon when loading with both icons', async () => {
+            const { container } = render(Button, {
+                label: 'Confirm',
+                loading: true,
+                leadingIcon: 'lucide:check',
+                trailingIcon: 'lucide:chevron-down'
+            })
+            const btn = page.getByRole('button', { name: 'Confirm' })
+            await expect.element(btn).toBeInTheDocument()
+
+            await expect
+                .poll(() => container.querySelectorAll('.animate-spin').length, { timeout: 5000 })
+                .toBe(1)
+
+            const spinner = container.querySelector('.animate-spin')!
+            const label = [...btn.element().querySelectorAll('span')].find(
+                (s) => s.textContent === 'Confirm'
+            )!
+            expect(
+                spinner.compareDocumentPosition(label) & Node.DOCUMENT_POSITION_FOLLOWING
+            ).toBeTruthy()
+        })
+
+        it('should spin only the trailing icon when loading with trailing=true', async () => {
+            const { container } = render(Button, {
+                label: 'Submit',
+                loading: true,
+                trailing: true,
+                leadingIcon: 'lucide:check',
+                trailingIcon: 'lucide:chevron-down'
+            })
+            const btn = page.getByRole('button', { name: 'Submit' })
+            await expect.element(btn).toBeInTheDocument()
+
+            await expect
+                .poll(() => container.querySelectorAll('.animate-spin').length, { timeout: 5000 })
+                .toBe(1)
+
+            const spinner = container.querySelector('.animate-spin')!
+            const label = [...btn.element().querySelectorAll('span')].find(
+                (s) => s.textContent === 'Submit'
+            )!
+            expect(
+                spinner.compareDocumentPosition(label) & Node.DOCUMENT_POSITION_PRECEDING
+            ).toBeTruthy()
+        })
+    })
 })
