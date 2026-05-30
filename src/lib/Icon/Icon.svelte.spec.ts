@@ -180,4 +180,21 @@ describe('Icon', () => {
             await expect.element(svg).toBeInTheDocument()
         })
     })
+
+    // ==================== FORWARDED ATTRIBUTES ====================
+
+    describe('forwarded attributes', () => {
+        it('forwards aria-label, role, and data-* to the svg', async () => {
+            const { container } = render(Icon, {
+                name: 'lucide:search',
+                'aria-label': 'Search',
+                role: 'img',
+                'data-testid': 'search-icon'
+            })
+            const svg = await getSvg(container)
+            await expect.element(svg).toHaveAttribute('aria-label', 'Search')
+            await expect.element(svg).toHaveAttribute('role', 'img')
+            await expect.element(svg).toHaveAttribute('data-testid', 'search-icon')
+        })
+    })
 })
