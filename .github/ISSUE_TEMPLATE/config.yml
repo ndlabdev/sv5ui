@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: 📖 Documentation
+      url: https://sv5ui.vercel.app
+      about: Read the component documentation and live examples.
+    - name: 💬 Questions & Discussions
+      url: https://github.com/ndlabdev/sv5ui/discussions
+      about: Ask a question or discuss an idea (not a bug or feature request).
