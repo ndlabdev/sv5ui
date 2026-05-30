@@ -1,103 +1,117 @@
 import type { Snippet } from 'svelte'
-import type { HTMLAttributes } from 'svelte/elements'
+import type { HTMLAttributes, HTMLButtonAttributes, HTMLAnchorAttributes } from 'svelte/elements'
 import type { LinkSlots } from './link.variants.js'
 import type { ClassNameValue } from 'tailwind-merge'
 
-export type LinkProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
-    /**
-     * Bindable reference to the root DOM element.
-     */
-    ref?: HTMLElement | null
+export type LinkProps = Omit<HTMLAttributes<HTMLElement>, 'class'> &
+    Pick<
+        HTMLButtonAttributes,
+        | 'name'
+        | 'value'
+        | 'form'
+        | 'formaction'
+        | 'formenctype'
+        | 'formmethod'
+        | 'formnovalidate'
+        | 'formtarget'
+        | 'popovertarget'
+        | 'popovertargetaction'
+    > &
+    Pick<HTMLAnchorAttributes, 'download' | 'hreflang' | 'ping' | 'media' | 'referrerpolicy'> & {
+        /**
+         * Bindable reference to the root DOM element.
+         */
+        ref?: HTMLElement | null
 
-    /**
-     * The destination URL for the anchor element.
-     * When omitted, renders as a `<button>` element.
-     */
-    href?: string
+        /**
+         * The destination URL for the anchor element.
+         * When omitted, renders as a `<button>` element.
+         */
+        href?: string
 
-    /**
-     * Overrides the auto-detected active state.
-     * When omitted, the active state is inferred from the current route.
-     */
-    active?: boolean
+        /**
+         * Overrides the auto-detected active state.
+         * When omitted, the active state is inferred from the current route.
+         */
+        active?: boolean
 
-    /**
-     * Requires an exact pathname match for active state detection.
-     * @default false
-     */
-    exact?: boolean
+        /**
+         * Requires an exact pathname match for active state detection.
+         * @default false
+         */
+        exact?: boolean
 
-    /**
-     * Controls query parameter matching for active state detection.
-     * - `true` — requires an exact match of all query parameters.
-     * - `'partial'` — link's query params must be a subset of the current route.
-     * - `false` — query parameters are ignored.
-     * @default false
-     */
-    exactQuery?: boolean | 'partial'
+        /**
+         * Controls query parameter matching for active state detection.
+         * - `true` — requires an exact match of all query parameters.
+         * - `'partial'` — link's query params must be a subset of the current route.
+         * - `false` — query parameters are ignored.
+         * @default false
+         */
+        exactQuery?: boolean | 'partial'
 
-    /**
-     * Requires an exact hash match for active state detection.
-     * @default false
-     */
-    exactHash?: boolean
+        /**
+         * Requires an exact hash match for active state detection.
+         * @default false
+         */
+        exactHash?: boolean
 
-    /**
-     * Additional CSS class applied when the link is active.
-     */
-    activeClass?: string
+        /**
+         * Additional CSS class applied when the link is active.
+         */
+        activeClass?: string
 
-    /**
-     * Additional CSS class applied when the link is inactive.
-     */
-    inactiveClass?: string
+        /**
+         * Additional CSS class applied when the link is inactive.
+         */
+        inactiveClass?: string
 
-    /**
-     * Disables the link and prevents navigation.
-     * @default false
-     */
-    disabled?: boolean
+        /**
+         * Disables the link and prevents navigation.
+         * @default false
+         */
+        disabled?: boolean
 
-    /**
-     * Strips all default styling, applying only `class`, `activeClass`, and `inactiveClass`.
-     * @default false
-     */
-    raw?: boolean
+        /**
+         * Strips all default styling, applying only `class`, `activeClass`, and `inactiveClass`.
+         * @default false
+         */
+        raw?: boolean
 
-    /**
-     * Treats the link as external, adding `rel="noopener noreferrer"` and `target="_blank"`.
-     * Auto-detected from the `href` when omitted.
-     */
-    external?: boolean
+        /**
+         * Treats the link as external, adding `rel="noopener noreferrer"` and `target="_blank"`.
+         * Auto-detected from the `href` when omitted.
+         */
+        external?: boolean
 
-    /**
-     * The button type attribute. Only applies when rendering as `<button>`.
-     * @default 'button'
-     */
-    type?: 'button' | 'submit' | 'reset'
+        /**
+         * The button type attribute. Only applies when rendering as `<button>`.
+         * @default 'button'
+         */
+        type?: 'button' | 'submit' | 'reset'
 
-    /**
-     * The link target attribute. Only applies when rendering as `<a>`.
-     */
-    target?: string
+        /**
+         * The link target attribute. Only applies when rendering as `<a>`.
+         */
+        target?: string
 
-    /**
-     * The link rel attribute. Only applies when rendering as `<a>`.
-     */
-    rel?: string
+        /**
+         * The link rel attribute. Only applies when rendering as `<a>`.
+         */
+        rel?: string
 
-    /**
-     * Additional CSS classes for the root element.
-     */
-    class?: ClassNameValue
+        /**
+         * Additional CSS classes for the root element.
+         */
+        class?: ClassNameValue
 
-    /**
-     * Override styles for specific link slots.
-     */
-    ui?: Partial<Record<LinkSlots, ClassNameValue>>
+        /**
+         * Override styles for specific link slots.
+         */
+        ui?: Partial<Record<LinkSlots, ClassNameValue>>
 
-    /**
-     * Content rendered inside the link.
-     */
-    children?: Snippet
-}
+        /**
+         * Content rendered inside the link.
+         */
+        children?: Snippet
+    }
