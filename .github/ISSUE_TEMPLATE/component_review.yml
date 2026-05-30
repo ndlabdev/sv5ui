@@ -7,7 +7,7 @@ body:
       attributes:
           value: |
               Use this to track a full review of a component, following the SV5UI review checklist.
-              Each confirmed finding should become its own issue (bug/enhancement) and be linked back here.
+              Keep all findings in this single issue's table by default. Split a finding into its own issue only when it is large enough to need independent tracking (its own PR, deferred work, or a separate assignee), and link it back here.
 
     - type: input
       id: component
