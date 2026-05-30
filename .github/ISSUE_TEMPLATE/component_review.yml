@@ -1,5 +1,5 @@
 name: 🔍 Component Review
-description: Track a thorough review of a component (props, types, a11y, performance, Nuxt parity)
+description: Track a thorough review of a component (props, types, a11y, performance, reference parity)
 title: '[Review]: '
 labels: ['status: needs-triage']
 body:
@@ -31,7 +31,7 @@ body:
               - label: 'Bug detection (conditional rendering, spread order, context reactivity, edge cases)'
               - label: 'Accessibility (roles, `aria-*`, keyboard, icon-only names)'
               - label: 'Exports & public API (`index.ts` exposes only user-facing types)'
-              - label: 'Parity with Nuxt UI v4'
+              - label: 'Parity with the reference implementation'
 
     - type: textarea
       id: findings
@@ -48,7 +48,7 @@ body:
     - type: input
       id: reference
       attributes:
-          label: Nuxt UI v4 reference
-          placeholder: https://github.com/nuxt/ui/tree/v4/src/runtime/components
+          label: Reference implementation
+          placeholder: Link to the reference implementation used for parity (optional)
       validations:
           required: false
