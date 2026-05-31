@@ -217,4 +217,38 @@ describe('AvatarGroup', () => {
             await expect.element(root).toHaveClass(/custom-base/)
         })
     })
+
+    // ==================== DISPLAY ORDER ====================
+    // Root is flex-row-reverse, so DOM order is the reverse of the visual order.
+    // Reversing visibleAvatars makes the array read left-to-right and puts the
+    // first avatar on top; the overflow indicator sits at the visual (right) end.
+
+    describe('display order', () => {
+        it('reverses DOM order so the array reads left-to-right visually', async () => {
+            const { container } = render(AvatarGroup, {
+                avatars: [{ text: '1' }, { text: '2' }, { text: '3' }]
+            })
+            const texts = Array.from(container.querySelectorAll('[data-avatar-fallback]')).map(
+                (el) => el.textContent
+            )
+            expect(texts).toEqual(['3', '2', '1'])
+        })
+
+        it('places the overflow indicator at the visual end', async () => {
+            const { container } = render(AvatarGroup, {
+                avatars: [
+                    { text: '1' },
+                    { text: '2' },
+                    { text: '3' },
+                    { text: '4' },
+                    { text: '5' }
+                ],
+                max: 3
+            })
+            const texts = Array.from(container.querySelectorAll('[data-avatar-fallback]')).map(
+                (el) => el.textContent
+            )
+            expect(texts).toEqual(['+2', '3', '2', '1'])
+        })
+    })
 })

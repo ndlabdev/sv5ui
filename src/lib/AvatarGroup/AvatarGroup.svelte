@@ -46,9 +46,11 @@
         }
     })
 
-    const visibleAvatars = $derived(
-        !avatars ? [] : max && max > 0 ? avatars.slice(0, max) : avatars
-    )
+    const visibleAvatars = $derived.by(() => {
+        if (!avatars) return []
+        const shown = max && max > 0 ? avatars.slice(0, max) : avatars
+        return [...shown].reverse()
+    })
 
     const overflowCount = $derived(
         avatars && max && max > 0 ? Math.max(0, avatars.length - max) : 0
