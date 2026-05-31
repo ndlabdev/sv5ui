@@ -15,6 +15,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Collapsible** — `CollapsibleProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`); they are forwarded to the root element (previously rejected by the type while `restProps` was effectively dead).
 - **Separator** — `position` prop (`'start' | 'center' | 'end'`, default `'center'`) controls where the label/icon/avatar/content sits along the separator.
 
+### Changed
+
+- **DropdownMenu** — **BREAKING:** the trigger `children` snippet is no longer auto-wrapped in a `<span>`. It now receives `{ open, props }` and you must spread `props` onto your own focusable trigger element so the menu's ARIA (`aria-haspopup`, `aria-expanded`, `id`) and event handlers land on the real control instead of a non-semantic wrapper. Migration:
+
+    ```svelte
+    <!-- Before -->
+    <DropdownMenu {items}>
+        <Button>Open</Button>
+    </DropdownMenu>
+
+    <!-- After -->
+    <DropdownMenu {items}>
+        {#snippet children({ props })}
+            <Button {...props}>Open</Button>
+        {/snippet}
+    </DropdownMenu>
+    ```
+
+### Removed
+
+- **DropdownMenu** — Removed the unused `name` field from `DropdownMenuRadioGroup`; it was accepted by the type but never read at runtime (radio grouping is keyed by the single `radioGroups[0]` entry).
+
 ### Fixed
 
 - **Button** — Loading state with both `leadingIcon` and `trailingIcon` no longer renders a static (non-spinning) loader on the opposite side. The spinner now appears only on the side selected by `trailing`, and the other icon keeps its original glyph.

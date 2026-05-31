@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { page } from 'vitest/browser'
 import DropdownMenu from './DropdownMenu.svelte'
+import DropdownMenuTriggerTestWrapper from './DropdownMenuTriggerTestWrapper.svelte'
 import type { DropdownMenuItem, DropdownMenuRadioGroup } from './dropdown-menu.types.js'
 
 describe('DropdownMenu', () => {
@@ -295,7 +296,7 @@ describe('DropdownMenu', () => {
                     { type: 'radio', label: 'Option 1', value: 'opt1' },
                     { type: 'radio', label: 'Option 2', value: 'opt2' }
                 ]
-                const radioGroups: DropdownMenuRadioGroup[] = [{ name: 'options', value: 'opt1' }]
+                const radioGroups: DropdownMenuRadioGroup[] = [{ value: 'opt1' }]
                 render(DropdownMenu, { open: true, items, radioGroups })
                 await vi.waitFor(() => {
                     expect(getRadioItems().length).toBe(2)
@@ -307,7 +308,7 @@ describe('DropdownMenu', () => {
                     { type: 'radio', label: 'Option 1', value: 'opt1' },
                     { type: 'radio', label: 'Option 2', value: 'opt2' }
                 ]
-                const radioGroups: DropdownMenuRadioGroup[] = [{ name: 'options', value: 'opt1' }]
+                const radioGroups: DropdownMenuRadioGroup[] = [{ value: 'opt1' }]
                 render(DropdownMenu, { open: true, items, radioGroups })
                 await vi.waitFor(() => {
                     const radioItems = getRadioItems()
@@ -323,9 +324,7 @@ describe('DropdownMenu', () => {
                     { type: 'radio', label: 'Option 1', value: 'opt1', closeOnSelect: false },
                     { type: 'radio', label: 'Option 2', value: 'opt2', closeOnSelect: false }
                 ]
-                const radioGroups: DropdownMenuRadioGroup[] = [
-                    { name: 'options', value: 'opt1', onValueChange }
-                ]
+                const radioGroups: DropdownMenuRadioGroup[] = [{ value: 'opt1', onValueChange }]
                 render(DropdownMenu, { open: true, items, radioGroups })
                 await vi.waitFor(() => {
                     expect(getRadioItems().length).toBe(2)
@@ -653,7 +652,7 @@ describe('DropdownMenu', () => {
                     items: [{ label: 'Sub Item' }]
                 }
             ]
-            const radioGroups: DropdownMenuRadioGroup[] = [{ name: 'theme', value: 'light' }]
+            const radioGroups: DropdownMenuRadioGroup[] = [{ value: 'light' }]
             render(DropdownMenu, { open: true, items, radioGroups })
 
             await vi.waitFor(() => {
@@ -686,6 +685,46 @@ describe('DropdownMenu', () => {
 
                 const items = getItems()
                 expect((items[0] as HTMLElement).className).toContain('item-custom')
+            })
+        })
+    })
+
+    // ==================== TRIGGER (children props) ====================
+
+    describe('trigger', () => {
+        const getTrigger = () =>
+            document.querySelector('[data-testid="trigger"]') as HTMLElement | null
+
+        it('should wire trigger props onto the caller element, not a wrapper', () => {
+            render(DropdownMenuTriggerTestWrapper, { items: basicItems })
+            const trigger = getTrigger()
+            expect(trigger).not.toBeNull()
+            expect(trigger!.tagName).toBe('BUTTON')
+            expect(trigger!.getAttribute('aria-haspopup')).toBe('menu')
+            expect(trigger!.hasAttribute('data-dropdown-menu-trigger')).toBe(true)
+        })
+
+        it('should not insert an extra span wrapper around the trigger', () => {
+            render(DropdownMenuTriggerTestWrapper, { items: basicItems })
+            const trigger = getTrigger()
+            expect(trigger!.parentElement?.tagName).not.toBe('SPAN')
+        })
+
+        it('should open the menu when the trigger is clicked', async () => {
+            render(DropdownMenuTriggerTestWrapper, { items: basicItems })
+            expect(getContent()).toBeNull()
+            getTrigger()!.click()
+            await vi.waitFor(() => {
+                expect(getContent()).not.toBeNull()
+            })
+        })
+
+        it('should expose open state to the children snippet', async () => {
+            render(DropdownMenuTriggerTestWrapper, { items: basicItems })
+            expect(getTrigger()!.getAttribute('data-open')).toBe('false')
+            getTrigger()!.click()
+            await vi.waitFor(() => {
+                expect(getTrigger()!.getAttribute('data-open')).toBe('true')
             })
         })
     })

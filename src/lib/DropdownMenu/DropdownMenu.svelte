@@ -348,9 +348,7 @@
     {#if children}
         <DropdownMenu.Trigger>
             {#snippet child({ props })}
-                <span {...props} class={className as string}>
-                    {@render children({ open })}
-                </span>
+                {@render children({ open, props })}
             {/snippet}
         </DropdownMenu.Trigger>
     {/if}
