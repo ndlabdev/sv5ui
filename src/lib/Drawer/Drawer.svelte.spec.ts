@@ -708,4 +708,23 @@ describe('Drawer', () => {
             })
         })
     })
+
+    // ==================== FORWARDED VAUL PROPS ====================
+
+    describe('forwarded vaul props', () => {
+        it('forwards container so content portals into the given element', async () => {
+            const el = document.createElement('div')
+            el.setAttribute('data-drawer-container', '')
+            document.body.appendChild(el)
+            try {
+                render(Drawer, { open: true, title: 'Test', container: el })
+                // Before the fix `container` was dropped → content went to <body>, not `el`.
+                await vi.waitFor(() => {
+                    expect(el.querySelector('[data-vaul-drawer]')).not.toBeNull()
+                })
+            } finally {
+                el.remove()
+            }
+        })
+    })
 })

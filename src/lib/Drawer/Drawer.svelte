@@ -44,7 +44,8 @@
         titleSlot,
         descriptionSlot,
         body: bodySlot,
-        footer: footerSlot
+        footer: footerSlot,
+        ...rest
     }: Props = $props()
 
     const hasTitle = $derived(!!title || !!titleSlot)
@@ -81,6 +82,7 @@
 
     const rootProps = $derived.by(() => {
         const base = {
+            ...rest,
             open,
             onOpenChange: handleOpenChange,
             direction,
