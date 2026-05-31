@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Button** — Removed the internal `leadingAvatarSize` key from the `ui` prop type; it was accepted by the type but silently ignored at runtime.
 - **Link** — Caller-passed attributes no longer override the component's disabled-state safety attributes (`role`, `aria-disabled`, `tabindex`) or the computed `target`/`rel`/`aria-current`; `{...restProps}` is now spread before the component's own attributes.
 - **Link** — `raw` mode now resolves an array `class` value correctly (via `tailwind-merge`) instead of mis-joining it into comma-separated invalid tokens.
+- **Alert** — Corrected the `variant` prop's documented default from `'soft'` to `'solid'` to match the actual runtime default.
 
 ## [1.8.0] - 2026-05-28
 
