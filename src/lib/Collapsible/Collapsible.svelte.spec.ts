@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import CollapsibleTestWrapper from './CollapsibleTestWrapper.svelte'
+import Collapsible from './Collapsible.svelte'
 
 const getRoot = () => document.querySelector('[data-collapsible-root]') as HTMLElement | null
 const getTrigger = () => document.querySelector('[data-collapsible-trigger]') as HTMLElement | null
@@ -202,6 +203,18 @@ describe('Collapsible', () => {
         it('should render disabled with data-disabled on trigger', () => {
             render(CollapsibleTestWrapper, { disabled: true })
             expect(getTrigger()!.hasAttribute('data-disabled')).toBe(true)
+        })
+    })
+
+    // ==================== FORWARDED ROOT ATTRIBUTES ====================
+
+    describe('forwarded root attributes', () => {
+        it('forwards id, aria-label, and data-* to the root element', () => {
+            render(Collapsible, { id: 'c1', 'aria-label': 'section', 'data-testid': 'collap' })
+            const root = getRoot()!
+            expect(root.getAttribute('id')).toBe('c1')
+            expect(root.getAttribute('aria-label')).toBe('section')
+            expect(root.getAttribute('data-testid')).toBe('collap')
         })
     })
 })
