@@ -270,4 +270,19 @@
             />
         </div>
     </section>
+
+    <!-- Position -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Position</h2>
+        <p class="text-sm text-on-surface-variant">
+            Use the <code class="rounded bg-surface-container-highest px-1">position</code> prop to
+            place the label/icon/avatar at the start, center, or end. Defaults to
+            <code class="rounded bg-surface-container-highest px-1">center</code>.
+        </p>
+        <div class="space-y-4 rounded-lg bg-surface-container-high p-4">
+            <Separator label="Start" position="start" />
+            <Separator label="Center" position="center" />
+            <Separator label="End" position="end" />
+        </div>
+    </section>
 </div>

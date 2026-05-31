@@ -75,6 +75,11 @@ export const separatorVariants = tv({
                 border: 'h-full flex-1',
                 container: 'my-2'
             }
+        },
+        position: {
+            start: '',
+            center: '',
+            end: ''
         }
     },
     compoundVariants: [
@@ -95,7 +100,8 @@ export const separatorVariants = tv({
         color: 'surface',
         size: 'xs',
         type: 'solid',
-        orientation: 'horizontal'
+        orientation: 'horizontal',
+        position: 'center'
     }
 })
 
