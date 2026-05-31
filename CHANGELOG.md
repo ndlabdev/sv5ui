@@ -9,7 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Button** — `ButtonProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), enabling typed submit buttons and download links that previously raised a type error.
+- **Link** — `LinkProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), which previously raised a type error.
 - **Icon** — `IconProps` now type-checks SVG HTML attributes — `role`, `tabindex`, `aria-*` (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-hidden`), common event handlers, and `data-*` — which previously raised a type error despite reaching the rendered `<svg>` at runtime. This unblocks typed meaningful (non-decorative) icons and test/data hooks.
+
+### Fixed
+
+- **Button** — Loading state with both `leadingIcon` and `trailingIcon` no longer renders a static (non-spinning) loader on the opposite side. The spinner now appears only on the side selected by `trailing`, and the other icon keeps its original glyph.
+- **Button** — Removed the internal `leadingAvatarSize` key from the `ui` prop type; it was accepted by the type but silently ignored at runtime.
+- **Link** — Caller-passed attributes no longer override the component's disabled-state safety attributes (`role`, `aria-disabled`, `tabindex`) or the computed `target`/`rel`/`aria-current`; `{...restProps}` is now spread before the component's own attributes.
+- **Link** — `raw` mode now resolves an array `class` value correctly (via `tailwind-merge`) instead of mis-joining it into comma-separated invalid tokens.
 
 ## [1.8.0] - 2026-05-28
 
