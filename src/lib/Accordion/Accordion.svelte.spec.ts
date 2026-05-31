@@ -467,4 +467,17 @@ describe('Accordion', () => {
             })
         })
     })
+
+    // ==================== FORCE MOUNT ====================
+
+    describe('forceMount', () => {
+        it('unmounts a closed item content when forceMount=true (slide-transition mode)', () => {
+            const { container } = render(Accordion, {
+                forceMount: true,
+                items: [{ label: 'Sec', content: 'FM_MARKER', value: 'a' }]
+            })
+            // Item is closed (no value); forceMount mode toggles content via {#if}.
+            expect(container.textContent).not.toContain('FM_MARKER')
+        })
+    })
 })

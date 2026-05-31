@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { BaseAccordionRootPropsWithoutHTML, AccordionContentPropsWithoutHTML } from 'bits-ui'
+import type { BaseAccordionRootPropsWithoutHTML } from 'bits-ui'
 import type { AccordionSlots } from './accordion.variants.js'
 
 // ============================================================================
@@ -122,10 +122,7 @@ export interface AccordionSlotProps {
  *
  * @see https://bits-ui.com/docs/components/accordion
  */
-export interface AccordionProps
-    extends
-        Omit<BaseAccordionRootPropsWithoutHTML, 'loop'>,
-        Pick<AccordionContentPropsWithoutHTML, 'forceMount'> {
+export interface AccordionProps extends Omit<BaseAccordionRootPropsWithoutHTML, 'loop'> {
     // -------------------------------------------------------------------------
     // Content
     // -------------------------------------------------------------------------
@@ -177,6 +174,18 @@ export interface AccordionProps
      * @default false
      */
     loop?: boolean
+
+    /**
+     * Use a JavaScript slide transition (enter/leave) for expanding and
+     * collapsing instead of the default CSS animation.
+     *
+     * Note: despite the name, this does **not** keep closed content mounted.
+     * When `true`, an item's content is unmounted while it is closed (required
+     * for the slide transition). The default (`false`) leaves bits-ui's CSS
+     * animation in place, which keeps closed content in the DOM (collapsed).
+     * @default false
+     */
+    forceMount?: boolean
 
     // -------------------------------------------------------------------------
     // Styling
