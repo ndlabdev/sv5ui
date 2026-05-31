@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Button** — `ButtonProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), enabling typed submit buttons and download links that previously raised a type error.
+
+### Fixed
+
+- **Button** — Loading state with both `leadingIcon` and `trailingIcon` no longer renders a static (non-spinning) loader on the opposite side. The spinner now appears only on the side selected by `trailing`, and the other icon keeps its original glyph.
+- **Button** — Removed the internal `leadingAvatarSize` key from the `ui` prop type; it was accepted by the type but silently ignored at runtime.
+
 ## [1.8.0] - 2026-05-28
 
 ### Added

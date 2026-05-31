@@ -76,13 +76,14 @@
     const isLeading = $derived((!!icon && !trailing) || (isLoading && !trailing) || !!leadingIcon)
     const isTrailing = $derived((!!icon && trailing) || (isLoading && trailing) || !!trailingIcon)
 
+    const spinLeading = $derived(isLoading && !trailing)
+    const spinTrailing = $derived(isLoading && trailing)
+
     const leadingIconName = $derived(
-        isLoading && isLeading
-            ? loadingIcon
-            : leadingIcon || (isLeading && !trailing ? icon : undefined)
+        spinLeading ? loadingIcon : leadingIcon || (!trailing ? icon : undefined)
     )
     const trailingIconName = $derived(
-        isLoading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
+        spinTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
     )
 
     const resolvedColor = $derived(active && activeColor ? activeColor : color)
@@ -96,8 +97,8 @@
             block,
             square: isIconOnly,
             loading: isLoading,
-            leading: isLeading,
-            trailing: isTrailing
+            leading: spinLeading,
+            trailing: spinTrailing
         })
         return {
             base: slots.base({ class: [config.slots.base, fieldGroupClass, className, ui?.base] }),
