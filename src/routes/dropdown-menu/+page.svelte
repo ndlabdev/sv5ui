@@ -179,10 +179,12 @@
         <h2 class="text-lg font-semibold">Basic</h2>
         <div class="rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={basicItems}>
-                <Button variant="outline">
-                    File
-                    <span class="ml-2 text-xs opacity-60">Alt+F</span>
-                </Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline">
+                        File
+                        <span class="ml-2 text-xs opacity-60">Alt+F</span>
+                    </Button>
+                {/snippet}
             </DropdownMenu>
         </div>
     </section>
@@ -200,7 +202,9 @@
         >
             {#each [{ side: 'top' as const, label: 'Top' }, { side: 'right' as const, label: 'Right' }, { side: 'bottom' as const, label: 'Bottom' }, { side: 'left' as const, label: 'Left' }] as item (item.side)}
                 <DropdownMenu items={basicItems.slice(0, 4)} side={item.side}>
-                    <Button variant="soft">{item.label}</Button>
+                    {#snippet children({ props })}
+                        <Button {...props} variant="soft">{item.label}</Button>
+                    {/snippet}
                 </DropdownMenu>
             {/each}
         </div>
@@ -212,7 +216,9 @@
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
             {#each [{ size: 'xs' as const, label: 'XS' }, { size: 'sm' as const, label: 'SM' }, { size: 'md' as const, label: 'MD' }, { size: 'lg' as const, label: 'LG' }, { size: 'xl' as const, label: 'XL' }] as item (item.size)}
                 <DropdownMenu items={basicItems.slice(0, 4)} size={item.size}>
-                    <Button size={item.size} variant="outline">{item.label}</Button>
+                    {#snippet children({ props })}
+                        <Button {...props} size={item.size} variant="outline">{item.label}</Button>
+                    {/snippet}
                 </DropdownMenu>
             {/each}
         </div>
@@ -228,7 +234,11 @@
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={coloredItems}>
-                <Button variant="outline" icon="lucide:more-horizontal">Actions</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:more-horizontal"
+                        >Actions</Button
+                    >
+                {/snippet}
             </DropdownMenu>
         </div>
     </section>
@@ -239,7 +249,9 @@
         <p class="text-sm text-on-surface-variant">Toggle boolean states with checkbox items.</p>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={checkboxItems}>
-                <Button variant="outline" icon="lucide:layout">View</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:layout">View</Button>
+                {/snippet}
             </DropdownMenu>
             <div class="text-sm text-on-surface-variant">
                 <p>Status Bar: <code class="text-primary">{showStatusBar}</code></p>
@@ -255,7 +267,9 @@
         <p class="text-sm text-on-surface-variant">Single selection with radio items and groups.</p>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={radioItems} {radioGroups}>
-                <Button variant="outline" icon="lucide:sun-moon">Theme</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:sun-moon">Theme</Button>
+                {/snippet}
             </DropdownMenu>
             <div class="text-sm text-on-surface-variant">
                 Selected: <code class="text-primary">{selectedTheme}</code>
@@ -268,7 +282,9 @@
         <h2 class="text-lg font-semibold">Submenus</h2>
         <div class="rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={submenuItems}>
-                <Button variant="outline" icon="lucide:menu">Navigate</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:menu">Navigate</Button>
+                {/snippet}
             </DropdownMenu>
         </div>
     </section>
@@ -285,10 +301,18 @@
         </p>
         <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={closeOnSelectItems}>
-                <Button variant="outline" icon="lucide:mouse-pointer-click">Actions</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:mouse-pointer-click"
+                        >Actions</Button
+                    >
+                {/snippet}
             </DropdownMenu>
             <DropdownMenu items={checkboxCloseOnSelectItems}>
-                <Button variant="outline" icon="lucide:check-square">Multi-Select</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:check-square"
+                        >Multi-Select</Button
+                    >
+                {/snippet}
             </DropdownMenu>
             <div class="text-sm text-on-surface-variant">
                 <p>Click count: <code class="text-primary">{clickCount}</code></p>
@@ -310,7 +334,11 @@
                 <p class="text-sm font-medium text-on-surface-variant">Observe click state</p>
                 <div class="flex items-center gap-4 rounded-lg bg-surface-container-high p-4">
                     <DropdownMenu items={basicItems.slice(0, 4)} bind:open={controlledOpen}>
-                        <Button variant={controlledOpen ? 'solid' : 'outline'}>Click me</Button>
+                        {#snippet children({ props })}
+                            <Button {...props} variant={controlledOpen ? 'solid' : 'outline'}>
+                                Click me
+                            </Button>
+                        {/snippet}
                     </DropdownMenu>
                     <span class="text-sm text-on-surface-variant">
                         open: <code class="text-primary">{controlledOpen}</code>
@@ -321,7 +349,9 @@
                 <p class="text-sm font-medium text-on-surface-variant">Toggle programmatically</p>
                 <div class="flex items-center gap-4 rounded-lg bg-surface-container-high p-4">
                     <DropdownMenu items={basicItems.slice(0, 4)} open={controlledOpen}>
-                        <Button variant="outline">Target</Button>
+                        {#snippet children({ props })}
+                            <Button {...props} variant="outline">Target</Button>
+                        {/snippet}
                     </DropdownMenu>
                     <Button variant="soft" onclick={() => (controlledOpen = !controlledOpen)}>
                         {controlledOpen ? 'Close' : 'Open'}
@@ -336,7 +366,9 @@
         <h2 class="text-lg font-semibold">Custom Header/Footer</h2>
         <div class="rounded-lg bg-surface-container-high p-4">
             <DropdownMenu items={basicItems.slice(0, 4)}>
-                <Button variant="outline" icon="lucide:user-circle">Account</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:user-circle">Account</Button>
+                {/snippet}
                 {#snippet header()}
                     <div class="px-3 py-2">
                         <p class="text-sm font-medium">John Doe</p>
@@ -373,7 +405,9 @@
         </p>
         <div class="rounded-lg bg-surface-container-high p-4">
             <DropdownMenu>
-                <Button variant="outline" icon="lucide:palette">Colors</Button>
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" icon="lucide:palette">Colors</Button>
+                {/snippet}
                 {#snippet content({ close })}
                     <div class="p-4">
                         <p class="mb-3 text-sm font-medium">Choose a color</p>
@@ -409,7 +443,9 @@
                             separator: 'bg-on-primary/20'
                         }}
                     >
-                        <Button>Primary Style</Button>
+                        {#snippet children({ props })}
+                            <Button {...props}>Primary Style</Button>
+                        {/snippet}
                     </DropdownMenu>
                 </div>
             </div>
@@ -420,7 +456,9 @@
                         items={basicItems.slice(0, 4)}
                         ui={{ content: 'rounded-xl shadow-2xl' }}
                     >
-                        <Button variant="outline">Rounded</Button>
+                        {#snippet children({ props })}
+                            <Button {...props} variant="outline">Rounded</Button>
+                        {/snippet}
                     </DropdownMenu>
                 </div>
             </div>
@@ -441,16 +479,18 @@
                     class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
                 >
                     <DropdownMenu items={profileItems}>
-                        <Button icon="lucide:chevron-down" trailing>
-                            <span class="flex items-center gap-2">
-                                <span
-                                    class="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-on-primary"
-                                >
-                                    JD
+                        {#snippet children({ props })}
+                            <Button {...props} icon="lucide:chevron-down" trailing>
+                                <span class="flex items-center gap-2">
+                                    <span
+                                        class="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-on-primary"
+                                    >
+                                        JD
+                                    </span>
+                                    shadcn
                                 </span>
-                                shadcn
-                            </span>
-                        </Button>
+                            </Button>
+                        {/snippet}
                     </DropdownMenu>
                 </div>
             </div>
@@ -462,12 +502,15 @@
                     class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
                 >
                     <DropdownMenu items={coloredItems} arrow align="center">
-                        <Button
-                            variant="outline"
-                            icon="lucide:more-vertical"
-                            square
-                            aria-label="More options"
-                        />
+                        {#snippet children({ props })}
+                            <Button
+                                {...props}
+                                variant="outline"
+                                icon="lucide:more-vertical"
+                                square
+                                aria-label="More options"
+                            />
+                        {/snippet}
                     </DropdownMenu>
                 </div>
             </div>

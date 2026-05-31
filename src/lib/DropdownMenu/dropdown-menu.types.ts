@@ -170,11 +170,6 @@ export type DropdownMenuItem =
  */
 export interface DropdownMenuRadioGroup {
     /**
-     * Unique identifier for the radio group.
-     */
-    name: string
-
-    /**
      * Currently selected value in the group.
      */
     value?: string
@@ -254,8 +249,9 @@ export interface DropdownMenuProps extends RootProps, ContentProps {
     items?: DropdownMenuItem[]
 
     /**
-     * Radio groups configuration for managing radio item selections.
-     * @example [{ name: 'theme', value: 'dark', onValueChange: (v) => theme = v }]
+     * Radio group configuration for managing radio item selections.
+     * Only the first entry is used — all `type: 'radio'` items belong to it.
+     * @example [{ value: 'dark', onValueChange: (v) => theme = v }]
      */
     radioGroups?: DropdownMenuRadioGroup[]
 
@@ -305,7 +301,9 @@ export interface DropdownMenuProps extends RootProps, ContentProps {
     // -------------------------------------------------------------------------
 
     /**
-     * Additional CSS class for the trigger wrapper.
+     * Additional CSS class for the dropdown content.
+     * Applied only when no trigger `children` are provided (style your own
+     * trigger element directly otherwise).
      */
     class?: ClassNameValue
 
@@ -319,10 +317,18 @@ export interface DropdownMenuProps extends RootProps, ContentProps {
     // -------------------------------------------------------------------------
 
     /**
-     * Default slot content used as the trigger element.
-     * When provided, clicking this element opens the dropdown.
+     * Trigger content. Spread the provided `props` onto your own focusable
+     * element (e.g. a `<Button>`) so the trigger's ARIA and event handlers land
+     * on the real control.
+     *
+     * @example
+     * ```svelte
+     * {#snippet children({ open, props })}
+     *   <Button {...props}>{open ? 'Close' : 'Open'}</Button>
+     * {/snippet}
+     * ```
      */
-    children?: Snippet<[{ open: boolean }]>
+    children?: Snippet<[{ open: boolean; props: Record<string, unknown> }]>
 
     /**
      * Custom content to render at the top of the dropdown menu.
