@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Button** — `ButtonProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), enabling typed submit buttons and download links that previously raised a type error.
 - **Link** — `LinkProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), which previously raised a type error.
 - **Icon** — `IconProps` now type-checks SVG HTML attributes — `role`, `tabindex`, `aria-*` (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-hidden`), common event handlers, and `data-*` — which previously raised a type error despite reaching the rendered `<svg>` at runtime. This unblocks typed meaningful (non-decorative) icons and test/data hooks.
+- **Separator** — `position` prop (`'start' | 'center' | 'end'`, default `'center'`) controls where the label/icon/avatar/content sits along the separator.
 
 ### Fixed
 
@@ -19,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Button** — Removed the internal `leadingAvatarSize` key from the `ui` prop type; it was accepted by the type but silently ignored at runtime.
 - **Link** — Caller-passed attributes no longer override the component's disabled-state safety attributes (`role`, `aria-disabled`, `tabindex`) or the computed `target`/`rel`/`aria-current`; `{...restProps}` is now spread before the component's own attributes.
 - **Link** — `raw` mode now resolves an array `class` value correctly (via `tailwind-merge`) instead of mis-joining it into comma-separated invalid tokens.
+- **AvatarGroup** — Avatars now render in array order left-to-right (the first avatar leftmost and on top). Previously the `flex-row-reverse` layout combined with an un-reversed list displayed them right-to-left (e.g. `[1,2,3]` rendered as `3 2 1`).
+- **Alert** — Corrected the `variant` prop's documented default from `'soft'` to `'solid'` to match the actual runtime default.
 - **Drawer** — Forward the remaining typed vaul-svelte props that were silently dropped (`setBackgroundColorOnScale`, `fixed`, `defaultOpen`, `disablePreventScroll`, `repositionInputs`, `snapToSequentialPoint`, `container`, `onAnimationEnd`, `preventScrollRestoration`, `autoFocus`). They were accepted by the type but never reached the underlying drawer.
 
 ## [1.8.0] - 2026-05-28

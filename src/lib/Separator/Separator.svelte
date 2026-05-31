@@ -24,6 +24,7 @@
         size = config.defaultVariants.size,
         type = config.defaultVariants.type,
         orientation = config.defaultVariants.orientation,
+        position = config.defaultVariants.position,
         decorative = false,
         class: className,
         content,
@@ -46,9 +47,11 @@
 </script>
 
 <Separator.Root bind:ref class={classes.root} {orientation} {decorative} {...restProps}>
-    <div class={classes.border}></div>
-
     {#if hasContent}
+        {#if position !== 'start'}
+            <div class={classes.border}></div>
+        {/if}
+
         <div class={classes.container}>
             {#if content}
                 {@render content()}
@@ -65,6 +68,10 @@
             {/if}
         </div>
 
+        {#if position !== 'end'}
+            <div class={classes.border}></div>
+        {/if}
+    {:else}
         <div class={classes.border}></div>
     {/if}
 </Separator.Root>
