@@ -52,7 +52,7 @@ export type AlertProps = Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'title'>
 
     /**
      * The visual style variant.
-     * @default 'soft'
+     * @default 'solid'
      */
     variant?: NonNullable<AlertVariantProps['variant']>
 
