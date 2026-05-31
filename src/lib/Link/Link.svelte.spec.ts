@@ -363,4 +363,68 @@ describe('Link', () => {
             await expect.element(el).toHaveClass(/px-4/)
         })
     })
+
+    // ==================== NATIVE ATTRIBUTES ====================
+
+    describe('native attributes', () => {
+        it('should forward button form attributes (name, value, formaction)', async () => {
+            const { container } = render(Link, {
+                type: 'submit',
+                name: 'action',
+                value: 'save',
+                formaction: '/save',
+                active: false
+            })
+            const el = page.elementLocator(container.firstElementChild!)
+            await expect.element(el).toHaveAttribute('name', 'action')
+            await expect.element(el).toHaveAttribute('value', 'save')
+            await expect.element(el).toHaveAttribute('formaction', '/save')
+        })
+
+        it('should forward anchor attributes (download, hreflang)', async () => {
+            const { container } = render(Link, {
+                href: '/file.pdf',
+                download: 'report.pdf',
+                hreflang: 'en',
+                active: false
+            })
+            const el = page.elementLocator(container.firstElementChild!)
+            await expect.element(el).toHaveAttribute('download', 'report.pdf')
+            await expect.element(el).toHaveAttribute('hreflang', 'en')
+        })
+    })
+
+    // ==================== restProps PRECEDENCE ====================
+
+    describe('restProps precedence', () => {
+        it('disabled-state tabindex/role are not overridden by restProps', async () => {
+            const { container } = render(Link, {
+                href: '/x',
+                disabled: true,
+                active: false,
+                tabindex: 5,
+                role: 'button'
+            })
+            const el = container.firstElementChild!
+            expect(el.getAttribute('tabindex')).toBe('-1')
+            expect(el.getAttribute('role')).toBe('link')
+        })
+    })
+
+    // ==================== RAW CLASS ARRAY ====================
+
+    describe('raw class array', () => {
+        it('joins an array class with spaces, not commas', async () => {
+            const { container } = render(Link, {
+                href: '/x',
+                raw: true,
+                active: false,
+                class: ['text-error', 'underline']
+            })
+            const el = container.firstElementChild!
+            expect(el.className).toContain('text-error')
+            expect(el.className).toContain('underline')
+            expect(el.className).not.toContain(',')
+        })
+    })
 })

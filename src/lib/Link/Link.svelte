@@ -51,6 +51,7 @@
 
 <script lang="ts">
     import { page } from '$app/state'
+    import { twMerge } from 'tailwind-merge'
     import { linkVariants, linkDefaults } from './link.variants.js'
     import { getComponentConfig } from '../config.js'
 
@@ -113,7 +114,7 @@
 
     const baseClass = $derived.by(() => {
         const stateClass = isActive ? activeClass : inactiveClass
-        if (raw) return [className, stateClass].filter(Boolean).join(' ')
+        if (raw) return twMerge(stateClass, className)
 
         const slots = linkVariants({ active: isActive, disabled, raw })
         return slots.base({ class: [config.slots.base, stateClass, className, ui?.base] })
@@ -138,6 +139,7 @@
     <!-- eslint-disable svelte/no-navigation-without-resolve -->
     <a
         bind:this={ref}
+        {...restProps}
         href={disabled ? undefined : href}
         class={baseClass}
         target={resolvedTarget}
@@ -147,7 +149,6 @@
         aria-current={ariaCurrent}
         tabindex={disabled ? -1 : undefined}
         onclick={handleClick}
-        {...restProps}
     >
         <!-- eslint-enable svelte/no-navigation-without-resolve -->
         {@render children?.()}
@@ -155,12 +156,12 @@
 {:else}
     <button
         bind:this={ref}
+        {...restProps}
         type={type ?? 'button'}
         class={baseClass}
         {disabled}
         aria-current={ariaCurrent}
         onclick={handleClick}
-        {...restProps}
     >
         {@render children?.()}
     </button>
