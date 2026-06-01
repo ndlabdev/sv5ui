@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **DropdownMenu** — Removed the unused `name` field from `DropdownMenuRadioGroup`; it was accepted by the type but never read at runtime (radio grouping is keyed by the single `radioGroups[0]` entry).
 - **Tabs** — Removed the unused `slot` field from `TabsItem`; it was accepted by the type and documented as enabling dynamic per-item slots, but was never wired to any rendering (setting it had no effect).
 - **Select** — Removed the unused `defaultValue` prop; it was accepted by the type but never wired (the component is controlled via `value`), so setting it had no effect.
+- **Hooks** — Removed the unused `wireFormEvents` helper from the public API; no component adopted it (they wire `useFormFieldEmit` directly), so it was dead code. Use `useFormFieldEmit` instead.
 
 ### Fixed
 
