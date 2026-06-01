@@ -2,6 +2,7 @@ import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import SelectMenu from './SelectMenu.svelte'
+import SelectMenuFormFieldTestWrapper from './SelectMenuFormFieldTestWrapper.svelte'
 import type { SelectMenuItem, SelectMenuItemType } from './select-menu.types.js'
 
 const defaultItems: SelectMenuItem[] = [
@@ -804,6 +805,26 @@ describe('SelectMenu', () => {
             await page.getByRole('option', { name: /Create "react"/ }).click()
             await new Promise((r) => setTimeout(r, 50))
             expect(onCreate).not.toHaveBeenCalled()
+        })
+    })
+
+    // ==================== FORMFIELD INTEGRATION ====================
+
+    describe('FormField integration', () => {
+        it('should not share the FormField id between the trigger and the search input', async () => {
+            render(SelectMenuFormFieldTestWrapper, {
+                items: [{ value: 'apple', label: 'Apple' }]
+            })
+            await vi.waitFor(() => {
+                expect(document.querySelector('input[placeholder="Search..."]')).not.toBeNull()
+            })
+            const withFieldId = document.querySelectorAll('[id="form-field-fruit"]')
+            expect(withFieldId.length).toBe(1)
+            expect((withFieldId[0] as HTMLElement).tagName).toBe('BUTTON')
+            const search = document.querySelector(
+                'input[placeholder="Search..."]'
+            ) as HTMLInputElement
+            expect(search.id).not.toBe('form-field-fruit')
         })
     })
 })

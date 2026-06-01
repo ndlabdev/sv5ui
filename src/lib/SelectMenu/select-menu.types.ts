@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { SelectMenuVariantProps, SelectMenuSlots } from './select-menu.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
-import type { ComboboxContentPropsWithoutHTML } from 'bits-ui'
+import type { ComboboxContentPropsWithoutHTML, ComboboxTriggerProps } from 'bits-ui'
 
 // ============================================================================
 // Item Types (reuse from Select)
@@ -125,7 +125,26 @@ type ContentProps = Pick<
  *
  * @see https://bits-ui.com/docs/components/combobox
  */
-export interface SelectMenuProps extends ContentProps {
+type TriggerHTMLProps = Pick<
+    ComboboxTriggerProps,
+    | 'style'
+    | 'title'
+    | 'role'
+    | 'tabindex'
+    | 'aria-label'
+    | 'aria-labelledby'
+    | 'onclick'
+    | 'onkeydown'
+    | 'onmouseenter'
+    | 'onmouseleave'
+    | 'onfocus'
+    | 'onblur'
+>
+
+export interface SelectMenuProps extends ContentProps, TriggerHTMLProps {
+    /** Custom data attributes are forwarded to the trigger element. */
+    [key: `data-${string}`]: unknown
+
     // -------------------------------------------------------------------------
     // Ref
     // -------------------------------------------------------------------------

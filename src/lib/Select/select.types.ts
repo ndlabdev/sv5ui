@@ -2,7 +2,11 @@ import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { SelectVariantProps, SelectSlots } from './select.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
-import type { SelectRootPropsWithoutHTML, SelectContentPropsWithoutHTML } from 'bits-ui'
+import type {
+    SelectRootPropsWithoutHTML,
+    SelectContentPropsWithoutHTML,
+    SelectTriggerProps
+} from 'bits-ui'
 
 /**
  * The value shape for the Select.
@@ -148,7 +152,26 @@ type ContentProps = Pick<
  *
  * @see https://bits-ui.com/docs/components/select
  */
-export interface SelectProps extends RootProps, ContentProps {
+type TriggerHTMLProps = Pick<
+    SelectTriggerProps,
+    | 'style'
+    | 'title'
+    | 'role'
+    | 'tabindex'
+    | 'aria-label'
+    | 'aria-labelledby'
+    | 'onclick'
+    | 'onkeydown'
+    | 'onmouseenter'
+    | 'onmouseleave'
+    | 'onfocus'
+    | 'onblur'
+>
+
+export interface SelectProps extends RootProps, ContentProps, TriggerHTMLProps {
+    /** Custom data attributes are forwarded to the trigger element. */
+    [key: `data-${string}`]: unknown
+
     // -------------------------------------------------------------------------
     // Ref
     // -------------------------------------------------------------------------
@@ -169,14 +192,6 @@ export interface SelectProps extends RootProps, ContentProps {
      * - When `multiple` is `true`, this is a `string[]`.
      */
     value?: string | string[]
-
-    /**
-     * The default selected value when uncontrolled.
-     *
-     * - When `multiple` is `false`/omitted, this is a `string`.
-     * - When `multiple` is `true`, this is a `string[]`.
-     */
-    defaultValue?: string | string[]
 
     /**
      * Whether multiple items can be selected at once.

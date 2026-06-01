@@ -67,7 +67,8 @@
         itemLabel: itemLabelSlot,
         itemTrailing,
         selected: selectedSlot,
-        content: contentSlot
+        content: contentSlot,
+        ...restProps
     }: Props = $props()
 
     // ---- Form context ----
@@ -371,6 +372,7 @@
         {/if}
 
         <Select.Trigger
+            {...restProps}
             id={resolvedId}
             name={resolvedName}
             aria-describedby={ariaDescribedBy}
