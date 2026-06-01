@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
+import type { PaginationRootProps } from 'bits-ui'
 import type { PaginationSlots, PaginationVariantProps } from './pagination.variants.js'
 import type { ButtonProps } from '../Button/button.types.js'
 
@@ -49,7 +50,26 @@ export interface PaginationItemSlotProps {
  *
  * @see https://bits-ui.com/docs/components/pagination
  */
-export interface PaginationProps {
+export interface PaginationProps extends Pick<
+    PaginationRootProps,
+    | 'id'
+    | 'style'
+    | 'title'
+    | 'role'
+    | 'tabindex'
+    | 'aria-label'
+    | 'aria-labelledby'
+    | 'aria-describedby'
+    | 'onclick'
+    | 'onkeydown'
+    | 'onmouseenter'
+    | 'onmouseleave'
+    | 'onfocus'
+    | 'onblur'
+> {
+    /** Custom data attributes are forwarded to the root element. */
+    [key: `data-${string}`]: unknown
+
     /**
      * Bindable reference to the root DOM element.
      */

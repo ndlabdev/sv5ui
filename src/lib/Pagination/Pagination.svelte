@@ -47,7 +47,8 @@
         nextSlot,
         lastSlot,
         ellipsisSlot,
-        itemSlot
+        itemSlot,
+        ...restProps
     }: Props = $props()
 
     if (page === undefined) {
@@ -94,6 +95,7 @@
 </script>
 
 <Pagination.Root
+    {...restProps}
     bind:ref
     count={total}
     perPage={itemsPerPage}
@@ -144,6 +146,7 @@
                                 square
                                 {size}
                                 class={classes.prev}
+                                aria-label="Previous page"
                             >
                                 {@render prevSlot({ page: page!, disabled: prevDisabled })}
                             </ButtonComponent>
@@ -156,6 +159,7 @@
                                 {size}
                                 icon={prevIcon}
                                 class={classes.prev}
+                                aria-label="Previous page"
                             />
                         {/if}
                     {/snippet}
@@ -196,6 +200,7 @@
                                 square
                                 {size}
                                 class={classes.next}
+                                aria-label="Next page"
                             >
                                 {@render nextSlot({ page: page!, disabled: nextDisabled })}
                             </ButtonComponent>
@@ -208,6 +213,7 @@
                                 {size}
                                 icon={nextIcon}
                                 class={classes.next}
+                                aria-label="Next page"
                             />
                         {/if}
                     {/snippet}
