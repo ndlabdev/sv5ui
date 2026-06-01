@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-06-01
+
 ### Added
 
 - **Button** — `ButtonProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), enabling typed submit buttons and download links that previously raised a type error.
@@ -256,7 +258,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/ndlabdev/sv5ui/compare/v1.8.0...v2.0.0
 [1.6.0]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/ndlabdev/sv5ui/compare/v1.4.0...v1.5.0
