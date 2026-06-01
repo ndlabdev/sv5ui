@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Icon** — `IconProps` now type-checks SVG HTML attributes — `role`, `tabindex`, `aria-*` (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-hidden`), common event handlers, and `data-*` — which previously raised a type error despite reaching the rendered `<svg>` at runtime. This unblocks typed meaningful (non-decorative) icons and test/data hooks.
 - **Collapsible** — `CollapsibleProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`); they are forwarded to the root element (previously rejected by the type while `restProps` was effectively dead).
 - **Separator** — `position` prop (`'start' | 'center' | 'end'`, default `'center'`) controls where the label/icon/avatar/content sits along the separator.
+- **Tabs** — `TabsProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`) and forwards them to the root element; previously these were rejected by the type and no `restProps` were spread.
 - **Pagination** — `PaginationProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`) and forwards them to the root element; previously these were rejected by the type and no `restProps` were spread.
 
 ### Changed
@@ -37,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **DropdownMenu** — Removed the unused `name` field from `DropdownMenuRadioGroup`; it was accepted by the type but never read at runtime (radio grouping is keyed by the single `radioGroups[0]` entry).
+- **Tabs** — Removed the unused `slot` field from `TabsItem`; it was accepted by the type and documented as enabling dynamic per-item slots, but was never wired to any rendering (setting it had no effect).
 
 ### Fixed
 
@@ -47,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **AvatarGroup** — Avatars now render in array order left-to-right (the first avatar leftmost and on top). Previously the `flex-row-reverse` layout combined with an un-reversed list displayed them right-to-left (e.g. `[1,2,3]` rendered as `3 2 1`).
 - **Alert** — Corrected the `variant` prop's documented default from `'soft'` to `'solid'` to match the actual runtime default.
 - **Drawer** — Forward the remaining typed vaul-svelte props that were silently dropped (`setBackgroundColorOnScale`, `fixed`, `defaultOpen`, `disablePreventScroll`, `repositionInputs`, `snapToSequentialPoint`, `container`, `onAnimationEnd`, `preventScrollRestoration`, `autoFocus`). They were accepted by the type but never reached the underlying drawer.
+- **Tabs** — The decorative sliding indicator is now marked `aria-hidden="true"` so assistive technologies ignore the empty visual element inside the tablist.
 - **Pagination** — The previous/next navigation buttons now have an accessible name (`aria-label` "Previous page" / "Next page"); they were icon-only with no label, so assistive tech announced nothing (the first/last buttons already had names).
 - **Pagination** — Removed the dead `firstIcon`/`prevIcon`/`nextIcon`/`lastIcon` keys from the `ui` slot type; they were accepted by the type but silently ignored (navigation icon sizing is handled by the underlying button). The same-named icon-name props (e.g. `prevIcon="lucide:arrow-left"`) are unaffected.
 

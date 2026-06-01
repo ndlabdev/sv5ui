@@ -32,7 +32,8 @@
         leading,
         label: labelSlot,
         trailing,
-        body: bodySlot
+        body: bodySlot,
+        ...restProps
     }: Props = $props()
 
     // Initialize value if not provided (intentionally reads initial values only)
@@ -131,6 +132,7 @@
 </script>
 
 <Tabs.Root
+    {...restProps}
     bind:ref
     bind:value
     {onValueChange}
@@ -141,7 +143,7 @@
     class={classes.root}
 >
     <Tabs.List bind:ref={listEl} class={classes.list}>
-        <div class={classes.indicator} style={indicatorStyle}></div>
+        <div class={classes.indicator} style={indicatorStyle} aria-hidden="true"></div>
 
         {#each items as item, index (item.value ?? index)}
             {@const itemValue = getItemValue(item, index)}
