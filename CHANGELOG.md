@@ -52,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Tabs** — The decorative sliding indicator is now marked `aria-hidden="true"` so assistive technologies ignore the empty visual element inside the tablist.
 - **Pagination** — The previous/next navigation buttons now have an accessible name (`aria-label` "Previous page" / "Next page"); they were icon-only with no label, so assistive tech announced nothing (the first/last buttons already had names).
 - **Pagination** — Removed the dead `firstIcon`/`prevIcon`/`nextIcon`/`lastIcon` keys from the `ui` slot type; they were accepted by the type but silently ignored (navigation icon sizing is handled by the underlying button). The same-named icon-name props (e.g. `prevIcon="lucide:arrow-left"`) are unaffected.
+- **Input** — Loading state no longer renders a duplicate, non-spinning loader: when a `trailingIcon` (or both a leading and trailing icon) is present, the spinner now appears only on the side selected by `trailing`, and the opposite side keeps its own icon glyph instead of showing a second static loader.
+- **Input** — `avatar` now takes precedence over `leadingIcon` when both are provided, matching the documented behavior; previously the leading icon was shown and the avatar was hidden.
 
 ## [1.8.0] - 2026-05-28
 

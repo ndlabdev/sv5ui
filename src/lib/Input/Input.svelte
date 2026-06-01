@@ -94,19 +94,14 @@
     const resolvedId = $derived(id ?? formFieldContext?.ariaId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
-    const isLeading = $derived(
-        (!!icon && !trailing) || (loading && !trailing) || !!leadingIcon || !!avatar
-    )
-    const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
+    const loadingLeading = $derived(loading && !trailing)
+    const loadingTrailing = $derived(loading && trailing)
 
-    const leadingIconName = $derived(
-        loading && isLeading
-            ? loadingIcon
-            : leadingIcon || (isLeading && !trailing && !avatar ? icon : undefined)
-    )
-    const trailingIconName = $derived(
-        loading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
-    )
+    const isLeading = $derived((!!icon && !trailing) || !!leadingIcon || !!avatar || loadingLeading)
+    const isTrailing = $derived((!!icon && trailing) || !!trailingIcon || loadingTrailing)
+
+    const leadingIconName = $derived(leadingIcon || (!!icon && !trailing ? icon : undefined))
+    const trailingIconName = $derived(trailingIcon || (!!icon && trailing ? icon : undefined))
 
     const ariaDescribedBy = $derived(
         !formFieldContext
@@ -123,7 +118,6 @@
             size: resolvedSize,
             leading: isLeading,
             trailing: isTrailing,
-            loading,
             highlight: resolvedHighlight
         })
     )
@@ -154,13 +148,19 @@
         <span class={classes.leading}>
             {@render leadingSlot()}
         </span>
-    {:else if isLeading && leadingIconName}
+    {:else if loadingLeading}
         <span class={classes.leading}>
-            <Icon name={leadingIconName} class={classes.leadingIcon} />
+            <span class="inline-flex animate-spin">
+                <Icon name={loadingIcon} class={classes.leadingIcon} />
+            </span>
         </span>
     {:else if avatar}
         <span class={classes.leading}>
             <Avatar {...avatar} size={classes.leadingAvatarSize} class={classes.leadingAvatar} />
+        </span>
+    {:else if leadingIconName}
+        <span class={classes.leading}>
+            <Icon name={leadingIconName} class={classes.leadingIcon} />
         </span>
     {/if}
 
@@ -185,7 +185,13 @@
         <span class={classes.trailing}>
             {@render trailingSlot()}
         </span>
-    {:else if isTrailing && trailingIconName}
+    {:else if loadingTrailing}
+        <span class={classes.trailing}>
+            <span class="inline-flex animate-spin">
+                <Icon name={loadingIcon} class={classes.trailingIcon} />
+            </span>
+        </span>
+    {:else if trailingIconName}
         <span class={classes.trailing}>
             <Icon name={trailingIconName} class={classes.trailingIcon} />
         </span>

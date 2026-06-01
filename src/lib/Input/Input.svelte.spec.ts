@@ -94,6 +94,37 @@ describe('Input', () => {
             const spans = container.querySelectorAll('span')
             expect(spans.length).toBeGreaterThanOrEqual(1)
         })
+
+        it('should spin the leading loader and keep the trailing icon static (both icons)', () => {
+            const { container } = render(Input, {
+                loading: true,
+                leadingIcon: 'lucide:mail',
+                trailingIcon: 'lucide:check'
+            })
+            expect(container.querySelector('.start-0 .animate-spin')).not.toBeNull()
+            expect(container.querySelector('.end-0 .animate-spin')).toBeNull()
+            expect(container.querySelector('.end-0')).not.toBeNull()
+        })
+
+        it('should keep a trailing-only icon static and not duplicate the loader there', () => {
+            const { container } = render(Input, {
+                loading: true,
+                trailingIcon: 'lucide:eye'
+            })
+            expect(container.querySelector('.end-0 .animate-spin')).toBeNull()
+            expect(container.querySelector('.start-0 .animate-spin')).not.toBeNull()
+        })
+
+        it('should spin the trailing loader and keep the leading icon static when trailing', () => {
+            const { container } = render(Input, {
+                loading: true,
+                trailing: true,
+                leadingIcon: 'lucide:mail',
+                trailingIcon: 'lucide:check'
+            })
+            expect(container.querySelector('.end-0 .animate-spin')).not.toBeNull()
+            expect(container.querySelector('.start-0 .animate-spin')).toBeNull()
+        })
     })
 
     // ==================== VARIANTS ====================
@@ -302,12 +333,12 @@ describe('Input', () => {
             await expect.element(input).toHaveClass(/ps-9/)
         })
 
-        it('should not render avatar when leadingIcon is provided', () => {
+        it('should render avatar over leadingIcon when both are provided (avatar takes precedence)', () => {
             const { container } = render(Input, {
                 leadingIcon: 'lucide:user',
                 avatar: { alt: 'John Doe' }
             })
-            expect(container.textContent).not.toContain('JD')
+            expect(container.textContent).toContain('JD')
         })
 
         it('should not render avatar when loading', () => {
