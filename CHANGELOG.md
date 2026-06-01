@@ -46,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **AvatarGroup** — Avatars now render in array order left-to-right (the first avatar leftmost and on top). Previously the `flex-row-reverse` layout combined with an un-reversed list displayed them right-to-left (e.g. `[1,2,3]` rendered as `3 2 1`).
 - **Alert** — Corrected the `variant` prop's documented default from `'soft'` to `'solid'` to match the actual runtime default.
 - **Drawer** — Forward the remaining typed vaul-svelte props that were silently dropped (`setBackgroundColorOnScale`, `fixed`, `defaultOpen`, `disablePreventScroll`, `repositionInputs`, `snapToSequentialPoint`, `container`, `onAnimationEnd`, `preventScrollRestoration`, `autoFocus`). They were accepted by the type but never reached the underlying drawer.
+- **Input** — Loading state no longer renders a duplicate, non-spinning loader: when a `trailingIcon` (or both a leading and trailing icon) is present, the spinner now appears only on the side selected by `trailing`, and the opposite side keeps its own icon glyph instead of showing a second static loader.
+- **Input** — `avatar` now takes precedence over `leadingIcon` when both are provided, matching the documented behavior; previously the leading icon was shown and the avatar was hidden.
 
 ## [1.8.0] - 2026-05-28
 
