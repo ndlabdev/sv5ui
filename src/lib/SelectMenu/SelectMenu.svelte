@@ -21,7 +21,6 @@
     } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
-    import Input from '../Input/Input.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
@@ -82,7 +81,8 @@
         itemTrailing,
         selected: selectedSlot,
         empty: emptySlot,
-        content: contentSlot
+        content: contentSlot,
+        ...restProps
     }: Props = $props()
 
     // ---- Form context ----
@@ -444,7 +444,9 @@
         {forceMount}
         class={contentClass}
     >
-        <Input
+        <!-- svelte-ignore a11y_autofocus -->
+        <input
+            type="text"
             autofocus
             placeholder={searchPlaceholder}
             value={searchTerm}
@@ -455,8 +457,6 @@
                 e.preventDefault()
                 handleCreate()
             }}
-            variant="none"
-            size={resolvedSize}
             class={inputClass}
         />
 
@@ -539,6 +539,7 @@
         />
 
         <Combobox.Trigger
+            {...restProps}
             id={resolvedId}
             aria-describedby={ariaDescribedBy}
             aria-invalid={resolvedHighlight ? true : undefined}

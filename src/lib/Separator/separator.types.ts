@@ -24,6 +24,12 @@ export type SeparatorProps = Separator.RootProps & {
     type?: NonNullable<SeparatorVariantProps['type']>
 
     /**
+     * Position of the label/icon/avatar/content along the separator.
+     * @default 'center'
+     */
+    position?: NonNullable<SeparatorVariantProps['position']>
+
+    /**
      * Text content displayed in the center of the separator.
      */
     label?: string

@@ -587,4 +587,22 @@ describe('Select', () => {
             })
         })
     })
+
+    // ==================== NATIVE ATTRIBUTES ====================
+
+    describe('native attributes', () => {
+        it('should forward id, aria-label and data-* to the trigger', () => {
+            render(Select, {
+                items: defaultItems,
+                id: 'fruit-select',
+                'aria-label': 'Fruit',
+                'data-testid': 'fruit-trigger'
+            })
+            const trigger = getTrigger()
+            expect(trigger).not.toBeNull()
+            expect(trigger!.id).toBe('fruit-select')
+            expect(trigger!.getAttribute('aria-label')).toBe('Fruit')
+            expect(trigger!.getAttribute('data-testid')).toBe('fruit-trigger')
+        })
+    })
 })

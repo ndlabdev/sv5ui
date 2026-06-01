@@ -1,10 +1,27 @@
 import type { IconProps as IconifyProps } from '@iconify/svelte'
+import type { SVGAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 
-export interface IconProps extends Omit<
-    IconifyProps,
-    'icon' | 'width' | 'height' | 'rotate' | 'flip' | 'class'
-> {
+export interface IconProps
+    extends
+        Omit<IconifyProps, 'icon' | 'width' | 'height' | 'rotate' | 'flip' | 'class'>,
+        Pick<
+            SVGAttributes<SVGSVGElement>,
+            | 'role'
+            | 'tabindex'
+            | 'aria-label'
+            | 'aria-labelledby'
+            | 'aria-describedby'
+            | 'aria-hidden'
+            | 'onclick'
+            | 'onkeydown'
+            | 'onmouseenter'
+            | 'onmouseleave'
+            | 'onfocus'
+            | 'onblur'
+        > {
+    /** Custom data attributes are forwarded to the rendered `<svg>`. */
+    [key: `data-${string}`]: unknown
     /**
      * Icon name in Iconify format: "collection:icon-name"
      * @example "lucide:home", "mdi:account", "heroicons:star"

@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-06-01
+
+### Added
+
+- **Button** — `ButtonProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), enabling typed submit buttons and download links that previously raised a type error.
+- **Link** — `LinkProps` now type-checks native `<button>` form attributes (`name`, `value`, `form`, `formaction`, `formenctype`, `formmethod`, `formnovalidate`, `formtarget`, `popovertarget`, `popovertargetaction`) and `<a>` attributes (`download`, `hreflang`, `ping`, `media`, `referrerpolicy`), which previously raised a type error.
+- **Icon** — `IconProps` now type-checks SVG HTML attributes — `role`, `tabindex`, `aria-*` (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-hidden`), common event handlers, and `data-*` — which previously raised a type error despite reaching the rendered `<svg>` at runtime. This unblocks typed meaningful (non-decorative) icons and test/data hooks.
+- **Collapsible** — `CollapsibleProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`); they are forwarded to the root element (previously rejected by the type while `restProps` was effectively dead).
+- **Separator** — `position` prop (`'start' | 'center' | 'end'`, default `'center'`) controls where the label/icon/avatar/content sits along the separator.
+- **Tabs** — `TabsProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`) and forwards them to the root element; previously these were rejected by the type and no `restProps` were spread.
+- **Pagination** — `PaginationProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`) and forwards them to the root element; previously these were rejected by the type and no `restProps` were spread.
+- **Select** — `SelectProps` now type-checks trigger HTML attributes (`style`, `title`, `role`, `tabindex`, `aria-label`, `aria-labelledby`, common event handlers, and `data-*`) and forwards them to the `Select.Trigger`; previously these were rejected by the type and no `restProps` were spread.
+- **SelectMenu** — `SelectMenuProps` now type-checks trigger HTML attributes (`style`, `title`, `role`, `tabindex`, `aria-label`, `aria-labelledby`, common event handlers, and `data-*`) and forwards them to the `Combobox.Trigger`; previously these were rejected by the type and no `restProps` were spread.
+
+### Changed
+
+- **DropdownMenu** — **BREAKING:** the trigger `children` snippet is no longer auto-wrapped in a `<span>`. It now receives `{ open, props }` and you must spread `props` onto your own focusable trigger element so the menu's ARIA (`aria-haspopup`, `aria-expanded`, `id`) and event handlers land on the real control instead of a non-semantic wrapper. Migration:
+
+    ```svelte
+    <!-- Before -->
+    <DropdownMenu {items}>
+        <Button>Open</Button>
+    </DropdownMenu>
+
+    <!-- After -->
+    <DropdownMenu {items}>
+        {#snippet children({ props })}
+            <Button {...props}>Open</Button>
+        {/snippet}
+    </DropdownMenu>
+    ```
+
+### Removed
+
+- **DropdownMenu** — Removed the unused `name` field from `DropdownMenuRadioGroup`; it was accepted by the type but never read at runtime (radio grouping is keyed by the single `radioGroups[0]` entry).
+- **Tabs** — Removed the unused `slot` field from `TabsItem`; it was accepted by the type and documented as enabling dynamic per-item slots, but was never wired to any rendering (setting it had no effect).
+- **Select** — Removed the unused `defaultValue` prop; it was accepted by the type but never wired (the component is controlled via `value`), so setting it had no effect.
+- **Hooks** — Removed the unused `wireFormEvents` helper from the public API; no component adopted it (they wire `useFormFieldEmit` directly), so it was dead code. Use `useFormFieldEmit` instead.
+
+### Fixed
+
+- **Button** — Loading state with both `leadingIcon` and `trailingIcon` no longer renders a static (non-spinning) loader on the opposite side. The spinner now appears only on the side selected by `trailing`, and the other icon keeps its original glyph.
+- **Button** — Removed the internal `leadingAvatarSize` key from the `ui` prop type; it was accepted by the type but silently ignored at runtime.
+- **Link** — Caller-passed attributes no longer override the component's disabled-state safety attributes (`role`, `aria-disabled`, `tabindex`) or the computed `target`/`rel`/`aria-current`; `{...restProps}` is now spread before the component's own attributes.
+- **Link** — `raw` mode now resolves an array `class` value correctly (via `tailwind-merge`) instead of mis-joining it into comma-separated invalid tokens.
+- **AvatarGroup** — Avatars now render in array order left-to-right (the first avatar leftmost and on top). Previously the `flex-row-reverse` layout combined with an un-reversed list displayed them right-to-left (e.g. `[1,2,3]` rendered as `3 2 1`).
+- **Alert** — Corrected the `variant` prop's documented default from `'soft'` to `'solid'` to match the actual runtime default.
+- **Drawer** — Forward the remaining typed vaul-svelte props that were silently dropped (`setBackgroundColorOnScale`, `fixed`, `defaultOpen`, `disablePreventScroll`, `repositionInputs`, `snapToSequentialPoint`, `container`, `onAnimationEnd`, `preventScrollRestoration`, `autoFocus`). They were accepted by the type but never reached the underlying drawer.
+- **Tabs** — The decorative sliding indicator is now marked `aria-hidden="true"` so assistive technologies ignore the empty visual element inside the tablist.
+- **Pagination** — The previous/next navigation buttons now have an accessible name (`aria-label` "Previous page" / "Next page"); they were icon-only with no label, so assistive tech announced nothing (the first/last buttons already had names).
+- **Pagination** — Removed the dead `firstIcon`/`prevIcon`/`nextIcon`/`lastIcon` keys from the `ui` slot type; they were accepted by the type but silently ignored (navigation icon sizing is handled by the underlying button). The same-named icon-name props (e.g. `prevIcon="lucide:arrow-left"`) are unaffected.
+- **Input** — Loading state no longer renders a duplicate, non-spinning loader: when a `trailingIcon` (or both a leading and trailing icon) is present, the spinner now appears only on the side selected by `trailing`, and the opposite side keeps its own icon glyph instead of showing a second static loader.
+- **Input** — `avatar` now takes precedence over `leadingIcon` when both are provided, matching the documented behavior; previously the leading icon was shown and the avatar was hidden.
+- **SelectMenu** — The in-dropdown search field no longer inherits the surrounding `FormField` context. Previously, when a `SelectMenu` was used inside a `<FormField>`, the search input duplicated the field's `id` (invalid HTML, broke label association) and fired spurious `FormField` validation events while typing.
+
 ## [1.8.0] - 2026-05-28
 
 ### Added
@@ -203,7 +258,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/ndlabdev/sv5ui/compare/v1.8.0...v2.0.0
 [1.6.0]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/ndlabdev/sv5ui/compare/v1.4.0...v1.5.0

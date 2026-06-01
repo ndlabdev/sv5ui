@@ -1,5 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
+import type { TabsRootProps } from 'bits-ui'
 import type { TabsSlots, TabsVariantProps } from './tabs.variants.js'
 
 // ============================================================================
@@ -52,12 +53,6 @@ export interface TabsItem {
     content?: string
 
     /**
-     * Named slot identifier for custom content rendering.
-     * When provided, allows using dynamic snippet slots for this item.
-     */
-    slot?: string
-
-    /**
      * Additional CSS classes applied to this item's trigger element.
      */
     class?: ClassNameValue
@@ -108,7 +103,26 @@ export interface TabsSlotProps {
  *
  * @see https://bits-ui.com/docs/components/tabs
  */
-export interface TabsProps {
+export interface TabsProps extends Pick<
+    TabsRootProps,
+    | 'id'
+    | 'style'
+    | 'title'
+    | 'role'
+    | 'tabindex'
+    | 'aria-label'
+    | 'aria-labelledby'
+    | 'aria-describedby'
+    | 'onclick'
+    | 'onkeydown'
+    | 'onmouseenter'
+    | 'onmouseleave'
+    | 'onfocus'
+    | 'onblur'
+> {
+    /** Custom data attributes are forwarded to the root element. */
+    [key: `data-${string}`]: unknown
+
     /**
      * Bindable reference to the root DOM element.
      */

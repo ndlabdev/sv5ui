@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { CollapsibleRootPropsWithoutHTML } from 'bits-ui'
+import type { CollapsibleRootProps, CollapsibleRootPropsWithoutHTML } from 'bits-ui'
 import type { CollapsibleSlots } from './collapsible.variants.js'
 
 /**
@@ -22,10 +22,32 @@ import type { CollapsibleSlots } from './collapsible.variants.js'
  *
  * @see https://bits-ui.com/docs/components/collapsible
  */
-export interface CollapsibleProps extends Pick<
-    CollapsibleRootPropsWithoutHTML,
-    'open' | 'onOpenChange' | 'onOpenChangeComplete' | 'disabled'
-> {
+export interface CollapsibleProps
+    extends
+        Pick<
+            CollapsibleRootPropsWithoutHTML,
+            'open' | 'onOpenChange' | 'onOpenChangeComplete' | 'disabled'
+        >,
+        Pick<
+            CollapsibleRootProps,
+            | 'id'
+            | 'style'
+            | 'title'
+            | 'role'
+            | 'tabindex'
+            | 'aria-label'
+            | 'aria-labelledby'
+            | 'aria-describedby'
+            | 'onclick'
+            | 'onkeydown'
+            | 'onmouseenter'
+            | 'onmouseleave'
+            | 'onfocus'
+            | 'onblur'
+        > {
+    /** Custom data attributes are forwarded to the root element. */
+    [key: `data-${string}`]: unknown
+
     // -------------------------------------------------------------------------
     // Refs
     // -------------------------------------------------------------------------

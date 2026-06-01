@@ -206,6 +206,38 @@ describe('Separator', () => {
         })
     })
 
+    // ==================== POSITION ====================
+
+    describe('position', () => {
+        it('center (default) renders border, content, border', () => {
+            const { container } = render(Separator, { label: 'OR' })
+            const root = container.firstElementChild!
+            expect(root.children.length).toBe(3)
+            // middle child is the content container
+            expect(root.children[1].textContent).toContain('OR')
+        })
+
+        it('start renders content first, then a single border', () => {
+            const { container } = render(Separator, { label: 'OR', position: 'start' })
+            const root = container.firstElementChild!
+            expect(root.children.length).toBe(2)
+            expect(root.children[0].textContent).toContain('OR')
+        })
+
+        it('end renders a single border, then content', () => {
+            const { container } = render(Separator, { label: 'OR', position: 'end' })
+            const root = container.firstElementChild!
+            expect(root.children.length).toBe(2)
+            expect(root.children[1].textContent).toContain('OR')
+        })
+
+        it('ignores position when there is no content (single border)', () => {
+            const { container } = render(Separator, { position: 'start' })
+            const root = container.firstElementChild!
+            expect(root.children.length).toBe(1)
+        })
+    })
+
     // ==================== COMBINED ====================
 
     describe('combined', () => {
