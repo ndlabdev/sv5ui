@@ -318,4 +318,47 @@ describe('Pagination', () => {
             })
         })
     })
+
+    // ==================== NAVIGATION ACCESSIBLE NAMES ====================
+
+    describe('navigation accessible names', () => {
+        it('should give the prev and next buttons an accessible name', async () => {
+            render(Pagination, defaultProps)
+            await vi.waitFor(() => {
+                expect(getPrevButton()).not.toBeNull()
+                expect(getNextButton()).not.toBeNull()
+            })
+            expect(getPrevButton()!.getAttribute('aria-label')).toBe('Previous page')
+            expect(getNextButton()!.getAttribute('aria-label')).toBe('Next page')
+        })
+
+        it('should keep accessible names when custom prev/next icons are used', async () => {
+            render(Pagination, {
+                ...defaultProps,
+                prevIcon: 'lucide:arrow-left',
+                nextIcon: 'lucide:arrow-right'
+            })
+            await vi.waitFor(() => expect(getPrevButton()).not.toBeNull())
+            expect(getPrevButton()!.getAttribute('aria-label')).toBe('Previous page')
+            expect(getNextButton()!.getAttribute('aria-label')).toBe('Next page')
+        })
+    })
+
+    // ==================== NATIVE ATTRIBUTES ====================
+
+    describe('native attributes', () => {
+        it('should forward id, aria-label and data-* to the root element', async () => {
+            render(Pagination, {
+                ...defaultProps,
+                id: 'pager',
+                'aria-label': 'Page navigation',
+                'data-testid': 'pager-root'
+            })
+            await vi.waitFor(() => expect(getRoot()).not.toBeNull())
+            const root = getRoot()!
+            expect(root.id).toBe('pager')
+            expect(root.getAttribute('aria-label')).toBe('Page navigation')
+            expect(root.getAttribute('data-testid')).toBe('pager-root')
+        })
+    })
 })

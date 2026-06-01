@@ -97,11 +97,7 @@ export const paginationVariants = tv({
         prev: '',
         next: '',
         last: '',
-        ellipsisIcon: navIcon,
-        firstIcon: navIcon,
-        prevIcon: navIcon,
-        nextIcon: navIcon,
-        lastIcon: navIcon
+        ellipsisIcon: navIcon
     },
     variants: {
         size: {
@@ -109,51 +105,31 @@ export const paginationVariants = tv({
                 list: 'gap-0.5',
                 item: 'size-7 text-xs',
                 ellipsis: 'size-7 text-xs',
-                ellipsisIcon: 'size-3',
-                firstIcon: 'size-3',
-                prevIcon: 'size-3',
-                nextIcon: 'size-3',
-                lastIcon: 'size-3'
+                ellipsisIcon: 'size-3'
             },
             sm: {
                 list: 'gap-0.5',
                 item: 'size-8 text-xs',
                 ellipsis: 'size-8 text-xs',
-                ellipsisIcon: 'size-3.5',
-                firstIcon: 'size-3.5',
-                prevIcon: 'size-3.5',
-                nextIcon: 'size-3.5',
-                lastIcon: 'size-3.5'
+                ellipsisIcon: 'size-3.5'
             },
             md: {
                 list: 'gap-1',
                 item: 'size-9 text-sm',
                 ellipsis: 'size-9 text-sm',
-                ellipsisIcon: 'size-4',
-                firstIcon: 'size-4',
-                prevIcon: 'size-4',
-                nextIcon: 'size-4',
-                lastIcon: 'size-4'
+                ellipsisIcon: 'size-4'
             },
             lg: {
                 list: 'gap-1',
                 item: 'size-10 text-sm',
                 ellipsis: 'size-10 text-sm',
-                ellipsisIcon: 'size-5',
-                firstIcon: 'size-5',
-                prevIcon: 'size-5',
-                nextIcon: 'size-5',
-                lastIcon: 'size-5'
+                ellipsisIcon: 'size-5'
             },
             xl: {
                 list: 'gap-1.5',
                 item: 'size-11 text-base',
                 ellipsis: 'size-11 text-base',
-                ellipsisIcon: 'size-5',
-                firstIcon: 'size-5',
-                prevIcon: 'size-5',
-                nextIcon: 'size-5',
-                lastIcon: 'size-5'
+                ellipsisIcon: 'size-5'
             }
         },
         disabled: {
