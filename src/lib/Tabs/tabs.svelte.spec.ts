@@ -472,4 +472,45 @@ describe('Tabs', () => {
             })
         })
     })
+
+    // ==================== NATIVE ATTRIBUTES ====================
+
+    describe('native attributes', () => {
+        it('should forward id, aria-label and data-* to the root element', async () => {
+            render(Tabs, {
+                items: sampleItems,
+                id: 'settings-tabs',
+                'aria-label': 'Settings sections',
+                'data-testid': 'tabs-root'
+            })
+            await vi.waitFor(() => {
+                const root = getRoot()
+                expect(root).not.toBeNull()
+                expect(root!.id).toBe('settings-tabs')
+                expect(root!.getAttribute('aria-label')).toBe('Settings sections')
+                expect(root!.getAttribute('data-testid')).toBe('tabs-root')
+            })
+        })
+
+        it('should forward onclick handler to the root element', async () => {
+            const onclick = vi.fn()
+            render(Tabs, { items: sampleItems, onclick })
+            await vi.waitFor(() => expect(getRoot()).not.toBeNull())
+            getRoot()!.click()
+            expect(onclick).toHaveBeenCalled()
+        })
+    })
+
+    // ==================== INDICATOR ACCESSIBILITY ====================
+
+    describe('indicator accessibility', () => {
+        it('should mark the decorative indicator with aria-hidden', async () => {
+            render(Tabs, { items: sampleItems })
+            await vi.waitFor(() => {
+                const indicator = getList()!.querySelector('.transition-all')
+                expect(indicator).not.toBeNull()
+                expect(indicator!.getAttribute('aria-hidden')).toBe('true')
+            })
+        })
+    })
 })
