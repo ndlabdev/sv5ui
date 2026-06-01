@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Separator** — `position` prop (`'start' | 'center' | 'end'`, default `'center'`) controls where the label/icon/avatar/content sits along the separator.
 - **Tabs** — `TabsProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`) and forwards them to the root element; previously these were rejected by the type and no `restProps` were spread.
 - **Pagination** — `PaginationProps` now type-checks root HTML attributes (`id`, `style`, `title`, `role`, `tabindex`, `aria-*`, common event handlers, and `data-*`) and forwards them to the root element; previously these were rejected by the type and no `restProps` were spread.
+- **Select** — `SelectProps` now type-checks trigger HTML attributes (`style`, `title`, `role`, `tabindex`, `aria-label`, `aria-labelledby`, common event handlers, and `data-*`) and forwards them to the `Select.Trigger`; previously these were rejected by the type and no `restProps` were spread.
+- **SelectMenu** — `SelectMenuProps` now type-checks trigger HTML attributes (`style`, `title`, `role`, `tabindex`, `aria-label`, `aria-labelledby`, common event handlers, and `data-*`) and forwards them to the `Combobox.Trigger`; previously these were rejected by the type and no `restProps` were spread.
 
 ### Changed
 
@@ -39,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **DropdownMenu** — Removed the unused `name` field from `DropdownMenuRadioGroup`; it was accepted by the type but never read at runtime (radio grouping is keyed by the single `radioGroups[0]` entry).
 - **Tabs** — Removed the unused `slot` field from `TabsItem`; it was accepted by the type and documented as enabling dynamic per-item slots, but was never wired to any rendering (setting it had no effect).
+- **Select** — Removed the unused `defaultValue` prop; it was accepted by the type but never wired (the component is controlled via `value`), so setting it had no effect.
 
 ### Fixed
 
@@ -54,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Pagination** — Removed the dead `firstIcon`/`prevIcon`/`nextIcon`/`lastIcon` keys from the `ui` slot type; they were accepted by the type but silently ignored (navigation icon sizing is handled by the underlying button). The same-named icon-name props (e.g. `prevIcon="lucide:arrow-left"`) are unaffected.
 - **Input** — Loading state no longer renders a duplicate, non-spinning loader: when a `trailingIcon` (or both a leading and trailing icon) is present, the spinner now appears only on the side selected by `trailing`, and the opposite side keeps its own icon glyph instead of showing a second static loader.
 - **Input** — `avatar` now takes precedence over `leadingIcon` when both are provided, matching the documented behavior; previously the leading icon was shown and the avatar was hidden.
+- **SelectMenu** — The in-dropdown search field no longer inherits the surrounding `FormField` context. Previously, when a `SelectMenu` was used inside a `<FormField>`, the search input duplicated the field's `id` (invalid HTML, broke label association) and fired spurious `FormField` validation events while typing.
 
 ## [1.8.0] - 2026-05-28
 
