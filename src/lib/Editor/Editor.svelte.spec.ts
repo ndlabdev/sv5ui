@@ -463,6 +463,39 @@ describe('Editor', () => {
                 expect(btn).not.toBeNull()
             })
         })
+
+        const selectFile = (container: Element) => {
+            const input = container.querySelector('[data-editor-image-input]') as HTMLInputElement
+            const dt = new DataTransfer()
+            dt.items.add(new File(['x'], 'x.png', { type: 'image/png' }))
+            input.files = dt.files
+            input.dispatchEvent(new Event('change', { bubbles: true }))
+        }
+
+        it('blocks an unsafe image src returned by onImageUpload', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+            const { container } = render(Editor, {
+                image: true,
+                onImageUpload: async () => 'javascript:alert(1)'
+            })
+            await vi.waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+            selectFile(container)
+            await vi.waitFor(() => expect(warn).toHaveBeenCalled())
+            expect(container.querySelector('img')).toBeNull()
+            warn.mockRestore()
+        })
+
+        it('inserts an image for a safe https src from onImageUpload', async () => {
+            const { container } = render(Editor, {
+                image: true,
+                onImageUpload: async () => 'https://example.com/a.png'
+            })
+            await vi.waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+            selectFile(container)
+            await vi.waitFor(() => {
+                expect(container.querySelector('img')).not.toBeNull()
+            })
+        })
     })
 
     // ==================== PHASE 2: TABLES ====================

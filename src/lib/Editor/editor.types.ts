@@ -261,6 +261,12 @@ export interface EditorProps extends Omit<
      * Bindable content. The runtime type depends on `output`:
      * - `output: 'html'` (default) → `string` of HTML
      * - `output: 'json'` → `EditorJSON` document
+     *
+     * Security: the serialized value is structurally validated by the editor
+     * schema (unknown tags, attributes, and event handlers are dropped), but it
+     * is NOT sanitizer-clean. It can still contain arbitrary image `src` values
+     * (including `data:` URIs from pasted content). Sanitize the HTML output
+     * (e.g. with DOMPurify) before rendering it as raw markup elsewhere.
      */
     value?: string | EditorJSON
 
@@ -355,6 +361,11 @@ export interface EditorProps extends Omit<
      * must return the resolved URL to insert as `<img src=...>`. When
      * omitted and `image` is `true`, images can only be inserted via URL
      * prompt (toolbar).
+     *
+     * The returned URL is validated before insertion: relative URLs,
+     * `http(s)`, and raster `data:image/*` URIs are allowed; `javascript:`,
+     * `data:text/*`, and `data:image/svg+xml` are rejected (the image is not
+     * inserted and a warning is logged).
      */
     onImageUpload?: (file: File) => Promise<string>
 

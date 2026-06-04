@@ -24,7 +24,12 @@
     import Icon from '../Icon/Icon.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
     import EditorUrlPrompt from './EditorUrlPrompt.svelte'
-    import { httpUrlSchema, youtubeUrlSchema, type UrlSchema } from './editor.schemas.js'
+    import {
+        httpUrlSchema,
+        youtubeUrlSchema,
+        isSafeImageSrc,
+        type UrlSchema
+    } from './editor.schemas.js'
 
     const config = getComponentConfig('editor', editorDefaults)
 
@@ -468,6 +473,11 @@
         if (!onImageUpload) return
         try {
             const url = await onImageUpload(file)
+            if (!isSafeImageSrc(url)) {
+                // eslint-disable-next-line no-console
+                console.warn('[Editor] blocked unsafe image src from onImageUpload:', url)
+                return
+            }
             editor.chain().focus().setImage({ src: url }).run()
         } catch (err) {
             // eslint-disable-next-line no-console
