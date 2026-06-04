@@ -116,6 +116,28 @@ describe('Editor', () => {
                 expect(getProseMirror(container)?.textContent).toContain('From JSON')
             })
         })
+
+        it('applies an external value change after the editor has emitted (echo-dedup stays correct)', async () => {
+            let api: EditorApi | undefined
+            const screen = render(Editor, {
+                value: '<p>start</p>',
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            api!.insert(' edited')
+            await vi.waitFor(() => {
+                expect(getProseMirror(screen.container)?.textContent).toContain('edited')
+            })
+            await screen.rerender({ value: '<p>external</p>' })
+            await vi.waitFor(() => {
+                expect(getProseMirror(screen.container)?.textContent).toContain('external')
+            })
+        })
     })
 
     // ==================== EDITABILITY ====================

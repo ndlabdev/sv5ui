@@ -228,6 +228,7 @@
     }
 
     let suppressUpdate = false
+    let lastEmitted: string | EditorJSON | undefined
 
     $effect(() => {
         if (!contentElement) return
@@ -267,6 +268,7 @@
                     syncState(e)
                     if (suppressUpdate) return
                     const serialized = serialize(e)
+                    lastEmitted = serialized
                     value = serialized
                     emit.onInput()
                     onValueChange?.(serialized)
@@ -324,6 +326,7 @@
     $effect(() => {
         if (!editor) return
         if (value === undefined) return
+        if (typeof value === 'string' && value === lastEmitted) return
         const current = serialize(editor)
         if (isContentEqual(current, value)) return
         suppressUpdate = true
