@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Calendar** — The Previous/Next year navigation buttons did nothing on initial render. They advanced an internal `placeholder` that stayed `undefined` until the first month navigation, so the first year click was a no-op. The placeholder is now initialized (from `value` when provided, otherwise today) so year navigation works immediately.
+
 ## [2.0.0] - 2026-06-01
 
 ### Added
