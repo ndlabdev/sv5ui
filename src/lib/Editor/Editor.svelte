@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-    import { Editor } from '@tiptap/core'
+    import { Editor, type AnyExtension } from '@tiptap/core'
     import BubbleMenuExt from '@tiptap/extension-bubble-menu'
     import { untrack } from 'svelte'
     import { editorVariants, editorDefaults } from './editor.variants.js'
@@ -191,7 +191,7 @@
         })
     }
 
-    function resolveExtensions() {
+    function resolveExtensions(): AnyExtension[] | Promise<AnyExtension[]> {
         if (extensionsOverride) return extensionsOverride
         return buildExtensions({
             headingLevels,
@@ -245,43 +245,56 @@
             ...(ariaDescribedBy ? { 'aria-describedby': ariaDescribedBy } : {}),
             ...(hasError ? { 'aria-invalid': 'true' } : {})
         }))
-        const exts = untrack(() => resolveExtensions())
+        const el = contentElement
+        const result = untrack(() => resolveExtensions())
 
-        const ed = new Editor({
-            element: contentElement,
-            extensions: exts,
-            content: initialContent,
-            editable: initialEditable,
-            autofocus: initialAutofocus,
-            editorProps: {
-                attributes: initialAttrs as Record<string, string>
-            },
-            onCreate: ({ editor: e }) => syncState(e),
-            onUpdate: ({ editor: e }) => {
-                syncState(e)
-                if (suppressUpdate) return
-                const serialized = serialize(e)
-                value = serialized
-                emit.onInput()
-                onValueChange?.(serialized)
-            },
-            onSelectionUpdate: ({ editor: e }) => syncState(e),
-            onFocus: ({ editor: e }) => {
-                syncState(e)
-                emit.onFocus()
-                onFocus?.()
-            },
-            onBlur: ({ editor: e }) => {
-                syncState(e)
-                emit.onBlur()
-                onBlur?.()
-            }
-        })
+        let ed: Editor | null = null
+        let cancelled = false
 
-        editor = ed
+        const create = (exts: AnyExtension[]) => {
+            if (cancelled) return
+            ed = new Editor({
+                element: el,
+                extensions: exts,
+                content: initialContent,
+                editable: initialEditable,
+                autofocus: initialAutofocus,
+                editorProps: {
+                    attributes: initialAttrs as Record<string, string>
+                },
+                onCreate: ({ editor: e }) => syncState(e),
+                onUpdate: ({ editor: e }) => {
+                    syncState(e)
+                    if (suppressUpdate) return
+                    const serialized = serialize(e)
+                    value = serialized
+                    emit.onInput()
+                    onValueChange?.(serialized)
+                },
+                onSelectionUpdate: ({ editor: e }) => syncState(e),
+                onFocus: ({ editor: e }) => {
+                    syncState(e)
+                    emit.onFocus()
+                    onFocus?.()
+                },
+                onBlur: ({ editor: e }) => {
+                    syncState(e)
+                    emit.onBlur()
+                    onBlur?.()
+                }
+            })
+            editor = ed
+        }
+
+        if (result instanceof Promise) {
+            result.then(create)
+        } else {
+            create(result)
+        }
 
         return () => {
-            ed.destroy()
+            cancelled = true
+            ed?.destroy()
             editor = null
         }
     })

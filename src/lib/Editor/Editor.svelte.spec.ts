@@ -457,7 +457,12 @@ describe('Editor', () => {
         it('clicking table button opens dimension picker', async () => {
             const { container } = render(Editor, { tables: true, toolbar: ['table'] })
             await vi.waitFor(() => {
-                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+                const btn = container.querySelector(
+                    'button[data-action="table"]'
+                ) as HTMLButtonElement | null
+                expect(btn).not.toBeNull()
+                expect(btn!.disabled).toBe(false)
             })
             const btn = container.querySelector('button[data-action="table"]') as HTMLButtonElement
             await btn.click()
@@ -469,7 +474,12 @@ describe('Editor', () => {
         it('clicking a dimension cell button inserts a table (UI flow)', async () => {
             const { container } = render(Editor, { tables: true, toolbar: ['table'] })
             await vi.waitFor(() => {
-                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+                const btn = container.querySelector(
+                    'button[data-action="table"]'
+                ) as HTMLButtonElement | null
+                expect(btn).not.toBeNull()
+                expect(btn!.disabled).toBe(false)
             })
             const tableBtn = container.querySelector(
                 'button[data-action="table"]'
@@ -702,6 +712,31 @@ describe('Editor', () => {
             })
             await vi.waitFor(() => {
                 expect(getContent(container)?.className).toContain('custom-content-cls')
+            })
+        })
+    })
+
+    // ==================== LAZY EXTENSION LOADING ====================
+
+    describe('lazy extension loading', () => {
+        it('mounts synchronously when no lazy feature (markdown/tables) is enabled', () => {
+            const { container } = render(Editor, { toolbar: ['bold'] })
+            expect(container.querySelector('.ProseMirror')).not.toBeNull()
+        })
+
+        it('mounts asynchronously when tables are enabled (lazy chunk)', async () => {
+            const { container } = render(Editor, { tables: true })
+            expect(container.querySelector('.ProseMirror')).toBeNull()
+            await vi.waitFor(() => {
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+            })
+        })
+
+        it('mounts asynchronously for markdown output (lazy chunk)', async () => {
+            const { container } = render(Editor, { output: 'markdown' })
+            expect(container.querySelector('.ProseMirror')).toBeNull()
+            await vi.waitFor(() => {
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
             })
         })
     })

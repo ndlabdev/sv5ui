@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Editor** — The heavy optional extensions are now lazy-loaded via dynamic `import()`: `tiptap-markdown` (only when `output="markdown"`) and the table packages (only when `tables` is enabled). Editors that don't use them no longer pull `markdown-it` (~80 KB gzip) or `prosemirror-tables` (~25 KB gzip) into the bundle — the consumer's bundler now code-splits them into separate chunks loaded on demand. Editors that enable neither still mount **synchronously** (no behavior change); only `markdown`/`tables` editors initialize asynchronously while their chunk loads (toolbar actions are briefly disabled and `bind:api` methods are no-ops until then).
+
 ## [2.0.0] - 2026-06-01
 
 ### Added

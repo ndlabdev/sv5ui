@@ -6,11 +6,6 @@ import Typography from '@tiptap/extension-typography'
 import CharacterCount from '@tiptap/extension-character-count'
 import Image from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
-import { Table } from '@tiptap/extension-table'
-import { TableRow } from '@tiptap/extension-table-row'
-import { TableCell } from '@tiptap/extension-table-cell'
-import { TableHeader } from '@tiptap/extension-table-header'
-import { Markdown } from 'tiptap-markdown'
 import Youtube from '@tiptap/extension-youtube'
 import { DragHandle } from '@tiptap/extension-drag-handle'
 import type { SuggestionOptions } from '@tiptap/suggestion'
@@ -68,7 +63,13 @@ function buildImageExt(): AnyExtension {
     })
 }
 
-function buildTableExts(): AnyExtension[] {
+async function buildTableExts(): Promise<AnyExtension[]> {
+    const [{ Table }, { TableRow }, { TableCell }, { TableHeader }] = await Promise.all([
+        import('@tiptap/extension-table'),
+        import('@tiptap/extension-table-row'),
+        import('@tiptap/extension-table-cell'),
+        import('@tiptap/extension-table-header')
+    ])
     return [
         Table.configure({
             resizable: true,
@@ -80,7 +81,8 @@ function buildTableExts(): AnyExtension[] {
     ]
 }
 
-function buildMarkdownExt(allowHtml: boolean): AnyExtension {
+async function buildMarkdownExt(allowHtml: boolean): Promise<AnyExtension> {
+    const { Markdown } = await import('tiptap-markdown')
     return Markdown.configure({
         html: allowHtml,
         tightLists: true,
@@ -133,7 +135,8 @@ function buildDragHandleExt(): AnyExtension {
     })
 }
 
-type OptionalBuilder = (o: BuildExtensionsOptions) => AnyExtension | AnyExtension[] | null
+type OptionalBuilderResult = AnyExtension | AnyExtension[] | Promise<AnyExtension | AnyExtension[]>
+type OptionalBuilder = (o: BuildExtensionsOptions) => OptionalBuilderResult | null
 
 const OPTIONAL_BUILDERS: OptionalBuilder[] = [
     (o) => (o.placeholder ? Placeholder.configure({ placeholder: o.placeholder }) : null),
@@ -150,17 +153,28 @@ const OPTIONAL_BUILDERS: OptionalBuilder[] = [
     (o) => (o.dragHandle ? buildDragHandleExt() : null)
 ]
 
-function collectOptionalExts(options: BuildExtensionsOptions): AnyExtension[] {
-    const acc: AnyExtension[] = []
+function collectOptionalExts(
+    options: BuildExtensionsOptions
+): AnyExtension[] | Promise<AnyExtension[]> {
+    const sync: AnyExtension[] = []
+    const lazy: Promise<AnyExtension | AnyExtension[]>[] = []
     for (const build of OPTIONAL_BUILDERS) {
         const result = build(options)
-        if (result === null) continue
-        if (Array.isArray(result)) acc.push(...result)
-        else acc.push(result)
+        if (result === null || result === undefined) continue
+        if (result instanceof Promise) lazy.push(result)
+        else if (Array.isArray(result)) sync.push(...result)
+        else sync.push(result)
     }
-    return acc
+    if (lazy.length === 0) return sync
+    return Promise.all(lazy).then((resolved) => [...sync, ...resolved.flat()])
 }
 
-export function buildExtensions(options: BuildExtensionsOptions = {}): AnyExtension[] {
-    return [...buildCore(options), ...collectOptionalExts(options), ...(options.extra ?? [])]
+export function buildExtensions(
+    options: BuildExtensionsOptions = {}
+): AnyExtension[] | Promise<AnyExtension[]> {
+    const optional = collectOptionalExts(options)
+    if (optional instanceof Promise) {
+        return optional.then((opt) => [...buildCore(options), ...opt, ...(options.extra ?? [])])
+    }
+    return [...buildCore(options), ...optional, ...(options.extra ?? [])]
 }
