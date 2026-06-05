@@ -11,17 +11,6 @@ export const httpUrlSchema: UrlSchema = v.pipe(
     v.regex(/^https?:\/\//i, 'URL must start with http:// or https://')
 )
 
-/**
- * Whether a string is safe to use as an `<img src>`. Allows relative URLs,
- * `http`/`https`, and raster `data:image/*` URIs; blocks `javascript:`,
- * `vbscript:`, `data:text/*`, and `data:image/svg+xml` (SVG can execute script).
- *
- * The input is first normalized the way the WHATWG URL parser does — tab/CR/LF
- * are removed and leading/trailing control characters and spaces (code point
- * <= 0x20) are stripped — so prefixed/embedded-control bypasses (a leading
- * control byte before `javascript:`, or `java\nscript:`) cannot slip past the
- * scheme check.
- */
 function normalizeUrl(src: string): string {
     const s = src.replace(/[\t\n\r]/g, '')
     let start = 0

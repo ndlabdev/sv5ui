@@ -245,10 +245,6 @@
     $effect(() => {
         if (!contentElement) return
 
-        // Untrack: these props would otherwise cause editor recreation on every
-        // keystroke (value changes via onUpdate → effect re-runs → destroy + rebuild
-        // → cursor lost → can only type 1 char). value sync is handled by a
-        // dedicated effect below; disabled/readonly toggle via setEditable.
         const initialContent = untrack(() => value ?? '')
         const initialEditable = untrack(() => !disabled && !readonly)
         const initialAutofocus = untrack(() => autofocus)
@@ -321,9 +317,6 @@
         }
     })
 
-    // Sync aria attributes on the ProseMirror element when error/id state changes.
-    // Tiptap's editorProps.attributes is read once at init, so toggling needs
-    // direct DOM access. Run on every state change.
     $effect(() => {
         if (!contentElement) return
         const pm = contentElement.querySelector('.ProseMirror') as HTMLElement | null
@@ -421,7 +414,6 @@
         }
     })
 
-    // ----- URL prompt modal (shared by YouTube/Image/Link toolbar + slash) -----
     interface UrlPromptState {
         open: boolean
         title: string
@@ -465,7 +457,6 @@
         }
     }
 
-    // ----- Image upload via hidden file input -----
     let fileInput: HTMLInputElement | null = $state(null)
 
     async function handleFileSelected(event: Event): Promise<void> {
@@ -537,7 +528,6 @@
         })
     }
 
-    // ----- Table dimension picker -----
     let tableMenuOpen = $state(false)
     let tablePickerRows = $state(0)
     let tablePickerCols = $state(0)

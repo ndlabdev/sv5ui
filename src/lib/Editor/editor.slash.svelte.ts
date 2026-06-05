@@ -20,11 +20,6 @@ interface SlashCommandsContext {
     image?: boolean
     tables?: boolean
     youtube?: boolean
-    /**
-     * Override for the URL prompt used by image/youtube commands. Pass an
-     * async function that resolves to a URL string, or `null`/empty string
-     * to cancel. When omitted, falls back to `window.prompt`.
-     */
     promptUrl?: (opts: UrlPromptOptions) => Promise<string | null>
 }
 
@@ -33,10 +28,6 @@ function defaultPromptUrl(opts: UrlPromptOptions): Promise<string | null> {
     return Promise.resolve(window.prompt(opts.title, opts.initialValue ?? opts.placeholder ?? ''))
 }
 
-/**
- * Returns the built-in slash command list, optionally including media
- * commands based on which features are enabled in the host Editor.
- */
 export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): SlashCommand[] {
     const commands: SlashCommand[] = [
         {
@@ -170,11 +161,6 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
 
     return commands
 }
-
-// ----------------------------------------------------------------------------
-// Suggestion popup — mounts the SlashPopup Svelte component imperatively
-// (Tiptap's Suggestion render API expects DOM-level lifecycle hooks).
-// ----------------------------------------------------------------------------
 
 type MountedComponent = ReturnType<typeof mount>
 
@@ -326,10 +312,6 @@ function buildSuggestionRender() {
     }
 }
 
-// ----------------------------------------------------------------------------
-// Tiptap extension
-// ----------------------------------------------------------------------------
-
 interface SlashExtensionOptions {
     suggestion: Partial<SuggestionOptions>
 }
@@ -369,8 +351,6 @@ export function buildSlashExtension(commands: SlashCommand[], trigger: string = 
             allowSpaces: false,
             items: ({ query }: { query: string }) => substringFilter(commands, query),
             render: buildSuggestionRender as unknown as SuggestionOptions['render'],
-            // Tiptap merges `suggestion` shallowly when an extension is .configure()'d,
-            // so the command default in addOptions gets overwritten. Include it here.
             command: ({ editor, range, props }) => {
                 editor.chain().focus().deleteRange(range).run()
                 ;(props as SlashCommand).run({ editor })
