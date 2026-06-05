@@ -178,11 +178,21 @@ export function buildDefaultSlashCommands(ctx: SlashCommandsContext = {}): Slash
 
 type MountedComponent = ReturnType<typeof mount>
 
+let slashSeq = 0
+
 interface PopupHandle {
     container: HTMLElement
     component: MountedComponent
-    state: { items: SlashCommand[]; selectedIndex: number; onPick: (i: number) => void }
+    state: {
+        items: SlashCommand[]
+        selectedIndex: number
+        onPick: (i: number) => void
+        listboxId: string
+        optionIdPrefix: string
+    }
     cleanup: (() => void) | null
+    editorDom: HTMLElement | null
+    stopActiveDescendant: (() => void) | null
 }
 
 function substringFilter(commands: SlashCommand[], query: string): SlashCommand[] {
@@ -209,6 +219,11 @@ function buildSuggestionRender() {
         }) => {
             if (typeof document === 'undefined') return
 
+            const seq = ++slashSeq
+            const listboxId = `sv5ui-slash-listbox-${seq}`
+            const optionIdPrefix = `sv5ui-slash-${seq}-`
+            const editorDom = props.editor.view.dom as HTMLElement
+
             const container = document.createElement('div')
             container.setAttribute('data-editor-slash-container', '')
             container.style.cssText = 'position:absolute;top:0;left:0;z-index:50;'
@@ -217,6 +232,8 @@ function buildSuggestionRender() {
             const state = $state({
                 items: props.items,
                 selectedIndex: 0,
+                listboxId,
+                optionIdPrefix,
                 onPick: (i: number) => {
                     const cmd = state.items[i]
                     if (!cmd) return
@@ -229,7 +246,30 @@ function buildSuggestionRender() {
                 props: state
             })
 
-            handle = { container, component, state, cleanup: null }
+            editorDom.setAttribute('aria-controls', listboxId)
+            editorDom.setAttribute('aria-expanded', 'true')
+
+            const stopActiveDescendant = $effect.root(() => {
+                $effect(() => {
+                    if (state.items.length > 0) {
+                        editorDom.setAttribute(
+                            'aria-activedescendant',
+                            `${optionIdPrefix}${state.selectedIndex}`
+                        )
+                    } else {
+                        editorDom.removeAttribute('aria-activedescendant')
+                    }
+                })
+            })
+
+            handle = {
+                container,
+                component,
+                state,
+                cleanup: null,
+                editorDom,
+                stopActiveDescendant
+            }
 
             const rect = props.clientRect?.()
             if (rect) {
@@ -273,6 +313,12 @@ function buildSuggestionRender() {
         onExit: () => {
             if (!handle) return
             handle.cleanup?.()
+            handle.stopActiveDescendant?.()
+            if (handle.editorDom) {
+                handle.editorDom.removeAttribute('aria-controls')
+                handle.editorDom.removeAttribute('aria-expanded')
+                handle.editorDom.removeAttribute('aria-activedescendant')
+            }
             unmount(handle.component)
             handle.container.remove()
             handle = null

@@ -795,4 +795,96 @@ describe('Editor', () => {
             })
         })
     })
+
+    // ==================== POPUP ACCESSIBILITY ====================
+
+    describe('popup accessibility', () => {
+        it('slash popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
+            let api: EditorApi | undefined
+            const { container } = render(Editor, {
+                slash: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+
+            api!.editor!.chain().focus().insertContent('/').run()
+
+            const popup = await vi.waitFor(() => {
+                const el = document.querySelector('[data-editor-slash-popup]')
+                expect(el).not.toBeNull()
+                return el as HTMLElement
+            })
+
+            const options = popup.querySelectorAll('[role="option"]')
+            expect(options.length).toBeGreaterThan(0)
+
+            const selected = popup.querySelectorAll('[role="option"][aria-selected="true"]')
+            expect(selected.length).toBe(1)
+
+            expect(popup.getAttribute('aria-label')).toBe('Slash commands')
+            expect(popup.id).not.toBe('')
+
+            const pm = getProseMirror(container)!
+            expect(pm.getAttribute('aria-controls')).toBe(popup.id)
+            expect(pm.getAttribute('aria-expanded')).toBe('true')
+
+            const activeId = pm.getAttribute('aria-activedescendant')
+            expect(activeId).toBeTruthy()
+            expect(popup.querySelector(`#${activeId}`)).not.toBeNull()
+            expect(popup.querySelector(`#${activeId}`)?.getAttribute('aria-selected')).toBe('true')
+        })
+
+        it('mention popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
+            let api: EditorApi | undefined
+            const { container } = render(Editor, {
+                onMention: async () => [
+                    { id: 'alice', label: 'Alice' },
+                    { id: 'bob', label: 'Bob' }
+                ],
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+
+            api!.editor!.chain().focus().insertContent('@').run()
+
+            const popup = await vi.waitFor(() => {
+                const el = document.querySelector('[data-editor-mention-popup]')
+                expect(el).not.toBeNull()
+                const list = (el as HTMLElement).querySelector('[role="listbox"]')
+                expect(list?.querySelectorAll('[role="option"]').length).toBeGreaterThan(0)
+                return el as HTMLElement
+            })
+
+            const listbox = popup.querySelector('[role="listbox"]') as HTMLElement
+            expect(listbox.getAttribute('aria-label')).toBe('Mentions')
+            expect(listbox.id).not.toBe('')
+
+            const options = listbox.querySelectorAll('[role="option"]')
+            expect(options.length).toBe(2)
+
+            const selected = listbox.querySelectorAll('[role="option"][aria-selected="true"]')
+            expect(selected.length).toBe(1)
+
+            const pm = getProseMirror(container)!
+            expect(pm.getAttribute('aria-controls')).toBe(listbox.id)
+            expect(pm.getAttribute('aria-expanded')).toBe('true')
+
+            const activeId = pm.getAttribute('aria-activedescendant')
+            expect(activeId).toBeTruthy()
+            expect(listbox.querySelector(`#${activeId}`)).not.toBeNull()
+            expect(listbox.querySelector(`#${activeId}`)?.getAttribute('aria-selected')).toBe(
+                'true'
+            )
+        })
+    })
 })

@@ -7,6 +7,8 @@ interface BuildMentionSuggestionOptions {
     onQuery: (query: string) => Promise<MentionItem[]>
 }
 
+let mentionSeq = 0
+
 interface SuggestionRef {
     items: MentionItem[]
     selectedIndex: number
@@ -14,6 +16,9 @@ interface SuggestionRef {
     listEl: HTMLElement | null
     cleanup: (() => void) | null
     pickItem: (index: number) => void
+    editorDom: HTMLElement | null
+    listboxId: string
+    optionIdPrefix: string
 }
 
 function createPopup(): HTMLElement {
@@ -42,6 +47,9 @@ function renderItems(state: SuggestionRef): void {
         row.type = 'button'
         row.setAttribute('data-mention-item', '')
         row.setAttribute('data-index', String(i))
+        row.setAttribute('role', 'option')
+        row.id = `${state.optionIdPrefix}${i}`
+        row.setAttribute('aria-selected', i === state.selectedIndex ? 'true' : 'false')
         row.className = [
             'flex w-full items-center gap-2 px-3 py-1.5 text-sm text-start',
             'hover:bg-surface-container-high',
@@ -69,6 +77,13 @@ function renderItems(state: SuggestionRef): void {
         })
         state.listEl?.appendChild(row)
     })
+
+    if (state.editorDom && state.items.length > 0) {
+        state.editorDom.setAttribute(
+            'aria-activedescendant',
+            `${state.optionIdPrefix}${state.selectedIndex}`
+        )
+    }
 }
 
 export function buildMentionSuggestion(
@@ -89,11 +104,21 @@ export function buildMentionSuggestion(
                 onStart: (props: SuggestionProps) => {
                     if (typeof document === 'undefined') return
 
+                    const seq = ++mentionSeq
+                    const listboxId = `sv5ui-mention-listbox-${seq}`
+                    const optionIdPrefix = `sv5ui-mention-${seq}-`
+                    const editorDom = props.editor.view.dom as HTMLElement
+
                     const popupEl = createPopup()
                     const listEl = document.createElement('div')
                     listEl.setAttribute('role', 'listbox')
+                    listEl.id = listboxId
+                    listEl.setAttribute('aria-label', 'Mentions')
                     popupEl.appendChild(listEl)
                     document.body.appendChild(popupEl)
+
+                    editorDom.setAttribute('aria-controls', listboxId)
+                    editorDom.setAttribute('aria-expanded', 'true')
 
                     state = {
                         items: props.items as MentionItem[],
@@ -101,6 +126,9 @@ export function buildMentionSuggestion(
                         popupEl,
                         listEl,
                         cleanup: null,
+                        editorDom,
+                        listboxId,
+                        optionIdPrefix,
                         pickItem: (i: number) => {
                             const it = state?.items[i]
                             if (!it) return
@@ -160,6 +188,11 @@ export function buildMentionSuggestion(
                 onExit: () => {
                     state?.cleanup?.()
                     state?.popupEl?.remove()
+                    if (state?.editorDom) {
+                        state.editorDom.removeAttribute('aria-controls')
+                        state.editorDom.removeAttribute('aria-expanded')
+                        state.editorDom.removeAttribute('aria-activedescendant')
+                    }
                     state = null
                 }
             }
