@@ -58,6 +58,7 @@
         markdownAllowHtml = false,
         image = false,
         onImageUpload,
+        onImageUploadError,
         tables = false,
         onMention,
         mentionTrigger = '@',
@@ -81,6 +82,14 @@
 
     const formFieldContext = useFormField()
     const emit = useFormFieldEmit()
+
+    const resolvedOutput = untrack(() => output)
+
+    function getMarkdownStorage(ed: Editor): { getMarkdown?: () => string } | undefined {
+        return (ed.storage as unknown as Record<string, unknown>).markdown as
+            | { getMarkdown?: () => string }
+            | undefined
+    }
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false
@@ -148,11 +157,9 @@
     }
 
     function serialize(ed: Editor): string | EditorJSON {
-        if (output === 'json') return ed.getJSON() as EditorJSON
-        if (output === 'markdown') {
-            const md = (ed.storage as unknown as Record<string, unknown>).markdown as
-                | { getMarkdown?: () => string }
-                | undefined
+        if (resolvedOutput === 'json') return ed.getJSON() as EditorJSON
+        if (resolvedOutput === 'markdown') {
+            const md = getMarkdownStorage(ed)
             if (md && typeof md.getMarkdown === 'function') {
                 return md.getMarkdown()
             }
@@ -208,7 +215,7 @@
             tables,
             youtube,
             dragHandle,
-            markdown: output === 'markdown',
+            markdown: resolvedOutput === 'markdown',
             markdownAllowHtml,
             mentionTrigger,
             mentionSuggestion: onMention
@@ -355,13 +362,11 @@
             TOOLBAR_ACTIONS[action].run(editor)
         },
         getValue(format) {
-            if (!editor) return output === 'json' ? ({} as EditorJSON) : ''
-            const fmt = format ?? output
+            if (!editor) return resolvedOutput === 'json' ? ({} as EditorJSON) : ''
+            const fmt = format ?? resolvedOutput
             if (fmt === 'json') return editor.getJSON() as EditorJSON
             if (fmt === 'markdown') {
-                const md = (editor.storage as unknown as Record<string, unknown>).markdown as
-                    | { getMarkdown?: () => string }
-                    | undefined
+                const md = getMarkdownStorage(editor)
                 if (md && typeof md.getMarkdown === 'function') return md.getMarkdown()
                 return editor.getHTML()
             }
@@ -405,7 +410,6 @@
         return {
             root: slots.root({ class: [c.root, className, u.root] }),
             toolbar: slots.toolbar({ class: [c.toolbar, u.toolbar] }),
-            toolbarGroup: slots.toolbarGroup({ class: [c.toolbarGroup, u.toolbarGroup] }),
             toolbarButton: slots.toolbarButton({ class: [c.toolbarButton, u.toolbarButton] }),
             toolbarSeparator: slots.toolbarSeparator({
                 class: [c.toolbarSeparator, u.toolbarSeparator]
@@ -480,8 +484,12 @@
             }
             editor.chain().focus().setImage({ src: url }).run()
         } catch (err) {
-            // eslint-disable-next-line no-console
-            console.error('[Editor] image upload failed', err)
+            if (onImageUploadError) {
+                onImageUploadError(err)
+            } else {
+                // eslint-disable-next-line no-console
+                console.error('[Editor] image upload failed', err)
+            }
         }
     }
 

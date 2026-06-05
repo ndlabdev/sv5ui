@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Editor** — `onImageUploadError` prop, called when `onImageUpload` rejects (previously upload failures were only logged to the console). Use it to surface errors to the user.
+
 ### Changed
 
 - **Editor** — Halved the serialization work per keystroke: the value-sync effect no longer re-serializes the document to compare it against a value the editor itself just emitted (it short-circuits on its own echo). Previously every edit serialized twice — once to push `value`, then again in the sync effect to compare. Most noticeable for `output="markdown"` and large documents. No API or behavior change.
 - **Editor** — The heavy optional extensions are now lazy-loaded via dynamic `import()`: `tiptap-markdown` (only when `output="markdown"`) and the table packages (only when `tables` is enabled). Editors that don't use them no longer pull `markdown-it` (~80 KB gzip) or `prosemirror-tables` (~25 KB gzip) into the bundle — the consumer's bundler now code-splits them into separate chunks loaded on demand. Editors that enable neither still mount **synchronously** (no behavior change); only `markdown`/`tables` editors initialize asynchronously while their chunk loads (toolbar actions are briefly disabled and `bind:api` methods are no-ops until then).
 
+### Removed
+
+- **Editor** — Removed the unused `toolbarGroup` key from the `ui` slot type; it was computed but never rendered, so setting it had no effect.
+
 ### Fixed
 
+- **Editor** — Changing the `output` prop on an already-mounted editor no longer corrupts the content. `output` is read once at mount (it also decides whether the Markdown extension is loaded); it is now applied consistently to serialization, so a runtime change is simply ignored instead of producing a format/extension mismatch. Re-key the component (`{#key output}`) to switch formats.
 - **Editor** — The mention (`@`) and slash (`/`) autocomplete popups are now proper ARIA listboxes: each item exposes `role="option"` + `aria-selected`, the listbox has an accessible name, and while a popup is open the editor's contenteditable exposes `aria-controls`, `aria-expanded`, and `aria-activedescendant` (cleared on close) so screen readers announce the highlighted option as the user navigates.
 
 ### Security

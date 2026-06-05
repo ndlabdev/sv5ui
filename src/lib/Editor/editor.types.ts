@@ -272,6 +272,10 @@ export interface EditorProps extends Omit<
 
     /**
      * Serialization format used for `value` and `onValueChange`.
+     *
+     * Read once when the editor mounts (it also decides whether the Markdown
+     * extension is loaded). Changing it on an existing editor has no effect —
+     * re-key the component (e.g. `{#key output}`) to switch formats.
      * @default 'html'
      */
     output?: EditorOutput
@@ -368,6 +372,12 @@ export interface EditorProps extends Omit<
      * inserted and a warning is logged).
      */
     onImageUpload?: (file: File) => Promise<string>
+
+    /**
+     * Called when `onImageUpload` rejects. When omitted, the error is logged to
+     * the console. Use this to surface upload failures to the user.
+     */
+    onImageUploadError?: (error: unknown) => void
 
     // ------------------------------------------------------------------------
     // Tables (Phase 2)

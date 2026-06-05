@@ -14,7 +14,6 @@ export const editorVariants = tv({
             'bg-surface-container-low',
             'rounded-t-lg p-1.5'
         ],
-        toolbarGroup: 'flex items-center gap-0.5',
         toolbarButton: [
             'inline-flex items-center justify-center rounded text-on-surface-variant',
             'hover:bg-surface-container-high hover:text-on-surface',

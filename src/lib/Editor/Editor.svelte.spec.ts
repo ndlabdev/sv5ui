@@ -138,6 +138,24 @@ describe('Editor', () => {
                 expect(getProseMirror(screen.container)?.textContent).toContain('external')
             })
         })
+
+        it('treats output as fixed at mount (changing the prop later has no effect)', async () => {
+            let api: EditorApi | undefined
+            const screen = render(Editor, {
+                output: 'html',
+                value: '<p>hi</p>',
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            expect(typeof api!.getValue()).toBe('string')
+            await screen.rerender({ output: 'json', value: '<p>hi</p>' })
+            expect(typeof api!.getValue()).toBe('string')
+        })
     })
 
     // ==================== EDITABILITY ====================
@@ -495,6 +513,20 @@ describe('Editor', () => {
             await vi.waitFor(() => {
                 expect(container.querySelector('img')).not.toBeNull()
             })
+        })
+
+        it('calls onImageUploadError when the upload rejects', async () => {
+            const onImageUploadError = vi.fn()
+            const { container } = render(Editor, {
+                image: true,
+                onImageUpload: async () => {
+                    throw new Error('upload failed')
+                },
+                onImageUploadError
+            })
+            await vi.waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+            selectFile(container)
+            await vi.waitFor(() => expect(onImageUploadError).toHaveBeenCalled())
         })
     })
 
