@@ -61,7 +61,9 @@
                 title="Basic Drawer"
                 description="This is a basic drawer with title, description, body and footer."
             >
-                <Button variant="outline" label="Open Drawer" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Drawer" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Slides up from the bottom by default. Swipe down or click the overlay to
@@ -86,7 +88,13 @@
                     title="{dir.charAt(0).toUpperCase() + dir.slice(1)} Drawer"
                     description="Opens from the {dir}."
                 >
-                    <Button variant="outline" label={dir.charAt(0).toUpperCase() + dir.slice(1)} />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            label={dir.charAt(0).toUpperCase() + dir.slice(1)}
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <p class="text-on-surface-variant">
                             Drawer from the <strong>{dir}</strong>. Swipe towards the edge to
@@ -120,11 +128,14 @@
                     title="Inset {dir.charAt(0).toUpperCase() + dir.slice(1)}"
                     description="Inset + {dir} direction."
                 >
-                    <Button
-                        variant="soft"
-                        size="sm"
-                        label="Inset {dir.charAt(0).toUpperCase() + dir.slice(1)}"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="soft"
+                            size="sm"
+                            label="Inset {dir.charAt(0).toUpperCase() + dir.slice(1)}"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <p class="text-on-surface-variant">
                             Inset mode combined with <strong>{dir}</strong> direction.
@@ -152,7 +163,9 @@
                 title="No Handle"
                 description="Handle is hidden."
             >
-                <Button variant="outline" label="No Handle" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Handle" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">No drag handle visible. Still swipeable.</p>
                 {/snippet}
@@ -171,7 +184,9 @@
                 title="Handle Only"
                 description="Only the handle can be dragged."
             >
-                <Button variant="outline" label="Handle Only" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Handle Only" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Content area is not draggable — only the handle responds to drag.
@@ -199,7 +214,9 @@
                 title="Non-Modal"
                 description="No overlay, background is interactive."
             >
-                <Button variant="outline" label="Non-Modal" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Non-Modal" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         No overlay. You can still interact with the page behind.
@@ -220,7 +237,9 @@
                 title="Scale Background"
                 description="Background scales down when opened."
             >
-                <Button variant="outline" label="Scale Background" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Scale Background" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         The page content behind scales down, creating a layered depth effect.
@@ -247,7 +266,9 @@
                 title="Non-Dismissible"
                 description="You must use the close button."
             >
-                <Button variant="outline" label="Open (Non-Dismissible)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (Non-Dismissible)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Try swiping or clicking outside — the drawer will not close.
@@ -276,7 +297,9 @@
                 title="Snap Points"
                 description="Snaps at 25%, 50%, 100%."
             >
-                <Button variant="outline" label="3 Snap Points" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="3 Snap Points" />
+                {/snippet}
                 {#snippet body()}
                     <div class="space-y-2">
                         <p class="text-on-surface-variant">
@@ -299,7 +322,9 @@
                 title="Controlled Snap"
                 description="Active: {activeSnap}"
             >
-                <Button variant="outline" label="Controlled Snap" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Controlled Snap" />
+                {/snippet}
                 {#snippet body()}
                     <div class="space-y-3">
                         <p class="text-on-surface-variant">
@@ -340,7 +365,9 @@
                 title="Outer Drawer"
                 description="This is the parent drawer."
             >
-                <Button variant="outline" label="Open Nested" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Nested" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Click below to open a child drawer on top of this one.
@@ -352,7 +379,14 @@
                             title="Inner Drawer"
                             description="Nested child drawer."
                         >
-                            <Button variant="solid" color="primary" label="Open Inner Drawer" />
+                            {#snippet children({ props })}
+                                <Button
+                                    {...props}
+                                    variant="solid"
+                                    color="primary"
+                                    label="Open Inner Drawer"
+                                />
+                            {/snippet}
                             {#snippet body()}
                                 <p class="text-on-surface-variant">
                                     This is the nested drawer. Closing it returns to the outer
@@ -386,7 +420,9 @@
         <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
             <!-- Custom header -->
             <Drawer bind:open={slotsOpen}>
-                <Button variant="outline" label="Custom Header" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Custom Header" />
+                {/snippet}
                 {#snippet header()}
                     <div class="flex items-center gap-3">
                         <div
@@ -426,7 +462,9 @@
 
             <!-- Full content slot -->
             <Drawer bind:open={customContentOpen} title="Custom Content">
-                <Button variant="outline" label="Content Slot" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Content Slot" />
+                {/snippet}
                 {#snippet content()}
                     <div class="flex flex-col items-center gap-4 p-6">
                         <div
@@ -472,7 +510,9 @@
                 title="Callback Demo"
                 description="Check the log above."
             >
-                <Button variant="outline" label="Open (With Callbacks)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (With Callbacks)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Open, close, and watch the callback log update.
@@ -535,7 +575,9 @@
                     container: 'gap-3'
                 }}
             >
-                <Button variant="outline" label="Open Styled Drawer" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Styled Drawer" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-primary-container/80">
                         This drawer overrides content, title, description, handle, and container
@@ -563,12 +605,15 @@
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Mobile Settings Panel</p>
                 <Drawer bind:open={settingsOpen} title="Settings">
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:settings"
-                        label="Settings"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:settings"
+                            label="Settings"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-4">
                             {#each [{ icon: 'lucide:user', label: 'Account', desc: 'Manage your profile' }, { icon: 'lucide:bell', label: 'Notifications', desc: 'Push, email, SMS' }, { icon: 'lucide:shield', label: 'Privacy', desc: 'Data and permissions' }, { icon: 'lucide:palette', label: 'Appearance', desc: 'Theme and display' }, { icon: 'lucide:globe', label: 'Language', desc: 'English (US)' }] as item (item.label)}
@@ -616,12 +661,15 @@
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Notifications Drawer</p>
                 <Drawer bind:open={notificationsOpen} direction="right">
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:bell"
-                        label="Notifications"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:bell"
+                            label="Notifications"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet header()}
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-on-surface">Notifications</h3>
@@ -674,12 +722,15 @@
                     title="Filters"
                     description="Refine your search results."
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:filter"
-                        label="Filters"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:filter"
+                            label="Filters"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-4">
                             <div>
@@ -735,13 +786,16 @@
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Confirmation (Non-Dismissible)</p>
                 <Drawer bind:open={confirmOpen} dismissible={false} handle={false}>
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:trash-2"
-                        label="Delete Account"
-                        color="error"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:trash-2"
+                            label="Delete Account"
+                            color="error"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet content()}
                         <div class="flex flex-col items-center gap-4 p-6 text-center">
                             <div

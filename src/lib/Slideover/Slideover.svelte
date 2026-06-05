@@ -197,8 +197,10 @@
 
 <Dialog.Root bind:open onOpenChange={handleOpenChange} {onOpenChangeComplete}>
     {#if children}
-        <Dialog.Trigger class={className as string}>
-            {@render children()}
+        <Dialog.Trigger>
+            {#snippet child({ props })}
+                {@render children({ props })}
+            {/snippet}
         </Dialog.Trigger>
     {/if}
 

@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Modal / Slideover / Drawer** — **BREAKING.** The trigger is no longer wrapped in an extra `<button>`. Previously the `children` snippet was rendered inside the component's own trigger button, so passing a `<Button>`/`<Link>` produced an invalid nested `<button>` inside `<button>` (an SSR `node_invalid_placement_ssr` hydration error that can escalate to a hard `The deferred DOM Node could not be resolved` failure). The `children` snippet now receives a `props` argument that you must spread onto your own focusable element, so the trigger ARIA and event handlers land on the real control. Migration:
+
+    ```svelte
+    <!-- Before -->
+    <Modal title="…">
+        <Button>Open</Button>
+    </Modal>
+
+    <!-- After -->
+    <Modal title="…">
+        {#snippet children({ props })}
+            <Button {...props}>Open</Button>
+        {/snippet}
+    </Modal>
+    ```
+
 ## [2.0.0] - 2026-06-01
 
 ### Added

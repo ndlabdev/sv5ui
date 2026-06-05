@@ -86,9 +86,18 @@ export type DrawerProps = VaulRootProps & {
     class?: ClassNameValue
 
     /**
-     * Default slot renders the trigger element.
+     * Trigger content. Spread the provided `props` onto your own focusable
+     * element (e.g. a `<Button>`) so the drawer's trigger ARIA and event
+     * handlers land on the real control instead of a nested wrapper button.
+     *
+     * @example
+     * ```svelte
+     * {#snippet children({ props })}
+     *   <Button {...props}>Open</Button>
+     * {/snippet}
+     * ```
      */
-    children?: Snippet
+    children?: Snippet<[{ props: Record<string, unknown> }]>
 
     /**
      * Custom content slot (replaces default layout with header/body/footer).
