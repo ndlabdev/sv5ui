@@ -14,7 +14,7 @@
     import { calendarVariants, calendarDefaults } from './calendar.variants.js'
     import { getComponentConfig } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import type { DateValue } from '@internationalized/date'
+    import { type DateValue, today, getLocalTimeZone } from '@internationalized/date'
     import type { Month } from 'bits-ui'
     import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
 
@@ -62,6 +62,19 @@
         weekDay: weekDaySlot,
         ...restProps
     }: Props = $props()
+
+    function firstDateOf(val: unknown): DateValue | undefined {
+        if (!val) return undefined
+        if (Array.isArray(val)) return val[0] as DateValue | undefined
+        if (typeof val === 'object' && 'start' in val) {
+            return (val as { start?: DateValue }).start
+        }
+        return val as DateValue
+    }
+
+    if (placeholder === undefined) {
+        placeholder = firstDateOf(value) ?? today(getLocalTimeZone())
+    }
 
     const formFieldContext = useFormField()
     const emit = useFormFieldEmit()

@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Editor** — Changing the `output` prop on an already-mounted editor no longer corrupts the content. `output` is read once at mount (it also decides whether the Markdown extension is loaded); it is now applied consistently to serialization, so a runtime change is simply ignored instead of producing a format/extension mismatch. Re-key the component (`{#key output}`) to switch formats.
 - **Editor** — The mention (`@`) and slash (`/`) autocomplete popups are now proper ARIA listboxes: each item exposes `role="option"` + `aria-selected`, the listbox has an accessible name, and while a popup is open the editor's contenteditable exposes `aria-controls`, `aria-expanded`, and `aria-activedescendant` (cleared on close) so screen readers announce the highlighted option as the user navigates.
+- **Calendar** — The Previous/Next year navigation buttons did nothing on initial render. They advanced an internal `placeholder` that stayed `undefined` until the first month navigation, so the first year click was a no-op. The placeholder is now initialized (from `value` when provided, otherwise today) so year navigation works immediately.
 
 ### Security
 
