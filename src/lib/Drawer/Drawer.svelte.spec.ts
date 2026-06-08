@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { page } from 'vitest/browser'
 import Drawer from './Drawer.svelte'
+import DrawerTriggerTestWrapper from './DrawerTriggerTestWrapper.svelte'
 
 describe('Drawer', () => {
     // Helper: query inside the portal (document.body) since Drawer portals its content
@@ -725,6 +726,21 @@ describe('Drawer', () => {
             } finally {
                 el.remove()
             }
+        })
+    })
+
+    describe('trigger', () => {
+        it('forwards trigger props to the caller element without nesting a button', async () => {
+            const { container } = render(DrawerTriggerTestWrapper)
+            const btn = container.querySelector('[data-testid="trigger"]') as HTMLButtonElement
+            expect(btn).not.toBeNull()
+            expect(btn.tagName).toBe('BUTTON')
+            expect(btn.querySelector('button')).toBeNull()
+            expect(btn.getAttribute('data-state')).toBe('closed')
+            btn.click()
+            await vi.waitFor(() => {
+                expect(btn.getAttribute('data-state')).toBe('open')
+            })
         })
     })
 })

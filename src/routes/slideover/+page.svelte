@@ -72,7 +72,9 @@
                 title="Right Slideover"
                 description="Slides in from the right (default)."
             >
-                <Button variant="outline" label="Right" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Right" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         This panel slides in from the right side (default).
@@ -89,7 +91,9 @@
                 title="Left Slideover"
                 description="Slides in from the left."
             >
-                <Button variant="outline" label="Left" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Left" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">This panel slides in from the left side.</p>
                 {/snippet}
@@ -104,7 +108,9 @@
                 title="Top Slideover"
                 description="Slides down from the top."
             >
-                <Button variant="outline" label="Top" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Top" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">This panel slides down from the top.</p>
                 {/snippet}
@@ -119,7 +125,9 @@
                 title="Bottom Slideover"
                 description="Slides up from the bottom."
             >
-                <Button variant="outline" label="Bottom" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Bottom" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">This panel slides up from the bottom.</p>
                 {/snippet}
@@ -145,7 +153,9 @@
                 title="Inset Right"
                 description="Inset mode with rounded corners."
             >
-                <Button variant="outline" label="Inset (Right)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Inset (Right)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         This slideover has margins and rounded corners, giving it a floating
@@ -168,7 +178,9 @@
                 title="Inset Left"
                 description="Inset mode from the left side."
             >
-                <Button variant="outline" label="Inset (Left)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Inset (Left)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Inset mode from the left with floating panel appearance.
@@ -190,7 +202,9 @@
                 title="Inset Top"
                 description="Inset mode from the top."
             >
-                <Button variant="outline" label="Inset (Top)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Inset (Top)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Inset mode from the top with floating panel appearance.
@@ -212,7 +226,9 @@
                 title="Inset Bottom"
                 description="Inset mode from the bottom."
             >
-                <Button variant="outline" label="Inset (Bottom)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Inset (Bottom)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Inset mode from the bottom with floating panel appearance.
@@ -246,7 +262,9 @@
                 title="No Transition"
                 description="This slideover appears and disappears instantly."
             >
-                <Button variant="outline" label="No Transition" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Transition" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         No slide or fade animation — the slideover snaps open and closed.
@@ -279,7 +297,9 @@
                 title="No Close Button"
                 description="The X button is hidden."
             >
-                <Button variant="outline" label="No Close Button" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Close Button" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         There's no X button. Use the footer button or Escape key to close.
@@ -313,7 +333,9 @@
                 title="No Overlay"
                 description="The backdrop is hidden."
             >
-                <Button variant="outline" label="No Overlay" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Overlay" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         The slideover has no backdrop overlay. The page content behind is fully
@@ -348,7 +370,9 @@
                 title="Non-Dismissible"
                 description="You must use the button to close."
             >
-                <Button variant="outline" label="Open (Non-Dismissible)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (Non-Dismissible)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Try clicking outside or pressing Escape — the slideover will not close.
@@ -387,7 +411,9 @@
         <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
             <!-- Custom header slot -->
             <Slideover bind:open={slotsOpen}>
-                <Button variant="outline" label="Custom Header" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Custom Header" />
+                {/snippet}
                 {#snippet header()}
                     <div class="flex items-center gap-3 p-4 sm:px-6">
                         <div
@@ -422,7 +448,9 @@
 
             <!-- Custom title/description slots -->
             <Slideover bind:open={titleSlotOpen}>
-                <Button variant="outline" label="Custom Title/Desc" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Custom Title/Desc" />
+                {/snippet}
                 {#snippet titleSlot()}
                     <span class="flex items-center gap-2">
                         <Icon name="lucide:sparkles" size="16" class="text-warning" />
@@ -467,7 +495,9 @@
                 title="User Profile"
                 description="Manage your account settings."
             >
-                <Button variant="outline" label="Actions Slot" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Actions Slot" />
+                {/snippet}
                 {#snippet actions()}
                     <Badge variant="soft" color="success" size="xs" label="Active" />
                     <Badge variant="soft" color="info" size="xs" label="Pro" />
@@ -487,7 +517,9 @@
 
             <!-- Full content slot -->
             <Slideover bind:open={customContentOpen} title="Custom Content">
-                <Button variant="outline" label="Content Slot" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Content Slot" />
+                {/snippet}
                 {#snippet content()}
                     <div class="flex h-full flex-col items-center justify-center gap-4 p-6">
                         <div
@@ -544,7 +576,9 @@
                 title="Callback Demo"
                 description="Check the log above."
             >
-                <Button variant="outline" label="Open (With Callbacks)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (With Callbacks)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Open, close, and watch the callback log update in real-time.
@@ -578,7 +612,9 @@
                 title="No Portal"
                 description="Rendered inline, not in a portal."
             >
-                <Button variant="outline" label="Open (No Portal)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (No Portal)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         This slideover is rendered inline in the DOM.
@@ -650,7 +686,9 @@
                     description: 'text-on-primary-container/70'
                 }}
             >
-                <Button variant="outline" label="Open Styled Slideover" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Styled Slideover" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-primary-container/80">
                         This slideover overrides
@@ -695,12 +733,15 @@
                     title="Filters"
                     description="Refine your search results."
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:sliders-horizontal"
-                        label="Filters"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:sliders-horizontal"
+                            label="Filters"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-6">
                             <div>
@@ -786,12 +827,15 @@
                     title="Settings"
                     description="Customize your experience."
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:settings"
-                        label="Settings"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:settings"
+                            label="Settings"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-6">
                             <div class="flex items-center justify-between">
@@ -866,12 +910,15 @@
                     title="Shopping Cart"
                     description="3 items in your cart"
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:shopping-cart"
-                        label="Cart (3)"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:shopping-cart"
+                            label="Cart (3)"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-4">
                             {#each [{ name: 'Wireless Headphones', price: '$199.99', qty: 1 }, { name: 'USB-C Cable', price: '$19.99', qty: 2 }, { name: 'Phone Case', price: '$29.99', qty: 1 }] as item (item.name)}
@@ -932,12 +979,15 @@
                     title="Notifications"
                     description="You have 5 unread notifications"
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:bell"
-                        label="Notifications"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:bell"
+                            label="Notifications"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-3">
                             {#each [{ icon: 'lucide:package', title: 'Order shipped', desc: 'Your order #1234 has been shipped', time: '2m ago', color: 'text-info' }, { icon: 'lucide:user-plus', title: 'New follower', desc: 'John Doe started following you', time: '1h ago', color: 'text-primary' }, { icon: 'lucide:message-circle', title: 'New comment', desc: 'Sarah commented on your post', time: '3h ago', color: 'text-success' }, { icon: 'lucide:heart', title: 'Post liked', desc: 'Your post received 100 likes', time: '5h ago', color: 'text-error' }, { icon: 'lucide:calendar', title: 'Event reminder', desc: 'Team meeting in 30 minutes', time: '1d ago', color: 'text-warning' }] as notif (notif.title)}
@@ -991,7 +1041,9 @@
                     title={`Size: ${s}`}
                     description={`right side, size="${s}"`}
                 >
-                    <Button variant="outline" label={`size="${s}"`} />
+                    {#snippet children({ props })}
+                        <Button {...props} variant="outline" label={`size="${s}"`} />
+                    {/snippet}
                     {#snippet body()}
                         <p class="text-sm text-on-surface-variant">
                             Current size is <code>{s}</code>.
@@ -1019,7 +1071,9 @@
                     title={`Transition: ${t}`}
                     description="Open and close to see the animation."
                 >
-                    <Button variant="outline" label={`transition="${t}"`} />
+                    {#snippet children({ props })}
+                        <Button {...props} variant="outline" label={`transition="${t}"`} />
+                    {/snippet}
                 </Slideover>
             {/each}
         </div>

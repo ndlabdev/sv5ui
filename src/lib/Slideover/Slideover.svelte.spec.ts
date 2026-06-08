@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { page } from 'vitest/browser'
 import Slideover from './Slideover.svelte'
+import SlideoverTriggerTestWrapper from './SlideoverTriggerTestWrapper.svelte'
 
 describe('Slideover', () => {
     const getOverlay = () => document.querySelector('[data-dialog-overlay]') as HTMLElement | null
@@ -613,6 +614,21 @@ describe('Slideover', () => {
             await vi.waitFor(() => {
                 const content = getContent()
                 expect(content!.className).toMatch(/slide-in-full-left/)
+            })
+        })
+    })
+
+    describe('trigger', () => {
+        it('forwards trigger props to the caller element without nesting a button', async () => {
+            const { container } = render(SlideoverTriggerTestWrapper)
+            const btn = container.querySelector('[data-testid="trigger"]') as HTMLButtonElement
+            expect(btn).not.toBeNull()
+            expect(btn.tagName).toBe('BUTTON')
+            expect(btn.querySelector('button')).toBeNull()
+            expect(btn.getAttribute('data-state')).toBe('closed')
+            btn.click()
+            await vi.waitFor(() => {
+                expect(btn.getAttribute('data-state')).toBe('open')
             })
         })
     })

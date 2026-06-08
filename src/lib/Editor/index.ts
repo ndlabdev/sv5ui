@@ -29,10 +29,12 @@
  *
  * (`npm add` / `yarn add` work equally well.)
  *
- * All 18 packages are required, even if you only enable a subset of
- * features. Editor imports every extension at module load so toggling
- * `image`, `tables`, `youtube`, etc. via props doesn't trigger a dynamic
- * import. Missing peers fail at runtime with module-resolution errors.
+ * All 18 packages must be installed even if you only enable a subset of
+ * features — missing peers fail at runtime with module-resolution errors.
+ * Most extensions are imported eagerly, but the heaviest optional ones load
+ * on demand: `tiptap-markdown` (only with `output="markdown"`) and the table
+ * packages (only with `tables`) are pulled in via dynamic `import()`, so your
+ * bundler code-splits them out of the base editor chunk when unused.
  *
  * ## Usage
  *

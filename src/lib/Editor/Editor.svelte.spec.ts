@@ -116,6 +116,46 @@ describe('Editor', () => {
                 expect(getProseMirror(container)?.textContent).toContain('From JSON')
             })
         })
+
+        it('applies an external value change after the editor has emitted (echo-dedup stays correct)', async () => {
+            let api: EditorApi | undefined
+            const screen = render(Editor, {
+                value: '<p>start</p>',
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            api!.insert(' edited')
+            await vi.waitFor(() => {
+                expect(getProseMirror(screen.container)?.textContent).toContain('edited')
+            })
+            await screen.rerender({ value: '<p>external</p>' })
+            await vi.waitFor(() => {
+                expect(getProseMirror(screen.container)?.textContent).toContain('external')
+            })
+        })
+
+        it('treats output as fixed at mount (changing the prop later has no effect)', async () => {
+            let api: EditorApi | undefined
+            const screen = render(Editor, {
+                output: 'html',
+                value: '<p>hi</p>',
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+            expect(typeof api!.getValue()).toBe('string')
+            await screen.rerender({ output: 'json', value: '<p>hi</p>' })
+            expect(typeof api!.getValue()).toBe('string')
+        })
     })
 
     // ==================== EDITABILITY ====================
@@ -441,6 +481,53 @@ describe('Editor', () => {
                 expect(btn).not.toBeNull()
             })
         })
+
+        const selectFile = (container: Element) => {
+            const input = container.querySelector('[data-editor-image-input]') as HTMLInputElement
+            const dt = new DataTransfer()
+            dt.items.add(new File(['x'], 'x.png', { type: 'image/png' }))
+            input.files = dt.files
+            input.dispatchEvent(new Event('change', { bubbles: true }))
+        }
+
+        it('blocks an unsafe image src returned by onImageUpload', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+            const { container } = render(Editor, {
+                image: true,
+                onImageUpload: async () => 'javascript:alert(1)'
+            })
+            await vi.waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+            selectFile(container)
+            await vi.waitFor(() => expect(warn).toHaveBeenCalled())
+            expect(container.querySelector('img')).toBeNull()
+            warn.mockRestore()
+        })
+
+        it('inserts an image for a safe https src from onImageUpload', async () => {
+            const { container } = render(Editor, {
+                image: true,
+                onImageUpload: async () => 'https://example.com/a.png'
+            })
+            await vi.waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+            selectFile(container)
+            await vi.waitFor(() => {
+                expect(container.querySelector('img')).not.toBeNull()
+            })
+        })
+
+        it('calls onImageUploadError when the upload rejects', async () => {
+            const onImageUploadError = vi.fn()
+            const { container } = render(Editor, {
+                image: true,
+                onImageUpload: async () => {
+                    throw new Error('upload failed')
+                },
+                onImageUploadError
+            })
+            await vi.waitFor(() => expect(container.querySelector('.ProseMirror')).not.toBeNull())
+            selectFile(container)
+            await vi.waitFor(() => expect(onImageUploadError).toHaveBeenCalled())
+        })
     })
 
     // ==================== PHASE 2: TABLES ====================
@@ -457,7 +544,12 @@ describe('Editor', () => {
         it('clicking table button opens dimension picker', async () => {
             const { container } = render(Editor, { tables: true, toolbar: ['table'] })
             await vi.waitFor(() => {
-                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+                const btn = container.querySelector(
+                    'button[data-action="table"]'
+                ) as HTMLButtonElement | null
+                expect(btn).not.toBeNull()
+                expect(btn!.disabled).toBe(false)
             })
             const btn = container.querySelector('button[data-action="table"]') as HTMLButtonElement
             await btn.click()
@@ -469,7 +561,12 @@ describe('Editor', () => {
         it('clicking a dimension cell button inserts a table (UI flow)', async () => {
             const { container } = render(Editor, { tables: true, toolbar: ['table'] })
             await vi.waitFor(() => {
-                expect(container.querySelector('button[data-action="table"]')).not.toBeNull()
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+                const btn = container.querySelector(
+                    'button[data-action="table"]'
+                ) as HTMLButtonElement | null
+                expect(btn).not.toBeNull()
+                expect(btn!.disabled).toBe(false)
             })
             const tableBtn = container.querySelector(
                 'button[data-action="table"]'
@@ -703,6 +800,123 @@ describe('Editor', () => {
             await vi.waitFor(() => {
                 expect(getContent(container)?.className).toContain('custom-content-cls')
             })
+        })
+    })
+
+    // ==================== LAZY EXTENSION LOADING ====================
+
+    describe('lazy extension loading', () => {
+        it('mounts synchronously when no lazy feature (markdown/tables) is enabled', () => {
+            const { container } = render(Editor, { toolbar: ['bold'] })
+            expect(container.querySelector('.ProseMirror')).not.toBeNull()
+        })
+
+        it('mounts asynchronously when tables are enabled (lazy chunk)', async () => {
+            const { container } = render(Editor, { tables: true })
+            expect(container.querySelector('.ProseMirror')).toBeNull()
+            await vi.waitFor(() => {
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+            })
+        })
+
+        it('mounts asynchronously for markdown output (lazy chunk)', async () => {
+            const { container } = render(Editor, { output: 'markdown' })
+            expect(container.querySelector('.ProseMirror')).toBeNull()
+            await vi.waitFor(() => {
+                expect(container.querySelector('.ProseMirror')).not.toBeNull()
+            })
+        })
+    })
+
+    // ==================== POPUP ACCESSIBILITY ====================
+
+    describe('popup accessibility', () => {
+        it('slash popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
+            let api: EditorApi | undefined
+            const { container } = render(Editor, {
+                slash: true,
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+
+            api!.editor!.chain().focus().insertContent('/').run()
+
+            const popup = await vi.waitFor(() => {
+                const el = document.querySelector('[data-editor-slash-popup]')
+                expect(el).not.toBeNull()
+                return el as HTMLElement
+            })
+
+            const options = popup.querySelectorAll('[role="option"]')
+            expect(options.length).toBeGreaterThan(0)
+
+            const selected = popup.querySelectorAll('[role="option"][aria-selected="true"]')
+            expect(selected.length).toBe(1)
+
+            expect(popup.getAttribute('aria-label')).toBe('Slash commands')
+            expect(popup.id).not.toBe('')
+
+            const pm = getProseMirror(container)!
+            expect(pm.getAttribute('aria-controls')).toBe(popup.id)
+            expect(pm.getAttribute('aria-expanded')).toBe('true')
+
+            const activeId = pm.getAttribute('aria-activedescendant')
+            expect(activeId).toBeTruthy()
+            expect(popup.querySelector(`#${activeId}`)).not.toBeNull()
+            expect(popup.querySelector(`#${activeId}`)?.getAttribute('aria-selected')).toBe('true')
+        })
+
+        it('mention popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
+            let api: EditorApi | undefined
+            const { container } = render(Editor, {
+                onMention: async () => [
+                    { id: 'alice', label: 'Alice' },
+                    { id: 'bob', label: 'Bob' }
+                ],
+                get api() {
+                    return api
+                },
+                set api(v: EditorApi | undefined) {
+                    api = v
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).not.toBeNull())
+
+            api!.editor!.chain().focus().insertContent('@').run()
+
+            const popup = await vi.waitFor(() => {
+                const el = document.querySelector('[data-editor-mention-popup]')
+                expect(el).not.toBeNull()
+                const list = (el as HTMLElement).querySelector('[role="listbox"]')
+                expect(list?.querySelectorAll('[role="option"]').length).toBeGreaterThan(0)
+                return el as HTMLElement
+            })
+
+            const listbox = popup.querySelector('[role="listbox"]') as HTMLElement
+            expect(listbox.getAttribute('aria-label')).toBe('Mentions')
+            expect(listbox.id).not.toBe('')
+
+            const options = listbox.querySelectorAll('[role="option"]')
+            expect(options.length).toBe(2)
+
+            const selected = listbox.querySelectorAll('[role="option"][aria-selected="true"]')
+            expect(selected.length).toBe(1)
+
+            const pm = getProseMirror(container)!
+            expect(pm.getAttribute('aria-controls')).toBe(listbox.id)
+            expect(pm.getAttribute('aria-expanded')).toBe('true')
+
+            const activeId = pm.getAttribute('aria-activedescendant')
+            expect(activeId).toBeTruthy()
+            expect(listbox.querySelector(`#${activeId}`)).not.toBeNull()
+            expect(listbox.querySelector(`#${activeId}`)?.getAttribute('aria-selected')).toBe(
+                'true'
+            )
         })
     })
 })

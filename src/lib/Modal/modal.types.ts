@@ -137,10 +137,18 @@ export interface ModalProps extends RootProps, ContentProps {
     // --- Slots ---
 
     /**
-     * Default slot content used as the trigger element.
-     * When provided, clicking this element opens the modal.
+     * Trigger content. Spread the provided `props` onto your own focusable
+     * element (e.g. a `<Button>`) so the dialog's trigger ARIA and event
+     * handlers land on the real control instead of a nested wrapper button.
+     *
+     * @example
+     * ```svelte
+     * {#snippet children({ props })}
+     *   <Button {...props}>Open</Button>
+     * {/snippet}
+     * ```
      */
-    children?: Snippet
+    children?: Snippet<[{ props: Record<string, unknown> }]>
 
     /**
      * Custom content slot that replaces the entire default layout
