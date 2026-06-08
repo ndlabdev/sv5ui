@@ -231,6 +231,21 @@ describe('Command', () => {
         })
     })
 
+    // ==================== ROOT ATTRIBUTES ====================
+
+    describe('root html attributes', () => {
+        it('should forward id and data-* attributes to the root element', () => {
+            render(CommandTestWrapper, {
+                groups: sampleGroups,
+                id: 'my-command',
+                'data-foo': 'bar'
+            })
+            const root = getRoot()!
+            expect(root.id).toBe('my-command')
+            expect(root.getAttribute('data-foo')).toBe('bar')
+        })
+    })
+
     // ==================== COMBINED ====================
 
     describe('combined', () => {

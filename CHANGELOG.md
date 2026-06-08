@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Editor** — `onImageUploadError` prop, called when `onImageUpload` rejects (previously upload failures were only logged to the console). Use it to surface errors to the user.
+- **Command** — Exported the `CommandGroup` and `CommandItem` types from the package entry, so consumers can type the `groups` data with full type-checking without importing from internal paths.
+- **Command** — `CommandProps` now type-checks `id` and `data-*` attributes on the root element (useful as a scoping/anchor target and for test/analytics hooks); previously these were rejected by the type even though `restProps` already reached the root.
 
 ### Changed
 
