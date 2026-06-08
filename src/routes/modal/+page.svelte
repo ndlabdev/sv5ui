@@ -59,7 +59,9 @@
                 title="Basic Modal"
                 description="This is a basic modal with title, description, body and footer."
             >
-                <Button variant="outline" label="Open Modal" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Modal" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         A centered modal dialog. Click the X, press Escape, or click outside to
@@ -89,7 +91,9 @@
                 title="Fullscreen Modal"
                 description="This modal takes up the entire screen."
             >
-                <Button variant="outline" label="Open Fullscreen" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Fullscreen" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Covers the entire viewport. Useful for complex forms or media viewers.
@@ -116,7 +120,9 @@
                 title="Scrollable Modal"
                 description="The entire modal scrolls within the overlay."
             >
-                <Button variant="outline" label="Scrollable" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Scrollable" />
+                {/snippet}
                 {#snippet body()}
                     <div class="space-y-3">
                         {#each Array.from({ length: 20 }, (_, i) => i) as i (i)}
@@ -142,7 +148,9 @@
                 title="Scrollable + Fullscreen"
                 description="Full viewport with scrollable content."
             >
-                <Button variant="outline" label="Scrollable + Fullscreen" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Scrollable + Fullscreen" />
+                {/snippet}
                 {#snippet body()}
                     <div class="space-y-3">
                         {#each Array.from({ length: 30 }, (_, i) => i) as i (i)}
@@ -173,7 +181,9 @@
                 title="No Transition"
                 description="Appears instantly without animation."
             >
-                <Button variant="outline" label="No Transition" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Transition" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">Modal opens and closes without animation.</p>
                 {/snippet}
@@ -192,7 +202,9 @@
                 title="No Close Button"
                 description="Close button is hidden."
             >
-                <Button variant="outline" label="No Close Button" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Close Button" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">Use the footer button or Escape to close.</p>
                 {/snippet}
@@ -207,7 +219,9 @@
                 title="No Overlay"
                 description="Background is visible."
             >
-                <Button variant="outline" label="No Overlay" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="No Overlay" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">No backdrop overlay behind the modal.</p>
                 {/snippet}
@@ -232,7 +246,9 @@
                 title="Non-Dismissible"
                 description="Must use the close button."
             >
-                <Button variant="outline" label="Open (Non-Dismissible)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (Non-Dismissible)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Clicking outside or pressing Escape won't close this modal.
@@ -256,7 +272,9 @@
         <div class="flex flex-wrap gap-3 rounded-lg bg-surface-container-high p-4">
             <!-- Custom header -->
             <Modal bind:open={slotsOpen}>
-                <Button variant="outline" label="Custom Header" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Custom Header" />
+                {/snippet}
                 {#snippet header()}
                     <div class="flex items-center gap-3 p-4 sm:px-6">
                         <div
@@ -298,7 +316,9 @@
                 title="User Profile"
                 description="Manage your account settings."
             >
-                <Button variant="outline" label="Actions Slot" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Actions Slot" />
+                {/snippet}
                 {#snippet actions()}
                     <Badge variant="soft" color="success" size="xs" label="Active" />
                     <Badge variant="soft" color="info" size="xs" label="Pro" />
@@ -315,7 +335,9 @@
 
             <!-- Full content slot -->
             <Modal bind:open={customContentOpen} title="Custom Content">
-                <Button variant="outline" label="Content Slot" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Content Slot" />
+                {/snippet}
                 {#snippet content()}
                     <div class="flex flex-col items-center gap-4 p-6">
                         <div
@@ -360,7 +382,9 @@
                 title="Callback Demo"
                 description="Check the log above."
             >
-                <Button variant="outline" label="Open (With Callbacks)" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open (With Callbacks)" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-surface-variant">
                         Open, close, and watch the callback log update.
@@ -422,7 +446,9 @@
                     header: 'border-on-primary-container/10'
                 }}
             >
-                <Button variant="outline" label="Open Styled Modal" />
+                {#snippet children({ props })}
+                    <Button {...props} variant="outline" label="Open Styled Modal" />
+                {/snippet}
                 {#snippet body()}
                     <p class="text-on-primary-container/80">
                         This modal overrides content, title, description, and header slot classes.
@@ -449,13 +475,16 @@
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Confirmation Dialog</p>
                 <Modal bind:open={confirmOpen} dismissible={false} close={false}>
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:trash-2"
-                        label="Delete Item"
-                        color="error"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:trash-2"
+                            label="Delete Item"
+                            color="error"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet content()}
                         <div class="flex flex-col items-center gap-4 p-6 text-center">
                             <div
@@ -495,12 +524,15 @@
                     title="Create Project"
                     description="Fill in the details to create a new project."
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:plus"
-                        label="New Project"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:plus"
+                            label="New Project"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <div class="space-y-4">
                             <div>
@@ -556,12 +588,15 @@
                     description="Your session has timed out due to inactivity."
                     dismissible={false}
                 >
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:clock"
-                        label="Session Alert"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:clock"
+                            label="Session Alert"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet body()}
                         <p class="text-on-surface-variant">
                             Please sign in again to continue using the application.
@@ -583,12 +618,15 @@
             <div class="rounded-lg bg-surface-container-high p-4">
                 <p class="mb-3 text-sm font-medium">Image Preview</p>
                 <Modal bind:open={imageOpen} close={{ color: 'surface', size: 'md' }}>
-                    <Button
-                        variant="outline"
-                        leadingIcon="lucide:image"
-                        label="View Image"
-                        class="w-full"
-                    />
+                    {#snippet children({ props })}
+                        <Button
+                            {...props}
+                            variant="outline"
+                            leadingIcon="lucide:image"
+                            label="View Image"
+                            class="w-full"
+                        />
+                    {/snippet}
                     {#snippet content()}
                         <div class="p-2">
                             <img
@@ -624,7 +662,9 @@
                     title={`Size: ${s}`}
                     description="Resize your browser to see how the modal width scales."
                 >
-                    <Button variant="outline" label={`size="${s}"`} />
+                    {#snippet children({ props })}
+                        <Button {...props} variant="outline" label={`size="${s}"`} />
+                    {/snippet}
                     {#snippet body()}
                         <p class="text-sm text-on-surface-variant">
                             Current size is <code>{s}</code>.
@@ -652,7 +692,9 @@
                     title={`Transition: ${t}`}
                     description="Open and close to see the animation."
                 >
-                    <Button variant="outline" label={`transition="${t}"`} />
+                    {#snippet children({ props })}
+                        <Button {...props} variant="outline" label={`transition="${t}"`} />
+                    {/snippet}
                 </Modal>
             {/each}
         </div>

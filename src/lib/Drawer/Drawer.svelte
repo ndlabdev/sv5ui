@@ -177,8 +177,10 @@
 
 {#snippet drawerBody()}
     {#if children}
-        <Drawer.Trigger class={className as string}>
-            {@render children()}
+        <Drawer.Trigger>
+            {#snippet child({ props })}
+                {@render children({ props })}
+            {/snippet}
         </Drawer.Trigger>
     {/if}
 
