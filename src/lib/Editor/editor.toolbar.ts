@@ -9,14 +9,6 @@ export interface ToolbarActionDef {
     run: (editor: Editor) => void
 }
 
-// ---------------------------------------------------------------------------
-// Fallback `run` handlers below (link/image/youtube) use window.prompt because
-// they need to gather a URL. Editor.svelte intercepts these actions and routes
-// them through the EditorUrlPrompt modal instead. The fallbacks only execute
-// when a consumer calls `api.run('link'|'image'|'youtube')` directly — at
-// which point we have no modal mount point, so window.prompt is the simplest
-// non-UI fallback.
-// ---------------------------------------------------------------------------
 function promptForLink(editor: Editor): void {
     const previous = (editor.getAttributes('link').href as string | undefined) ?? 'https://'
     const url = typeof window === 'undefined' ? null : window.prompt('URL', previous)

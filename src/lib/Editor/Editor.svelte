@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-    import { Editor } from '@tiptap/core'
+    import { Editor, type AnyExtension } from '@tiptap/core'
     import BubbleMenuExt from '@tiptap/extension-bubble-menu'
     import { untrack } from 'svelte'
     import { editorVariants, editorDefaults } from './editor.variants.js'
@@ -24,7 +24,12 @@
     import Icon from '../Icon/Icon.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
     import EditorUrlPrompt from './EditorUrlPrompt.svelte'
-    import { httpUrlSchema, youtubeUrlSchema, type UrlSchema } from './editor.schemas.js'
+    import {
+        httpUrlSchema,
+        youtubeUrlSchema,
+        isSafeImageSrc,
+        type UrlSchema
+    } from './editor.schemas.js'
 
     const config = getComponentConfig('editor', editorDefaults)
 
@@ -53,6 +58,7 @@
         markdownAllowHtml = false,
         image = false,
         onImageUpload,
+        onImageUploadError,
         tables = false,
         onMention,
         mentionTrigger = '@',
@@ -76,6 +82,14 @@
 
     const formFieldContext = useFormField()
     const emit = useFormFieldEmit()
+
+    const resolvedOutput = untrack(() => output)
+
+    function getMarkdownStorage(ed: Editor): { getMarkdown?: () => string } | undefined {
+        return (ed.storage as unknown as Record<string, unknown>).markdown as
+            | { getMarkdown?: () => string }
+            | undefined
+    }
 
     const hasError = $derived(
         formFieldContext?.error !== undefined && formFieldContext?.error !== false
@@ -143,11 +157,9 @@
     }
 
     function serialize(ed: Editor): string | EditorJSON {
-        if (output === 'json') return ed.getJSON() as EditorJSON
-        if (output === 'markdown') {
-            const md = (ed.storage as unknown as Record<string, unknown>).markdown as
-                | { getMarkdown?: () => string }
-                | undefined
+        if (resolvedOutput === 'json') return ed.getJSON() as EditorJSON
+        if (resolvedOutput === 'markdown') {
+            const md = getMarkdownStorage(ed)
             if (md && typeof md.getMarkdown === 'function') {
                 return md.getMarkdown()
             }
@@ -191,7 +203,7 @@
         })
     }
 
-    function resolveExtensions() {
+    function resolveExtensions(): AnyExtension[] | Promise<AnyExtension[]> {
         if (extensionsOverride) return extensionsOverride
         return buildExtensions({
             headingLevels,
@@ -203,7 +215,7 @@
             tables,
             youtube,
             dragHandle,
-            markdown: output === 'markdown',
+            markdown: resolvedOutput === 'markdown',
             markdownAllowHtml,
             mentionTrigger,
             mentionSuggestion: onMention
@@ -228,14 +240,11 @@
     }
 
     let suppressUpdate = false
+    let lastEmitted: string | EditorJSON | undefined
 
     $effect(() => {
         if (!contentElement) return
 
-        // Untrack: these props would otherwise cause editor recreation on every
-        // keystroke (value changes via onUpdate → effect re-runs → destroy + rebuild
-        // → cursor lost → can only type 1 char). value sync is handled by a
-        // dedicated effect below; disabled/readonly toggle via setEditable.
         const initialContent = untrack(() => value ?? '')
         const initialEditable = untrack(() => !disabled && !readonly)
         const initialAutofocus = untrack(() => autofocus)
@@ -245,43 +254,57 @@
             ...(ariaDescribedBy ? { 'aria-describedby': ariaDescribedBy } : {}),
             ...(hasError ? { 'aria-invalid': 'true' } : {})
         }))
-        const exts = untrack(() => resolveExtensions())
+        const el = contentElement
+        const result = untrack(() => resolveExtensions())
 
-        const ed = new Editor({
-            element: contentElement,
-            extensions: exts,
-            content: initialContent,
-            editable: initialEditable,
-            autofocus: initialAutofocus,
-            editorProps: {
-                attributes: initialAttrs as Record<string, string>
-            },
-            onCreate: ({ editor: e }) => syncState(e),
-            onUpdate: ({ editor: e }) => {
-                syncState(e)
-                if (suppressUpdate) return
-                const serialized = serialize(e)
-                value = serialized
-                emit.onInput()
-                onValueChange?.(serialized)
-            },
-            onSelectionUpdate: ({ editor: e }) => syncState(e),
-            onFocus: ({ editor: e }) => {
-                syncState(e)
-                emit.onFocus()
-                onFocus?.()
-            },
-            onBlur: ({ editor: e }) => {
-                syncState(e)
-                emit.onBlur()
-                onBlur?.()
-            }
-        })
+        let ed: Editor | null = null
+        let cancelled = false
 
-        editor = ed
+        const create = (exts: AnyExtension[]) => {
+            if (cancelled) return
+            ed = new Editor({
+                element: el,
+                extensions: exts,
+                content: initialContent,
+                editable: initialEditable,
+                autofocus: initialAutofocus,
+                editorProps: {
+                    attributes: initialAttrs as Record<string, string>
+                },
+                onCreate: ({ editor: e }) => syncState(e),
+                onUpdate: ({ editor: e }) => {
+                    syncState(e)
+                    if (suppressUpdate) return
+                    const serialized = serialize(e)
+                    lastEmitted = serialized
+                    value = serialized
+                    emit.onInput()
+                    onValueChange?.(serialized)
+                },
+                onSelectionUpdate: ({ editor: e }) => syncState(e),
+                onFocus: ({ editor: e }) => {
+                    syncState(e)
+                    emit.onFocus()
+                    onFocus?.()
+                },
+                onBlur: ({ editor: e }) => {
+                    syncState(e)
+                    emit.onBlur()
+                    onBlur?.()
+                }
+            })
+            editor = ed
+        }
+
+        if (result instanceof Promise) {
+            result.then(create)
+        } else {
+            create(result)
+        }
 
         return () => {
-            ed.destroy()
+            cancelled = true
+            ed?.destroy()
             editor = null
         }
     })
@@ -294,9 +317,6 @@
         }
     })
 
-    // Sync aria attributes on the ProseMirror element when error/id state changes.
-    // Tiptap's editorProps.attributes is read once at init, so toggling needs
-    // direct DOM access. Run on every state change.
     $effect(() => {
         if (!contentElement) return
         const pm = contentElement.querySelector('.ProseMirror') as HTMLElement | null
@@ -311,6 +331,7 @@
     $effect(() => {
         if (!editor) return
         if (value === undefined) return
+        if (typeof value === 'string' && value === lastEmitted) return
         const current = serialize(editor)
         if (isContentEqual(current, value)) return
         suppressUpdate = true
@@ -334,13 +355,11 @@
             TOOLBAR_ACTIONS[action].run(editor)
         },
         getValue(format) {
-            if (!editor) return output === 'json' ? ({} as EditorJSON) : ''
-            const fmt = format ?? output
+            if (!editor) return resolvedOutput === 'json' ? ({} as EditorJSON) : ''
+            const fmt = format ?? resolvedOutput
             if (fmt === 'json') return editor.getJSON() as EditorJSON
             if (fmt === 'markdown') {
-                const md = (editor.storage as unknown as Record<string, unknown>).markdown as
-                    | { getMarkdown?: () => string }
-                    | undefined
+                const md = getMarkdownStorage(editor)
                 if (md && typeof md.getMarkdown === 'function') return md.getMarkdown()
                 return editor.getHTML()
             }
@@ -384,7 +403,6 @@
         return {
             root: slots.root({ class: [c.root, className, u.root] }),
             toolbar: slots.toolbar({ class: [c.toolbar, u.toolbar] }),
-            toolbarGroup: slots.toolbarGroup({ class: [c.toolbarGroup, u.toolbarGroup] }),
             toolbarButton: slots.toolbarButton({ class: [c.toolbarButton, u.toolbarButton] }),
             toolbarSeparator: slots.toolbarSeparator({
                 class: [c.toolbarSeparator, u.toolbarSeparator]
@@ -396,7 +414,6 @@
         }
     })
 
-    // ----- URL prompt modal (shared by YouTube/Image/Link toolbar + slash) -----
     interface UrlPromptState {
         open: boolean
         title: string
@@ -440,7 +457,6 @@
         }
     }
 
-    // ----- Image upload via hidden file input -----
     let fileInput: HTMLInputElement | null = $state(null)
 
     async function handleFileSelected(event: Event): Promise<void> {
@@ -452,10 +468,19 @@
         if (!onImageUpload) return
         try {
             const url = await onImageUpload(file)
+            if (!isSafeImageSrc(url)) {
+                // eslint-disable-next-line no-console
+                console.warn('[Editor] blocked unsafe image src from onImageUpload:', url)
+                return
+            }
             editor.chain().focus().setImage({ src: url }).run()
         } catch (err) {
-            // eslint-disable-next-line no-console
-            console.error('[Editor] image upload failed', err)
+            if (onImageUploadError) {
+                onImageUploadError(err)
+            } else {
+                // eslint-disable-next-line no-console
+                console.error('[Editor] image upload failed', err)
+            }
         }
     }
 
@@ -503,7 +528,6 @@
         })
     }
 
-    // ----- Table dimension picker -----
     let tableMenuOpen = $state(false)
     let tablePickerRows = $state(0)
     let tablePickerCols = $state(0)
