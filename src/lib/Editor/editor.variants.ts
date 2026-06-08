@@ -14,7 +14,6 @@ export const editorVariants = tv({
             'bg-surface-container-low',
             'rounded-t-lg p-1.5'
         ],
-        toolbarGroup: 'flex items-center gap-0.5',
         toolbarButton: [
             'inline-flex items-center justify-center rounded text-on-surface-variant',
             'hover:bg-surface-container-high hover:text-on-surface',
@@ -26,7 +25,6 @@ export const editorVariants = tv({
         toolbarSeparator: 'mx-1 h-5 w-px shrink-0 bg-outline-variant',
         content: [
             'text-on-surface',
-            // ----- Inner ProseMirror element (the actual contenteditable) -----
             '[&_.ProseMirror]:outline-none',
             '[&_.ProseMirror]:focus:outline-none',
             '[&_.ProseMirror]:focus-visible:outline-none',
@@ -34,13 +32,11 @@ export const editorVariants = tv({
             '[&_.ProseMirror]:min-h-32',
             '[&_.ProseMirror]:whitespace-pre-wrap',
             '[&_.ProseMirror]:break-words',
-            // ----- Placeholder (when editor is empty) -----
             '[&_.is-editor-empty]:before:content-[attr(data-placeholder)]',
             '[&_.is-editor-empty]:before:text-on-surface-variant/60',
             '[&_.is-editor-empty]:before:pointer-events-none',
             '[&_.is-editor-empty]:before:float-left',
             '[&_.is-editor-empty]:before:h-0',
-            // ----- Content typography (lightweight in-house prose) -----
             '[&_p]:my-2 [&_p:first-child]:mt-0 [&_p:last-child]:mb-0',
             '[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:my-3',
             '[&_h2]:text-xl [&_h2]:font-bold [&_h2]:my-3',
@@ -57,17 +53,13 @@ export const editorVariants = tv({
             '[&_hr]:border-outline-variant [&_hr]:my-4',
             '[&_strong]:font-semibold',
             '[&_em]:italic',
-            // ----- Image -----
             '[&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-2',
-            // ----- YouTube embed (responsive 16:9) -----
             '[&_iframe[src*="youtube"]]:aspect-video [&_iframe[src*="youtube"]]:w-full [&_iframe[src*="youtube"]]:rounded-md [&_iframe[src*="youtube"]]:my-3 [&_iframe[src*="youtube"]]:border-0',
-            // ----- Mention chip -----
             '[&_.sv5ui-editor-mention]:inline-flex [&_.sv5ui-editor-mention]:items-center',
             '[&_.sv5ui-editor-mention]:rounded [&_.sv5ui-editor-mention]:bg-primary-container/60',
             '[&_.sv5ui-editor-mention]:text-on-primary-container',
             '[&_.sv5ui-editor-mention]:px-1.5 [&_.sv5ui-editor-mention]:py-0.5',
             '[&_.sv5ui-editor-mention]:text-sm [&_.sv5ui-editor-mention]:font-medium',
-            // ----- Table -----
             '[&_.tableWrapper]:my-3 [&_.tableWrapper]:overflow-x-auto',
             '[&_table]:w-full [&_table]:border-collapse [&_table]:table-fixed',
             '[&_table]:border [&_table]:border-outline-variant [&_table]:rounded-md',
@@ -78,12 +70,10 @@ export const editorVariants = tv({
             '[&_td]:border [&_td]:border-outline-variant',
             '[&_td]:px-2 [&_td]:py-1.5 [&_td]:align-top',
             '[&_td]:relative [&_td]:min-w-16',
-            // Tiptap selectedCell highlight + column resize handle
             '[&_.selectedCell]:bg-primary/10',
             '[&_.column-resize-handle]:absolute [&_.column-resize-handle]:top-0 [&_.column-resize-handle]:bottom-[-2px]',
             '[&_.column-resize-handle]:-right-0.5 [&_.column-resize-handle]:w-1',
             '[&_.column-resize-handle]:bg-primary/40 [&_.column-resize-handle]:pointer-events-none',
-            // ----- Selection styling -----
             '[&_::selection]:bg-primary/20'
         ],
         footer: [
@@ -95,11 +85,6 @@ export const editorVariants = tv({
         ],
         countLabel: 'tabular-nums',
         bubbleMenu: [
-            // ⚠️ Tiptap's BubbleMenu only sets `visibility:hidden` initially,
-            // leaving the element in normal flow (taking up space below the editor)
-            // until the user first selects text. Setting `position:absolute` upfront
-            // keeps it out of flow from mount — extension's Floating UI positioning
-            // then overrides left/top inline on selection.
             'absolute top-0 left-0 z-50 invisible',
             'flex items-center gap-0.5 p-1',
             'rounded-lg border border-outline-variant bg-surface',
