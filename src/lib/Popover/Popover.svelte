@@ -105,7 +105,7 @@
     {#if children}
         <Popover.Trigger>
             {#snippet child({ props })}
-                <span {...props} class={className as string}>
+                <span {...props} class={[className]}>
                     {@render children({ open })}
                 </span>
             {/snippet}
