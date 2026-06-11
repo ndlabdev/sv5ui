@@ -170,7 +170,7 @@ type TriggerHTMLProps = Pick<
 
 export interface SelectProps extends RootProps, ContentProps, TriggerHTMLProps {
     /** Custom data attributes are forwarded to the trigger element. */
-    [key: `data-${string}`]: unknown
+    [key: `data-${string}`]: string | number | boolean | null | undefined
 
     // -------------------------------------------------------------------------
     // Ref
