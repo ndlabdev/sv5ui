@@ -54,6 +54,7 @@
     const resolvedId = $derived(id ?? formFieldContext?.ariaId ?? autoId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
+    const legendId = $derived(`${resolvedId}-legend`)
 
     const ariaDescribedBy = $derived(
         !formFieldContext
@@ -186,13 +187,14 @@
         {orientation}
         aria-describedby={ariaDescribedBy}
         aria-invalid={hasError ? true : undefined}
+        aria-labelledby={legend && !legendSlot ? legendId : undefined}
         class={layoutClasses.fieldset}
     >
         {#if legend || legendSlot}
             {#if legendSlot}
                 {@render legendSlot({ legend })}
             {:else}
-                <span class={layoutClasses.legend}>{legend}</span>
+                <span id={legendId} class={layoutClasses.legend}>{legend}</span>
             {/if}
         {/if}
 
