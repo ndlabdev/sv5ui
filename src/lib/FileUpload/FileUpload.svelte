@@ -154,6 +154,13 @@
         }
     })
 
+    $effect(() => {
+        return () => {
+            for (const [, url] of urlCache) URL.revokeObjectURL(url)
+            urlCache.clear()
+        }
+    })
+
     export function open() {
         if (isDisabled) return
         inputRef?.click()
