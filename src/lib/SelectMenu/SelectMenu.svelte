@@ -23,6 +23,7 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useDebounce } from '../hooks/useDebounce.svelte.js'
 
     const config = getComponentConfig('selectMenu', selectMenuDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -181,13 +182,28 @@
 
     // ---- Search & filtering ----
     let searchTerm = $state('')
+    let debouncedSearch = $state('')
+    const searchDebounce = useDebounce({ delay: 200 })
+
+    function setSearch(term: string) {
+        searchTerm = term
+        searchDebounce.run(() => {
+            debouncedSearch = term
+        })
+    }
+
+    function resetSearch() {
+        searchDebounce.cancel()
+        searchTerm = ''
+        debouncedSearch = ''
+    }
 
     const filteredItems = $derived(
-        ignoreFilter || !searchTerm.trim()
+        ignoreFilter || !debouncedSearch.trim()
             ? combinedItems
             : combinedItems.filter((item) => {
                   if ('type' in item) return true
-                  const query = searchTerm.toLowerCase()
+                  const query = debouncedSearch.toLowerCase()
                   return filterFields.some((field) => {
                       const val = (item as unknown as Record<string, unknown>)[field]
                       return typeof val === 'string' && val.toLowerCase().includes(query)
@@ -256,7 +272,7 @@
         }
 
         emit.onChange()
-        searchTerm = ''
+        resetSearch()
     }
 
     // ---- Leading / trailing ----
@@ -386,7 +402,7 @@
     // ---- Event handlers (Nuxt UI v4 pattern) ----
     function onUpdateOpen(val: boolean) {
         if (!val) {
-            searchTerm = ''
+            resetSearch()
             emit.onBlur()
         } else {
             emit.onFocus()
@@ -450,7 +466,7 @@
             autofocus
             placeholder={searchPlaceholder}
             value={searchTerm}
-            oninput={(e) => (searchTerm = (e.currentTarget as HTMLInputElement).value)}
+            oninput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
             onkeydown={(e: KeyboardEvent) => {
                 if (e.key !== 'Enter') return
                 if (!showCreateItem) return
