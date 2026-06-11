@@ -122,9 +122,7 @@
         }
     }
 
-    $effect.pre(() => {
-        api = apiInstance
-    })
+    api = apiInstance
 
     const variantSlots = $derived(stepperVariants({ orientation, size, color }))
 

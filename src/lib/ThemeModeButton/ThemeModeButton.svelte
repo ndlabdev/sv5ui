@@ -34,7 +34,8 @@
 
     const isDark = $derived(mode.current === 'dark')
 
-    const slots = $derived(themeModeButtonVariants())
+    const slots = themeModeButtonVariants()
+    const baseClass = $derived(slots.base({ class: [config.slots.base, className, ui?.base] }))
 
     const iconName = $derived(isDark ? lightIcon : darkIcon)
 </script>
@@ -48,7 +49,7 @@
         {disabled}
         {square}
         {block}
-        class={slots.base({ class: [config.slots.base, className, ui?.base] })}
+        class={baseClass}
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         onclick={toggleMode}
         {...restProps}
@@ -65,7 +66,7 @@
         {square}
         {block}
         icon={iconName}
-        class={slots.base({ class: [config.slots.base, className, ui?.base] })}
+        class={baseClass}
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         onclick={toggleMode}
         {...restProps}
