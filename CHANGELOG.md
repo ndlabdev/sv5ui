@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-06-13
+
 ### Added
 
 - **Editor** — `onImageUploadError` prop, called when `onImageUpload` rejects (previously upload failures were only logged to the console). Use it to surface errors to the user.
 - **Command** — Exported the `CommandGroup` and `CommandItem` types from the package entry, so consumers can type the `groups` data with full type-checking without importing from internal paths.
 - **Command** — `CommandProps` now type-checks `id` and `data-*` attributes on the root element (useful as a scoping/anchor target and for test/analytics hooks); previously these were rejected by the type even though `restProps` already reached the root.
+- **Input** — Exported the `InputValue` type from the package entry; it is the constraint behind the public `InputProps<T>` generic, so consumers can now name it directly.
 
 ### Changed
 
@@ -33,16 +36,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Editor** — Halved the serialization work per keystroke: the value-sync effect no longer re-serializes the document to compare it against a value the editor itself just emitted (it short-circuits on its own echo). Previously every edit serialized twice — once to push `value`, then again in the sync effect to compare. Most noticeable for `output="markdown"` and large documents. No API or behavior change.
 - **Editor** — The heavy optional extensions are now lazy-loaded via dynamic `import()`: `tiptap-markdown` (only when `output="markdown"`) and the table packages (only when `tables` is enabled). Editors that don't use them no longer pull `markdown-it` (~80 KB gzip) or `prosemirror-tables` (~25 KB gzip) into the bundle — the consumer's bundler now code-splits them into separate chunks loaded on demand. Editors that enable neither still mount **synchronously** (no behavior change); only `markdown`/`tables` editors initialize asynchronously while their chunk loads (toolbar actions are briefly disabled and `bind:api` methods are no-ops until then).
+- **Components** — Reduced per-render styling cost: Accordion, Progress, Switch, Stepper, ThemeModeButton, and Skeleton no longer re-instantiate their `tailwind-variants` function on every render (defaults are precomputed/memoized and reused). No API or behavior change.
+- **SelectMenu** — The in-dropdown search now debounces filtering (200ms) so large item lists are not re-scanned on every keystroke. Typing stays instant; only the filtered list updates after a short pause. The displayed search term and create-on-Enter are unaffected.
+- **Types** — Tightened several public types (no runtime change): the `data-*` passthrough index signatures are now `string | number | boolean | null | undefined` instead of `unknown` (Icon, Tabs, Pagination, Command, Select, SelectMenu, Collapsible), and `Separator` no longer intersects bits-ui's `class` type with `ClassNameValue`.
 
 ### Removed
 
 - **Editor** — Removed the unused `toolbarGroup` key from the `ui` slot type; it was computed but never rendered, so setting it had no effect.
+- **Badge** — Removed the internal `leadingAvatarSize` key from the `ui` prop type; it was accepted by the type but silently ignored at runtime (mirrors the Button fix in 2.0.0).
 
 ### Fixed
 
 - **Editor** — Changing the `output` prop on an already-mounted editor no longer corrupts the content. `output` is read once at mount (it also decides whether the Markdown extension is loaded); it is now applied consistently to serialization, so a runtime change is simply ignored instead of producing a format/extension mismatch. Re-key the component (`{#key output}`) to switch formats.
 - **Editor** — The mention (`@`) and slash (`/`) autocomplete popups are now proper ARIA listboxes: each item exposes `role="option"` + `aria-selected`, the listbox has an accessible name, and while a popup is open the editor's contenteditable exposes `aria-controls`, `aria-expanded`, and `aria-activedescendant` (cleared on close) so screen readers announce the highlighted option as the user navigates.
 - **Calendar** — The Previous/Next year navigation buttons did nothing on initial render. They advanced an internal `placeholder` that stayed `undefined` until the first month navigation, so the first year click was a no-op. The placeholder is now initialized (from `value` when provided, otherwise today) so year navigation works immediately.
+- **RadioGroup** — The legend is now programmatically associated with the radiogroup via `aria-labelledby`, so screen readers announce the group name. Applies to the default text legend; a custom `legendSlot` remains the consumer's responsibility.
+- **FileUpload** — Cached blob object URLs are now revoked when the component unmounts. Previously only URLs for files removed from `value` were revoked, so files still present at unmount leaked their object URLs.
 
 ### Security
 
@@ -299,7 +308,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ndlabdev/sv5ui/compare/v1.8.0...v2.0.0
 [1.6.0]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/ndlabdev/sv5ui/compare/v1.5.0...v1.5.1
