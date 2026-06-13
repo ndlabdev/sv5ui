@@ -222,6 +222,66 @@ describe('Calendar', () => {
                 expect(buttons.length).toBeGreaterThanOrEqual(4)
             })
         })
+
+        it('should advance the year when Next year is clicked (no placeholder provided)', async () => {
+            render(Calendar)
+            await vi.waitFor(() => expect(getHeading()).not.toBeNull())
+            const before = getHeading()!.textContent ?? ''
+            const yearBefore = Number(before.match(/\d{4}/)?.[0])
+            const nextYear = document.querySelector('[aria-label="Next year"]') as HTMLButtonElement
+            expect(nextYear).not.toBeNull()
+            nextYear.click()
+            await vi.waitFor(() => {
+                const yearAfter = Number((getHeading()!.textContent ?? '').match(/\d{4}/)?.[0])
+                expect(yearAfter).toBe(yearBefore + 1)
+            })
+        })
+
+        it('should go back a year when Previous year is clicked (no placeholder provided)', async () => {
+            render(Calendar)
+            await vi.waitFor(() => expect(getHeading()).not.toBeNull())
+            const yearBefore = Number((getHeading()!.textContent ?? '').match(/\d{4}/)?.[0])
+            const prevYear = document.querySelector(
+                '[aria-label="Previous year"]'
+            ) as HTMLButtonElement
+            expect(prevYear).not.toBeNull()
+            prevYear.click()
+            await vi.waitFor(() => {
+                const yearAfter = Number((getHeading()!.textContent ?? '').match(/\d{4}/)?.[0])
+                expect(yearAfter).toBe(yearBefore - 1)
+            })
+        })
+
+        it('should open on the value month when a value is provided without a placeholder', async () => {
+            render(Calendar, { value: new CalendarDate(2020, 1, 15) })
+            await vi.waitFor(() => {
+                const heading = getHeading()
+                expect(heading).not.toBeNull()
+                expect(heading!.textContent).toContain('January')
+                expect(heading!.textContent).toContain('2020')
+            })
+        })
+
+        it('should still navigate months when no placeholder is provided', async () => {
+            render(Calendar)
+            await vi.waitFor(() => expect(getHeading()).not.toBeNull())
+            const before = getHeading()!.textContent ?? ''
+            getNextButton()!.click()
+            await vi.waitFor(() => {
+                expect((getHeading()!.textContent ?? '') !== before).toBe(true)
+            })
+        })
+
+        it('should move to the value month when value is set after mount', async () => {
+            const screen = render(Calendar, {})
+            await vi.waitFor(() => expect(getHeading()).not.toBeNull())
+            await screen.rerender({ value: new CalendarDate(2019, 7, 4) })
+            await vi.waitFor(() => {
+                const heading = getHeading()!
+                expect(heading.textContent).toContain('July')
+                expect(heading.textContent).toContain('2019')
+            })
+        })
     })
 
     // ==================== DISABLED STATE ====================

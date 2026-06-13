@@ -6,9 +6,11 @@
         items: SlashCommand[]
         selectedIndex: number
         onPick: (index: number) => void
+        listboxId: string
+        optionIdPrefix: string
     }
 
-    let { items, selectedIndex, onPick }: Props = $props()
+    let { items, selectedIndex, onPick, listboxId, optionIdPrefix }: Props = $props()
 
     let listEl: HTMLDivElement | null = $state(null)
 
@@ -24,7 +26,9 @@
 
 <div
     bind:this={listEl}
+    id={listboxId}
     role="listbox"
+    aria-label="Slash commands"
     data-editor-slash-popup
     class="max-h-72 max-w-80 min-w-64 overflow-y-auto rounded-lg border border-outline-variant bg-surface py-1 shadow-lg"
 >
@@ -35,6 +39,9 @@
             {@const active = i === selectedIndex}
             <button
                 type="button"
+                role="option"
+                id={`${optionIdPrefix}${i}`}
+                aria-selected={active}
                 data-slash-item
                 data-id={cmd.id}
                 data-index={i}

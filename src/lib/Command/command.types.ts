@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
-import type { CommandRootPropsWithoutHTML } from 'bits-ui'
+import type { CommandRootProps, CommandRootPropsWithoutHTML } from 'bits-ui'
 import type { CommandSlots, CommandVariantProps } from './command.variants.js'
 
 // ============================================================================
@@ -73,10 +73,16 @@ export interface CommandItemSlotProps {
  *
  * @see https://bits-ui.com/docs/components/command
  */
-export interface CommandProps extends Pick<
-    CommandRootPropsWithoutHTML,
-    'value' | 'onValueChange' | 'filter' | 'shouldFilter' | 'loop' | 'vimBindings' | 'label'
-> {
+export interface CommandProps
+    extends
+        Pick<
+            CommandRootPropsWithoutHTML,
+            'value' | 'onValueChange' | 'filter' | 'shouldFilter' | 'loop' | 'vimBindings' | 'label'
+        >,
+        Pick<CommandRootProps, 'id'> {
+    /** Custom data attributes are forwarded to the root element. */
+    [key: `data-${string}`]: string | number | boolean | null | undefined
+
     // -------------------------------------------------------------------------
     // Refs
     // -------------------------------------------------------------------------

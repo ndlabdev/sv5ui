@@ -121,7 +121,7 @@ export interface TabsProps extends Pick<
     | 'onblur'
 > {
     /** Custom data attributes are forwarded to the root element. */
-    [key: `data-${string}`]: unknown
+    [key: `data-${string}`]: string | number | boolean | null | undefined
 
     /**
      * Bindable reference to the root DOM element.

@@ -72,17 +72,16 @@
         disabled: isDisabled ? true : undefined
     })
 
-    const classes = $derived.by(() => {
-        const slots = switchVariants(variantOpts)
-        return {
-            root: slots.root({ class: [config.slots.root, className, ui?.root] }),
-            base: slots.base({ class: [config.slots.base, ui?.base] }),
-            container: slots.container({ class: [config.slots.container, ui?.container] }),
-            thumb: slots.thumb({ class: [config.slots.thumb, ui?.thumb] }),
-            wrapper: slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
-            label: slots.label({ class: [config.slots.label, ui?.label] }),
-            description: slots.description({ class: [config.slots.description, ui?.description] })
-        }
+    const slots = $derived(switchVariants(variantOpts))
+
+    const classes = $derived({
+        root: slots.root({ class: [config.slots.root, className, ui?.root] }),
+        base: slots.base({ class: [config.slots.base, ui?.base] }),
+        container: slots.container({ class: [config.slots.container, ui?.container] }),
+        thumb: slots.thumb({ class: [config.slots.thumb, ui?.thumb] }),
+        wrapper: slots.wrapper({ class: [config.slots.wrapper, ui?.wrapper] }),
+        label: slots.label({ class: [config.slots.label, ui?.label] }),
+        description: slots.description({ class: [config.slots.description, ui?.description] })
     })
 
     const iconClasses = $derived.by(() => {
@@ -91,15 +90,11 @@
         const iconUiClass = [config.slots.icon, ui?.icon]
         return {
             checked: hasCheckedIcon
-                ? switchVariants({ ...variantOpts, checked: true, unchecked: loading }).icon({
-                      class: iconUiClass
-                  })
+                ? slots.icon({ class: iconUiClass, checked: true, unchecked: loading })
                 : undefined,
             unchecked:
                 hasUncheckedIcon && !loading
-                    ? switchVariants({ ...variantOpts, unchecked: true }).icon({
-                          class: iconUiClass
-                      })
+                    ? slots.icon({ class: iconUiClass, unchecked: true })
                     : undefined
         }
     })

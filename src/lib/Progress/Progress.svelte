@@ -80,6 +80,19 @@
         }
     })
 
+    const stepClasses = $derived.by(() => {
+        const make = (step: 'active' | 'first' | 'last' | 'other') =>
+            progressVariants({ size, orientation, inverted, step }).step({
+                class: [config.slots.step, ui?.step]
+            })
+        return {
+            active: make('active'),
+            first: make('first'),
+            last: make('last'),
+            other: make('other')
+        }
+    })
+
     const state = $derived(isIndeterminate ? 'indeterminate' : 'determinate')
 </script>
 
@@ -108,12 +121,7 @@
     {#if hasSteps && Array.isArray(max)}
         <div class={classes.steps}>
             {#each max as step, index (index)}
-                {@const stepClass = progressVariants({
-                    size,
-                    orientation,
-                    inverted,
-                    step: stepVariant(index)
-                }).step({ class: [config.slots.step, ui?.step] })}
+                {@const stepClass = stepClasses[stepVariant(index)]}
                 <div class={stepClass}>
                     {#if stepSlot}
                         {@render stepSlot({ step, index })}

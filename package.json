@@ -1,6 +1,6 @@
 {
     "name": "sv5ui",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "A modern Svelte 5 UI component library with Tailwind CSS",
     "author": "ndlabdev",
     "license": "MIT",
