@@ -329,7 +329,7 @@
 
 <ContextMenu.Root bind:open {onOpenChange}>
     {#if children}
-        <ContextMenu.Trigger class={className as string}>
+        <ContextMenu.Trigger class={[className]}>
             {@render children({ open })}
         </ContextMenu.Trigger>
     {/if}
