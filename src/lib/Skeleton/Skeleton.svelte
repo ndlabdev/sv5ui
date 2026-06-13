@@ -19,11 +19,9 @@
         ...restProps
     }: Props = $props()
 
-    const classes = $derived.by(() => {
-        const slots = skeletonVariants()
-        return {
-            root: slots.root({ class: [config.slots.root, className, ui?.root] })
-        }
+    const slots = skeletonVariants()
+    const classes = $derived({
+        root: slots.root({ class: [config.slots.root, className, ui?.root] })
     })
 </script>
 

@@ -53,7 +53,18 @@
 
     type SlotName = (typeof slotNames)[number]
 
+    const itemDefaults = $derived.by(() => {
+        const result = {} as Record<SlotName, string>
+        for (const slot of slotNames) {
+            result[slot] = variantSlots[slot]({ class: [config.slots[slot], ui?.[slot]] })
+        }
+        return result
+    })
+
     function getItemClasses(item: AccordionItem) {
+        if (!item.ui && item.class === undefined && item.disabled === undefined) {
+            return itemDefaults
+        }
         const result = {} as Record<SlotName, string>
         for (const slot of slotNames) {
             const baseClass = [
