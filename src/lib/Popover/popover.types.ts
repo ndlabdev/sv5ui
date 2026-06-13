@@ -30,6 +30,9 @@ type ContentProps = Pick<
 >
 
 export interface PopoverProps extends RootProps, ContentProps {
+    /** Custom data attributes are forwarded to the content element. */
+    [key: `data-${string}`]: string | number | boolean | null | undefined
+
     /**
      * Bindable reference to the content DOM element.
      */

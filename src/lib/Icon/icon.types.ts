@@ -21,7 +21,7 @@ export interface IconProps
             | 'onblur'
         > {
     /** Custom data attributes are forwarded to the rendered `<svg>`. */
-    [key: `data-${string}`]: unknown
+    [key: `data-${string}`]: string | number | boolean | null | undefined
     /**
      * Icon name in Iconify format: "collection:icon-name"
      * @example "lucide:home", "mdi:account", "heroicons:star"

@@ -20,7 +20,7 @@ export type BadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, 'class'> & {
      * Override styles for specific badge slots.
      * Available slots: base, label, leadingIcon, trailingIcon, leadingAvatar.
      */
-    ui?: Partial<Record<BadgeSlots, ClassNameValue>>
+    ui?: Partial<Record<Exclude<BadgeSlots, 'leadingAvatarSize'>, ClassNameValue>>
 
     /**
      * Sets the text content displayed inside the badge.

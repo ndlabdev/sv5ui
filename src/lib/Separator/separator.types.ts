@@ -4,7 +4,7 @@ import type { Separator } from 'bits-ui'
 import type { SeparatorVariantProps, SeparatorSlots } from './separator.variants.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
 
-export type SeparatorProps = Separator.RootProps & {
+export type SeparatorProps = Omit<Separator.RootProps, 'class'> & {
     /**
      * Sets the color scheme applied to the separator.
      * @default 'surface'

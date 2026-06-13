@@ -37,6 +37,9 @@ type ContentProps = Pick<
 >
 
 export interface TooltipProps extends ProviderProps, RootProps, ContentProps {
+    /** Custom data attributes are forwarded to the content element. */
+    [key: `data-${string}`]: string | number | boolean | null | undefined
+
     /**
      * Bindable reference to the content DOM element.
      */

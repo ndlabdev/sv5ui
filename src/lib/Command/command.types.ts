@@ -81,7 +81,7 @@ export interface CommandProps
         >,
         Pick<CommandRootProps, 'id'> {
     /** Custom data attributes are forwarded to the root element. */
-    [key: `data-${string}`]: unknown
+    [key: `data-${string}`]: string | number | boolean | null | undefined
 
     // -------------------------------------------------------------------------
     // Refs
