@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Components** — Reduced per-render styling cost: Accordion, Progress, Switch, Stepper, ThemeModeButton, and Skeleton no longer re-instantiate their `tailwind-variants` function on every render (defaults are precomputed/memoized and reused). No API or behavior change.
 - **SelectMenu** — The in-dropdown search now debounces filtering (200ms) so large item lists are not re-scanned on every keystroke. Typing stays instant; only the filtered list updates after a short pause. The displayed search term and create-on-Enter are unaffected.
 - **Types** — Tightened several public types (no runtime change): the `data-*` passthrough index signatures are now `string | number | boolean | null | undefined` instead of `unknown` (Icon, Tabs, Pagination, Command, Select, SelectMenu, Collapsible), and `Separator` no longer intersects bits-ui's `class` type with `ClassNameValue`.
+- **Table** — Internal refactor of `table.utils.ts` (the default sort comparator and pin-offset computation) to bring both functions under the lint complexity limit by extracting small helpers. No API or behavior change.
 
 ### Removed
 
