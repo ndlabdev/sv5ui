@@ -24,16 +24,24 @@ export function getRowKey<T extends Record<string, any>>(
     return index
 }
 
+function isNullish(v: unknown): boolean {
+    return v === null || v === undefined
+}
+
+function compareBooleans(a: boolean, b: boolean): number {
+    return a === b ? 0 : a ? -1 : 1
+}
+
 /**
  * Default sort comparator — handles string, number, boolean, null/undefined.
  */
 function defaultCompare(a: unknown, b: unknown): number {
     if (a === b) return 0
-    if (a === null || a === undefined) return 1
-    if (b === null || b === undefined) return -1
+    if (isNullish(a)) return 1
+    if (isNullish(b)) return -1
 
     if (typeof a === 'number' && typeof b === 'number') return a - b
-    if (typeof a === 'boolean' && typeof b === 'boolean') return a === b ? 0 : a ? -1 : 1
+    if (typeof a === 'boolean' && typeof b === 'boolean') return compareBooleans(a, b)
 
     return String(a).localeCompare(String(b))
 }
@@ -159,6 +167,26 @@ export function resolveVisibleColumns<T extends Record<string, any>>(
     return [...left, ...center, ...right]
 }
 
+type PinOffset = { side: 'left' | 'right'; offset: number }
+type PinOffsets = Map<string, PinOffset>
+
+function pinOffsetsForSide<T extends Record<string, any>>(
+    keys: string[],
+    side: 'left' | 'right',
+    columns: TableColumn<T>[],
+    columnSizing: Record<string, number>
+): [string, PinOffset][] {
+    const entries: [string, PinOffset][] = []
+    let offset = 0
+    for (const key of keys) {
+        const col = columns.find((c) => c.key === key)
+        if (!col) continue
+        entries.push([key, { side, offset }])
+        offset += columnSizing[key] ?? col.width ?? 150
+    }
+    return entries
+}
+
 /**
  * Compute cumulative left/right offsets for pinned columns.
  */
@@ -166,31 +194,18 @@ export function computePinOffsets<T extends Record<string, any>>(
     columns: TableColumn<T>[],
     columnSizing: Record<string, number>,
     columnPinning?: { left?: string[]; right?: string[] }
-): Map<string, { side: 'left' | 'right'; offset: number }> {
-    const offsets = new Map<string, { side: 'left' | 'right'; offset: number }>()
-    if (!columnPinning) return offsets
+): PinOffsets {
+    if (!columnPinning) return new Map()
 
-    const leftKeys = columnPinning.left ?? []
-    const rightKeys = columnPinning.right ?? []
-
-    let leftOffset = 0
-    for (const key of leftKeys) {
-        const col = columns.find((c) => c.key === key)
-        if (!col) continue
-        offsets.set(key, { side: 'left', offset: leftOffset })
-        leftOffset += columnSizing[key] ?? col.width ?? 150
-    }
-
-    let rightOffset = 0
-    for (let i = rightKeys.length - 1; i >= 0; i--) {
-        const key = rightKeys[i]
-        const col = columns.find((c) => c.key === key)
-        if (!col) continue
-        offsets.set(key, { side: 'right', offset: rightOffset })
-        rightOffset += columnSizing[key] ?? col.width ?? 150
-    }
-
-    return offsets
+    return new Map([
+        ...pinOffsetsForSide(columnPinning.left ?? [], 'left', columns, columnSizing),
+        ...pinOffsetsForSide(
+            [...(columnPinning.right ?? [])].reverse(),
+            'right',
+            columns,
+            columnSizing
+        )
+    ])
 }
 
 /**
