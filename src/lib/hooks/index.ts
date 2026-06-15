@@ -18,3 +18,6 @@ export type { UseEscapeKeydownOptions } from './useEscapeKeydown.svelte.js'
 
 export { useDebounce } from './useDebounce.svelte.js'
 export type { UseDebounceOptions } from './useDebounce.svelte.js'
+
+export { useResizeObserver, useElementSize } from './useResizeObserver.svelte.js'
+export type { UseElementSizeReturn } from './useResizeObserver.svelte.js'
