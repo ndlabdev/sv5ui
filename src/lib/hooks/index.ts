@@ -18,3 +18,6 @@ export type { UseEscapeKeydownOptions } from './useEscapeKeydown.svelte.js'
 
 export { useDebounce } from './useDebounce.svelte.js'
 export type { UseDebounceOptions } from './useDebounce.svelte.js'
+
+export { useScrollLock } from './useScrollLock.svelte.js'
+export type { UseScrollLockReturn } from './useScrollLock.svelte.js'

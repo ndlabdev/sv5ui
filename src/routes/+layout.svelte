@@ -74,7 +74,8 @@
             icon: 'lucide:arrow-down-to-line'
         },
         { href: '/use-escape-keydown', label: 'useEscapeKeydown', icon: 'lucide:keyboard' },
-        { href: '/use-debounce', label: 'useDebounce', icon: 'lucide:timer' }
+        { href: '/use-debounce', label: 'useDebounce', icon: 'lucide:timer' },
+        { href: '/use-scroll-lock', label: 'useScrollLock', icon: 'lucide:lock' }
     ]
 
     const docItems = [
