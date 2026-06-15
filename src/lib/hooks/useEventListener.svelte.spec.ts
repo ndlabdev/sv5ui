@@ -141,7 +141,11 @@ describe('useEventListener', () => {
         const bAdd = vi.spyOn(b, 'addEventListener')
         let current = $state(a)
         const cleanup = $effect.root(() => {
-            useEventListener(() => current, 'click', () => {})
+            useEventListener(
+                () => current,
+                'click',
+                () => {}
+            )
         })
         flushSync()
         current = b
