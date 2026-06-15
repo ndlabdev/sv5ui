@@ -21,7 +21,7 @@ export interface UseInfiniteScrollOptions {
     enabled?: boolean | (() => boolean)
 }
 
-export interface UseInfiniteScrollReturn {
+interface UseInfiniteScrollReturn {
     /** Whether an async onLoad is currently in progress */
     readonly loading: boolean
 }

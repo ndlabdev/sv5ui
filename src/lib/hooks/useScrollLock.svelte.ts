@@ -43,10 +43,8 @@ function release(el: HTMLElement): void {
     }
 }
 
-export interface UseScrollLockReturn {
-    /** Lock the target scroll imperatively (overrides the reactive `locked` source). */
+interface UseScrollLockReturn {
     lock: () => void
-    /** Unlock the target scroll imperatively (overrides the reactive `locked` source). */
     unlock: () => void
 }
 

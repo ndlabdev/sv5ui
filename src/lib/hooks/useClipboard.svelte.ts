@@ -6,7 +6,7 @@ export interface UseClipboardOptions {
     timeout?: number
 }
 
-export interface UseClipboardReturn {
+interface UseClipboardReturn {
     /** Whether text was recently copied (resets after timeout) */
     readonly copied: boolean
 
