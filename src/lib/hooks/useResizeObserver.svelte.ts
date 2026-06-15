@@ -39,7 +39,7 @@ export function useResizeObserver(
     })
 }
 
-export interface UseElementSizeReturn {
+interface UseElementSizeReturn {
     /** Current content-box width in pixels. */
     readonly width: number
     /** Current content-box height in pixels. */

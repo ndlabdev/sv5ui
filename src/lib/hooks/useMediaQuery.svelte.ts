@@ -6,7 +6,7 @@ export interface UseMediaQueryOptions {
     initialValue?: boolean
 }
 
-export interface UseMediaQueryReturn {
+interface UseMediaQueryReturn {
     /** Whether the media query currently matches */
     readonly matches: boolean
 }
