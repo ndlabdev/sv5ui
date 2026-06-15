@@ -399,7 +399,7 @@
         return 'type' in item && item.type === 'label'
     }
 
-    // ---- Event handlers (Nuxt UI v4 pattern) ----
+    // ---- Event handlers ----
     function onUpdateOpen(val: boolean) {
         if (!val) {
             resetSearch()

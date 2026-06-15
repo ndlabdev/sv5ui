@@ -170,7 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Form** — Centralized form validation and submission component with full parity to Nuxt UI v4's Form. Supports Zod 3.24+, Valibot 1.0+, Yup 1.7+ (via Standard Schema) and Joi 17+ (dedicated adapter). Features: custom validate function (sync/async), field-level validation on blur/input/change/focus with per-field debounce and eager-after-first-blur semantics, dirty/touched/blurred field tracking, loading auto-disable, nested forms with cascading validation/setErrors/clear/reset and state merging (full-form and field-scoped), schema transform output, full programmatic API via `bind:api` (submit, validate, clear, reset, setErrors, getErrors, errors, loading, dirty, submitCount)
+- **Form** — Centralized form validation and submission component. Supports Zod 3.24+, Valibot 1.0+, Yup 1.7+ (via Standard Schema) and Joi 17+ (dedicated adapter). Features: custom validate function (sync/async), field-level validation on blur/input/change/focus with per-field debounce and eager-after-first-blur semantics, dirty/touched/blurred field tracking, loading auto-disable, nested forms with cascading validation/setErrors/clear/reset and state merging (full-form and field-scoped), schema transform output, full programmatic API via `bind:api` (submit, validate, clear, reset, setErrors, getErrors, errors, loading, dirty, submitCount)
 - **useFormFieldEmit / wireFormEvents** — Helper hooks for custom input components to emit form events (blur, input, change, focus) to the parent Form via the FormField context
 - **Input** — `InputValue` generic type (`string | number | bigint | boolean | null | undefined`) and `InputProps<T extends InputValue>` for type-safe `bind:value` inference based on the input `type` attribute
 - **FormField** — `eagerValidation`, `validateOnInputDelay`, and `errorPattern` props for fine-grained field-level validation control when used inside a Form
@@ -255,7 +255,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored all existing components to align with Nuxt UI v4 structure
+- Refactored all existing components to a consistent slot/variant structure
 - Added `ref` prop with `$bindable(null)` to all components
 - Standardized restProps spread order across all components
 

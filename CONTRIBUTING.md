@@ -67,7 +67,7 @@ These are enforced by review and keep 40+ components consistent:
 
 - **No comments in code** except inside `*.types.ts` files. Rely on naming and types instead.
 - **Material Design 3 design tokens only** — use `bg-primary`, `text-on-surface`, `ring-outline-variant`, etc. Never hardcode colors.
-- **Mirror Nuxt UI v4** — match its slot names, variant names, and `defaultVariants` where reasonable. Diverge only with a documented reason.
+- **Consistent API surface** — use clear, consistent slot names, variant names, and `defaultVariants` across components. Diverge only with a documented reason.
 - **Styling via `tailwind-variants`** (`*.variants.ts`), with slots and `compoundVariants` for color × variant combinations.
 - **Svelte 5 runes** — `$derived` for simple derivations, `$derived.by` only for multi-line logic; avoid `$effect` unless necessary; `$bindable` for two-way props.
 - **Public types** must not leak `any`/`unknown` or internal slot/variant types. Export only what users need (`Props`, and user-facing `Size`/`Color`/`Variant`).

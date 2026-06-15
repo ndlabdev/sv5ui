@@ -8,9 +8,9 @@ import type { AvatarProps } from '../Avatar/avatar.types.js'
  * Valid value types for `<Input bind:value>`.
  *
  * Covers every HTML input `type` except `"file"` (which uses `FileList` and is
- * typically handled via `onchange` events, not `bind:value`). Pattern borrowed
- * from Nuxt UI v4's `AcceptableValue` — it's the minimum union that covers
- * real-world usage while still giving TypeScript enough to catch mistakes.
+ * typically handled via `onchange` events, not `bind:value`). It's the minimum
+ * union that covers real-world usage while still giving TypeScript enough to
+ * catch mistakes.
  *
  * Use with the component generic for strict typing:
  * ```ts

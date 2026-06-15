@@ -4,7 +4,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
  * Form component variants.
  *
  * The Form component renders a near-styleless `<form>` (or `<div>` for nested forms) —
- * matching Nuxt UI v4's minimal form theme. This exists primarily so users can inject
+ * a minimal form theme. This exists primarily so users can inject
  * shared form spacing via `defineConfig({ form: { slots: { root: 'space-y-4' } } })`.
  */
 export const formVariants = tv({
