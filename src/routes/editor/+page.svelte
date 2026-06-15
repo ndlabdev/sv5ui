@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Editor } from '$lib/Editor/index.js'
-    import type { EditorApi, EditorJSON, MentionItem } from '$lib/Editor/index.js'
+    import { Editor } from '$lib/components/Editor/index.js'
+    import type { EditorApi, EditorJSON, MentionItem } from '$lib/components/Editor/index.js'
     import { Button, Badge, Separator, Card, Icon, Form, FormField, Input } from '$lib/index.js'
 
     let basicHtml = $state('<p>Start writing here…</p>')

@@ -1,6 +1,6 @@
 import { getContext } from 'svelte'
-import type { FormFieldProps } from '../../FormField/form-field.types.js'
-import { getFormContext } from '../../Form/form.context.svelte.js'
+import type { FormFieldProps } from '../../components/FormField/form-field.types.js'
+import { getFormContext } from '../../components/Form/form.context.svelte.js'
 
 /**
  * Symbol key for the FormField context. Using a Symbol instead of a string

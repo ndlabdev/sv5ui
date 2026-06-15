@@ -43,9 +43,9 @@
             "default": "./dist/index.js"
         },
         "./editor": {
-            "types": "./dist/Editor/index.d.ts",
-            "svelte": "./dist/Editor/index.js",
-            "default": "./dist/Editor/index.js"
+            "types": "./dist/components/Editor/index.d.ts",
+            "svelte": "./dist/components/Editor/index.js",
+            "default": "./dist/components/Editor/index.js"
         },
         "./theme.css": {
             "import": "./dist/theme.css",
