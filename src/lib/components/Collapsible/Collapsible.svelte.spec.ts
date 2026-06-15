@@ -179,7 +179,7 @@ describe('Collapsible', () => {
 
         it('should not have extra default classes on root', () => {
             render(CollapsibleTestWrapper)
-            // root slot is empty by default (matching Nuxt UI)
+            // root slot is empty by default
             expect(getRoot()).not.toBeNull()
         })
     })

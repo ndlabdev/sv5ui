@@ -268,7 +268,7 @@ export class FormContext<T = unknown> {
     // ==================== VALIDATION CORE ====================
 
     // The validation pipeline inherently has 6 sequential stages (nested → custom →
-    // schema → merge → scope → transform) mirroring Nuxt UI's Form.vue. Decomposing
+    // schema → merge → scope → transform). Decomposing
     // further would fragment the logic across helpers without reducing real complexity.
     // eslint-disable-next-line complexity
     async validate(opts: FormValidateOpts = {}): Promise<T | false> {

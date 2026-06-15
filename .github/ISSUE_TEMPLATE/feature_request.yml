@@ -32,15 +32,6 @@ body:
       validations:
           required: true
 
-    - type: input
-      id: nuxt-parity
-      attributes:
-          label: Nuxt UI v4 reference
-          description: sv5ui mirrors Nuxt UI v4 where possible. Link the equivalent component/prop if one exists.
-          placeholder: https://ui.nuxt.com/components/button
-      validations:
-          required: false
-
     - type: textarea
       id: alternatives
       attributes:
