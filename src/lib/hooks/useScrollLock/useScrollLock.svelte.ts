@@ -1,3 +1,5 @@
+import { toGetter } from '../utils.js'
+
 type ElementTarget = HTMLElement | null | undefined | (() => HTMLElement | null | undefined)
 
 interface LockState {
@@ -73,7 +75,7 @@ export function useScrollLock(
     locked: boolean | (() => boolean),
     target?: ElementTarget
 ): UseScrollLockReturn {
-    const resolveLocked = typeof locked === 'function' ? locked : () => locked
+    const resolveLocked = toGetter(locked)
     const resolveTarget = typeof target === 'function' ? target : () => target ?? document.body
 
     let manual = $state<boolean | null>(null)

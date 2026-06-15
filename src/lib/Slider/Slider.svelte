@@ -8,7 +8,7 @@
     import { Slider, useId } from 'bits-ui'
     import { sliderVariants, sliderDefaults } from './slider.variants.js'
     import { getComponentConfig } from '../config.js'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
 
     const config = getComponentConfig('slider', sliderDefaults)
 

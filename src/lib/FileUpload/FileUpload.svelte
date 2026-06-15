@@ -12,7 +12,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Button from '../Button/Button.svelte'
     import Modal from '../Modal/Modal.svelte'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
 
     const config = getComponentConfig('fileUpload', fileUploadDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)

@@ -9,7 +9,7 @@
     import { formFieldVariants, formFieldDefaults } from './form-field.variants.js'
     import { getComponentConfig } from '../config.js'
     import { setContext, untrack } from 'svelte'
-    import { type FormFieldContext, FORM_FIELD_CONTEXT_KEY } from '../hooks/useFormField.svelte.js'
+    import { type FormFieldContext, FORM_FIELD_CONTEXT_KEY } from '../hooks/useFormField/index.js'
     import { getFormContext } from '../Form/form.context.svelte.js'
 
     const config = getComponentConfig('formField', formFieldDefaults)

@@ -1,8 +1,6 @@
-type MaybeGetter<T> = T | (() => T)
+import { toGetter } from '../utils.js'
 
-function toGetter<T>(value: MaybeGetter<T>): () => T {
-    return typeof value === 'function' ? (value as () => T) : () => value
-}
+type MaybeGetter<T> = T | (() => T)
 
 /**
  * Attach event listener(s) to a target with automatic cleanup.

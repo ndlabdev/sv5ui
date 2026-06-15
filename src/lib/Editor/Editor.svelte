@@ -10,7 +10,7 @@
     import { untrack } from 'svelte'
     import { editorVariants, editorDefaults } from './editor.variants.js'
     import { getComponentConfig } from '../config.js'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
     import { TOOLBAR_ACTIONS, DEFAULT_TOOLBAR, type ToolbarActionDef } from './editor.toolbar.js'
     import { buildExtensions } from './editor.extensions.js'
     import { buildMentionSuggestion } from './editor.suggestion.js'

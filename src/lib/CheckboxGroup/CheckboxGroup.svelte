@@ -9,7 +9,7 @@
     import { checkboxGroupVariants, checkboxGroupDefaults } from './checkbox-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
     import type { CheckboxGroupItem } from './checkbox-group.types.js'
 
     const config = getComponentConfig('checkboxGroup', checkboxGroupDefaults)

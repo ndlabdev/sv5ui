@@ -8,7 +8,7 @@
     import { PinInput, useId } from 'bits-ui'
     import { pinInputVariants, pinInputDefaults } from './pin-input.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
     import Icon from '../Icon/Icon.svelte'
 
     const config = getComponentConfig('pinInput', pinInputDefaults)

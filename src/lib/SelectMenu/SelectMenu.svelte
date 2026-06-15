@@ -22,8 +22,8 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
-    import { useDebounce } from '../hooks/useDebounce.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
+    import { useDebounce } from '../hooks/useDebounce/index.js'
 
     const config = getComponentConfig('selectMenu', selectMenuDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
