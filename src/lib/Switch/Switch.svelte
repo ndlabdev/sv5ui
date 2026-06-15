@@ -9,7 +9,7 @@
     import { switchVariants, switchDefaults } from './switch.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
 
     const config = getComponentConfig('switch', switchDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)

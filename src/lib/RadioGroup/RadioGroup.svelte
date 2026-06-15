@@ -9,7 +9,7 @@
     import { radioGroupVariants, radioGroupDefaults } from './radio-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../config.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
     import type { RadioGroupItem } from './radio-group.types.js'
 
     const config = getComponentConfig('radioGroup', radioGroupDefaults)

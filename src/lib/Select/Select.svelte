@@ -16,7 +16,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
 
     const config = getComponentConfig('select', selectDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)

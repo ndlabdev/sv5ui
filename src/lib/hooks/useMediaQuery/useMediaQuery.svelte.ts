@@ -1,3 +1,5 @@
+import { toGetter } from '../utils.js'
+
 export interface UseMediaQueryOptions {
     /**
      * Initial value before the media query is evaluated (SSR-safe).
@@ -35,7 +37,7 @@ export function useMediaQuery(
     options: UseMediaQueryOptions = {}
 ): UseMediaQueryReturn {
     const { initialValue = false } = options
-    const resolveQuery = typeof query === 'function' ? query : () => query
+    const resolveQuery = toGetter(query)
 
     let matches = $state(initialValue)
 

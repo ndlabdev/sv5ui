@@ -13,7 +13,7 @@
         type FieldGroupVariantProps
     } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
 
     const config = getComponentConfig('textarea', textareaDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)

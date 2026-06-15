@@ -16,7 +16,7 @@
     import Icon from '../Icon/Icon.svelte'
     import { type DateValue, today, getLocalTimeZone } from '@internationalized/date'
     import type { Month } from 'bits-ui'
-    import { useFormField, useFormFieldEmit } from '../hooks/useFormField.svelte.js'
+    import { useFormField, useFormFieldEmit } from '../hooks/useFormField/index.js'
 
     const config = getComponentConfig('calendar', calendarDefaults)
 

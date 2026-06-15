@@ -1,3 +1,5 @@
+import { toGetter } from '../utils.js'
+
 type ElementTarget = HTMLElement | null | undefined | (() => HTMLElement | null | undefined)
 
 /**
@@ -26,7 +28,7 @@ export function useResizeObserver(
     callback: ResizeObserverCallback,
     options?: ResizeObserverOptions
 ): void {
-    const resolveTarget = typeof target === 'function' ? target : () => target
+    const resolveTarget = toGetter(target)
 
     $effect(() => {
         const el = resolveTarget()
