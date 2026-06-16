@@ -1,3 +1,4 @@
+import { flushSync } from 'svelte'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useInfiniteScroll } from './useInfiniteScroll.svelte.js'
 
@@ -46,8 +47,9 @@ describe('useInfiniteScroll', () => {
         let api: ReturnType<typeof useInfiniteScroll>
         const cleanup = $effect.root(() => {
             api = useInfiniteScroll({ onLoad })
+            api.action(node)
         })
-        api!.action(node)
+        flushSync()
 
         node.scrollTop = node.scrollHeight - node.clientHeight
         node.dispatchEvent(new Event('scroll'))
@@ -69,8 +71,9 @@ describe('useInfiniteScroll', () => {
         let api: ReturnType<typeof useInfiniteScroll>
         const cleanup = $effect.root(() => {
             api = useInfiniteScroll({ onLoad, enabled: () => false })
+            api.action(node)
         })
-        api!.action(node)
+        flushSync()
 
         node.scrollTop = node.scrollHeight - node.clientHeight
         node.dispatchEvent(new Event('scroll'))
@@ -92,8 +95,9 @@ describe('useInfiniteScroll', () => {
         let api: ReturnType<typeof useInfiniteScroll>
         const cleanup = $effect.root(() => {
             api = useInfiniteScroll({ onLoad })
+            api.action(node)
         })
-        api!.action(node)
+        flushSync()
 
         node.scrollTop = node.scrollHeight - node.clientHeight
         node.dispatchEvent(new Event('scroll'))
@@ -114,8 +118,9 @@ describe('useInfiniteScroll', () => {
         let api: ReturnType<typeof useInfiniteScroll>
         const cleanup = $effect.root(() => {
             api = useInfiniteScroll({ onLoad, threshold: 50 })
+            api.action(node)
         })
-        api!.action(node)
+        flushSync()
 
         node.scrollTop = 0
         node.dispatchEvent(new Event('scroll'))

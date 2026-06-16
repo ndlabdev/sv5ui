@@ -1,5 +1,7 @@
+import { flushSync } from 'svelte'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { useEscapeKeydown } from './useEscapeKeydown.svelte.js'
+import type { Action } from 'svelte/action'
+import { useEscapeKeydown, type UseEscapeKeydownOptions } from './useEscapeKeydown.svelte.js'
 
 describe('useEscapeKeydown', () => {
     let node: HTMLDivElement
@@ -13,48 +15,57 @@ describe('useEscapeKeydown', () => {
         node.remove()
     })
 
+    function mount(options: UseEscapeKeydownOptions) {
+        let action: ReturnType<Action<HTMLElement, UseEscapeKeydownOptions>>
+        const cleanup = $effect.root(() => {
+            action = useEscapeKeydown(node, options)
+        })
+        flushSync()
+        return { action: action!, cleanup }
+    }
+
     it('should call the handler on Escape keydown', () => {
         const handler = vi.fn()
-        const action = useEscapeKeydown(node, { handler })
+        const { cleanup } = mount({ handler })
 
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
         expect(handler).toHaveBeenCalledTimes(1)
-        action?.destroy?.()
+        cleanup()
     })
 
     it('should not call the handler for other keys', () => {
         const handler = vi.fn()
-        const action = useEscapeKeydown(node, { handler })
+        const { cleanup } = mount({ handler })
 
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
         expect(handler).not.toHaveBeenCalled()
-        action?.destroy?.()
+        cleanup()
     })
 
     it('should not call the handler when disabled', () => {
         const handler = vi.fn()
-        const action = useEscapeKeydown(node, { handler, enabled: false })
+        const { cleanup } = mount({ handler, enabled: false })
 
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
         expect(handler).not.toHaveBeenCalled()
-        action?.destroy?.()
+        cleanup()
     })
 
     it('should react to enabled toggled via update', () => {
         const handler = vi.fn()
-        const action = useEscapeKeydown(node, { handler, enabled: false })
+        const { action, cleanup } = mount({ handler, enabled: false })
 
         action?.update?.({ handler, enabled: true })
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
         expect(handler).toHaveBeenCalledTimes(1)
-        action?.destroy?.()
+        cleanup()
     })
 
-    it('should stop calling the handler after destroy', () => {
+    it('should stop calling the handler after the action is destroyed', () => {
         const handler = vi.fn()
-        const action = useEscapeKeydown(node, { handler })
+        const { cleanup } = mount({ handler })
 
-        action?.destroy?.()
+        cleanup()
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
         expect(handler).not.toHaveBeenCalled()
     })

@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action'
+import { useEventListener } from '../useEventListener/index.js'
 
 export interface UseInfiniteScrollOptions {
     /**
@@ -83,17 +84,12 @@ export function useInfiniteScroll(
     }
 
     const action: Action<HTMLElement> = (node) => {
-        function handleScroll() {
-            check(node)
-        }
-
-        node.addEventListener('scroll', handleScroll, { passive: true })
-
-        return {
-            destroy() {
-                node.removeEventListener('scroll', handleScroll)
-            }
-        }
+        useEventListener(
+            () => node,
+            'scroll',
+            () => check(node),
+            { passive: true }
+        )
     }
 
     return {

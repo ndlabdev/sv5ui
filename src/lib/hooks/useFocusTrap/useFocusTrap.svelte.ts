@@ -1,4 +1,5 @@
 import { toGetter } from '../utils.js'
+import { useEventListener } from '../useEventListener/index.js'
 
 type ElementTarget = HTMLElement | null | undefined | (() => HTMLElement | null | undefined)
 
@@ -81,8 +82,21 @@ export function useFocusTrap(target: ElementTarget, options: UseFocusTrapOptions
             ;(initial ?? getFocusable(el)[0] ?? el).focus()
         }
 
-        function handleKeydown(event: KeyboardEvent) {
+        return () => {
+            if (restoreFocus && previouslyFocused && document.contains(previouslyFocused)) {
+                previouslyFocused.focus()
+            }
+        }
+    })
+
+    useEventListener(
+        () => (resolveActive() && resolveTarget() ? document : null),
+        'keydown',
+        (event) => {
             if (event.key !== 'Tab') return
+            const el = resolveTarget()
+            if (!el) return
+
             const focusable = getFocusable(el)
             if (focusable.length === 0) {
                 event.preventDefault()
@@ -101,15 +115,7 @@ export function useFocusTrap(target: ElementTarget, options: UseFocusTrapOptions
                 event.preventDefault()
                 first.focus()
             }
-        }
-
-        document.addEventListener('keydown', handleKeydown, true)
-
-        return () => {
-            document.removeEventListener('keydown', handleKeydown, true)
-            if (restoreFocus && previouslyFocused && document.contains(previouslyFocused)) {
-                previouslyFocused.focus()
-            }
-        }
-    })
+        },
+        true
+    )
 }
