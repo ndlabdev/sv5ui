@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action'
+import { useEventListener } from '../useEventListener/index.js'
 
 export interface UseEscapeKeydownOptions {
     /**
@@ -37,21 +38,20 @@ export const useEscapeKeydown: Action<HTMLElement, UseEscapeKeydownOptions> = (
 ) => {
     let currentOptions = initialOptions!
 
-    function handleKeydown(event: KeyboardEvent) {
-        if (currentOptions.enabled === false) return
-        if (event.key === 'Escape') {
-            currentOptions.handler(event)
+    useEventListener(
+        () => document,
+        'keydown',
+        (event) => {
+            if (currentOptions.enabled === false) return
+            if (event.key === 'Escape') {
+                currentOptions.handler(event)
+            }
         }
-    }
-
-    document.addEventListener('keydown', handleKeydown)
+    )
 
     return {
         update(newOptions) {
             currentOptions = newOptions
-        },
-        destroy() {
-            document.removeEventListener('keydown', handleKeydown)
         }
     }
 }

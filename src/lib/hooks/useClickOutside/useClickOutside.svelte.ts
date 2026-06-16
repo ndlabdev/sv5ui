@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action'
+import { useEventListener } from '../useEventListener/index.js'
 
 export interface UseClickOutsideOptions {
     /**
@@ -37,21 +38,21 @@ export const useClickOutside: Action<HTMLElement, UseClickOutsideOptions> = (
 ) => {
     let currentOptions = initialOptions!
 
-    function handlePointerDown(event: PointerEvent) {
-        if (currentOptions.enabled === false) return
-        if (!node.contains(event.target as Node)) {
-            currentOptions.handler(event)
-        }
-    }
-
-    document.addEventListener('pointerdown', handlePointerDown, true)
+    useEventListener(
+        () => document,
+        'pointerdown',
+        (event) => {
+            if (currentOptions.enabled === false) return
+            if (!node.contains(event.target as Node)) {
+                currentOptions.handler(event)
+            }
+        },
+        true
+    )
 
     return {
         update(newOptions) {
             currentOptions = newOptions
-        },
-        destroy() {
-            document.removeEventListener('pointerdown', handlePointerDown, true)
         }
     }
 }

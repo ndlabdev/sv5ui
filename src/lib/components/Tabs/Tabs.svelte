@@ -9,6 +9,7 @@
     import { tick, untrack } from 'svelte'
     import { tabsVariants, tabsDefaults } from './tabs.variants.js'
     import { getComponentConfig } from '../../config.js'
+    import { useResizeObserver } from '../../hooks/useResizeObserver/index.js'
     import Icon from '../Icon/Icon.svelte'
 
     const config = getComponentConfig('tabs', tabsDefaults)
@@ -118,17 +119,8 @@
     })
 
     // Handle resize with rAF debouncing
-    $effect(() => {
-        if (!listEl) return
-
-        const observer = new ResizeObserver(scheduleIndicatorUpdate)
-        observer.observe(listEl)
-
-        return () => {
-            observer.disconnect()
-            cancelAnimationFrame(rafId)
-        }
-    })
+    useResizeObserver(() => listEl, scheduleIndicatorUpdate)
+    $effect(() => () => cancelAnimationFrame(rafId))
 </script>
 
 <Tabs.Root
