@@ -9,6 +9,7 @@
     import { pinInputVariants, pinInputDefaults } from './pin-input.variants.js'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import { useTimeout } from '../../hooks/useTimers/index.js'
     import Icon from '../Icon/Icon.svelte'
 
     const config = getComponentConfig('pinInput', pinInputDefaults)
@@ -104,13 +105,13 @@
         }
     })
 
-    $effect(() => {
-        if (!autofocus) return
-        const input = ref?.querySelector('[data-pin-input-input]') as HTMLInputElement | null
-        if (!input) return
-        const timer = setTimeout(() => input.focus(), autofocusDelay)
-        return () => clearTimeout(timer)
-    })
+    useTimeout(
+        () => {
+            const input = ref?.querySelector('[data-pin-input-input]') as HTMLInputElement | null
+            input?.focus()
+        },
+        () => (autofocus ? autofocusDelay : null)
+    )
 </script>
 
 <div class="relative inline-flex" {...restProps}>
