@@ -12,10 +12,10 @@ const defaultItems: SelectMenuItem[] = [
 ]
 
 const getTrigger = (container: Element) =>
-    container.querySelector('button') as HTMLButtonElement | null
+    container.querySelector('[data-combobox-trigger]') as HTMLElement | null
 
 const getRootWrapper = (container: Element) =>
-    getTrigger(container)?.closest('div') as HTMLDivElement | null
+    getTrigger(container)?.parentElement as HTMLDivElement | null
 
 describe('SelectMenu', () => {
     // ==================== RENDERING ====================
@@ -57,8 +57,8 @@ describe('SelectMenu', () => {
 
     describe('dropdown interaction', () => {
         it('should open dropdown on trigger click', async () => {
-            render(SelectMenu, { items: defaultItems, portal: false })
-            await page.getByRole('button').first().click()
+            const { container } = render(SelectMenu, { items: defaultItems, portal: false })
+            getTrigger(container)!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
             await vi.waitFor(() => {
                 const options = document.querySelectorAll('[role="option"]')
                 expect(options.length).toBeGreaterThan(0)
@@ -99,12 +99,12 @@ describe('SelectMenu', () => {
 
         it('should call onOpenChange when opening', async () => {
             const onOpenChange = vi.fn()
-            render(SelectMenu, {
+            const { container } = render(SelectMenu, {
                 items: defaultItems,
                 portal: false,
                 onOpenChange
             })
-            await page.getByRole('button').first().click()
+            getTrigger(container)!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }))
             await vi.waitFor(() => {
                 expect(onOpenChange).toHaveBeenCalledWith(true)
             })
@@ -223,12 +223,12 @@ describe('SelectMenu', () => {
     describe('disabled', () => {
         it('should be disabled when disabled prop is true', () => {
             const { container } = render(SelectMenu, { items: defaultItems, disabled: true })
-            expect(getTrigger(container)!.disabled).toBe(true)
+            expect(getTrigger(container)!.hasAttribute('disabled')).toBe(true)
         })
 
         it('should not be disabled by default', () => {
             const { container } = render(SelectMenu, { items: defaultItems })
-            expect(getTrigger(container)!.disabled).toBe(false)
+            expect(getTrigger(container)!.hasAttribute('disabled')).toBe(false)
         })
 
         it('should not open when disabled', async () => {
@@ -482,7 +482,7 @@ describe('SelectMenu', () => {
                 disabled: true
             })
             await expect.element(page.getByText('Cherry')).toBeInTheDocument()
-            expect(getTrigger(container)!.disabled).toBe(true)
+            expect(getTrigger(container)!.hasAttribute('disabled')).toBe(true)
         })
 
         it('should render with variant, color, and size combined', () => {
@@ -584,7 +584,7 @@ describe('SelectMenu', () => {
 
         const typeSearch = (value: string) => {
             const input = Array.from(document.querySelectorAll('input')).find(
-                (i) => i.getAttribute('aria-hidden') !== 'true'
+                (i) => i.type === 'text' && !i.hasAttribute('data-combobox-input')
             ) as HTMLInputElement | undefined
             if (!input) throw new Error('Search input not found')
             input.focus()
@@ -672,7 +672,7 @@ describe('SelectMenu', () => {
                 expect(findCreateOption()).toBeDefined()
             })
             await page.getByRole('option', { name: /Create "mango"/ }).click()
-            const trigger = container.querySelector('button[aria-haspopup]') as HTMLButtonElement
+            const trigger = container.querySelector('[data-combobox-trigger]') as HTMLElement
             expect(trigger.getAttribute('data-state')).toBe('open')
         })
 
@@ -745,7 +745,7 @@ describe('SelectMenu', () => {
                 portal: false
             })
             const input = Array.from(document.querySelectorAll('input')).find(
-                (i) => i.getAttribute('aria-hidden') !== 'true'
+                (i) => i.type === 'text' && !i.hasAttribute('data-combobox-input')
             ) as HTMLInputElement
             input.focus()
             input.value = 'mango'
@@ -820,7 +820,7 @@ describe('SelectMenu', () => {
             })
             const withFieldId = document.querySelectorAll('[id="form-field-fruit"]')
             expect(withFieldId.length).toBe(1)
-            expect((withFieldId[0] as HTMLElement).tagName).toBe('BUTTON')
+            expect((withFieldId[0] as HTMLElement).hasAttribute('data-combobox-trigger')).toBe(true)
             const search = document.querySelector(
                 'input[placeholder="Search..."]'
             ) as HTMLInputElement
