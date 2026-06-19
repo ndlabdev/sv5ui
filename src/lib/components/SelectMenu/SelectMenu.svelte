@@ -23,7 +23,7 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
-    import { useDebounce } from '../../hooks/useDebounce/index.js'
+    import { useDebouncedState } from '../../hooks/useDebouncedState/index.js'
 
     const config = getComponentConfig('selectMenu', selectMenuDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -181,29 +181,22 @@
     }
 
     // ---- Search & filtering ----
-    let searchTerm = $state('')
-    let debouncedSearch = $state('')
-    const searchDebounce = useDebounce({ delay: 200 })
+    const search = useDebouncedState('', 200)
 
     function setSearch(term: string) {
-        searchTerm = term
-        searchDebounce.run(() => {
-            debouncedSearch = term
-        })
+        search.current = term
     }
 
     function resetSearch() {
-        searchDebounce.cancel()
-        searchTerm = ''
-        debouncedSearch = ''
+        search.setImmediate('')
     }
 
     const filteredItems = $derived(
-        ignoreFilter || !debouncedSearch.trim()
+        ignoreFilter || !search.debounced.trim()
             ? combinedItems
             : combinedItems.filter((item) => {
                   if ('type' in item) return true
-                  const query = debouncedSearch.toLowerCase()
+                  const query = search.debounced.toLowerCase()
                   return filterFields.some((field) => {
                       const val = (item as unknown as Record<string, unknown>)[field]
                       return typeof val === 'string' && val.toLowerCase().includes(query)
@@ -214,7 +207,7 @@
     const hasFilteredSelectItems = $derived(filteredItems.some((item) => !('type' in item)))
 
     // ---- Create item ----
-    const trimmedSearch = $derived(searchTerm.trim())
+    const trimmedSearch = $derived(search.current.trim())
     const exactMatchExists = $derived.by(() => {
         if (!trimmedSearch) return false
         const query = trimmedSearch.toLowerCase()
@@ -460,12 +453,10 @@
         {forceMount}
         class={contentClass}
     >
-        <!-- svelte-ignore a11y_autofocus -->
         <input
             type="text"
-            autofocus
             placeholder={searchPlaceholder}
-            value={searchTerm}
+            value={search.current}
             oninput={(e) => setSearch((e.currentTarget as HTMLInputElement).value)}
             onkeydown={(e: KeyboardEvent) => {
                 if (e.key !== 'Enter') return
@@ -477,7 +468,7 @@
         />
 
         {#if contentSlot}
-            {@render contentSlot({ open, searchTerm })}
+            {@render contentSlot({ open, searchTerm: search.current })}
         {:else}
             <div class={viewportClass}>
                 {#each filteredItems as selectItem, index ('value' in selectItem ? selectItem.value : `${selectItem.type}-${index}`)}
@@ -504,7 +495,7 @@
 
                 {#if !hasFilteredSelectItems && !showCreateItem}
                     {#if emptySlot}
-                        {@render emptySlot({ searchTerm })}
+                        {@render emptySlot({ searchTerm: search.current })}
                     {:else}
                         <div class={emptyClass}>{emptyText}</div>
                     {/if}
@@ -551,7 +542,7 @@
         <Combobox.Input
             class="pointer-events-none absolute inset-0 opacity-0"
             tabindex={-1}
-            aria-hidden="true"
+            aria-label={searchPlaceholder}
         />
 
         <Combobox.Trigger
@@ -561,17 +552,21 @@
             aria-invalid={resolvedHighlight ? true : undefined}
             class={baseClass}
         >
-            {#if selectedSlot && hasSelection}
-                {@render selectedSlot({
-                    items: selectedItems,
-                    remove: removeValue,
-                    clear: clearSelection
-                })}
-            {:else if hasSelection && displayLabel}
-                <span class={valueClass}>{displayLabel}</span>
-            {:else if placeholder}
-                <span class={placeholderClass}>{placeholder}</span>
-            {/if}
+            {#snippet child({ props })}
+                <div {...props} role="button" tabindex={disabled ? -1 : 0}>
+                    {#if selectedSlot && hasSelection}
+                        {@render selectedSlot({
+                            items: selectedItems,
+                            remove: removeValue,
+                            clear: clearSelection
+                        })}
+                    {:else if hasSelection && displayLabel}
+                        <span class={valueClass}>{displayLabel}</span>
+                    {:else if placeholder}
+                        <span class={placeholderClass}>{placeholder}</span>
+                    {/if}
+                </div>
+            {/snippet}
         </Combobox.Trigger>
 
         {#if trailingSlot}
