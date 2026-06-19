@@ -25,3 +25,6 @@ vite.config.ts.timestamp-*
 
 # Local Claude Code config (skills, settings) — not shared via git
 .claude/
+
+# Internal planning doc — keep local, not shared via git
+HOOKS_PLAN.md
