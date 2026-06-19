@@ -76,6 +76,7 @@
         { href: '/use-escape-keydown', label: 'useEscapeKeydown', icon: 'lucide:keyboard' },
         { href: '/use-debounce', label: 'useDebounce', icon: 'lucide:timer' },
         { href: '/use-throttle', label: 'useThrottle', icon: 'lucide:gauge' },
+        { href: '/use-timers', label: 'useTimeout / useInterval', icon: 'lucide:hourglass' },
         { href: '/use-event-listener', label: 'useEventListener', icon: 'lucide:radio' },
         { href: '/use-resize-observer', label: 'useResizeObserver', icon: 'lucide:scaling' },
         {
