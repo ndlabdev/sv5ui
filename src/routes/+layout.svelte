@@ -78,6 +78,11 @@
         { href: '/use-throttle', label: 'useThrottle', icon: 'lucide:gauge' },
         { href: '/use-event-listener', label: 'useEventListener', icon: 'lucide:radio' },
         { href: '/use-resize-observer', label: 'useResizeObserver', icon: 'lucide:scaling' },
+        {
+            href: '/use-intersection-observer',
+            label: 'useIntersectionObserver',
+            icon: 'lucide:eye'
+        },
         { href: '/use-scroll-lock', label: 'useScrollLock', icon: 'lucide:lock' },
         { href: '/use-focus-trap', label: 'useFocusTrap', icon: 'lucide:focus' },
         { href: '/use-local-storage', label: 'useLocalStorage', icon: 'lucide:database' }
