@@ -12,6 +12,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Button from '../Button/Button.svelte'
     import Checkbox from '../Checkbox/Checkbox.svelte'
+    import { useThrottle } from '../../hooks/useThrottle/index.js'
     import {
         autoGenerateColumns,
         getRowKey,
@@ -351,6 +352,7 @@
     // Column Resizing
     // =========================================================================
     let resizing = $state<{ key: string; startX: number; startWidth: number } | null>(null)
+    const resizeThrottle = useThrottle({ delay: 16 })
 
     function onResizeStart(e: MouseEvent, col: TableColumn<T>) {
         e.preventDefault()
@@ -359,13 +361,15 @@
 
         const onMove = (ev: MouseEvent) => {
             if (!resizing) return
-            const diff = ev.clientX - resizing.startX
-            let newWidth = resizing.startWidth + diff
+            const { key, startX, startWidth } = resizing
+            const diff = ev.clientX - startX
             const min = col.minWidth ?? 50
             const max = col.maxWidth ?? Infinity
-            newWidth = Math.max(min, Math.min(max, newWidth))
-            columnSizing = { ...columnSizing, [resizing.key]: newWidth }
-            onColumnSizingChange?.(columnSizing)
+            const newWidth = Math.max(min, Math.min(max, startWidth + diff))
+            resizeThrottle.run(() => {
+                columnSizing = { ...columnSizing, [key]: newWidth }
+                onColumnSizingChange?.(columnSizing)
+            })
         }
 
         const onUp = () => {
