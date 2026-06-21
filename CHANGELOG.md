@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **useEventListener** — Declarative event-listener hook with automatic cleanup. Binds a handler to a target (a value or a reactive getter for Window/Document/Element), accepts one or many event types, forwards listener options, and is SSR-safe. The foundation the other DOM hooks build on.
+- **useResizeObserver / useElementSize** — Observe an element's size with a `ResizeObserver` (auto-disconnect on teardown); `useElementSize` exposes reactive `width`/`height`. The target may be a reactive getter; SSR-safe.
+- **useScrollLock** — Lock body scroll without layout shift (scrollbar-width compensation), ref-counted so nested/concurrent locks compose, and restore the previous inline styles on release.
+- **useFocusTrap** — Trap keyboard focus within an element while active: cycles Tab / Shift+Tab among focusable descendants, focuses an initial element on activation, and restores focus on exit. The target and `active` accept reactive getters; SSR-safe. (Not for bits-ui overlays — Modal/Slideover/Drawer/Popover already trap focus.)
+- **useLocalStorage** — Reactive, typed `localStorage` state with cross-tab sync via the `storage` event, a pluggable serializer (JSON by default), and SSR-safety (returns the initial value on the server, hydrates on mount); tolerates serialization/quota errors.
+- **useThrottle** — Throttle a callback to at most once per `delay` with leading + trailing invocation. The companion to `useDebounce` — ideal for scroll, resize, mousemove, and drag handlers.
+- **useIntersectionObserver** — Observe an element's intersection with the viewport (or a root) via `IntersectionObserver` (auto-disconnect), with reactive `isIntersecting`. The target may be a reactive getter; SSR-safe.
+- **useTimeout / useInterval** — Timers with proper runes teardown. A reactive `delay` restarts the timer; a `null` delay disables it. `useInterval` adds `pause` / `resume` / `active` (and a `paused` option); `useTimeout` adds `restart` / `cancel`. SSR-safe.
+- **useDebouncedState** — Reactive state whose `debounced` mirror lags behind `current` (read/write, bindable) by a delay — write `current` from an input and derive from `debounced`, with `setImmediate` to skip the delay (e.g. on reset). Composes `useDebounce`, so the pending timer clears on teardown.
+
+### Changed
+
+- **Hooks (internal)** — All DOM listeners and observers now route through `useEventListener` / `useResizeObserver`: `useClickOutside`, `useEscapeKeydown`, `useInfiniteScroll`, `useFocusTrap`, and the Tabs indicator. No API or behavior change.
+- **Table / PinInput / SelectMenu** — Internal dogfooding of the new hooks: Table's column-resize drag throttles its width updates through `useThrottle` (~60fps, bounding re-renders and the `onColumnSizingChange` callback rate), PinInput's autofocus delay uses `useTimeout`, and SelectMenu's search uses `useDebouncedState`. No API or behavior change.
+- **Hooks (types)** — The hooks barrel now re-exports via `export *`, and per-hook return-type _interfaces_ are no longer exported as named types (they remain available as each hook's inferred return type). Option/parameter types are still exported. Only affects code that imported a hook's return type by name.
+
+### Fixed
+
+- **SelectMenu** — Resolved three console warnings present since earlier versions:
+    - **`hydration_mismatch`** — when the trigger held interactive content (the multi-select `selected` slot renders chip-remove `<button>`s), those buttons nested inside the trigger's own `<button>`, which is invalid HTML the browser restructures — so the hydrated DOM no longer matched the server output. The trigger now renders a `<div role="button">` (via bits-ui's `child` snippet) so interactive trigger content is valid. Consumers that select the trigger by tag should target `[data-combobox-trigger]` instead of `button`.
+    - **"aria-hidden on a focused element"** — the visually-hidden combobox input carried `aria-hidden` while bits-ui focuses it on open; it now uses `aria-label`, so the real control is accessible rather than hidden-yet-focused.
+    - **blocked `autofocus`** — removed the `autofocus` on the in-dropdown search input; it was already blocked (bits-ui focuses the combobox input first) and therefore non-functional.
+
 ## [2.1.0] - 2026-06-13
 
 ### Added
