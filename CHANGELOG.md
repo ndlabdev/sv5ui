@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - **`hydration_mismatch`** — when the trigger held interactive content (the multi-select `selected` slot renders chip-remove `<button>`s), those buttons nested inside the trigger's own `<button>`, which is invalid HTML the browser restructures — so the hydrated DOM no longer matched the server output. The trigger now renders a `<div role="button">` (via bits-ui's `child` snippet) so interactive trigger content is valid. Consumers that select the trigger by tag should target `[data-combobox-trigger]` instead of `button`.
     - **"aria-hidden on a focused element"** — the visually-hidden combobox input carried `aria-hidden` while bits-ui focuses it on open; it now uses `aria-label`, so the real control is accessible rather than hidden-yet-focused.
     - **blocked `autofocus`** — removed the `autofocus` on the in-dropdown search input; it was already blocked (bits-ui focuses the combobox input first) and therefore non-functional.
+- **DropdownMenu / ContextMenu** — The checkbox/radio checked indicator no longer renders an oversized, unstyled checkmark. The indicator `<Icon>` had no size and fell back to the 24px default, overflowing its slot; it now fills the slot (`size-full`) so it scales with the component size.
 
 ## [2.1.0] - 2026-06-13
 

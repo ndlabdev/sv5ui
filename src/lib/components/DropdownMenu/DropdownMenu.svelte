@@ -187,7 +187,7 @@
             {:else}
                 <span class={classes.itemIndicator}>
                     {#if item.checked}
-                        <Icon name={checkedIcon} />
+                        <Icon name={checkedIcon} class="size-full" />
                     {/if}
                 </span>
             {/if}
@@ -216,7 +216,7 @@
             {:else}
                 <span class={classes.itemIndicator}>
                     {#if firstRadioGroup?.value === item.value}
-                        <Icon name={checkedIcon} />
+                        <Icon name={checkedIcon} class="size-full" />
                     {/if}
                 </span>
             {/if}
