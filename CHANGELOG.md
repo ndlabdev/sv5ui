@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - **`hydration_mismatch`** — when the trigger held interactive content (the multi-select `selected` slot renders chip-remove `<button>`s), those buttons nested inside the trigger's own `<button>`, which is invalid HTML the browser restructures — so the hydrated DOM no longer matched the server output. The trigger now renders a `<div role="button">` (via bits-ui's `child` snippet) so interactive trigger content is valid. Consumers that select the trigger by tag should target `[data-combobox-trigger]` instead of `button`.
     - **"aria-hidden on a focused element"** — the visually-hidden combobox input carried `aria-hidden` while bits-ui focuses it on open; it now uses `aria-label`, so the real control is accessible rather than hidden-yet-focused.
     - **blocked `autofocus`** — removed the `autofocus` on the in-dropdown search input; it was already blocked (bits-ui focuses the combobox input first) and therefore non-functional.
+- **Packaging** — Published `dist/*.svelte` files are now preprocessed to plain JavaScript instead of shipping un-transpiled TypeScript in `<script lang="ts">`. This fixes parse errors with strict bundlers — notably Rolldown in Vite 8 (`optimizeDeps` and SSR) rejecting TypeScript-only syntax such as optional parameters (`event?: Event`). No API, type, or runtime behavior change — only the published `.svelte` source is type-stripped. ([#138](https://github.com/ndlabdev/sv5ui/issues/138))
 
 ## [2.1.0] - 2026-06-13
 
