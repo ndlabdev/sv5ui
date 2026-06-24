@@ -1,7 +1,11 @@
 import adapter from '@sveltejs/adapter-auto'
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
+    // Transpile <script lang="ts"> → JS when packaging so dist is plain JS,
+    // not TS (Rolldown / Vite 8 compatibility). See #138.
+    preprocess: vitePreprocess({ script: true }),
     kit: {
         // adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
         // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
