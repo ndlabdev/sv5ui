@@ -28,7 +28,7 @@ Closes #
 - [ ] `pnpm test` passes
 - [ ] Added or updated tests for the change
 - [ ] Updated `CHANGELOG.md` under `[Unreleased]`
-- [ ] Followed component conventions (no comments outside `*.types.ts`, Material 3 design tokens, Nuxt UI v4 parity)
+- [ ] Followed component conventions (no comments outside `*.types.ts`, Material 3 design tokens)
 
 ## Screenshots / notes
 

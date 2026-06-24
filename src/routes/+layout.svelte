@@ -74,7 +74,24 @@
             icon: 'lucide:arrow-down-to-line'
         },
         { href: '/use-escape-keydown', label: 'useEscapeKeydown', icon: 'lucide:keyboard' },
-        { href: '/use-debounce', label: 'useDebounce', icon: 'lucide:timer' }
+        { href: '/use-debounce', label: 'useDebounce', icon: 'lucide:timer' },
+        { href: '/use-throttle', label: 'useThrottle', icon: 'lucide:gauge' },
+        { href: '/use-timers', label: 'useTimeout / useInterval', icon: 'lucide:hourglass' },
+        {
+            href: '/use-debounced-state',
+            label: 'useDebouncedState',
+            icon: 'lucide:text-search'
+        },
+        { href: '/use-event-listener', label: 'useEventListener', icon: 'lucide:radio' },
+        { href: '/use-resize-observer', label: 'useResizeObserver', icon: 'lucide:scaling' },
+        {
+            href: '/use-intersection-observer',
+            label: 'useIntersectionObserver',
+            icon: 'lucide:eye'
+        },
+        { href: '/use-scroll-lock', label: 'useScrollLock', icon: 'lucide:lock' },
+        { href: '/use-focus-trap', label: 'useFocusTrap', icon: 'lucide:focus' },
+        { href: '/use-local-storage', label: 'useLocalStorage', icon: 'lucide:database' }
     ]
 
     const docItems = [

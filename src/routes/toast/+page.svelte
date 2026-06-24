@@ -1,7 +1,7 @@
 <script lang="ts">
     import { toast, Toaster } from '$lib/index.js'
     import { Button, Icon } from '$lib/index.js'
-    import type { ToasterProps } from '$lib/Toast/toast.types.js'
+    import type { ToasterProps } from '$lib/components/Toast/toast.types.js'
 
     type Variant = NonNullable<ToasterProps['variant']>
     type Position = NonNullable<ToasterProps['position']>

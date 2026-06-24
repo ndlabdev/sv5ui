@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-06-24
+
+### Added
+
+New SSR-safe Svelte 5 hooks:
+
+- **useEventListener** — declarative event listener with auto-cleanup (foundation for the DOM hooks).
+- **useResizeObserver / useElementSize** — observe element size; reactive `width`/`height`.
+- **useScrollLock** — lock body scroll without layout shift; ref-counted.
+- **useFocusTrap** — trap focus within an element while active; restores focus on exit.
+- **useLocalStorage** — reactive, typed `localStorage` with cross-tab sync.
+- **useThrottle** — throttle a callback (leading + trailing); companion to `useDebounce`.
+- **useIntersectionObserver** — observe viewport intersection; reactive `isIntersecting`.
+- **useTimeout / useInterval** — timers with runes teardown; reactive delay, pause/resume.
+- **useDebouncedState** — state whose `debounced` mirror lags `current`; built on `useDebounce`.
+
+### Changed
+
+- **Hooks (internal)** — DOM listeners/observers consolidated onto `useEventListener` / `useResizeObserver`; Table, PinInput, and SelectMenu dogfood `useThrottle` / `useTimeout` / `useDebouncedState`. No behavior change.
+- **Hooks (types)** — barrel uses `export *`; per-hook return-type interfaces are no longer named exports (still available as inferred types).
+
+### Fixed
+
+- **Packaging** — `dist/*.svelte` now ships as plain JS (TypeScript preprocessed), fixing parse errors with strict bundlers like Rolldown / Vite 8 (`optimizeDeps` + SSR). ([#138](https://github.com/ndlabdev/sv5ui/issues/138))
+- **SelectMenu** — fixed console warnings: `hydration_mismatch` (trigger is now a `<div role="button">` so multi-select chips with remove buttons are valid HTML — select it via `[data-combobox-trigger]`), aria-hidden on the focused combobox input (→ `aria-label`), and a blocked autofocus.
+- **DropdownMenu / ContextMenu** — checkbox/radio checked indicator icon is now sized to its slot (no more oversized checkmark).
+
 ## [2.1.0] - 2026-06-13
 
 ### Added
@@ -170,7 +197,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Form** — Centralized form validation and submission component with full parity to Nuxt UI v4's Form. Supports Zod 3.24+, Valibot 1.0+, Yup 1.7+ (via Standard Schema) and Joi 17+ (dedicated adapter). Features: custom validate function (sync/async), field-level validation on blur/input/change/focus with per-field debounce and eager-after-first-blur semantics, dirty/touched/blurred field tracking, loading auto-disable, nested forms with cascading validation/setErrors/clear/reset and state merging (full-form and field-scoped), schema transform output, full programmatic API via `bind:api` (submit, validate, clear, reset, setErrors, getErrors, errors, loading, dirty, submitCount)
+- **Form** — Centralized form validation and submission component. Supports Zod 3.24+, Valibot 1.0+, Yup 1.7+ (via Standard Schema) and Joi 17+ (dedicated adapter). Features: custom validate function (sync/async), field-level validation on blur/input/change/focus with per-field debounce and eager-after-first-blur semantics, dirty/touched/blurred field tracking, loading auto-disable, nested forms with cascading validation/setErrors/clear/reset and state merging (full-form and field-scoped), schema transform output, full programmatic API via `bind:api` (submit, validate, clear, reset, setErrors, getErrors, errors, loading, dirty, submitCount)
 - **useFormFieldEmit / wireFormEvents** — Helper hooks for custom input components to emit form events (blur, input, change, focus) to the parent Form via the FormField context
 - **Input** — `InputValue` generic type (`string | number | bigint | boolean | null | undefined`) and `InputProps<T extends InputValue>` for type-safe `bind:value` inference based on the input `type` attribute
 - **FormField** — `eagerValidation`, `validateOnInputDelay`, and `errorPattern` props for fine-grained field-level validation control when used inside a Form
@@ -255,7 +282,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored all existing components to align with Nuxt UI v4 structure
+- Refactored all existing components to a consistent slot/variant structure
 - Added `ref` prop with `$bindable(null)` to all components
 - Standardized restProps spread order across all components
 
@@ -309,7 +336,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/ndlabdev/sv5ui/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ndlabdev/sv5ui/compare/v1.8.0...v2.0.0
 [1.6.0]: https://github.com/ndlabdev/sv5ui/compare/v1.5.1...v1.6.0

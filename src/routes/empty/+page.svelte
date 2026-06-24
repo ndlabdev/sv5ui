@@ -1,6 +1,6 @@
 <script lang="ts">
     import { Empty, Separator } from '$lib/index.js'
-    import Link from '$lib/Link/Link.svelte'
+    import Link from '$lib/components/Link/Link.svelte'
 
     const variants = ['solid', 'outline', 'soft', 'subtle', 'naked'] as const
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const

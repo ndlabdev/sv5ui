@@ -34,7 +34,7 @@ defineConfig({
 // Reset to library defaults
 resetConfig()`
 
-    const variantsCode = `// src/lib/Button/button.variants.ts
+    const variantsCode = `// src/lib/components/Button/button.variants.ts
 export const buttonVariants = tv({
     variants: {
         variant: {

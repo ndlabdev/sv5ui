@@ -1,6 +1,6 @@
 {
     "name": "sv5ui",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "A modern Svelte 5 UI component library with Tailwind CSS",
     "author": "ndlabdev",
     "license": "MIT",
@@ -43,9 +43,9 @@
             "default": "./dist/index.js"
         },
         "./editor": {
-            "types": "./dist/Editor/index.d.ts",
-            "svelte": "./dist/Editor/index.js",
-            "default": "./dist/Editor/index.js"
+            "types": "./dist/components/Editor/index.d.ts",
+            "svelte": "./dist/components/Editor/index.js",
+            "default": "./dist/components/Editor/index.js"
         },
         "./theme.css": {
             "import": "./dist/theme.css",
