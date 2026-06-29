@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Tour** — product-tour / onboarding component. Spotlight highlight + floating panel (`@floating-ui/dom`) with step navigation, arrow, progress dots, and a centered dialog mode (`target: null`). Supports per-step `placement`, async `onBeforeNext`/`onBeforePrev` guards, `spotlightInteractable`, `waitForTarget`, `disabled` steps, and `header`/`footer`/`content` snippets. Responsive (flips placement on small screens) and accessible (`role="dialog"`, focus trap, `aria-live`, `prefers-reduced-motion`).
+- **useTour** — headless controller for `<Tour controller={…}>`: `start`/`stop`/`next`/`prev`/`goTo` plus optional `persist` (local/session storage) so a tour resumes across reloads and SPA navigation — enabling multi-page tours. Single-page usage can skip the hook and use `bind:api`.
+
 ## [2.2.0] - 2026-06-24
 
 ### Added
