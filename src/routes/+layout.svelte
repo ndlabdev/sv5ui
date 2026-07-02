@@ -25,6 +25,7 @@
         { href: '/timeline', label: 'Timeline', icon: 'lucide:git-commit-horizontal' },
         { href: '/user', label: 'User', icon: 'lucide:user' },
         { href: '/empty', label: 'Empty', icon: 'lucide:inbox' },
+        { href: '/error', label: 'Error', icon: 'lucide:triangle-alert' },
         { href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' },
         { href: '/drawer', label: 'Drawer', icon: 'lucide:panel-bottom' },
         { href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' },
