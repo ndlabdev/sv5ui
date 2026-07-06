@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Error** — pre-built error page component: `error` object (`statusCode`, `statusMessage`, `message` with automatic dedup), `icon`, configurable clear button (`clear`, `redirect`, `onClear` for svelte:boundary reset), snippet overrides (`leading`, `statusCode`, `statusMessage`, `message`, `links`, `children`), and `ui` slot styling.
+
 ## [2.2.0] - 2026-06-24
 
 ### Added
