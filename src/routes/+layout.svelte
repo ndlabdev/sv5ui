@@ -26,6 +26,7 @@
         { href: '/user', label: 'User', icon: 'lucide:user' },
         { href: '/empty', label: 'Empty', icon: 'lucide:inbox' },
         { href: '/error', label: 'Error', icon: 'lucide:triangle-alert' },
+        { href: '/header', label: 'Header', icon: 'lucide:panel-top-dashed' },
         { href: '/main', label: 'Main', icon: 'lucide:layout-template' },
         { href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' },
         { href: '/drawer', label: 'Drawer', icon: 'lucide:panel-bottom' },
