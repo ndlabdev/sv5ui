@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-07-07
+
+### Added
+
+New components:
+
+- **Tour** — spotlight product tour with floating step panel: per-step `placement`, async `onBeforeNext`/`onBeforePrev` guards, `waitForTarget`, `disabled` steps, centered dialog mode (`target: null`), `header`/`footer`/`content` snippets; responsive and accessible (focus trap, `aria-live`, `prefers-reduced-motion`). ([#144](https://github.com/ndlabdev/sv5ui/pull/144))
+- **useTour** — headless Tour controller (`start`/`stop`/`next`/`prev`/`goTo`) with optional `persist` for multi-page tours; single-page usage can use `bind:api` instead. ([#144](https://github.com/ndlabdev/sv5ui/pull/144))
+- **Error** — pre-built error page: `error` object (`statusCode`, `statusMessage`, `message` with dedup), `icon`, configurable clear button (`clear`, `redirect`, `onClear` for svelte:boundary reset), full snippet and `ui` overrides. ([#146](https://github.com/ndlabdev/sv5ui/pull/146))
+
+App shell suite — Header, Main, Footer, and Error share one height contract: `theme.css` defines `--ui-header-height` (default `4rem`, set to `0px` when the app has no header):
+
+- **Main** — content container filling the viewport below the header (`min-h-[calc(100svh-var(--ui-header-height,0px))]`). ([#150](https://github.com/ndlabdev/sv5ui/pull/150))
+- **Header** — sticky app header sized by the same variable: brand link, `left`/center/`right` areas, mobile menu composing Modal/Slideover/Drawer (`mode` + typed `menu` options), customizable toggle (composed `onclick`, `aria-expanded`), bindable `open`, `autoClose` on route change. ([#151](https://github.com/ndlabdev/sv5ui/pull/151))
+- **Footer / FooterColumns** — footer with five Container-aligned areas (mobile stack, lg+ three-column order) plus a link-group grid with `left`/`right` side sections, route-aware active links, and an external-link indicator. ([#152](https://github.com/ndlabdev/sv5ui/pull/152))
+
+Icons config — new defaults: `menu`, `external`.
+
 ## [2.2.0] - 2026-06-24
 
 ### Added
@@ -336,7 +354,8 @@ New SSR-safe Svelte 5 hooks:
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/ndlabdev/sv5ui/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/ndlabdev/sv5ui/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ndlabdev/sv5ui/compare/v1.8.0...v2.0.0

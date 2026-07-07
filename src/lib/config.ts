@@ -33,6 +33,8 @@ export const iconsDefaults = {
     chevronsRight: 'lucide:chevrons-right',
     ellipsis: 'lucide:ellipsis',
     close: 'lucide:x',
+    menu: 'lucide:menu',
+    external: 'lucide:arrow-up-right',
     check: 'lucide:check',
     light: 'lucide:sun',
     dark: 'lucide:moon',
