@@ -117,3 +117,21 @@ describe('Main', () => {
         })
     })
 })
+
+// ==================== HEIGHT CONTRACT ====================
+
+describe('height contract', () => {
+    it('should allow ui.root to override the min-height formula', async () => {
+        const { container } = render(Main, { ui: { root: 'min-h-dvh' } })
+        const root = container.firstElementChild!
+        expect(root.className).toContain('min-h-dvh')
+        expect(root.className).not.toContain('100svh')
+    })
+
+    it('should keep the header-height variable reference by default', async () => {
+        const { container } = render(Main, {})
+        expect(container.firstElementChild!.className).toContain(
+            'min-h-[calc(100svh-var(--ui-header-height,0px))]'
+        )
+    })
+})
