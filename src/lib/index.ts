@@ -51,6 +51,7 @@ export * from './components/Toast/index.js'
 export * from './components/Carousel/index.js'
 export * from './components/Banner/index.js'
 export * from './components/Stepper/index.js'
+export * from './components/Tour/index.js'
 
 // Composables
 export * from './hooks/index.js'
