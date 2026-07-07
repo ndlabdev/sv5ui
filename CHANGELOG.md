@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **useTour** — headless controller for `<Tour controller={…}>`: `start`/`stop`/`next`/`prev`/`goTo` plus optional `persist` (local/session storage) so a tour resumes across reloads and SPA navigation — enabling multi-page tours. Single-page usage can skip the hook and use `bind:api`.
 - **Error** — pre-built error page component: `error` object (`statusCode`, `statusMessage`, `message` with automatic dedup), `icon`, configurable clear button (`clear`, `redirect`, `onClear` for svelte:boundary reset), snippet overrides (`leading`, `statusCode`, `statusMessage`, `message`, `links`, `children`), and `ui` slot styling.
 - **Main** — content container that fills the viewport height below the header via `min-h-[calc(100svh-var(--ui-header-height,0px))]`; first piece of the app shell suite and the same height contract Error uses. `theme.css` now defines `--ui-header-height: 4rem` as the standard header height; apps without a header override it to `0px`.
+- **Header** — responsive app header sized by `h-(--ui-header-height)` (sticky, translucent blur): `title`/`to` brand link, `left`/`children`(center, lg+)/`right` areas, `top`/`bottom` rows, and a mobile menu composing Modal/Slideover/Drawer via `mode` with `menu` options (side/direction/overlay/dismissible), `toggle` (boolean | ButtonProps with composed `onclick` and `aria-expanded`), `toggleSide`, bindable `open`, and `autoClose` on route change. Adds a `menu` icon to the icons config.
 
 ## [2.2.0] - 2026-06-24
 
