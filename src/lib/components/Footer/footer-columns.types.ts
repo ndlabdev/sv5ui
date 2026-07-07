@@ -66,7 +66,18 @@ export type FooterColumnsProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
     link?: Snippet<[{ link: FooterColumnLink }]>
 
     /**
-     * Extra content rendered after the columns, inside the grid.
+     * Content beside the columns, before them on xl screens.
+     */
+    left?: Snippet
+
+    /**
+     * Content beside the columns, after them on xl screens.
+     * Designed for a newsletter or call to action block.
+     */
+    right?: Snippet
+
+    /**
+     * Extra content rendered as an additional column in the grid.
      */
     children?: Snippet
 }

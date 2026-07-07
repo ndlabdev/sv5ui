@@ -125,6 +125,40 @@ describe('FooterColumns', () => {
             expect(container.querySelector('a')).toBeNull()
         })
 
+        it('should render left and right sections beside the columns', async () => {
+            const { container } = render(FooterColumns, {
+                columns,
+                left: createRawSnippet(() => ({
+                    render: () => '<div data-testid="cols-left">About</div>',
+                    setup: () => {}
+                })),
+                right: createRawSnippet(() => ({
+                    render: () => '<div data-testid="cols-right">Newsletter</div>',
+                    setup: () => {}
+                }))
+            })
+            expect(container.querySelector('[data-testid="cols-left"]')).not.toBeNull()
+            expect(container.querySelector('[data-testid="cols-right"]')).not.toBeNull()
+        })
+
+        it('should style links by active state', async () => {
+            const { container } = render(FooterColumns, {
+                columns: [
+                    {
+                        label: 'Nav',
+                        children: [
+                            { label: 'Current', href: '/current', active: true },
+                            { label: 'Other', href: '/other', active: false }
+                        ]
+                    }
+                ]
+            })
+            const current = container.querySelector('a[href="/current"]')!
+            const other = container.querySelector('a[href="/other"]')!
+            expect(current.className).toContain('text-primary')
+            expect(other.className).toContain('text-on-surface-variant')
+        })
+
         it('should render children after the columns', async () => {
             const { container } = render(FooterColumns, {
                 columns,
