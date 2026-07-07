@@ -9,12 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Tour** — product-tour / onboarding component. Spotlight highlight + floating panel (`@floating-ui/dom`) with step navigation, arrow, progress dots, and a centered dialog mode (`target: null`). Supports per-step `placement`, async `onBeforeNext`/`onBeforePrev` guards, `spotlightInteractable`, `waitForTarget`, `disabled` steps, and `header`/`footer`/`content` snippets. Responsive (flips placement on small screens) and accessible (`role="dialog"`, focus trap, `aria-live`, `prefers-reduced-motion`).
-- **useTour** — headless controller for `<Tour controller={…}>`: `start`/`stop`/`next`/`prev`/`goTo` plus optional `persist` (local/session storage) so a tour resumes across reloads and SPA navigation — enabling multi-page tours. Single-page usage can skip the hook and use `bind:api`.
-- **Error** — pre-built error page component: `error` object (`statusCode`, `statusMessage`, `message` with automatic dedup), `icon`, configurable clear button (`clear`, `redirect`, `onClear` for svelte:boundary reset), snippet overrides (`leading`, `statusCode`, `statusMessage`, `message`, `links`, `children`), and `ui` slot styling.
-- **Main** — content container that fills the viewport height below the header via `min-h-[calc(100svh-var(--ui-header-height,0px))]`; first piece of the app shell suite and the same height contract Error uses. `theme.css` now defines `--ui-header-height: 4rem` as the standard header height; apps without a header override it to `0px`.
-- **Header** — responsive app header sized by `h-(--ui-header-height)` (sticky, translucent blur): `title`/`to` brand link, `left`/`children`(center, lg+)/`right` areas, `top`/`bottom` rows, and a mobile menu composing Modal/Slideover/Drawer via `mode` with `menu` options (side/direction/overlay/dismissible), `toggle` (boolean | ButtonProps with composed `onclick` and `aria-expanded`), `toggleSide`, bindable `open`, and `autoClose` on route change. Adds a `menu` icon to the icons config.
-- **Footer / FooterColumns** — app shell footer with `top`/`left`/`children`(center)/`right`/`bottom` areas (mobile stack, lg+ three-column order) and a link-group grid companion (`columns: FooterColumn[]` built on Link with external-link indicator, `columnLabel`/`link` typed snippet overrides). Adds an `external` icon to the icons config.
+New components:
+
+- **Tour** — spotlight product tour with floating step panel: per-step `placement`, async `onBeforeNext`/`onBeforePrev` guards, `waitForTarget`, `disabled` steps, centered dialog mode (`target: null`), `header`/`footer`/`content` snippets; responsive and accessible (focus trap, `aria-live`, `prefers-reduced-motion`). ([#144](https://github.com/ndlabdev/sv5ui/pull/144))
+- **useTour** — headless Tour controller (`start`/`stop`/`next`/`prev`/`goTo`) with optional `persist` for multi-page tours; single-page usage can use `bind:api` instead. ([#144](https://github.com/ndlabdev/sv5ui/pull/144))
+- **Error** — pre-built error page: `error` object (`statusCode`, `statusMessage`, `message` with dedup), `icon`, configurable clear button (`clear`, `redirect`, `onClear` for svelte:boundary reset), full snippet and `ui` overrides. ([#146](https://github.com/ndlabdev/sv5ui/pull/146))
+
+App shell suite — Header, Main, Footer, and Error share one height contract: `theme.css` defines `--ui-header-height` (default `4rem`, set to `0px` when the app has no header):
+
+- **Main** — content container filling the viewport below the header (`min-h-[calc(100svh-var(--ui-header-height,0px))]`). ([#150](https://github.com/ndlabdev/sv5ui/pull/150))
+- **Header** — sticky app header sized by the same variable: brand link, `left`/center/`right` areas, mobile menu composing Modal/Slideover/Drawer (`mode` + typed `menu` options), customizable toggle (composed `onclick`, `aria-expanded`), bindable `open`, `autoClose` on route change. ([#151](https://github.com/ndlabdev/sv5ui/pull/151))
+- **Footer / FooterColumns** — footer with five Container-aligned areas (mobile stack, lg+ three-column order) plus a link-group grid with `left`/`right` side sections, route-aware active links, and an external-link indicator. ([#152](https://github.com/ndlabdev/sv5ui/pull/152))
+
+Icons config — new defaults: `menu`, `external`.
 
 ## [2.2.0] - 2026-06-24
 
