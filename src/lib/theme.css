@@ -88,7 +88,7 @@
     --color-inverse-primary: oklch(0.707 0.165 254.62);
 
     /* ========== LAYOUT ========== */
-    --ui-header-height: 0px;
+    --ui-header-height: 4rem;
 }
 
 /* ============================================

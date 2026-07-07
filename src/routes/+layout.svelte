@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ModeWatcher } from 'mode-watcher'
     import { toggleMode, mode } from 'mode-watcher'
-    import { Button, Icon, Link } from '$lib/index.js'
+    import { Button, Icon, Link, Main } from '$lib/index.js'
     import './layout.css'
     import '../sv5ui.config.js'
 
@@ -26,6 +26,7 @@
         { href: '/user', label: 'User', icon: 'lucide:user' },
         { href: '/empty', label: 'Empty', icon: 'lucide:inbox' },
         { href: '/error', label: 'Error', icon: 'lucide:triangle-alert' },
+        { href: '/main', label: 'Main', icon: 'lucide:layout-template' },
         { href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' },
         { href: '/drawer', label: 'Drawer', icon: 'lucide:panel-bottom' },
         { href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' },
@@ -110,9 +111,9 @@
 <div class="min-h-screen bg-surface text-on-surface">
     <!-- Header -->
     <header
-        class="sticky top-0 z-50 border-b border-outline-variant bg-surface-container px-4 py-3 lg:px-6"
+        class="sticky top-0 z-50 h-(--ui-header-height) border-b border-outline-variant bg-surface-container px-4 lg:px-6"
     >
-        <div class="flex items-center justify-between">
+        <div class="flex h-full items-center justify-between">
             <div class="flex items-center gap-3">
                 <button
                     class="rounded-md p-1.5 text-on-surface-variant hover:bg-surface-container-high lg:hidden"
@@ -153,7 +154,7 @@
 
         <!-- Sidebar -->
         <aside
-            class="fixed top-14.25 left-0 z-40 h-[calc(100vh-57px)] w-64 shrink-0 overflow-y-auto border-r border-outline-variant bg-surface-container transition-transform duration-200 lg:sticky lg:translate-x-0 {sidebarOpen
+            class="fixed top-(--ui-header-height) left-0 z-40 h-[calc(100svh-var(--ui-header-height))] w-64 shrink-0 overflow-y-auto border-r border-outline-variant bg-surface-container transition-transform duration-200 lg:sticky lg:translate-x-0 {sidebarOpen
                 ? 'translate-x-0'
                 : '-translate-x-full'}"
         >
@@ -225,10 +226,10 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="min-h-[calc(100vh-57px)] flex-1 p-6 lg:p-8">
+        <Main class="flex-1 p-6 lg:p-8">
             <div class="mx-auto max-w-5xl">
                 {@render children()}
             </div>
-        </main>
+        </Main>
     </div>
 </div>
