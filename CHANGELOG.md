@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **DatePicker** — segmented date input with calendar popover built on the bits-ui DatePicker primitive: bindable `value`/`open`/`placeholder`, `granularity` up to seconds with `hourCycle`, min/max and `validate`/`onInvalid` constraints, `isDateDisabled`/`isDateUnavailable`/`isDateHighlightable` matchers, `closeOnDateSelect`, locale-aware segments and calendar, month/year controls, `numberOfMonths`, `weekNumbers`, `onOpenChangeComplete`, hidden input for native form submission, FormField integration (error color, aria wiring), Input-style field variants (`outline`/`soft`/`subtle`/`ghost`/`none`) and Calendar-style `calendarVariant`, full `ui` slot overrides including nested `calendarSlots`.
+
+### Changed
+
+- **Calendar** — disabled dates are now dimmed with `opacity-50` on top of the muted text color, making them visually distinct from days outside the current month.
+
 ## [2.3.0] - 2026-07-07
 
 ### Added
