@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **DatePicker** — segmented date input with calendar popover built on the bits-ui DatePicker primitive: bindable `value`/`open`/`placeholder`, `granularity` up to seconds with `hourCycle`, min/max and `validate`/`onInvalid` constraints, `isDateDisabled`/`isDateUnavailable`/`isDateHighlightable` matchers, `closeOnDateSelect`, locale-aware segments and calendar, month/year controls, `numberOfMonths`, `weekNumbers`, `onOpenChangeComplete`, hidden input for native form submission, FormField integration (error color, aria wiring), Input-style field variants (`outline`/`soft`/`subtle`/`ghost`/`none`) and Calendar-style `calendarVariant`, full `ui` slot overrides including nested `calendarSlots`.
+- **DateRangePicker** — range variant of DatePicker built on the bits-ui DateRangePicker primitive: start/end segmented inputs sharing one field with a separator icon, range calendar popover (two months by default) with solid selection endpoints, tinted in-range days, and hover preview, bindable `value` (`{ start, end }`), `minDays`/`maxDays`, `excludeDisabled`, `closeOnRangeSelect`, `onStartValueChange`/`onEndValueChange`, hidden `{name}-start`/`{name}-end` inputs for native form submission, and the full DatePicker prop surface (granularity, min/max, matchers, locale, variants, `ui` overrides).
 
 ### Changed
 
 - **Calendar** — disabled dates are now dimmed with `opacity-50` on top of the muted text color, making them visually distinct from days outside the current month.
+- **Calendar** — `calendarVariants` now styles range-selection states (`data-selection-start`/`data-selection-end`, tinted `data-range-middle` band, `data-highlighted` hover preview), shared by DateRangePicker and the Calendar `range` mode. In range mode, in-between days are now tinted instead of solid so the endpoints stand out; the single-date Calendar is unchanged.
 
 ## [2.3.0] - 2026-07-07
 
