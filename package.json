@@ -216,6 +216,7 @@
         "@floating-ui/dom": "^1.7.4",
         "@iconify/svelte": "^5.2.1",
         "@internationalized/date": "^3.11.0",
+        "@internationalized/number": "^3.6.7",
         "@standard-schema/spec": "^1.1.0",
         "bits-ui": "^2.15.4",
         "embla-carousel": "^8.6.0",
