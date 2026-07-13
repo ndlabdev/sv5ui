@@ -83,7 +83,7 @@ export interface DateRangePickerProps {
     readonlySegments?: EditableSegmentPart[]
     /**
      * Which segments the inputs render. Defaults to `'day'` for plain dates
-     * and `'minute'` for date-time values.
+     * and `'minute'` for date-time values (or when `timeInput` is set).
      */
     granularity?: Granularity
     hourCycle?: 12 | 24
@@ -128,9 +128,23 @@ export interface DateRangePickerProps {
     isDateHighlightable?: DateMatcher
     /**
      * Close the popover after a complete range is selected.
-     * @default true
+     * @default true — false when `timeInput` is set, so the popover stays
+     * open for time entry
      */
     closeOnRangeSelect?: boolean
+    /**
+     * Show segmented start and end time fields inside the popover, below the
+     * calendar. Implies `granularity: 'minute'` unless a time granularity is
+     * provided. Editing a time before its date is picked anchors the date
+     * portion to `placeholder`.
+     * @default false
+     */
+    timeInput?: boolean
+    /**
+     * Icon shown next to the popover time fields.
+     * @default 'lucide:clock'
+     */
+    timeIcon?: string
     /** @default false */
     preventDeselect?: boolean
     /** @default 0 */

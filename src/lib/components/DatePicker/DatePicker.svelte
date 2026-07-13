@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-    import { DatePicker } from 'bits-ui'
+    import { DatePicker, TimeField, type TimeValue } from 'bits-ui'
     import { datePickerVariants, datePickerDefaults } from './date-picker.variants.js'
     import { calendarVariants } from '../Calendar/calendar.variants.js'
     import { getComponentConfig } from '../../config.js'
@@ -47,7 +47,9 @@
         isDateDisabled,
         isDateUnavailable,
         isDateHighlightable,
-        closeOnDateSelect = true,
+        closeOnDateSelect,
+        timeInput = false,
+        timeIcon = 'lucide:clock',
         initialFocus = true,
         preventDeselect = false,
         weekStartsOn = 0,
@@ -84,8 +86,23 @@
     }: Props = $props()
 
     function hasTimeGranularity(): boolean {
-        return granularity === 'hour' || granularity === 'minute' || granularity === 'second'
+        return (
+            granularity === 'hour' ||
+            granularity === 'minute' ||
+            granularity === 'second' ||
+            (timeInput && granularity === undefined)
+        )
     }
+
+    const resolvedGranularity = $derived(
+        granularity ?? (timeInput ? ('minute' as const) : undefined)
+    )
+    const showTimeInput = $derived(
+        timeInput &&
+            (resolvedGranularity === 'hour' ||
+                resolvedGranularity === 'minute' ||
+                resolvedGranularity === 'second')
+    )
 
     if (placeholder === undefined) {
         placeholder =
@@ -133,7 +150,10 @@
             class: [config.slots.triggerIcon, ui?.triggerIcon]
         }),
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
-        calendar: variantSlots.calendar({ class: [config.slots.calendar, ui?.calendar] })
+        calendar: variantSlots.calendar({ class: [config.slots.calendar, ui?.calendar] }),
+        time: variantSlots.time({ class: [config.slots.time, ui?.time] }),
+        timeIcon: variantSlots.timeIcon({ class: [config.slots.timeIcon, ui?.timeIcon] }),
+        timeField: variantSlots.timeField({ class: [config.slots.timeField, ui?.timeField] })
     })
 
     const calendarSlotFns = $derived(
@@ -180,6 +200,21 @@
         lastValue = val
         onValueChange?.(val)
         emit.onChange()
+    }
+
+    const timeValue = $derived(value !== undefined && 'hour' in value ? value : undefined)
+    const timePlaceholder = $derived(
+        placeholder === undefined
+            ? undefined
+            : 'hour' in placeholder
+              ? placeholder
+              : toCalendarDateTime(placeholder)
+    )
+
+    function handleTimeChange(val: TimeValue | undefined) {
+        if (val === undefined || !('year' in val)) return
+        value = val
+        handleValueChange(val)
     }
 
     let rootEl = $state<HTMLElement | null>(null)
@@ -327,6 +362,39 @@
                 </div>
             {/snippet}
         </DatePicker.Calendar>
+
+        {#if showTimeInput}
+            <div class={classes.time}>
+                <Icon name={timeIcon} class={classes.timeIcon} />
+                <TimeField.Root
+                    value={timeValue}
+                    onValueChange={handleTimeChange}
+                    placeholder={timeValue ?? timePlaceholder}
+                    granularity={resolvedGranularity as 'hour' | 'minute' | 'second'}
+                    {hourCycle}
+                    {hideTimeZone}
+                    {locale}
+                    {disabled}
+                    {readonly}
+                >
+                    <TimeField.Input class={classes.timeField} aria-label="Time">
+                        {#snippet children({ segments })}
+                            {#each segments as segment, i (segment.part + i)}
+                                {#if segment.part === 'literal'}
+                                    <TimeField.Segment part={segment.part} class={classes.literal}>
+                                        {segment.value}
+                                    </TimeField.Segment>
+                                {:else}
+                                    <TimeField.Segment part={segment.part} class={classes.segment}>
+                                        {segment.value}
+                                    </TimeField.Segment>
+                                {/if}
+                            {/each}
+                        {/snippet}
+                    </TimeField.Input>
+                </TimeField.Root>
+            </div>
+        {/if}
     </DatePicker.Content>
 {/snippet}
 
@@ -342,7 +410,7 @@
     {disabled}
     {readonly}
     {readonlySegments}
-    {granularity}
+    granularity={resolvedGranularity}
     {hourCycle}
     {hideTimeZone}
     {locale}
@@ -352,7 +420,7 @@
     {onInvalid}
     {isDateDisabled}
     {isDateUnavailable}
-    {closeOnDateSelect}
+    closeOnDateSelect={closeOnDateSelect ?? !showTimeInput}
     {initialFocus}
     {preventDeselect}
     {weekStartsOn}

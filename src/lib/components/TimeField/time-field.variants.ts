@@ -1,6 +1,6 @@
 import { tv, type VariantProps } from 'tailwind-variants'
 
-export const datePickerVariants = tv({
+export const timeFieldVariants = tv({
     slots: {
         root: 'relative w-full inline-flex items-center',
         field: [
@@ -19,31 +19,11 @@ export const datePickerVariants = tv({
             'transition-colors'
         ],
         literal: 'px-0.5 text-on-surface-variant/75',
-        trigger: [
-            'absolute inset-y-0 end-0 flex items-center justify-center rounded-md',
-            'text-on-surface-variant/75 hover:text-on-surface',
-            'disabled:opacity-75 disabled:pointer-events-none',
-            'focus:outline-none focus-visible:ring-2',
-            'transition-colors'
+        iconWrapper: [
+            'absolute inset-y-0 end-0 flex items-center justify-center',
+            'text-on-surface-variant/75 pointer-events-none'
         ],
-        triggerIcon: 'shrink-0',
-        content: [
-            'z-50',
-            'bg-surface-container-lowest text-on-surface ring ring-surface-container-highest',
-            'rounded-md shadow-lg',
-            'focus:outline-none pointer-events-auto'
-        ],
-        calendar: 'p-3',
-        time: 'flex items-center justify-center gap-2 border-t border-surface-container-highest p-3',
-        timeIcon: 'shrink-0 text-on-surface-variant/75',
-        timeField: [
-            'inline-flex items-center rounded-md bg-surface text-on-surface',
-            'select-none whitespace-nowrap',
-            'ring ring-inset ring-outline-variant focus-within:ring-2',
-            'data-disabled:cursor-not-allowed data-disabled:opacity-75',
-            'data-invalid:ring-error',
-            'transition-colors focus-within:outline-none'
-        ]
+        icon: 'shrink-0'
     },
     variants: {
         variant: {
@@ -55,98 +35,72 @@ export const datePickerVariants = tv({
         },
         color: {
             primary: {
-                segment: 'focus:bg-primary/15 focus:text-primary',
-                trigger: 'focus-visible:ring-primary',
-                timeField: 'focus-within:ring-primary'
+                segment: 'focus:bg-primary/15 focus:text-primary'
             },
             secondary: {
-                segment: 'focus:bg-secondary/15 focus:text-secondary',
-                trigger: 'focus-visible:ring-secondary',
-                timeField: 'focus-within:ring-secondary'
+                segment: 'focus:bg-secondary/15 focus:text-secondary'
             },
             tertiary: {
-                segment: 'focus:bg-tertiary/15 focus:text-tertiary',
-                trigger: 'focus-visible:ring-tertiary',
-                timeField: 'focus-within:ring-tertiary'
+                segment: 'focus:bg-tertiary/15 focus:text-tertiary'
             },
             success: {
-                segment: 'focus:bg-success/15 focus:text-success',
-                trigger: 'focus-visible:ring-success',
-                timeField: 'focus-within:ring-success'
+                segment: 'focus:bg-success/15 focus:text-success'
             },
             warning: {
-                segment: 'focus:bg-warning/15 focus:text-warning',
-                trigger: 'focus-visible:ring-warning',
-                timeField: 'focus-within:ring-warning'
+                segment: 'focus:bg-warning/15 focus:text-warning'
             },
             error: {
-                segment: 'focus:bg-error/15 focus:text-error',
-                trigger: 'focus-visible:ring-error',
-                timeField: 'focus-within:ring-error'
+                segment: 'focus:bg-error/15 focus:text-error'
             },
             info: {
-                segment: 'focus:bg-info/15 focus:text-info',
-                trigger: 'focus-visible:ring-info',
-                timeField: 'focus-within:ring-info'
+                segment: 'focus:bg-info/15 focus:text-info'
             },
             surface: {
-                segment: 'focus:bg-inverse-surface/15 focus:text-on-surface',
-                trigger: 'focus-visible:ring-outline',
-                timeField: 'focus-within:ring-outline'
+                segment: 'focus:bg-inverse-surface/15 focus:text-on-surface'
             }
         },
         size: {
             xs: {
-                field: 'ps-1.5 py-1 pe-7 text-xs rounded',
-                trigger: 'pe-2 ps-1',
-                triggerIcon: 'size-3.5',
-                timeField: 'px-1 py-0.5 text-xs rounded',
-                timeIcon: 'size-3.5'
+                field: 'px-1.5 py-1 text-xs rounded',
+                iconWrapper: 'pe-2 ps-1',
+                icon: 'size-3.5'
             },
             sm: {
-                field: 'ps-2 py-1.5 pe-8 text-xs rounded-md',
-                trigger: 'pe-2.5 ps-1',
-                triggerIcon: 'size-4',
-                timeField: 'px-1.5 py-1 text-xs rounded-md',
-                timeIcon: 'size-4'
+                field: 'px-2 py-1.5 text-xs rounded-md',
+                iconWrapper: 'pe-2.5 ps-1',
+                icon: 'size-4'
             },
             md: {
-                field: 'ps-2.5 py-2 pe-10 text-sm rounded-md',
-                trigger: 'pe-3 ps-1.5',
-                triggerIcon: 'size-5',
-                timeField: 'px-2 py-1 text-sm rounded-md',
-                timeIcon: 'size-5'
+                field: 'px-2.5 py-2 text-sm rounded-md',
+                iconWrapper: 'pe-3 ps-1.5',
+                icon: 'size-5'
             },
             lg: {
-                field: 'ps-3.5 py-2.5 pe-11 text-sm rounded-md',
-                trigger: 'pe-4 ps-1.5',
-                triggerIcon: 'size-5',
-                timeField: 'px-2.5 py-1.5 text-sm rounded-md',
-                timeIcon: 'size-5'
+                field: 'px-3.5 py-2.5 text-sm rounded-md',
+                iconWrapper: 'pe-4 ps-1.5',
+                icon: 'size-5'
             },
             xl: {
-                field: 'ps-4.5 py-3 pe-13 text-base rounded-lg',
-                trigger: 'pe-5 ps-2',
-                triggerIcon: 'size-6',
-                timeField: 'px-3 py-2 text-base rounded-lg',
-                timeIcon: 'size-6'
+                field: 'px-4.5 py-3 text-base rounded-lg',
+                iconWrapper: 'pe-5 ps-2',
+                icon: 'size-6'
             }
+        },
+        icon: {
+            true: ''
         },
         highlight: {
             true: ''
-        },
-        transition: {
-            true: {
-                content: [
-                    'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-                    'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-                    'data-[side=top]:slide-in-from-bottom-2 data-[side=right]:slide-in-from-left-2',
-                    'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2'
-                ]
-            }
         }
     },
     compoundVariants: [
+        // ========== ICON FIELD PADDING ==========
+        { icon: true, size: 'xs', class: { field: 'pe-7' } },
+        { icon: true, size: 'sm', class: { field: 'pe-8' } },
+        { icon: true, size: 'md', class: { field: 'pe-10' } },
+        { icon: true, size: 'lg', class: { field: 'pe-11' } },
+        { icon: true, size: 'xl', class: { field: 'pe-13' } },
+
         // ========== OUTLINE VARIANTS ==========
         {
             variant: 'outline',
@@ -433,15 +387,15 @@ export const datePickerVariants = tv({
         variant: 'outline',
         color: 'primary',
         size: 'md',
-        highlight: false,
-        transition: true
+        icon: true,
+        highlight: false
     }
 })
 
-export type DatePickerVariantProps = VariantProps<typeof datePickerVariants>
-export type DatePickerSlots = keyof ReturnType<typeof datePickerVariants>
+export type TimeFieldVariantProps = VariantProps<typeof timeFieldVariants>
+export type TimeFieldSlots = keyof ReturnType<typeof timeFieldVariants>
 
-export const datePickerDefaults = {
-    defaultVariants: datePickerVariants.defaultVariants,
-    slots: {} as Partial<Record<DatePickerSlots, string>>
+export const timeFieldDefaults = {
+    defaultVariants: timeFieldVariants.defaultVariants,
+    slots: {} as Partial<Record<TimeFieldSlots, string>>
 }

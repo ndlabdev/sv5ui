@@ -5,7 +5,14 @@
 </script>
 
 <script lang="ts">
-    import { DateRangePicker, Portal, type DateRange, type SegmentPart } from 'bits-ui'
+    import {
+        DateRangePicker,
+        Portal,
+        TimeField,
+        type DateRange,
+        type SegmentPart,
+        type TimeValue
+    } from 'bits-ui'
     import {
         dateRangePickerVariants,
         dateRangePickerDefaults
@@ -55,7 +62,9 @@
         isDateDisabled,
         isDateUnavailable,
         isDateHighlightable,
-        closeOnRangeSelect = true,
+        closeOnRangeSelect,
+        timeInput = false,
+        timeIcon = 'lucide:clock',
         preventDeselect = false,
         weekStartsOn = 0,
         weekdayFormat = 'short',
@@ -92,8 +101,23 @@
     }: Props = $props()
 
     function hasTimeGranularity(): boolean {
-        return granularity === 'hour' || granularity === 'minute' || granularity === 'second'
+        return (
+            granularity === 'hour' ||
+            granularity === 'minute' ||
+            granularity === 'second' ||
+            (timeInput && granularity === undefined)
+        )
     }
+
+    const resolvedGranularity = $derived(
+        granularity ?? (timeInput ? ('minute' as const) : undefined)
+    )
+    const showTimeInput = $derived(
+        timeInput &&
+            (resolvedGranularity === 'hour' ||
+                resolvedGranularity === 'minute' ||
+                resolvedGranularity === 'second')
+    )
 
     if (placeholder === undefined) {
         placeholder =
@@ -143,7 +167,10 @@
             class: [config.slots.triggerIcon, ui?.triggerIcon]
         }),
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
-        calendar: variantSlots.calendar({ class: [config.slots.calendar, ui?.calendar] })
+        calendar: variantSlots.calendar({ class: [config.slots.calendar, ui?.calendar] }),
+        time: variantSlots.time({ class: [config.slots.time, ui?.time] }),
+        timeIcon: variantSlots.timeIcon({ class: [config.slots.timeIcon, ui?.timeIcon] }),
+        timeField: variantSlots.timeField({ class: [config.slots.timeField, ui?.timeField] })
     })
 
     const calendarSlotFns = $derived(
@@ -196,6 +223,30 @@
         emit.onChange()
     }
 
+    const startTimeValue = $derived(
+        value?.start !== undefined && 'hour' in value.start ? value.start : undefined
+    )
+    const endTimeValue = $derived(
+        value?.end !== undefined && 'hour' in value.end ? value.end : undefined
+    )
+    const timePlaceholder = $derived(
+        placeholder === undefined
+            ? undefined
+            : 'hour' in placeholder
+              ? placeholder
+              : toCalendarDateTime(placeholder)
+    )
+
+    function handleTimeChange(edge: 'start' | 'end', val: TimeValue | undefined) {
+        if (val === undefined || !('year' in val)) return
+        const next: DateRange = {
+            start: edge === 'start' ? val : value?.start,
+            end: edge === 'end' ? val : value?.end
+        }
+        value = next
+        handleValueChange(next)
+    }
+
     let rootEl = $state<HTMLElement | null>(null)
     let contentEl = $state<HTMLElement | null>(null)
 
@@ -225,6 +276,39 @@
             </DateRangePicker.Segment>
         {/if}
     {/each}
+{/snippet}
+
+{#snippet timeField(edge: 'start' | 'end')}
+    <TimeField.Root
+        value={edge === 'start' ? startTimeValue : endTimeValue}
+        onValueChange={(val) => handleTimeChange(edge, val)}
+        placeholder={(edge === 'start' ? startTimeValue : endTimeValue) ?? timePlaceholder}
+        granularity={resolvedGranularity as 'hour' | 'minute' | 'second'}
+        {hourCycle}
+        {hideTimeZone}
+        {locale}
+        {disabled}
+        {readonly}
+    >
+        <TimeField.Input
+            class={classes.timeField}
+            aria-label={edge === 'start' ? 'Start time' : 'End time'}
+        >
+            {#snippet children({ segments })}
+                {#each segments as segment, i (segment.part + i)}
+                    {#if segment.part === 'literal'}
+                        <TimeField.Segment part={segment.part} class={classes.literal}>
+                            {segment.value}
+                        </TimeField.Segment>
+                    {:else}
+                        <TimeField.Segment part={segment.part} class={classes.segment}>
+                            {segment.value}
+                        </TimeField.Segment>
+                    {/if}
+                {/each}
+            {/snippet}
+        </TimeField.Input>
+    </TimeField.Root>
 {/snippet}
 
 {#snippet pickerContentEl()}
@@ -359,6 +443,15 @@
                 </div>
             {/snippet}
         </DateRangePicker.Calendar>
+
+        {#if showTimeInput}
+            <div class={classes.time}>
+                <Icon name={timeIcon} class={classes.timeIcon} />
+                {@render timeField('start')}
+                <Icon name={separatorIcon} class={classes.separator} />
+                {@render timeField('end')}
+            </div>
+        {/if}
     </DateRangePicker.Content>
 {/snippet}
 
@@ -376,7 +469,7 @@
     {disabled}
     {readonly}
     {readonlySegments}
-    {granularity}
+    granularity={resolvedGranularity}
     {hourCycle}
     {hideTimeZone}
     {locale}
@@ -389,7 +482,7 @@
     {onInvalid}
     {isDateDisabled}
     {isDateUnavailable}
-    {closeOnRangeSelect}
+    closeOnRangeSelect={closeOnRangeSelect ?? !showTimeInput}
     {preventDeselect}
     {weekStartsOn}
     {weekdayFormat}

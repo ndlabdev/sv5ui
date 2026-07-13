@@ -35,7 +35,17 @@ export const dateRangePickerVariants = tv({
             'rounded-md shadow-lg',
             'focus:outline-none pointer-events-auto'
         ],
-        calendar: 'p-3'
+        calendar: 'p-3',
+        time: 'flex items-center justify-center gap-2 border-t border-surface-container-highest p-3',
+        timeIcon: 'shrink-0 text-on-surface-variant/75',
+        timeField: [
+            'inline-flex items-center rounded-md bg-surface text-on-surface',
+            'select-none whitespace-nowrap',
+            'ring ring-inset ring-outline-variant focus-within:ring-2',
+            'data-disabled:cursor-not-allowed data-disabled:opacity-75',
+            'data-invalid:ring-error',
+            'transition-colors focus-within:outline-none'
+        ]
     },
     variants: {
         variant: {
@@ -48,35 +58,43 @@ export const dateRangePickerVariants = tv({
         color: {
             primary: {
                 segment: 'focus:bg-primary/15 focus:text-primary',
-                trigger: 'focus-visible:ring-primary'
+                trigger: 'focus-visible:ring-primary',
+                timeField: 'focus-within:ring-primary'
             },
             secondary: {
                 segment: 'focus:bg-secondary/15 focus:text-secondary',
-                trigger: 'focus-visible:ring-secondary'
+                trigger: 'focus-visible:ring-secondary',
+                timeField: 'focus-within:ring-secondary'
             },
             tertiary: {
                 segment: 'focus:bg-tertiary/15 focus:text-tertiary',
-                trigger: 'focus-visible:ring-tertiary'
+                trigger: 'focus-visible:ring-tertiary',
+                timeField: 'focus-within:ring-tertiary'
             },
             success: {
                 segment: 'focus:bg-success/15 focus:text-success',
-                trigger: 'focus-visible:ring-success'
+                trigger: 'focus-visible:ring-success',
+                timeField: 'focus-within:ring-success'
             },
             warning: {
                 segment: 'focus:bg-warning/15 focus:text-warning',
-                trigger: 'focus-visible:ring-warning'
+                trigger: 'focus-visible:ring-warning',
+                timeField: 'focus-within:ring-warning'
             },
             error: {
                 segment: 'focus:bg-error/15 focus:text-error',
-                trigger: 'focus-visible:ring-error'
+                trigger: 'focus-visible:ring-error',
+                timeField: 'focus-within:ring-error'
             },
             info: {
                 segment: 'focus:bg-info/15 focus:text-info',
-                trigger: 'focus-visible:ring-info'
+                trigger: 'focus-visible:ring-info',
+                timeField: 'focus-within:ring-info'
             },
             surface: {
                 segment: 'focus:bg-inverse-surface/15 focus:text-on-surface',
-                trigger: 'focus-visible:ring-outline'
+                trigger: 'focus-visible:ring-outline',
+                timeField: 'focus-within:ring-outline'
             }
         },
         size: {
@@ -84,31 +102,41 @@ export const dateRangePickerVariants = tv({
                 field: 'ps-1.5 py-1 pe-7 text-xs rounded',
                 separator: 'size-3 mx-1',
                 trigger: 'pe-2 ps-1',
-                triggerIcon: 'size-3.5'
+                triggerIcon: 'size-3.5',
+                timeField: 'px-1 py-0.5 text-xs rounded',
+                timeIcon: 'size-3.5'
             },
             sm: {
                 field: 'ps-2 py-1.5 pe-8 text-xs rounded-md',
                 separator: 'size-3.5 mx-1',
                 trigger: 'pe-2.5 ps-1',
-                triggerIcon: 'size-4'
+                triggerIcon: 'size-4',
+                timeField: 'px-1.5 py-1 text-xs rounded-md',
+                timeIcon: 'size-4'
             },
             md: {
                 field: 'ps-2.5 py-2 pe-10 text-sm rounded-md',
                 separator: 'size-4 mx-1.5',
                 trigger: 'pe-3 ps-1.5',
-                triggerIcon: 'size-5'
+                triggerIcon: 'size-5',
+                timeField: 'px-2 py-1 text-sm rounded-md',
+                timeIcon: 'size-5'
             },
             lg: {
                 field: 'ps-3.5 py-2.5 pe-11 text-sm rounded-md',
                 separator: 'size-4 mx-1.5',
                 trigger: 'pe-4 ps-1.5',
-                triggerIcon: 'size-5'
+                triggerIcon: 'size-5',
+                timeField: 'px-2.5 py-1.5 text-sm rounded-md',
+                timeIcon: 'size-5'
             },
             xl: {
                 field: 'ps-4.5 py-3 pe-13 text-base rounded-lg',
                 separator: 'size-5 mx-2',
                 trigger: 'pe-5 ps-2',
-                triggerIcon: 'size-6'
+                triggerIcon: 'size-6',
+                timeField: 'px-3 py-2 text-base rounded-lg',
+                timeIcon: 'size-6'
             }
         },
         highlight: {
