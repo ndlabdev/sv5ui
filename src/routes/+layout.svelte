@@ -50,6 +50,7 @@
         { href: '/form-field', label: 'Form Field', icon: 'lucide:text-cursor-input' },
         { href: '/form', label: 'Form', icon: 'lucide:clipboard-list' },
         { href: '/input', label: 'Input', icon: 'lucide:text-cursor' },
+        { href: '/input-number', label: 'Input Number', icon: 'lucide:hash' },
         { href: '/textarea', label: 'Textarea', icon: 'lucide:text' },
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
         { href: '/select-menu', label: 'Select Menu', icon: 'lucide:list-filter' },
