@@ -604,6 +604,210 @@ describe('DatePicker', () => {
         })
     })
 
+    // ==================== TIME INPUT ====================
+
+    describe('time input', () => {
+        const getTimeField = () =>
+            document.querySelector('[data-time-field-input]') as HTMLElement | null
+        const getTimeSegment = (part: string) =>
+            document.querySelector(
+                `[data-time-field-input] [data-segment="${part}"]`
+            ) as HTMLElement | null
+
+        it('should not render a time field by default', async () => {
+            render(DatePicker, { open: true })
+            await vi.waitFor(() => {
+                expect(getCalendar()).not.toBeNull()
+            })
+            expect(getTimeField()).toBeNull()
+        })
+
+        it('should render a time field in the popover when timeInput is set', async () => {
+            render(DatePicker, { open: true, timeInput: true })
+            await vi.waitFor(() => {
+                expect(getTimeField()).not.toBeNull()
+                expect(getTimeSegment('hour')).not.toBeNull()
+                expect(getTimeSegment('minute')).not.toBeNull()
+            })
+        })
+
+        it('should imply minute granularity on the main field', async () => {
+            render(DatePicker, { timeInput: true })
+            await vi.waitFor(() => {
+                expect(getSegment('hour')).not.toBeNull()
+                expect(getSegment('minute')).not.toBeNull()
+            })
+        })
+
+        it('should display the time portion of the value', async () => {
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                value: new CalendarDateTime(2024, 3, 15, 14, 45)
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment('hour')!.textContent).toContain('2')
+                expect(getTimeSegment('minute')!.textContent).toContain('45')
+            })
+        })
+
+        it('should keep the popover open after selecting a date', async () => {
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                placeholder: new CalendarDateTime(2024, 3, 15, 10, 30)
+            })
+            await vi.waitFor(() => {
+                expect(getDays().length).toBeGreaterThan(0)
+            })
+            const day = Array.from(getDays()).find(
+                (d) => !d.hasAttribute('data-outside-month')
+            ) as HTMLElement
+            day.click()
+            await vi.waitFor(() => {
+                expect(day.hasAttribute('data-selected')).toBe(true)
+            })
+            expect(getContent()).not.toBeNull()
+        })
+
+        it('should still close on date select when closeOnDateSelect is true', async () => {
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                closeOnDateSelect: true,
+                placeholder: new CalendarDateTime(2024, 3, 15, 10, 30)
+            })
+            await vi.waitFor(() => {
+                expect(getDays().length).toBeGreaterThan(0)
+            })
+            const day = Array.from(getDays()).find(
+                (d) => !d.hasAttribute('data-outside-month')
+            ) as HTMLElement
+            day.click()
+            await vi.waitFor(() => {
+                expect(getContent()).toBeNull()
+            })
+        })
+
+        it('should update the value when editing the popover time field', async () => {
+            const onValueChange = vi.fn()
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                value: new CalendarDateTime(2024, 3, 15, 10, 30),
+                onValueChange
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment('minute')).not.toBeNull()
+            })
+            const minute = getTimeSegment('minute')!
+            minute.focus()
+            minute.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true })
+            )
+            await vi.waitFor(() => {
+                expect(onValueChange).toHaveBeenCalled()
+                const value = onValueChange.mock.calls.at(-1)![0] as CalendarDateTime
+                expect(value.minute).toBe(31)
+                expect(value.day).toBe(15)
+            })
+        })
+
+        it('should sync the main field segments after editing the time', async () => {
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                value: new CalendarDateTime(2024, 3, 15, 10, 30)
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment('hour')).not.toBeNull()
+            })
+            const hour = getTimeSegment('hour')!
+            hour.focus()
+            hour.dispatchEvent(
+                new KeyboardEvent('keydown', { key: '9', bubbles: true, cancelable: true })
+            )
+            await vi.waitFor(() => {
+                expect(getSegment('hour')!.textContent).toContain('9')
+            })
+        })
+
+        it('should anchor the date to the placeholder when editing time first', async () => {
+            const onValueChange = vi.fn()
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                placeholder: new CalendarDateTime(2024, 3, 15, 10, 30),
+                onValueChange
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment('hour')).not.toBeNull()
+            })
+            for (const part of ['hour', 'minute', 'dayPeriod']) {
+                const segment = getTimeSegment(part)!
+                segment.focus()
+                segment.dispatchEvent(
+                    new KeyboardEvent('keydown', {
+                        key: 'ArrowUp',
+                        bubbles: true,
+                        cancelable: true
+                    })
+                )
+            }
+            await vi.waitFor(() => {
+                expect(onValueChange).toHaveBeenCalled()
+                const value = onValueChange.mock.calls.at(-1)![0] as CalendarDateTime
+                expect(value.year).toBe(2024)
+                expect(value.month).toBe(3)
+                expect(value.day).toBe(15)
+            })
+        })
+
+        it('should keep the selected date after clearing and retyping the time', async () => {
+            const onValueChange = vi.fn()
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                value: new CalendarDateTime(2024, 3, 15, 10, 30),
+                onValueChange
+            })
+            await vi.waitFor(() => {
+                expect(getNextButton()).not.toBeNull()
+                expect(getTimeSegment('hour')).not.toBeNull()
+            })
+            getNextButton()!.click()
+            getNextButton()!.click()
+            await vi.waitFor(() => {
+                expect(getHeading()!.textContent).toContain('May')
+            })
+            const hour = getTimeSegment('hour')!
+            hour.focus()
+            for (const key of ['Backspace', 'Backspace', '9']) {
+                hour.dispatchEvent(
+                    new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+                )
+            }
+            await vi.waitFor(() => {
+                const value = onValueChange.mock.calls.at(-1)![0] as CalendarDateTime
+                expect(value.hour).toBe(9)
+                expect(value.month).toBe(3)
+                expect(value.day).toBe(15)
+            })
+        })
+
+        it('should apply ui slot overrides on the time area', async () => {
+            render(DatePicker, {
+                open: true,
+                timeInput: true,
+                ui: { time: 'custom-time-class', timeField: 'custom-time-field-class' }
+            })
+            await vi.waitFor(() => {
+                expect(getTimeField()!.className).toContain('custom-time-field-class')
+                expect(getTimeField()!.closest('.custom-time-class')).not.toBeNull()
+            })
+        })
+    })
+
     // ==================== FORM INTEGRATION ====================
 
     describe('form integration', () => {

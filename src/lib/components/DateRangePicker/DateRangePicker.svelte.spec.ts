@@ -660,6 +660,136 @@ describe('DateRangePicker', () => {
         })
     })
 
+    // ==================== TIME INPUT ====================
+
+    describe('time input', () => {
+        const getTimeFields = () => document.querySelectorAll('[data-time-field-input]')
+        const getTimeSegment = (index: number, part: string) =>
+            getTimeFields()[index]?.querySelector(`[data-segment="${part}"]`) as HTMLElement | null
+
+        const pressKey = (el: HTMLElement, key: string) =>
+            el.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
+
+        const sampleDateTimeRange: DateRange = {
+            start: new CalendarDateTime(2024, 3, 10, 9, 0),
+            end: new CalendarDateTime(2024, 3, 20, 17, 30)
+        }
+
+        it('should not render time fields by default', async () => {
+            render(DateRangePicker, { open: true })
+            await vi.waitFor(() => {
+                expect(getCalendar()).not.toBeNull()
+            })
+            expect(getTimeFields().length).toBe(0)
+        })
+
+        it('should render start and end time fields when timeInput is set', async () => {
+            render(DateRangePicker, { open: true, timeInput: true })
+            await vi.waitFor(() => {
+                expect(getTimeFields().length).toBe(2)
+            })
+            expect(getTimeFields()[0].getAttribute('aria-label')).toBe('Start time')
+            expect(getTimeFields()[1].getAttribute('aria-label')).toBe('End time')
+        })
+
+        it('should imply minute granularity on the main inputs', async () => {
+            render(DateRangePicker, { timeInput: true })
+            await vi.waitFor(() => {
+                expect(getSegments('hour').length).toBe(2)
+                expect(getSegments('minute').length).toBe(2)
+            })
+        })
+
+        it('should display the time portions of the range', async () => {
+            render(DateRangePicker, {
+                open: true,
+                timeInput: true,
+                value: sampleDateTimeRange
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment(0, 'hour')!.textContent).toContain('9')
+                expect(getTimeSegment(1, 'hour')!.textContent).toContain('5')
+                expect(getTimeSegment(1, 'minute')!.textContent).toContain('30')
+            })
+        })
+
+        it('should keep the popover open after selecting a range', async () => {
+            render(DateRangePicker, {
+                open: true,
+                timeInput: true,
+                placeholder: new CalendarDateTime(2024, 3, 15, 10, 30)
+            })
+            await vi.waitFor(() => {
+                expect(getDays().length).toBeGreaterThan(0)
+            })
+            findDay('10').click()
+            findDay('20').click()
+            await vi.waitFor(() => {
+                expect(findDay('20').hasAttribute('data-selection-end')).toBe(true)
+            })
+            expect(getContent()).not.toBeNull()
+        })
+
+        it('should update the start value when editing the start time field', async () => {
+            const onValueChange = vi.fn()
+            render(DateRangePicker, {
+                open: true,
+                timeInput: true,
+                value: sampleDateTimeRange,
+                onValueChange
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment(0, 'minute')).not.toBeNull()
+            })
+            const minute = getTimeSegment(0, 'minute')!
+            minute.focus()
+            pressKey(minute, 'ArrowUp')
+            await vi.waitFor(() => {
+                expect(onValueChange).toHaveBeenCalled()
+                const range = onValueChange.mock.calls.at(-1)![0] as DateRange
+                const start = range.start as CalendarDateTime
+                expect(start.minute).toBe(1)
+                expect(start.day).toBe(10)
+                expect((range.end as CalendarDateTime).minute).toBe(30)
+            })
+        })
+
+        it('should update the end value when editing the end time field', async () => {
+            const onValueChange = vi.fn()
+            render(DateRangePicker, {
+                open: true,
+                timeInput: true,
+                value: sampleDateTimeRange,
+                onValueChange
+            })
+            await vi.waitFor(() => {
+                expect(getTimeSegment(1, 'minute')).not.toBeNull()
+            })
+            const minute = getTimeSegment(1, 'minute')!
+            minute.focus()
+            pressKey(minute, 'ArrowUp')
+            await vi.waitFor(() => {
+                expect(onValueChange).toHaveBeenCalled()
+                const range = onValueChange.mock.calls.at(-1)![0] as DateRange
+                expect((range.end as CalendarDateTime).minute).toBe(31)
+                expect((range.start as CalendarDateTime).minute).toBe(0)
+            })
+        })
+
+        it('should apply ui slot overrides on the time area', async () => {
+            render(DateRangePicker, {
+                open: true,
+                timeInput: true,
+                ui: { time: 'custom-time-class', timeField: 'custom-time-field-class' }
+            })
+            await vi.waitFor(() => {
+                expect(getTimeFields().length).toBe(2)
+                expect(getTimeFields()[0].className).toContain('custom-time-field-class')
+                expect(getTimeFields()[0].closest('.custom-time-class')).not.toBeNull()
+            })
+        })
+    })
+
     // ==================== FORM INTEGRATION ====================
 
     describe('form integration', () => {

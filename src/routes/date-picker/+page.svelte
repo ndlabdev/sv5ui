@@ -205,6 +205,30 @@
         </div>
     </section>
 
+    <!-- Time input -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Time Input</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code>timeInput</code> adds a segmented time field below the calendar and keeps the
+            popover open after picking a date. It implies <code>granularity="minute"</code> and
+            follows <code>hourCycle</code> and <code>locale</code>.
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <div class="grid gap-4 sm:grid-cols-2">
+                <div class="space-y-1">
+                    <p class="text-sm font-medium text-on-surface-variant">Date &amp; time</p>
+                    <DatePicker timeInput />
+                </div>
+                <div class="space-y-1">
+                    <p class="text-sm font-medium text-on-surface-variant">
+                        24 hour cycle, seconds
+                    </p>
+                    <DatePicker timeInput granularity="second" hourCycle={24} />
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Form integration -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Form Integration</h2>

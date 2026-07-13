@@ -68,7 +68,7 @@ export interface DatePickerProps {
     readonlySegments?: EditableSegmentPart[]
     /**
      * Which segments the field renders. Defaults to `'day'` for plain dates
-     * and `'minute'` for date-time values.
+     * and `'minute'` for date-time values (or when `timeInput` is set).
      */
     granularity?: Granularity
     hourCycle?: 12 | 24
@@ -100,9 +100,23 @@ export interface DatePickerProps {
     isDateHighlightable?: DateMatcher
     /**
      * Close the popover after a date is selected.
-     * @default true
+     * @default true — false when `timeInput` is set, so the popover stays
+     * open for time entry
      */
     closeOnDateSelect?: boolean
+    /**
+     * Show a segmented time field inside the popover, below the calendar.
+     * Implies `granularity: 'minute'` unless a time granularity is provided.
+     * Editing the time before picking a date anchors the date portion to
+     * `placeholder`.
+     * @default false
+     */
+    timeInput?: boolean
+    /**
+     * Icon shown next to the popover time field.
+     * @default 'lucide:clock'
+     */
+    timeIcon?: string
     /**
      * Focus the selected (or today's) date when the popover opens.
      * @default true

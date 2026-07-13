@@ -237,6 +237,21 @@
         </div>
     </section>
 
+    <!-- Time input -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Time Input</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code>timeInput</code> adds start and end time fields below the calendar and keeps the
+            popover open after picking a range. It implies <code>granularity="minute"</code> and
+            follows <code>hourCycle</code> and <code>locale</code>.
+        </p>
+        <div class="rounded-lg bg-surface-container-high p-4">
+            <div class="max-w-md">
+                <DateRangePicker timeInput hourCycle={24} />
+            </div>
+        </div>
+    </section>
+
     <!-- Form integration -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Form Integration</h2>
