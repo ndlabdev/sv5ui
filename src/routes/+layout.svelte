@@ -41,6 +41,7 @@
         { href: '/breadcrumb', label: 'Breadcrumb', icon: 'lucide:chevrons-right' },
         { href: '/calendar', label: 'Calendar', icon: 'lucide:calendar' },
         { href: '/date-picker', label: 'Date Picker', icon: 'lucide:calendar-days' },
+        { href: '/date-range-picker', label: 'Date Range Picker', icon: 'lucide:calendar-range' },
         { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' },
         { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' },
         { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' },
