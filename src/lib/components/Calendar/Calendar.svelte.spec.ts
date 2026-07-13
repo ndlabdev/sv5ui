@@ -314,6 +314,15 @@ describe('Calendar', () => {
                 expect(foundDisabled).toBe(true)
             })
         })
+
+        it('should fade disabled dates', async () => {
+            render(Calendar)
+            await vi.waitFor(() => {
+                const days = getDays()
+                expect(days.length).toBeGreaterThan(0)
+                expect((days[0] as HTMLElement).className).toContain('data-disabled:opacity-50')
+            })
+        })
     })
 
     // ==================== READONLY STATE ====================
