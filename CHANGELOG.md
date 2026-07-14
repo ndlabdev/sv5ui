@@ -17,6 +17,10 @@ New form components (all with hidden inputs for native form submission, FormFiel
 - **InputTags** — tag input rendering values as removable `Badge`s (custom build): bindable `value` (`string[]`), commit via Enter/`delimiter`/`addOnPaste`/`addOnTab`/`addOnBlur`, duplicate rejection, `max` count and `maxLength` per tag, two-step Backspace with arrow-key tag navigation, per-tag delete buttons, tags customizable via BadgeProps and `tagSlot`, one hidden input per tag (`FormData.getAll`). ([#162](https://github.com/ndlabdev/sv5ui/pull/162))
 - **TimeField** — segmented time input (bits-ui): bindable `value`/`placeholder` (`Time`, `CalendarDateTime`, or `ZonedDateTime`; only the time portion is edited), `granularity`, `hourCycle`, min/max and `validate`/`onInvalid`, `readonlySegments`, locale-aware spinbutton segments, customizable trailing clock `icon`. ([#163](https://github.com/ndlabdev/sv5ui/pull/163))
 
+Other new components:
+
+- **Toggle** — two-state pressed button (bits-ui), the foundation for the upcoming ToggleGroup: bindable `pressed` with `onPressedChange`, `aria-pressed`/`data-state` semantics (a plain button, not a form control like Switch), Button-aligned visual API (`outline`/`soft`/`subtle`/`ghost` variants, 8 colors, 5 sizes, `icon`/`leadingIcon`/`trailingIcon`, `square`, `block`, `label`/children), neutral off state with the color scheme applied only when pressed. ([#165](https://github.com/ndlabdev/sv5ui/pull/165))
+
 ### Changed
 
 - **Calendar** — disabled dates are dimmed with `opacity-50`; `calendarVariants` now styles range-selection states (solid endpoints, tinted in-range band, hover preview), shared by DateRangePicker and Calendar `range` mode. ([#159](https://github.com/ndlabdev/sv5ui/pull/159), [#160](https://github.com/ndlabdev/sv5ui/pull/160))

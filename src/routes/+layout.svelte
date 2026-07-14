@@ -57,6 +57,7 @@
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
         { href: '/select-menu', label: 'Select Menu', icon: 'lucide:list-filter' },
         { href: '/switch', label: 'Switch', icon: 'lucide:toggle-left' },
+        { href: '/toggle', label: 'Toggle', icon: 'lucide:square-power' },
         { href: '/checkbox', label: 'Checkbox', icon: 'lucide:square-check' },
         { href: '/checkbox-group', label: 'Checkbox Group', icon: 'lucide:square-check-big' },
         { href: '/radio-group', label: 'Radio Group', icon: 'lucide:circle-dot-dashed' },
