@@ -19,7 +19,8 @@ New form components (all with hidden inputs for native form submission, FormFiel
 
 Other new components:
 
-- **Toggle** — two-state pressed button (bits-ui), the foundation for the upcoming ToggleGroup: bindable `pressed` with `onPressedChange`, `aria-pressed`/`data-state` semantics (a plain button, not a form control like Switch), Button-aligned visual API (`outline`/`soft`/`subtle`/`ghost` variants, 8 colors, 5 sizes, `icon`/`leadingIcon`/`trailingIcon`, `square`, `block`, `label`/children), neutral off state with the color scheme applied only when pressed. ([#165](https://github.com/ndlabdev/sv5ui/pull/165))
+- **Toggle** — two-state pressed button (bits-ui), the foundation for ToggleGroup: bindable `pressed` with `onPressedChange`, `aria-pressed`/`data-state` semantics (a plain button, not a form control like Switch), Button-aligned visual API (`outline`/`soft`/`subtle`/`ghost` variants, 8 colors, 5 sizes, `icon`/`leadingIcon`/`trailingIcon`, `square`, `block`, `label`/children), neutral off state with the color scheme applied only when pressed.
+- **ToggleGroup** — single or multiple selection over a set of toggle items (bits-ui): `type` prop switching bindable `value` between `string` and `string[]`, `items` array (`value`/`label`/`icon`/`leadingIcon`/`trailingIcon`/`ariaLabel`/`disabled`) plus `itemSlot` snippet, items styled by the Toggle variant system, `attached` for a flush segmented-control look (FieldGroup corner rounding), `orientation`-aware arrow-key navigation with `loop`/`rovingFocus`, `block` for equal-width full-width items, group and per-item disabled.
 
 ### Changed
 
