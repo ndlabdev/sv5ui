@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-07-19
+
 ### Added
 
 New form components (all with hidden inputs for native form submission, FormField integration, Input-style variants `outline`/`soft`/`subtle`/`ghost`/`none`, and full `ui` slot overrides):
