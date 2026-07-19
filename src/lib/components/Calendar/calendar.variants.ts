@@ -16,7 +16,7 @@ export const calendarVariants = tv({
         cellTrigger: [
             'm-0.5 relative flex items-center justify-center rounded-full whitespace-nowrap',
             'focus-visible:ring-2 focus:outline-none',
-            'data-disabled:text-on-surface-variant',
+            'data-disabled:text-on-surface-variant data-disabled:opacity-50',
             'data-unavailable:line-through data-unavailable:text-on-surface-variant data-unavailable:pointer-events-none',
             'data-today:font-semibold',
             'data-[outside-month]:text-on-surface-variant',
@@ -134,7 +134,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-primary data-[selected]:text-on-primary data-today:not-data-[selected]:text-primary data-[highlighted]:bg-primary/20 hover:not-data-[selected]:bg-primary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-primary data-[selected]:not-data-[range-middle]:text-on-primary data-today:not-data-[selected]:text-primary data-[highlighted]:not-data-[selected]:bg-primary/20 data-[range-middle]:bg-primary/20 hover:not-data-[selected]:bg-primary/20'
             }
         },
         {
@@ -142,7 +142,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-secondary data-[selected]:text-on-secondary data-today:not-data-[selected]:text-secondary data-[highlighted]:bg-secondary/20 hover:not-data-[selected]:bg-secondary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-secondary data-[selected]:not-data-[range-middle]:text-on-secondary data-today:not-data-[selected]:text-secondary data-[highlighted]:not-data-[selected]:bg-secondary/20 data-[range-middle]:bg-secondary/20 hover:not-data-[selected]:bg-secondary/20'
             }
         },
         {
@@ -150,7 +150,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-tertiary data-[selected]:text-on-tertiary data-today:not-data-[selected]:text-tertiary data-[highlighted]:bg-tertiary/20 hover:not-data-[selected]:bg-tertiary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-tertiary data-[selected]:not-data-[range-middle]:text-on-tertiary data-today:not-data-[selected]:text-tertiary data-[highlighted]:not-data-[selected]:bg-tertiary/20 data-[range-middle]:bg-tertiary/20 hover:not-data-[selected]:bg-tertiary/20'
             }
         },
         {
@@ -158,7 +158,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-success data-[selected]:text-on-success data-today:not-data-[selected]:text-success data-[highlighted]:bg-success/20 hover:not-data-[selected]:bg-success/20'
+                    'data-[selected]:not-data-[range-middle]:bg-success data-[selected]:not-data-[range-middle]:text-on-success data-today:not-data-[selected]:text-success data-[highlighted]:not-data-[selected]:bg-success/20 data-[range-middle]:bg-success/20 hover:not-data-[selected]:bg-success/20'
             }
         },
         {
@@ -166,7 +166,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-warning data-[selected]:text-on-warning data-today:not-data-[selected]:text-warning data-[highlighted]:bg-warning/20 hover:not-data-[selected]:bg-warning/20'
+                    'data-[selected]:not-data-[range-middle]:bg-warning data-[selected]:not-data-[range-middle]:text-on-warning data-today:not-data-[selected]:text-warning data-[highlighted]:not-data-[selected]:bg-warning/20 data-[range-middle]:bg-warning/20 hover:not-data-[selected]:bg-warning/20'
             }
         },
         {
@@ -174,7 +174,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-error data-[selected]:text-on-error data-today:not-data-[selected]:text-error data-[highlighted]:bg-error/20 hover:not-data-[selected]:bg-error/20'
+                    'data-[selected]:not-data-[range-middle]:bg-error data-[selected]:not-data-[range-middle]:text-on-error data-today:not-data-[selected]:text-error data-[highlighted]:not-data-[selected]:bg-error/20 data-[range-middle]:bg-error/20 hover:not-data-[selected]:bg-error/20'
             }
         },
         {
@@ -182,7 +182,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-info data-[selected]:text-on-info data-today:not-data-[selected]:text-info data-[highlighted]:bg-info/20 hover:not-data-[selected]:bg-info/20'
+                    'data-[selected]:not-data-[range-middle]:bg-info data-[selected]:not-data-[range-middle]:text-on-info data-today:not-data-[selected]:text-info data-[highlighted]:not-data-[selected]:bg-info/20 data-[range-middle]:bg-info/20 hover:not-data-[selected]:bg-info/20'
             }
         },
         {
@@ -190,7 +190,7 @@ export const calendarVariants = tv({
             variant: 'solid',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-inverse-surface data-[selected]:text-inverse-on-surface data-today:not-data-[selected]:text-on-surface data-[highlighted]:bg-inverse-surface/20 hover:not-data-[selected]:bg-inverse-surface/10'
+                    'data-[selected]:not-data-[range-middle]:bg-inverse-surface data-[selected]:not-data-[range-middle]:text-inverse-on-surface data-today:not-data-[selected]:text-on-surface data-[highlighted]:not-data-[selected]:bg-inverse-surface/20 data-[range-middle]:bg-inverse-surface/20 hover:not-data-[selected]:bg-inverse-surface/10'
             }
         },
 
@@ -200,7 +200,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-primary/50 data-[selected]:text-primary data-today:not-data-[selected]:text-primary data-[highlighted]:bg-primary/10 hover:not-data-[selected]:bg-primary/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-primary/50 data-[selected]:not-data-[range-middle]:text-primary data-today:not-data-[selected]:text-primary data-[highlighted]:not-data-[selected]:bg-primary/10 data-[range-middle]:bg-primary/10 hover:not-data-[selected]:bg-primary/10'
             }
         },
         {
@@ -208,7 +208,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-secondary/50 data-[selected]:text-secondary data-today:not-data-[selected]:text-secondary data-[highlighted]:bg-secondary/10 hover:not-data-[selected]:bg-secondary/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-secondary/50 data-[selected]:not-data-[range-middle]:text-secondary data-today:not-data-[selected]:text-secondary data-[highlighted]:not-data-[selected]:bg-secondary/10 data-[range-middle]:bg-secondary/10 hover:not-data-[selected]:bg-secondary/10'
             }
         },
         {
@@ -216,7 +216,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-tertiary/50 data-[selected]:text-tertiary data-today:not-data-[selected]:text-tertiary data-[highlighted]:bg-tertiary/10 hover:not-data-[selected]:bg-tertiary/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-tertiary/50 data-[selected]:not-data-[range-middle]:text-tertiary data-today:not-data-[selected]:text-tertiary data-[highlighted]:not-data-[selected]:bg-tertiary/10 data-[range-middle]:bg-tertiary/10 hover:not-data-[selected]:bg-tertiary/10'
             }
         },
         {
@@ -224,7 +224,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-success/50 data-[selected]:text-success data-today:not-data-[selected]:text-success data-[highlighted]:bg-success/10 hover:not-data-[selected]:bg-success/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-success/50 data-[selected]:not-data-[range-middle]:text-success data-today:not-data-[selected]:text-success data-[highlighted]:not-data-[selected]:bg-success/10 data-[range-middle]:bg-success/10 hover:not-data-[selected]:bg-success/10'
             }
         },
         {
@@ -232,7 +232,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-warning/50 data-[selected]:text-warning data-today:not-data-[selected]:text-warning data-[highlighted]:bg-warning/10 hover:not-data-[selected]:bg-warning/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-warning/50 data-[selected]:not-data-[range-middle]:text-warning data-today:not-data-[selected]:text-warning data-[highlighted]:not-data-[selected]:bg-warning/10 data-[range-middle]:bg-warning/10 hover:not-data-[selected]:bg-warning/10'
             }
         },
         {
@@ -240,7 +240,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-error/50 data-[selected]:text-error data-today:not-data-[selected]:text-error data-[highlighted]:bg-error/10 hover:not-data-[selected]:bg-error/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-error/50 data-[selected]:not-data-[range-middle]:text-error data-today:not-data-[selected]:text-error data-[highlighted]:not-data-[selected]:bg-error/10 data-[range-middle]:bg-error/10 hover:not-data-[selected]:bg-error/10'
             }
         },
         {
@@ -248,7 +248,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-info/50 data-[selected]:text-info data-today:not-data-[selected]:text-info data-[highlighted]:bg-info/10 hover:not-data-[selected]:bg-info/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-info/50 data-[selected]:not-data-[range-middle]:text-info data-today:not-data-[selected]:text-info data-[highlighted]:not-data-[selected]:bg-info/10 data-[range-middle]:bg-info/10 hover:not-data-[selected]:bg-info/10'
             }
         },
         {
@@ -256,7 +256,7 @@ export const calendarVariants = tv({
             variant: 'outline',
             class: {
                 cellTrigger:
-                    'data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-outline-variant data-[selected]:text-on-surface data-[selected]:bg-surface data-today:not-data-[selected]:text-on-surface data-[highlighted]:bg-inverse-surface/10 hover:not-data-[selected]:bg-inverse-surface/10'
+                    'data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-outline-variant data-[selected]:not-data-[range-middle]:text-on-surface data-[selected]:not-data-[range-middle]:bg-surface data-today:not-data-[selected]:text-on-surface data-[highlighted]:not-data-[selected]:bg-inverse-surface/10 data-[range-middle]:bg-inverse-surface/10 hover:not-data-[selected]:bg-inverse-surface/10'
             }
         },
 
@@ -266,7 +266,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-primary/10 data-[selected]:text-primary data-today:not-data-[selected]:text-primary data-[highlighted]:bg-primary/20 hover:not-data-[selected]:bg-primary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-primary/10 data-[selected]:not-data-[range-middle]:text-primary data-today:not-data-[selected]:text-primary data-[highlighted]:not-data-[selected]:bg-primary/10 data-[range-middle]:bg-primary/10 hover:not-data-[selected]:bg-primary/20'
             }
         },
         {
@@ -274,7 +274,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-secondary/10 data-[selected]:text-secondary data-today:not-data-[selected]:text-secondary data-[highlighted]:bg-secondary/20 hover:not-data-[selected]:bg-secondary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-secondary/10 data-[selected]:not-data-[range-middle]:text-secondary data-today:not-data-[selected]:text-secondary data-[highlighted]:not-data-[selected]:bg-secondary/10 data-[range-middle]:bg-secondary/10 hover:not-data-[selected]:bg-secondary/20'
             }
         },
         {
@@ -282,7 +282,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-tertiary/10 data-[selected]:text-tertiary data-today:not-data-[selected]:text-tertiary data-[highlighted]:bg-tertiary/20 hover:not-data-[selected]:bg-tertiary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-tertiary/10 data-[selected]:not-data-[range-middle]:text-tertiary data-today:not-data-[selected]:text-tertiary data-[highlighted]:not-data-[selected]:bg-tertiary/10 data-[range-middle]:bg-tertiary/10 hover:not-data-[selected]:bg-tertiary/20'
             }
         },
         {
@@ -290,7 +290,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-success/10 data-[selected]:text-success data-today:not-data-[selected]:text-success data-[highlighted]:bg-success/20 hover:not-data-[selected]:bg-success/20'
+                    'data-[selected]:not-data-[range-middle]:bg-success/10 data-[selected]:not-data-[range-middle]:text-success data-today:not-data-[selected]:text-success data-[highlighted]:not-data-[selected]:bg-success/10 data-[range-middle]:bg-success/10 hover:not-data-[selected]:bg-success/20'
             }
         },
         {
@@ -298,7 +298,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-warning/10 data-[selected]:text-warning data-today:not-data-[selected]:text-warning data-[highlighted]:bg-warning/20 hover:not-data-[selected]:bg-warning/20'
+                    'data-[selected]:not-data-[range-middle]:bg-warning/10 data-[selected]:not-data-[range-middle]:text-warning data-today:not-data-[selected]:text-warning data-[highlighted]:not-data-[selected]:bg-warning/10 data-[range-middle]:bg-warning/10 hover:not-data-[selected]:bg-warning/20'
             }
         },
         {
@@ -306,7 +306,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-error/10 data-[selected]:text-error data-today:not-data-[selected]:text-error data-[highlighted]:bg-error/20 hover:not-data-[selected]:bg-error/20'
+                    'data-[selected]:not-data-[range-middle]:bg-error/10 data-[selected]:not-data-[range-middle]:text-error data-today:not-data-[selected]:text-error data-[highlighted]:not-data-[selected]:bg-error/10 data-[range-middle]:bg-error/10 hover:not-data-[selected]:bg-error/20'
             }
         },
         {
@@ -314,7 +314,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-info/10 data-[selected]:text-info data-today:not-data-[selected]:text-info data-[highlighted]:bg-info/20 hover:not-data-[selected]:bg-info/20'
+                    'data-[selected]:not-data-[range-middle]:bg-info/10 data-[selected]:not-data-[range-middle]:text-info data-today:not-data-[selected]:text-info data-[highlighted]:not-data-[selected]:bg-info/10 data-[range-middle]:bg-info/10 hover:not-data-[selected]:bg-info/20'
             }
         },
         {
@@ -322,7 +322,7 @@ export const calendarVariants = tv({
             variant: 'soft',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-surface-container-highest data-[selected]:text-on-surface data-today:not-data-[selected]:text-on-surface data-[highlighted]:bg-inverse-surface/20 hover:not-data-[selected]:bg-inverse-surface/10'
+                    'data-[selected]:not-data-[range-middle]:bg-surface-container-highest data-[selected]:not-data-[range-middle]:text-on-surface data-today:not-data-[selected]:text-on-surface data-[highlighted]:not-data-[selected]:bg-inverse-surface/10 data-[range-middle]:bg-inverse-surface/10 hover:not-data-[selected]:bg-inverse-surface/10'
             }
         },
 
@@ -332,7 +332,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-primary/10 data-[selected]:text-primary data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-primary/25 data-today:not-data-[selected]:text-primary data-[highlighted]:bg-primary/20 hover:not-data-[selected]:bg-primary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-primary/10 data-[selected]:not-data-[range-middle]:text-primary data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-primary/25 data-today:not-data-[selected]:text-primary data-[highlighted]:not-data-[selected]:bg-primary/10 data-[range-middle]:bg-primary/10 hover:not-data-[selected]:bg-primary/20'
             }
         },
         {
@@ -340,7 +340,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-secondary/10 data-[selected]:text-secondary data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-secondary/25 data-today:not-data-[selected]:text-secondary data-[highlighted]:bg-secondary/20 hover:not-data-[selected]:bg-secondary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-secondary/10 data-[selected]:not-data-[range-middle]:text-secondary data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-secondary/25 data-today:not-data-[selected]:text-secondary data-[highlighted]:not-data-[selected]:bg-secondary/10 data-[range-middle]:bg-secondary/10 hover:not-data-[selected]:bg-secondary/20'
             }
         },
         {
@@ -348,7 +348,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-tertiary/10 data-[selected]:text-tertiary data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-tertiary/25 data-today:not-data-[selected]:text-tertiary data-[highlighted]:bg-tertiary/20 hover:not-data-[selected]:bg-tertiary/20'
+                    'data-[selected]:not-data-[range-middle]:bg-tertiary/10 data-[selected]:not-data-[range-middle]:text-tertiary data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-tertiary/25 data-today:not-data-[selected]:text-tertiary data-[highlighted]:not-data-[selected]:bg-tertiary/10 data-[range-middle]:bg-tertiary/10 hover:not-data-[selected]:bg-tertiary/20'
             }
         },
         {
@@ -356,7 +356,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-success/10 data-[selected]:text-success data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-success/25 data-today:not-data-[selected]:text-success data-[highlighted]:bg-success/20 hover:not-data-[selected]:bg-success/20'
+                    'data-[selected]:not-data-[range-middle]:bg-success/10 data-[selected]:not-data-[range-middle]:text-success data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-success/25 data-today:not-data-[selected]:text-success data-[highlighted]:not-data-[selected]:bg-success/10 data-[range-middle]:bg-success/10 hover:not-data-[selected]:bg-success/20'
             }
         },
         {
@@ -364,7 +364,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-warning/10 data-[selected]:text-warning data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-warning/25 data-today:not-data-[selected]:text-warning data-[highlighted]:bg-warning/20 hover:not-data-[selected]:bg-warning/20'
+                    'data-[selected]:not-data-[range-middle]:bg-warning/10 data-[selected]:not-data-[range-middle]:text-warning data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-warning/25 data-today:not-data-[selected]:text-warning data-[highlighted]:not-data-[selected]:bg-warning/10 data-[range-middle]:bg-warning/10 hover:not-data-[selected]:bg-warning/20'
             }
         },
         {
@@ -372,7 +372,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-error/10 data-[selected]:text-error data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-error/25 data-today:not-data-[selected]:text-error data-[highlighted]:bg-error/20 hover:not-data-[selected]:bg-error/20'
+                    'data-[selected]:not-data-[range-middle]:bg-error/10 data-[selected]:not-data-[range-middle]:text-error data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-error/25 data-today:not-data-[selected]:text-error data-[highlighted]:not-data-[selected]:bg-error/10 data-[range-middle]:bg-error/10 hover:not-data-[selected]:bg-error/20'
             }
         },
         {
@@ -380,7 +380,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-info/10 data-[selected]:text-info data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-info/25 data-today:not-data-[selected]:text-info data-[highlighted]:bg-info/20 hover:not-data-[selected]:bg-info/20'
+                    'data-[selected]:not-data-[range-middle]:bg-info/10 data-[selected]:not-data-[range-middle]:text-info data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-info/25 data-today:not-data-[selected]:text-info data-[highlighted]:not-data-[selected]:bg-info/10 data-[range-middle]:bg-info/10 hover:not-data-[selected]:bg-info/20'
             }
         },
         {
@@ -388,7 +388,7 @@ export const calendarVariants = tv({
             variant: 'subtle',
             class: {
                 cellTrigger:
-                    'data-[selected]:bg-surface-container-highest data-[selected]:text-on-surface data-[selected]:ring data-[selected]:ring-inset data-[selected]:ring-outline-variant data-today:not-data-[selected]:text-on-surface data-[highlighted]:bg-inverse-surface/20 hover:not-data-[selected]:bg-inverse-surface/10'
+                    'data-[selected]:not-data-[range-middle]:bg-surface-container-highest data-[selected]:not-data-[range-middle]:text-on-surface data-[selected]:not-data-[range-middle]:ring data-[selected]:not-data-[range-middle]:ring-inset data-[selected]:not-data-[range-middle]:ring-outline-variant data-today:not-data-[selected]:text-on-surface data-[highlighted]:not-data-[selected]:bg-inverse-surface/10 data-[range-middle]:bg-inverse-surface/10 hover:not-data-[selected]:bg-inverse-surface/10'
             }
         }
     ],

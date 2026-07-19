@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-07-19
+
+### Added
+
+New form components (all with hidden inputs for native form submission, FormField integration, Input-style variants `outline`/`soft`/`subtle`/`ghost`/`none`, and full `ui` slot overrides):
+
+- **DatePicker** — segmented date input with calendar popover (bits-ui): bindable `value`/`open`/`placeholder`, `granularity` up to seconds with `hourCycle`, min/max and `validate`/`onInvalid`, disabled/unavailable/highlightable matchers, `closeOnDateSelect`, locale-aware, `numberOfMonths`, `weekNumbers`, `calendarVariant` + nested `calendarSlots`. ([#159](https://github.com/ndlabdev/sv5ui/pull/159))
+- **DateRangePicker** — range variant of DatePicker (bits-ui): start/end segmented inputs in one field, two-month range calendar with tinted in-range days and hover preview, bindable `value` (`{ start, end }`), `minDays`/`maxDays`, `excludeDisabled`, `closeOnRangeSelect`, hidden `{name}-start`/`{name}-end` inputs, plus the full DatePicker prop surface. ([#160](https://github.com/ndlabdev/sv5ui/pull/160))
+- **InputNumber** — numeric input with stepper buttons (custom build): locale-aware formatting/parsing via `@internationalized/number` (`formatOptions`, `locale`), bindable `value` (`number | null`) clamped to `min`/`max` on commit, `step` snapping, press-and-hold repeat, ArrowUp/Down, Home/End and wheel stepping, horizontal/vertical `orientation`, steppers customizable via ButtonProps and slots, `role="spinbutton"`. ([#161](https://github.com/ndlabdev/sv5ui/pull/161))
+- **InputTags** — tag input rendering values as removable `Badge`s (custom build): bindable `value` (`string[]`), commit via Enter/`delimiter`/`addOnPaste`/`addOnTab`/`addOnBlur`, duplicate rejection, `max` count and `maxLength` per tag, two-step Backspace with arrow-key tag navigation, per-tag delete buttons, tags customizable via BadgeProps and `tagSlot`, one hidden input per tag (`FormData.getAll`). ([#162](https://github.com/ndlabdev/sv5ui/pull/162))
+- **TimeField** — segmented time input (bits-ui): bindable `value`/`placeholder` (`Time`, `CalendarDateTime`, or `ZonedDateTime`; only the time portion is edited), `granularity`, `hourCycle`, min/max and `validate`/`onInvalid`, `readonlySegments`, locale-aware spinbutton segments, customizable trailing clock `icon`. ([#163](https://github.com/ndlabdev/sv5ui/pull/163))
+
+Toggle family (Button-aligned `outline`/`soft`/`subtle`/`ghost` variants, 8 colors, 5 sizes, `ui` slot overrides):
+
+- **Toggle** — pressed-state button (bits-ui): bindable `pressed`, `aria-pressed` semantics (a plain button, unlike Switch), icons/label/children, neutral off state with color applied only when pressed. ([#167](https://github.com/ndlabdev/sv5ui/pull/167))
+- **ToggleGroup** — single or multiple selection over toggle items (bits-ui): `type` switches bindable `value` between `string` and `string[]`, `items` + `itemSlot`, `attached` segmented-control look, orientation-aware arrow-key navigation. ([#168](https://github.com/ndlabdev/sv5ui/pull/168))
+- **Rating** — star rating input (bits-ui): bindable `value`, `allowHalf`, `readonly`, slider a11y, hidden input + FormField integration, customizable `icon` (new `icons.star`) with `fill` control and optional `activeIcon`. ([#169](https://github.com/ndlabdev/sv5ui/pull/169))
+
+### Changed
+
+- **Calendar** — disabled dates are dimmed with `opacity-50`; `calendarVariants` now styles range-selection states (solid endpoints, tinted in-range band, hover preview), shared by DateRangePicker and Calendar `range` mode. ([#159](https://github.com/ndlabdev/sv5ui/pull/159), [#160](https://github.com/ndlabdev/sv5ui/pull/160))
+- **DatePicker / DateRangePicker** — new `timeInput` prop renders segmented time field(s) below the calendar, implies `granularity: 'minute'` when unset, and defaults close-on-select to `false` so the popover stays open for time entry. ([#163](https://github.com/ndlabdev/sv5ui/pull/163))
+
 ## [2.3.0] - 2026-07-07
 
 ### Added
