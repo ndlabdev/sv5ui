@@ -73,7 +73,8 @@
         { href: '/editor', label: 'Editor', icon: 'lucide:pen-tool' },
         { href: '/banner', label: 'Banner', icon: 'lucide:megaphone' },
         { href: '/stepper', label: 'Stepper', icon: 'lucide:list-ordered' },
-        { href: '/tour', label: 'Tour', icon: 'lucide:route' }
+        { href: '/tour', label: 'Tour', icon: 'lucide:route' },
+        { href: '/tree', label: 'Tree', icon: 'lucide:folder-tree' }
     ]
 
     const hookItems = [

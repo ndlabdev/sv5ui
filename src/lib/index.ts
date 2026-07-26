@@ -63,6 +63,7 @@ export * from './components/Carousel/index.js'
 export * from './components/Banner/index.js'
 export * from './components/Stepper/index.js'
 export * from './components/Tour/index.js'
+export * from './components/Tree/index.js'
 
 // Composables
 export * from './hooks/index.js'
