@@ -44,6 +44,7 @@
         { href: '/date-range-picker', label: 'Date Range Picker', icon: 'lucide:calendar-range' },
         { href: '/time-field', label: 'Time Field', icon: 'lucide:clock' },
         { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' },
+        { href: '/navigation-menu', label: 'Navigation Menu', icon: 'lucide:menu' },
         { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' },
         { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' },
         { href: '/pagination', label: 'Pagination', icon: 'lucide:chevrons-left-right-ellipsis' },
