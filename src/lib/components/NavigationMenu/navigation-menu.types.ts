@@ -43,8 +43,16 @@ export interface NavigationMenuChildItem {
     target?: string
     /** Whether this child represents the current page (sets `aria-current`). */
     active?: boolean
+    /** Exact-match route detection for `active`. @default true */
+    exact?: boolean
     /** Fired on select. Call `event.preventDefault()` to keep the menu open. */
     onSelect?: (event: Event) => void
+    /**
+     * Nested links. When set, this entry renders as a labeled group/column
+     * inside the mega-menu (a section header plus its links) instead of a
+     * single link. One level of nesting is supported.
+     */
+    children?: NavigationMenuChildItem[]
     /** Extra classes for the child link. */
     class?: ClassNameValue
 }
@@ -88,6 +96,8 @@ export interface NavigationMenuItem {
     disabled?: boolean
     /** Whether the item represents the current page (sets `aria-current`). */
     active?: boolean
+    /** Exact-match route detection for `active`. Overrides the menu-level `exact`. */
+    exact?: boolean
     /** Fired on select. Call `event.preventDefault()` to keep the menu open. */
     onSelect?: (event: Event) => void
     /** Nested dropdown / mega-menu entries. */
@@ -177,7 +187,11 @@ export interface NavigationMenuProps extends Omit<
     /** Whether expandable groups can be toggled (vertical). @default true */
     collapsible?: boolean
 
-    /** Show an active-route highlight bar. @default false */
+    /**
+     * Show a sliding active-route highlight bar. Ignored for the `pill`
+     * variant, whose filled background already marks the active item.
+     * @default false
+     */
     highlight?: boolean
 
     /** Visual style of items. @default 'pill' */
@@ -206,6 +220,13 @@ export interface NavigationMenuProps extends Omit<
 
     /** Item field used as the label. @default 'label' */
     labelKey?: string
+
+    /**
+     * Exact-match route auto-detection for active state. When `false`, a link
+     * is active for any route starting with its `href` (highlights parent
+     * routes). `aria-current="page"` remains exact-only. @default true
+     */
+    exact?: boolean
 
     /** ms before a dropdown opens on hover. @default 0 */
     delayDuration?: number

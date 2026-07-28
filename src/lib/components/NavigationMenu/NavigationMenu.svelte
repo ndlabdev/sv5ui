@@ -6,10 +6,11 @@
 
 <script lang="ts">
     import { NavigationMenu as Bits } from 'bits-ui'
-    import { untrack } from 'svelte'
+    import { tick, untrack } from 'svelte'
     import { SvelteSet } from 'svelte/reactivity'
     import { slide } from 'svelte/transition'
     import { page } from '$app/state'
+    import { useResizeObserver } from '../../hooks/useResizeObserver/index.js'
     import { navigationMenuVariants, navigationMenuDefaults } from './navigation-menu.variants.js'
     import type { NavigationMenuItem, NavigationMenuChildItem } from './navigation-menu.types.js'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
@@ -48,6 +49,7 @@
         popover = false,
         contentOrientation = 'horizontal',
         labelKey = 'label',
+        exact = true,
         delayDuration = 0,
         skipDelayDuration,
         disableClickTrigger = false,
@@ -100,10 +102,17 @@
         return href
     }
 
-    function isItemActive(active: boolean | undefined, href?: string): boolean {
+    function isItemActive(
+        active: boolean | undefined,
+        href?: string,
+        itemExact?: boolean
+    ): boolean {
         if (active !== undefined) return active
         if (!href || isExternal(href) || !page.url) return false
-        return page.url.pathname === href
+        const useExact = itemExact ?? exact
+        return useExact
+            ? page.url.pathname === href
+            : page.url.pathname === href || page.url.pathname.startsWith(`${href}/`)
     }
 
     function hasChildren(item: NavigationMenuItem): boolean {
@@ -187,6 +196,7 @@
     const isMobile = useMediaQuery(() => mobileBreakpoint)
     const showDrawer = $derived(drawer && isMobile.matches)
     const effectiveOrientation = $derived(showDrawer ? 'vertical' : orientation)
+    const effectiveCollapsed = $derived(collapsed && !showDrawer)
 
     let previousPath = page.url?.pathname
     $effect(() => {
@@ -203,7 +213,7 @@
             color,
             orientation: effectiveOrientation,
             highlight,
-            collapsed: collapsed && !showDrawer,
+            collapsed: effectiveCollapsed,
             contentOrientation,
             disabled
         })
@@ -212,6 +222,7 @@
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, ui?.root, className] }),
         list: variantSlots.list({ class: [config.slots.list, ui?.list] }),
+        highlight: variantSlots.highlight({ class: [config.slots.highlight, ui?.highlight] }),
         item: variantSlots.item({ class: [config.slots.item, ui?.item] }),
         label: variantSlots.label({ class: [config.slots.label, ui?.label] }),
         separator: variantSlots.separator({ class: [config.slots.separator, ui?.separator] }),
@@ -251,6 +262,16 @@
         childLinkDescription: variantSlots.childLinkDescription({
             class: [config.slots.childLinkDescription, ui?.childLinkDescription]
         }),
+        childGroup: variantSlots.childGroup({ class: [config.slots.childGroup, ui?.childGroup] }),
+        childGroupLabel: variantSlots.childGroupLabel({
+            class: [config.slots.childGroupLabel, ui?.childGroupLabel]
+        }),
+        childGroupList: variantSlots.childGroupList({
+            class: [config.slots.childGroupList, ui?.childGroupList]
+        }),
+        linkBadgeDot: variantSlots.linkBadgeDot({
+            class: [config.slots.linkBadgeDot, ui?.linkBadgeDot]
+        }),
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
         viewportWrapper: variantSlots.viewportWrapper({
             class: [config.slots.viewportWrapper, ui?.viewportWrapper]
@@ -271,6 +292,44 @@
     }
 
     const contentProps = $derived({ forceMount: !unmountOnHide || undefined })
+
+    let listEl = $state<HTMLElement | null>(null)
+    let highlightStyle = $state('')
+    let rafId = 0
+
+    const showHighlight = $derived(highlight && variant !== 'pill')
+
+    function updateIndicator() {
+        if (!showHighlight || !listEl) return
+        const activeEl = listEl.querySelector<HTMLElement>('[data-active]')
+        if (!activeEl) {
+            highlightStyle = 'opacity:0'
+            return
+        }
+        highlightStyle =
+            effectiveOrientation === 'horizontal'
+                ? `left:${activeEl.offsetLeft}px;width:${activeEl.offsetWidth}px`
+                : `top:${activeEl.offsetTop}px;height:${activeEl.offsetHeight}px`
+    }
+
+    function scheduleIndicator() {
+        cancelAnimationFrame(rafId)
+        rafId = requestAnimationFrame(updateIndicator)
+    }
+
+    useResizeObserver(() => listEl, scheduleIndicator)
+
+    $effect(() => {
+        void value
+        void page.url
+        void items
+        void effectiveOrientation
+        void showHighlight
+        if (showHighlight) tick().then(updateIndicator)
+    })
+
+    $effect(() => () => cancelAnimationFrame(rafId))
+    $effect(() => () => clearTimeout(flyoutTimer))
 </script>
 
 {#snippet leading(item: NavigationMenuItem, index: number, open: boolean)}
@@ -335,40 +394,57 @@
     {@render leading(item, index, open)}
     {@render label(item, index, open)}
     {@render trailing(item, index, open, isTrigger)}
+    {#if effectiveCollapsed && item.badge !== undefined}
+        <span class={classes.linkBadgeDot} data-navigation-menu-badge-dot="" aria-hidden="true"
+        ></span>
+    {/if}
 {/snippet}
 
 {#snippet childLink(sub: NavigationMenuChildItem)}
-    {@const active = isItemActive(sub.active, sub.href)}
-    <li class={classes.childItem}>
-        <Link
-            href={safeHref(sub.href)}
-            target={sub.target}
-            raw
-            exact
-            {active}
-            onclick={sub.onSelect}
-            data-active={active ? '' : undefined}
-            class={[classes.childLink, sub.class]}
-        >
-            {#if sub.icon}
-                <Icon name={sub.icon} class={classes.childLinkIcon} />
-            {/if}
-            <span class={classes.childLinkWrapper}>
-                <span class="inline-flex items-center gap-1">
-                    <span class={classes.childLinkLabel}>{sub.label}</span>
-                    {#if externalIcon !== false && isExternal(sub.href)}
-                        <Icon
-                            name={typeof externalIcon === 'string' ? externalIcon : icons.external}
-                            class={classes.linkLabelExternalIcon}
-                        />
+    {#if sub.children?.length}
+        <li class={classes.childGroup}>
+            <p class={classes.childGroupLabel}>{sub.label}</p>
+            <ul class={classes.childGroupList}>
+                {#each sub.children as grandchild, gi (grandchild.href ?? gi)}
+                    {@render childLink(grandchild)}
+                {/each}
+            </ul>
+        </li>
+    {:else}
+        {@const active = isItemActive(sub.active, sub.href, sub.exact)}
+        <li class={classes.childItem}>
+            <Link
+                href={safeHref(sub.href)}
+                target={sub.target}
+                raw
+                exact={sub.exact ?? exact}
+                {active}
+                onclick={sub.onSelect}
+                data-active={active ? '' : undefined}
+                class={[classes.childLink, sub.class]}
+            >
+                {#if sub.icon}
+                    <Icon name={sub.icon} class={classes.childLinkIcon} />
+                {/if}
+                <span class={classes.childLinkWrapper}>
+                    <span class="inline-flex items-center gap-1">
+                        <span class={classes.childLinkLabel}>{sub.label}</span>
+                        {#if externalIcon !== false && isExternal(sub.href)}
+                            <Icon
+                                name={typeof externalIcon === 'string'
+                                    ? externalIcon
+                                    : icons.external}
+                                class={classes.linkLabelExternalIcon}
+                            />
+                        {/if}
+                    </span>
+                    {#if sub.description}
+                        <span class={classes.childLinkDescription}>{sub.description}</span>
                     {/if}
                 </span>
-                {#if sub.description}
-                    <span class={classes.childLinkDescription}>{sub.description}</span>
-                {/if}
-            </span>
-        </Link>
-    </li>
+            </Link>
+        </li>
+    {/if}
 {/snippet}
 
 {#snippet megaContent(item: NavigationMenuItem, index: number)}
@@ -394,7 +470,15 @@
         class={classes.root}
         {...restProps as Record<string, unknown>}
     >
-        <Bits.List class={classes.list}>
+        <Bits.List bind:ref={listEl} class={classes.list}>
+            {#if showHighlight}
+                <div
+                    class={classes.highlight}
+                    style={highlightStyle}
+                    data-navigation-menu-highlight=""
+                    aria-hidden="true"
+                ></div>
+            {/if}
             {#if listLeading}{@render listLeading()}{/if}
             {#each groups as group, gi (gi)}
                 {#each group as item, index (itemValue(item, gi, index))}
@@ -431,15 +515,16 @@
                             </Bits.Content>
                         </Bits.Item>
                     {:else}
-                        {@const active = isItemActive(item.active, item.href)}
+                        {@const active = isItemActive(item.active, item.href, item.exact)}
+                        {@const href = safeHref(item.href)}
                         <Bits.Item value={iv} class={classes.item}>
-                            <Bits.Link href={safeHref(item.href)} {active} onSelect={item.onSelect}>
+                            <Bits.Link {href} {active} onSelect={item.onSelect}>
                                 {#snippet child({ props }: { props: Record<string, unknown> })}
                                     <Link
-                                        href={safeHref(item.href)}
+                                        {href}
                                         target={item.target}
                                         raw
-                                        exact
+                                        exact={item.exact ?? exact}
                                         {active}
                                         disabled={disabled || item.disabled}
                                         {...props}
@@ -470,17 +555,18 @@
 {/snippet}
 
 {#snippet verticalLeaf(item: NavigationMenuItem, index: number)}
-    {@const active = isItemActive(item.active, item.href)}
-    {@const collapsedTip = collapsed && (item.tooltip ?? tooltip)}
+    {@const active = isItemActive(item.active, item.href, item.exact)}
+    {@const collapsedTip = effectiveCollapsed && (item.tooltip ?? tooltip)}
     {#if collapsedTip}
         <Tooltip text={itemLabelText(item)} side="right" {...asProps(item.tooltip ?? tooltip)}>
             <Link
                 href={safeHref(item.href)}
                 target={item.target}
                 raw
-                exact
+                exact={item.exact ?? exact}
                 {active}
                 disabled={disabled || item.disabled}
+                onclick={item.onSelect}
                 data-active={active ? '' : undefined}
                 class={linkClass(item)}
             >
@@ -492,9 +578,10 @@
             href={safeHref(item.href)}
             target={item.target}
             raw
-            exact
+            exact={item.exact ?? exact}
             {active}
             disabled={disabled || item.disabled}
+            onclick={item.onSelect}
             data-active={active ? '' : undefined}
             class={linkClass(item)}
         >
@@ -513,7 +600,7 @@
         {:else if kind === 'label'}
             <span class={classes.label}>{itemLabelText(item)}</span>
         {:else if isDropdown(item)}
-            {#if collapsed}
+            {#if effectiveCollapsed}
                 <Popover
                     side="right"
                     sideOffset={8}
@@ -588,7 +675,15 @@
         class={classes.root}
         {...restProps}
     >
-        <ul class={classes.list}>
+        <ul bind:this={listEl} class={classes.list}>
+            {#if showHighlight}
+                <div
+                    class={classes.highlight}
+                    style={highlightStyle}
+                    data-navigation-menu-highlight=""
+                    aria-hidden="true"
+                ></div>
+            {/if}
             {#if listLeading}{@render listLeading()}{/if}
             {#each groups as group, gi (gi)}
                 {#each group as item, index (itemValue(item, gi, index))}

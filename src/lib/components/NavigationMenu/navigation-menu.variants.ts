@@ -3,7 +3,8 @@ import { tv, type VariantProps } from 'tailwind-variants'
 export const navigationMenuVariants = tv({
     slots: {
         root: 'relative',
-        list: 'isolate min-w-0',
+        list: 'relative isolate min-w-0',
+        highlight: 'absolute z-0 rounded-full transition-all duration-200',
         item: 'min-w-0',
         label: 'w-full flex items-center gap-1.5 px-2.5 pt-3 pb-1 font-semibold text-xs uppercase tracking-wider text-on-surface-variant',
         separator: 'shrink-0 bg-outline-variant',
@@ -34,6 +35,11 @@ export const navigationMenuVariants = tv({
         childLinkIcon: 'size-5 shrink-0 mt-0.5 text-on-surface-variant group-hover:text-primary',
         childLinkLabel: 'font-medium text-on-surface truncate',
         childLinkDescription: 'text-xs text-on-surface-variant/80 line-clamp-2',
+        childGroup: 'min-w-0',
+        childGroupLabel:
+            'px-2.5 pt-1 pb-1.5 font-semibold text-xs uppercase tracking-wider text-on-surface-variant',
+        childGroupList: 'grid gap-0.5',
+        linkBadgeDot: 'absolute top-1 end-1 size-2 rounded-full bg-error ring-2 ring-surface',
         content: [
             'top-0 left-0 w-full sm:absolute sm:w-auto',
             'data-[motion=from-start]:animate-[nav-from-start_250ms_ease]',
@@ -66,33 +72,33 @@ export const navigationMenuVariants = tv({
             link: ''
         },
         color: {
-            primary: '',
-            secondary: '',
-            tertiary: '',
-            success: '',
-            warning: '',
-            error: '',
-            info: '',
-            surface: ''
+            primary: { highlight: 'bg-primary' },
+            secondary: { highlight: 'bg-secondary' },
+            tertiary: { highlight: 'bg-tertiary' },
+            success: { highlight: 'bg-success' },
+            warning: { highlight: 'bg-warning' },
+            error: { highlight: 'bg-error' },
+            info: { highlight: 'bg-info' },
+            surface: { highlight: 'bg-on-surface-variant' }
         },
         orientation: {
             horizontal: {
                 root: 'w-full',
-                list: 'flex items-center gap-1',
-                separator: 'mx-1 h-5 w-px self-center'
+                list: 'flex items-center gap-1 overflow-x-auto scrollbar-thin',
+                separator: 'mx-1 h-5 w-px self-center',
+                highlight: 'bottom-0 h-0.5'
             },
             vertical: {
                 root: 'w-full',
                 list: 'flex flex-col gap-0.5',
                 item: 'flex flex-col',
                 separator: 'my-1 h-px w-full',
-                childList: 'ms-3.5 mt-0.5 gap-0.5 border-s border-outline-variant p-0 ps-2'
+                childList: 'ms-3.5 mt-0.5 gap-0.5 border-s border-outline-variant p-0 ps-2',
+                highlight: 'start-0 w-0.5'
             }
         },
         highlight: {
-            true: {
-                link: 'data-[active]:before:absolute data-[active]:before:bg-current data-[active]:before:rounded-full'
-            },
+            true: '',
             false: ''
         },
         collapsed: {
@@ -116,7 +122,9 @@ export const navigationMenuVariants = tv({
         {
             orientation: 'horizontal',
             class: {
-                link: 'px-2.5 py-1.5',
+                item: 'shrink-0',
+                link: 'w-auto px-2.5 py-1.5',
+                label: 'w-auto shrink-0 whitespace-nowrap',
                 childList: 'min-w-60'
             }
         },
@@ -128,20 +136,6 @@ export const navigationMenuVariants = tv({
         {
             orientation: 'vertical',
             class: { link: 'px-2.5 py-1.5' }
-        },
-        {
-            orientation: 'horizontal',
-            highlight: true,
-            class: {
-                link: 'data-[active]:before:-bottom-1 data-[active]:before:inset-x-2 data-[active]:before:h-0.5'
-            }
-        },
-        {
-            orientation: 'vertical',
-            highlight: true,
-            class: {
-                link: 'data-[active]:before:inset-y-1 data-[active]:before:-start-2 data-[active]:before:w-0.5'
-            }
         },
         {
             variant: 'pill',

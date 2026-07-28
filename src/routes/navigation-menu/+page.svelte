@@ -78,6 +78,135 @@
         { label: 'Pricing', icon: 'lucide:credit-card', href: '/pricing' }
     ]
 
+    const groupedMega: NavigationMenuItem[] = [
+        {
+            label: 'Product',
+            icon: 'lucide:box',
+            children: [
+                {
+                    label: 'Platform',
+                    children: [
+                        { label: 'Analytics', icon: 'lucide:chart-line', href: '/analytics' },
+                        { label: 'Automation', icon: 'lucide:workflow', href: '/automation' },
+                        { label: 'Reports', icon: 'lucide:file-chart-column', href: '/reports' }
+                    ]
+                },
+                {
+                    label: 'Developers',
+                    children: [
+                        { label: 'API', icon: 'lucide:code', href: '/api' },
+                        { label: 'CLI', icon: 'lucide:terminal', href: '/cli' },
+                        { label: 'Webhooks', icon: 'lucide:webhook', href: '/webhooks' }
+                    ]
+                }
+            ]
+        },
+        { label: 'Pricing', icon: 'lucide:credit-card', href: '/pricing' }
+    ]
+
+    const drawerItems: NavigationMenuItem[] = [
+        { label: 'Platform', type: 'label' },
+        { label: 'Home', icon: 'lucide:house', href: '/home' },
+        {
+            label: 'Products',
+            icon: 'lucide:box',
+            children: [
+                {
+                    label: 'Analytics',
+                    description: 'Track engagement and conversions in real time.',
+                    icon: 'lucide:chart-line',
+                    href: '/analytics'
+                },
+                {
+                    label: 'Automation',
+                    description: 'Build no-code workflows across your stack.',
+                    icon: 'lucide:workflow',
+                    href: '/automation'
+                },
+                {
+                    label: 'Reports',
+                    description: 'Schedule and export shareable dashboards.',
+                    icon: 'lucide:file-chart-column',
+                    href: '/reports'
+                },
+                {
+                    label: 'Integrations',
+                    description: 'Connect 100+ third-party tools.',
+                    icon: 'lucide:plug',
+                    href: '/integrations'
+                }
+            ]
+        },
+        {
+            label: 'Solutions',
+            icon: 'lucide:puzzle',
+            children: [
+                {
+                    label: 'By industry',
+                    children: [
+                        { label: 'E-commerce', icon: 'lucide:shopping-cart', href: '/x/ecommerce' },
+                        { label: 'Healthcare', icon: 'lucide:heart-pulse', href: '/x/healthcare' },
+                        { label: 'Finance', icon: 'lucide:landmark', href: '/x/finance' }
+                    ]
+                },
+                {
+                    label: 'By team',
+                    children: [
+                        { label: 'Engineering', icon: 'lucide:code', href: '/x/engineering' },
+                        { label: 'Marketing', icon: 'lucide:megaphone', href: '/x/marketing' },
+                        { label: 'Sales', icon: 'lucide:trending-up', href: '/x/sales' }
+                    ]
+                }
+            ]
+        },
+        {
+            label: 'Resources',
+            icon: 'lucide:library',
+            children: [
+                {
+                    label: 'Guides',
+                    description: 'Step-by-step tutorials.',
+                    icon: 'lucide:compass',
+                    href: '/guides'
+                },
+                {
+                    label: 'Blog',
+                    description: 'Product news and deep dives.',
+                    icon: 'lucide:rss',
+                    href: '/blog'
+                },
+                {
+                    label: 'Webinars',
+                    description: 'Live and on-demand sessions.',
+                    icon: 'lucide:video',
+                    href: '/webinars'
+                },
+                {
+                    label: 'Community',
+                    description: 'Join the discussion.',
+                    icon: 'lucide:users',
+                    href: '/community'
+                },
+                {
+                    label: 'Changelog',
+                    description: 'What shipped, and when.',
+                    icon: 'lucide:git-commit-horizontal',
+                    href: '/changelog'
+                }
+            ]
+        },
+        { label: 'Company', type: 'label' },
+        { label: 'Inbox', icon: 'lucide:inbox', href: '/inbox', badge: 24 },
+        { label: 'Pricing', icon: 'lucide:credit-card', href: '/pricing' },
+        { label: 'Docs', icon: 'lucide:book-open', href: '/docs' },
+        { label: 'Support', icon: 'lucide:life-buoy', href: '/support' },
+        { label: 'Status', icon: 'lucide:activity', href: '/status' },
+        { label: 'Careers', icon: 'lucide:briefcase', href: '/careers', badge: 'New' },
+        { label: 'Settings', icon: 'lucide:settings', href: '/settings' },
+        { label: 'GitHub', icon: 'lucide:github', href: 'https://github.com', target: '_blank' },
+        { label: 'Archived', icon: 'lucide:archive', href: '/archived', disabled: true }
+    ]
+
     const badgedItems: NavigationMenuItem[] = [
         { label: 'Inbox', icon: 'lucide:inbox', href: '/inbox', badge: 12 },
         { label: 'Drafts', icon: 'lucide:file-pen', href: '/drafts', badge: 3 },
@@ -176,6 +305,41 @@
     ]
 
     let verticalValue = $state<string | string[]>(['components'])
+
+    // ---- v2: interactive animated highlight ----
+    let hlActive = $state('overview')
+    const hlItems = $derived<NavigationMenuItem[]>(
+        [
+            { label: 'Overview', value: 'overview', icon: 'lucide:layout-dashboard' },
+            { label: 'Analytics', value: 'analytics', icon: 'lucide:chart-line' },
+            { label: 'Reports', value: 'reports', icon: 'lucide:file-chart-column' },
+            { label: 'Settings', value: 'settings', icon: 'lucide:settings' }
+        ].map((it) => ({
+            ...it,
+            active: hlActive === it.value,
+            onSelect: (e: Event) => {
+                e.preventDefault()
+                hlActive = it.value
+            }
+        }))
+    )
+
+    let hlVerticalActive = $state('inbox')
+    const hlVerticalItems = $derived<NavigationMenuItem[]>(
+        [
+            { label: 'Inbox', value: 'inbox', icon: 'lucide:inbox' },
+            { label: 'Drafts', value: 'drafts', icon: 'lucide:file-pen' },
+            { label: 'Sent', value: 'sent', icon: 'lucide:send' },
+            { label: 'Archive', value: 'archive', icon: 'lucide:archive' }
+        ].map((it) => ({
+            ...it,
+            active: hlVerticalActive === it.value,
+            onSelect: (e: Event) => {
+                e.preventDefault()
+                hlVerticalActive = it.value
+            }
+        }))
+    )
 
     // ---- Real-world: SaaS marketing header ----
     const appNavItems: NavigationMenuItem[] = [
@@ -336,6 +500,49 @@
         <NavigationMenu items={simpleItems} />
     </section>
 
+    <!-- v2: Animated highlight (interactive) -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">
+            Animated Highlight
+            <span
+                class="ms-1 rounded bg-primary-container px-1.5 py-0.5 align-middle text-xs font-medium text-on-primary-container"
+                >v2</span
+            >
+        </h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >highlight</code
+            >, a single indicator bar slides to the active item and resizes to match it (powered by
+            a resize observer). Click the items below to watch it move.
+        </p>
+        <div class="space-y-2">
+            <span class="text-xs font-medium text-on-surface-variant"
+                >Horizontal (link variant)</span
+            >
+            <div class="rounded-lg border border-outline-variant p-2">
+                <NavigationMenu items={hlItems} variant="link" highlight color="primary" />
+            </div>
+            <p class="text-xs text-on-surface-variant">
+                Active: <span class="font-mono text-on-surface">{hlActive}</span>
+            </p>
+        </div>
+        <div class="space-y-2">
+            <span class="text-xs font-medium text-on-surface-variant">Vertical (side bar)</span>
+            <div class="max-w-64 rounded-lg border border-outline-variant p-2">
+                <NavigationMenu
+                    items={hlVerticalItems}
+                    orientation="vertical"
+                    variant="pill"
+                    highlight
+                    color="success"
+                />
+            </div>
+            <p class="text-xs text-on-surface-variant">
+                Active: <span class="font-mono text-on-surface">{hlVerticalActive}</span>
+            </p>
+        </div>
+    </section>
+
     <!-- Mega menu -->
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Dropdown / Mega Menu</h2>
@@ -348,6 +555,17 @@
         <NavigationMenu items={megaItems} />
     </section>
 
+    <!-- Grouped columns -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Grouped Columns</h2>
+        <p class="text-sm text-on-surface-variant">
+            A mega-menu child with its own <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">children</code
+            > renders as a labeled column (section header + links), for larger navigation menus.
+        </p>
+        <NavigationMenu items={groupedMega} />
+    </section>
+
     <!-- Variants -->
     <section class="space-y-4">
         <h2 class="text-lg font-semibold text-on-surface">Variants</h2>
@@ -355,6 +573,9 @@
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">pill</code>
             (default) vs
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">link</code>.
+            With
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">highlight</code
+            >, an indicator bar slides to and resizes with the active item.
         </p>
         <div class="space-y-3">
             <NavigationMenu items={simpleItems} variant="pill" />
@@ -458,9 +679,25 @@
             >, the menu collapses into a toggle button + Drawer below
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
                 >mobileBreakpoint</code
-            > (default 768px). Resize the window to try it. It auto-closes on navigation.
+            > (default 768px). On desktop it stays a horizontal menu; resize the window below 768px to
+            see it swap to a toggle button + Drawer. It auto-closes on navigation.
         </p>
         <NavigationMenu items={megaItems} drawer />
+
+        <h3 class="pt-2 text-base font-semibold text-on-surface">Always-on drawer (stress test)</h3>
+        <p class="text-sm text-on-surface-variant">
+            Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >mobileBreakpoint</code
+            >
+            to
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >(min-width: 0px)</code
+            > to keep the drawer at every width, so you can exercise it on desktop too. This heavy set
+            mixes section labels, mega-menus (with descriptions), grouped-column submenus, badges, an
+            external link and a disabled item, plus enough entries to force the drawer to scroll. Panel
+            width stays fixed while sections expand/collapse.
+        </p>
+        <NavigationMenu items={drawerItems} drawer mobileBreakpoint="(min-width: 0px)" />
     </section>
 
     <!-- Avatars & Chips -->
@@ -623,6 +860,25 @@
         </div>
     </section>
 
+    <!-- Horizontal overflow -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Horizontal Overflow</h2>
+        <p class="text-sm text-on-surface-variant">
+            When a horizontal menu has more items than fit its container, it scrolls sideways
+            instead of squeezing items: labels never collapse to bare icons, and mega-menus still
+            open below (the dropdown is not clipped by the scroll area). The narrow frame below
+            forces the overflow. Scroll it horizontally, then open Products.
+        </p>
+        <div class="max-w-xl rounded-lg border border-outline-variant p-2">
+            <NavigationMenu items={drawerItems.filter((i) => i.type !== 'label')} />
+        </div>
+    </section>
+
+    <p class="text-sm text-on-surface-variant">
+        Keyboard and accessibility (roving focus, arrow keys, Escape, aria-current, real anchors)
+        are provided by the underlying primitive.
+    </p>
+
     <!-- Dashboard rail -->
     <section class="space-y-3">
         <h3 class="text-base font-semibold text-on-surface">Dashboard Rail (collapsible)</h3>
@@ -630,11 +886,13 @@
             class="flex h-80 overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest"
         >
             <aside
-                class="flex shrink-0 flex-col border-e border-outline-variant p-2 transition-[width] duration-200"
+                class="flex shrink-0 flex-col border-e border-outline-variant transition-[width] duration-200"
                 class:w-16={railCollapsed}
                 class:w-52={!railCollapsed}
             >
-                <div class="min-h-0 scrollbar-thin flex-1 overflow-y-auto">
+                <div
+                    class="min-h-0 scrollbar-thin flex-1 overflow-y-auto p-2 [scrollbar-gutter:stable]"
+                >
                     <NavigationMenu
                         items={dashboardItems}
                         orientation="vertical"
@@ -642,18 +900,20 @@
                         tooltip
                     />
                 </div>
-                <Button
-                    size="sm"
-                    variant="ghost"
-                    color="surface"
-                    class="mt-2 w-full shrink-0"
-                    leadingIcon={railCollapsed
-                        ? 'lucide:panel-left-open'
-                        : 'lucide:panel-left-close'}
-                    onclick={() => (railCollapsed = !railCollapsed)}
-                >
-                    {#if !railCollapsed}Collapse{/if}
-                </Button>
+                <div class="p-2 pt-0">
+                    <Button
+                        variant="ghost"
+                        color="surface"
+                        class="w-full shrink-0"
+                        label={railCollapsed ? undefined : 'Collapse'}
+                        leadingIcon={railCollapsed
+                            ? 'lucide:panel-left-open'
+                            : 'lucide:panel-left-close'}
+                        onclick={() => (railCollapsed = !railCollapsed)}
+                    >
+                        <!-- {#if !railCollapsed}Collapse{/if} -->
+                    </Button>
+                </div>
             </aside>
             <div class="min-w-0 flex-1 p-6">
                 <h4 class="text-lg font-bold text-on-surface">Good morning, Ada</h4>
@@ -664,10 +924,4 @@
             </div>
         </div>
     </section>
-
-    <p class="text-sm text-on-surface-variant">
-        Keyboard and accessibility (roving focus, arrow keys, Escape, aria-current, real anchors)
-        are provided by the underlying primitive. Future work: animated highlight indicator,
-        submenus in mega-menu content.
-    </p>
 </div>

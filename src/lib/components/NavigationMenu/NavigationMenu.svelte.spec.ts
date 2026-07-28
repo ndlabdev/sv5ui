@@ -131,6 +131,13 @@ describe('NavigationMenu', () => {
             const { container } = render(NavigationMenu, { items, labelKey: 'name' })
             expect(container.textContent).toContain('Custom')
         })
+
+        it('keeps horizontal items from collapsing and scrolls on overflow', () => {
+            const { container } = render(NavigationMenu, { items: linkItems })
+            expect(container.querySelector('.overflow-x-auto')).not.toBeNull()
+            const item = container.querySelector('[data-navigation-menu-item]')
+            expect(item?.className).toContain('shrink-0')
+        })
     })
 
     // ==================== HORIZONTAL DROPDOWN ====================
@@ -336,6 +343,101 @@ describe('NavigationMenu', () => {
             await vi.waitFor(() => {
                 expect(toggle.getAttribute('aria-expanded')).toBe('true')
             })
+        })
+    })
+
+    // ==================== V2 FEATURES ====================
+
+    describe('grouped-column submenus', () => {
+        const groupedMega: NavigationMenuItem[] = [
+            {
+                label: 'Product',
+                children: [
+                    {
+                        label: 'Analytics',
+                        children: [
+                            { label: 'Web', href: '/web' },
+                            { label: 'Mobile', href: '/mobile' }
+                        ]
+                    },
+                    { label: 'Pricing', href: '/pricing' }
+                ]
+            }
+        ]
+
+        it('renders a mega-menu child with children as a labeled group', async () => {
+            render(NavigationMenu, { items: groupedMega })
+            const trigger = document.querySelector('button[aria-expanded]') as HTMLButtonElement
+            await trigger.click()
+            await vi.waitFor(() => {
+                expect(document.querySelector('a[href="/web"]')).not.toBeNull()
+                expect(document.querySelector('a[href="/mobile"]')).not.toBeNull()
+            })
+            expect(document.body.textContent).toContain('Analytics')
+        })
+
+        it('still renders flat leaf children alongside groups', async () => {
+            render(NavigationMenu, { items: groupedMega })
+            const trigger = document.querySelector('button[aria-expanded]') as HTMLButtonElement
+            await trigger.click()
+            await vi.waitFor(() => {
+                expect(document.querySelector('a[href="/pricing"]')).not.toBeNull()
+            })
+        })
+    })
+
+    describe('highlight indicator', () => {
+        it('renders a moving highlight bar when highlight is set', () => {
+            const { container } = render(NavigationMenu, {
+                items: linkItems,
+                highlight: true,
+                variant: 'link'
+            })
+            expect(container.querySelector('[data-navigation-menu-highlight]')).not.toBeNull()
+        })
+
+        it('does not render the highlight bar by default', () => {
+            const { container } = render(NavigationMenu, { items: linkItems })
+            expect(container.querySelector('[data-navigation-menu-highlight]')).toBeNull()
+        })
+
+        it('suppresses the highlight bar for the pill variant', () => {
+            const { container } = render(NavigationMenu, {
+                items: linkItems,
+                highlight: true,
+                variant: 'pill'
+            })
+            expect(container.querySelector('[data-navigation-menu-highlight]')).toBeNull()
+        })
+    })
+
+    describe('collapsed badge dot', () => {
+        it('shows a dot on collapsed items that have a badge', () => {
+            const items: NavigationMenuItem[] = [
+                { label: 'Inbox', icon: 'lucide:inbox', href: '/inbox', badge: 5 }
+            ]
+            const { container } = render(NavigationMenu, {
+                items,
+                orientation: 'vertical',
+                collapsed: true
+            })
+            expect(container.querySelector('[data-navigation-menu-badge-dot]')).not.toBeNull()
+        })
+
+        it('has no dot when not collapsed', () => {
+            const items: NavigationMenuItem[] = [
+                { label: 'Inbox', icon: 'lucide:inbox', href: '/inbox', badge: 5 }
+            ]
+            const { container } = render(NavigationMenu, { items, orientation: 'vertical' })
+            expect(container.querySelector('[data-navigation-menu-badge-dot]')).toBeNull()
+        })
+    })
+
+    describe('exact / prefix active', () => {
+        it('accepts exact={false} and renders links', () => {
+            const items: NavigationMenuItem[] = [{ label: 'Docs', href: '/docs' }]
+            const { container } = render(NavigationMenu, { items, exact: false })
+            expect(container.querySelector('a[href="/docs"]')).not.toBeNull()
         })
     })
 })
