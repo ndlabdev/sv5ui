@@ -70,6 +70,7 @@
         { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' },
         { href: '/table', label: 'Table', icon: 'lucide:table' },
         { href: '/carousel', label: 'Carousel', icon: 'lucide:gallery-horizontal' },
+        { href: '/lightbox', label: 'Lightbox', icon: 'lucide:image' },
         { href: '/editor', label: 'Editor', icon: 'lucide:pen-tool' },
         { href: '/banner', label: 'Banner', icon: 'lucide:megaphone' },
         { href: '/stepper', label: 'Stepper', icon: 'lucide:list-ordered' },
