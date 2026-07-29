@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { createRawSnippet } from 'svelte'
 import { render } from 'vitest-browser-svelte'
 import { page } from 'vitest/browser'
 import NavigationMenu from './NavigationMenu.svelte'
@@ -438,6 +439,61 @@ describe('NavigationMenu', () => {
             const items: NavigationMenuItem[] = [{ label: 'Docs', href: '/docs' }]
             const { container } = render(NavigationMenu, { items, exact: false })
             expect(container.querySelector('a[href="/docs"]')).not.toBeNull()
+        })
+    })
+
+    // ==================== STACKED & ITEM ACTIONS ====================
+
+    describe('stacked', () => {
+        const findLabel = (container: Element, text: string) =>
+            [...container.querySelectorAll('a span')].find(
+                (s) => s.textContent?.trim() === text
+            ) as HTMLElement | undefined
+
+        it('stacks the icon over a small visible label', () => {
+            const { container } = render(NavigationMenu, { items: linkItems, stacked: true })
+            expect(container.querySelector('a')?.className).toContain('flex-col')
+            expect(findLabel(container, 'Home')?.className).not.toContain('sr-only')
+        })
+
+        it('keeps labels visible when collapsed + stacked', () => {
+            const { container } = render(NavigationMenu, {
+                items: linkItems,
+                orientation: 'vertical',
+                collapsed: true,
+                stacked: true
+            })
+            expect(findLabel(container, 'Home')?.className).toContain('not-sr-only')
+        })
+    })
+
+    describe('item actions', () => {
+        const actions = createRawSnippet(() => ({
+            render: () => '<button data-test-action type="button">Act</button>'
+        }))
+
+        it('renders item actions as a sibling of the anchor, never nested inside it', () => {
+            const { container } = render(NavigationMenu, {
+                items: linkItems,
+                orientation: 'vertical',
+                itemActions: actions
+            })
+            const action = container.querySelector('[data-test-action]')
+            expect(action).not.toBeNull()
+            expect(action?.closest('a')).toBeNull()
+        })
+
+        it('renders actions beside a group label as well as leaf items', () => {
+            const items: NavigationMenuItem[] = [
+                { label: 'Group', type: 'label' },
+                { label: 'Item', href: '/item' }
+            ]
+            const { container } = render(NavigationMenu, {
+                items,
+                orientation: 'vertical',
+                itemActions: actions
+            })
+            expect(container.querySelectorAll('[data-test-action]').length).toBe(2)
         })
     })
 })

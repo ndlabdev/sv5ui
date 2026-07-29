@@ -6,7 +6,7 @@ export const navigationMenuVariants = tv({
         list: 'relative isolate min-w-0',
         highlight: 'absolute z-0 rounded-full transition-all duration-200',
         item: 'min-w-0',
-        label: 'w-full flex items-center gap-1.5 px-2.5 pt-3 pb-1 font-semibold text-xs uppercase tracking-wider text-on-surface-variant',
+        label: 'w-full flex items-center gap-1.5 px-2.5 pt-3 pb-1 font-semibold text-sm text-on-surface-variant',
         separator: 'shrink-0 bg-outline-variant',
         link: [
             'group relative w-full flex items-center gap-1.5 font-medium text-sm rounded-md',
@@ -22,7 +22,7 @@ export const navigationMenuVariants = tv({
         linkTrailingBadge: 'shrink-0',
         linkTrailingIcon: 'size-5 shrink-0 transform transition-transform duration-200',
         childList: 'grid gap-0.5 p-2',
-        childLabel: 'font-semibold text-xs text-on-surface-variant px-2 py-1.5',
+        childLabel: 'font-semibold text-sm text-on-surface-variant px-2 py-1.5',
         childItem: 'min-w-0',
         childLink: [
             'group relative w-full flex items-start gap-2.5 px-2.5 py-2 rounded-lg',
@@ -36,10 +36,12 @@ export const navigationMenuVariants = tv({
         childLinkLabel: 'font-medium text-on-surface truncate',
         childLinkDescription: 'text-xs text-on-surface-variant/80 line-clamp-2',
         childGroup: 'min-w-0',
-        childGroupLabel:
-            'px-2.5 pt-1 pb-1.5 font-semibold text-xs uppercase tracking-wider text-on-surface-variant',
+        childGroupLabel: 'px-2.5 pt-1 pb-1.5 font-semibold text-sm text-on-surface-variant',
         childGroupList: 'grid gap-0.5',
         linkBadgeDot: 'absolute top-1 end-1 size-2 rounded-full bg-error ring-2 ring-surface',
+        itemActions:
+            'absolute end-1.5 top-1/2 z-10 -translate-y-1/2 inline-flex items-center opacity-0 transition-opacity focus-within:opacity-100 group-hover/nav-row:opacity-100 has-[[data-state=open]]:opacity-100',
+        labelActions: 'ms-auto inline-flex items-center',
         content: [
             'top-0 left-0 w-full sm:absolute sm:w-auto',
             'data-[motion=from-start]:animate-[nav-from-start_250ms_ease]',
@@ -109,6 +111,10 @@ export const navigationMenuVariants = tv({
             },
             false: ''
         },
+        stacked: {
+            true: '',
+            false: ''
+        },
         contentOrientation: {
             horizontal: {},
             vertical: {}
@@ -136,6 +142,28 @@ export const navigationMenuVariants = tv({
         {
             orientation: 'vertical',
             class: { link: 'px-2.5 py-1.5' }
+        },
+        {
+            stacked: true,
+            class: {
+                link: 'flex-col justify-center gap-1 py-2',
+                linkLabel: 'text-xs leading-tight',
+                linkTrailing: 'hidden'
+            }
+        },
+        {
+            orientation: 'horizontal',
+            stacked: true,
+            class: {
+                list: 'justify-around overflow-visible',
+                item: 'flex-1',
+                link: 'w-full'
+            }
+        },
+        {
+            collapsed: true,
+            stacked: true,
+            class: { linkLabel: 'not-sr-only text-xs leading-tight' }
         },
         {
             variant: 'pill',
@@ -252,6 +280,7 @@ export const navigationMenuVariants = tv({
         orientation: 'horizontal',
         highlight: false,
         collapsed: false,
+        stacked: false,
         contentOrientation: 'horizontal',
         disabled: false
     }

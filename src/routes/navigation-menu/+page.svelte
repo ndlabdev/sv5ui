@@ -1,11 +1,13 @@
 <script lang="ts">
     import {
         NavigationMenu,
+        DropdownMenu,
         Button,
         Avatar,
         Badge,
         Link,
-        type NavigationMenuItem
+        type NavigationMenuItem,
+        type DropdownMenuItem
     } from '$lib/index.js'
 
     const colors = [
@@ -302,6 +304,36 @@
         { label: 'Features', href: '/features' },
         { label: 'Pricing', href: '/pricing' },
         { label: 'Docs', href: '/docs' }
+    ]
+
+    const tabBarItems: NavigationMenuItem[] = [
+        { label: 'Home', icon: 'lucide:house', href: '/home', active: true },
+        { label: 'Samples', icon: 'lucide:play-circle', href: '/samples' },
+        { label: 'Explore', icon: 'lucide:compass', href: '/explore' },
+        { label: 'Library', icon: 'lucide:bookmark', href: '/library', badge: 3 }
+    ]
+
+    const railLabelItems: NavigationMenuItem[] = [
+        { label: 'Home', icon: 'lucide:house', href: '/home' },
+        { label: 'Search', icon: 'lucide:search', href: '/search' },
+        { label: 'Users', icon: 'lucide:users', href: '/users', active: true },
+        { label: 'Settings', icon: 'lucide:settings', href: '/settings' }
+    ]
+
+    const sidebarItems: NavigationMenuItem[] = [
+        { label: 'Personal', type: 'label' },
+        { label: 'Design System', icon: 'lucide:folder', href: '/ds', active: true },
+        { label: 'Travel', icon: 'lucide:folder', href: '/travel' },
+        { label: 'Teams', type: 'label' },
+        { label: 'Engineering', icon: 'lucide:folder', href: '/eng' },
+        { label: 'Marketing', icon: 'lucide:folder', href: '/mkt' }
+    ]
+
+    const rowMenuItems: DropdownMenuItem[] = [
+        { label: 'Rename', icon: 'lucide:pencil' },
+        { label: 'Duplicate', icon: 'lucide:copy' },
+        { type: 'separator' },
+        { label: 'Delete', icon: 'lucide:trash-2', color: 'error' }
     ]
 
     let verticalValue = $state<string | string[]>(['components'])
@@ -871,6 +903,75 @@
         </p>
         <div class="max-w-xl rounded-lg border border-outline-variant p-2">
             <NavigationMenu items={drawerItems.filter((i) => i.type !== 'label')} />
+        </div>
+    </section>
+
+    <!-- Bottom tab bar -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Bottom Tab Bar</h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >stacked</code
+            > on a horizontal menu, each item stacks its icon over a small label and the tabs share the
+            width equally, like a mobile app's bottom bar. A badge collapses to a dot on the icon (see
+            Library).
+        </p>
+        <div
+            class="mx-auto max-w-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-1.5"
+        >
+            <NavigationMenu items={tabBarItems} stacked color="primary" />
+        </div>
+    </section>
+
+    <!-- Rail with labels -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Rail With Labels</h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >stacked</code
+            > on a vertical menu, the rail stays compact but keeps a small label under each icon, so no
+            tooltip is needed.
+        </p>
+        <div class="w-24 rounded-lg border border-outline-variant p-1.5">
+            <NavigationMenu items={railLabelItems} orientation="vertical" stacked color="primary" />
+        </div>
+    </section>
+
+    <!-- Trailing actions on hover (Notion / Linear) -->
+    {#snippet sidebarActions({ item }: { item: NavigationMenuItem })}
+        {#if item.type === 'label'}
+            <Button icon="lucide:plus" size="xs" variant="ghost" color="surface" aria-label="Add" />
+        {:else}
+            <DropdownMenu items={rowMenuItems}>
+                {#snippet children({ props })}
+                    <Button
+                        {...props}
+                        icon="lucide:ellipsis"
+                        size="xs"
+                        variant="ghost"
+                        color="surface"
+                        aria-label="More actions"
+                    />
+                {/snippet}
+            </DropdownMenu>
+        {/if}
+    {/snippet}
+
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Trailing Actions On Hover</h2>
+        <p class="text-sm text-on-surface-variant">
+            The <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >itemActions</code
+            > snippet adds interactive controls (a DropdownMenu, an add button) that appear on row hover,
+            like Notion or Linear. They render outside the anchor so the menu stays valid and clickable.
+            Hover a row to reveal its menu; group headers show an add button.
+        </p>
+        <div class="max-w-72 rounded-lg border border-outline-variant p-2">
+            <NavigationMenu
+                items={sidebarItems}
+                orientation="vertical"
+                itemActions={sidebarActions}
+            />
         </div>
     </section>
 

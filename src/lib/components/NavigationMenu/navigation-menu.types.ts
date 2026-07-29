@@ -194,6 +194,14 @@ export interface NavigationMenuProps extends Omit<
      */
     highlight?: boolean
 
+    /**
+     * Stack each item's icon above a small label. With `orientation='horizontal'`
+     * this yields a mobile-style bottom tab bar (equal-width tabs); with
+     * `orientation='vertical'` a compact rail that keeps labels under the icons.
+     * @default false
+     */
+    stacked?: boolean
+
     /** Visual style of items. @default 'pill' */
     variant?: NonNullable<NavigationMenuVariantProps['variant']>
 
@@ -293,8 +301,14 @@ export interface NavigationMenuProps extends Omit<
     itemLeading?: Snippet<[NavigationMenuItemSlotProps]>
     /** Custom label renderer. */
     itemLabel?: Snippet<[NavigationMenuItemSlotProps]>
-    /** Custom trailing content (badge/chevron). */
+    /** Custom trailing content (badge/chevron), rendered inside the link. */
     itemTrailing?: Snippet<[NavigationMenuItemSlotProps]>
+    /**
+     * Interactive row actions (e.g. a DropdownMenu) shown on hover. Vertical
+     * only. Rendered as a sibling of the anchor (never nested inside it) so
+     * buttons/menus stay valid; also renders beside a `type: 'label'` header.
+     */
+    itemActions?: Snippet<[NavigationMenuItemSlotProps]>
     /** Custom dropdown/mega-menu content renderer. */
     itemContent?: Snippet<[NavigationMenuContentSlotProps]>
     /** Content before the list. */

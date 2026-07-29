@@ -40,6 +40,7 @@
         collapsed = false,
         collapsible = true,
         highlight = false,
+        stacked = false,
         variant = config.defaultVariants.variant ?? 'pill',
         color = config.defaultVariants.color ?? 'primary',
         trailingIcon = icons.chevronDown,
@@ -67,6 +68,7 @@
         itemLeading,
         itemLabel,
         itemTrailing,
+        itemActions,
         itemContent,
         listLeading,
         listTrailing,
@@ -214,6 +216,7 @@
             orientation: effectiveOrientation,
             highlight,
             collapsed: effectiveCollapsed,
+            stacked,
             contentOrientation,
             disabled
         })
@@ -271,6 +274,12 @@
         }),
         linkBadgeDot: variantSlots.linkBadgeDot({
             class: [config.slots.linkBadgeDot, ui?.linkBadgeDot]
+        }),
+        itemActions: variantSlots.itemActions({
+            class: [config.slots.itemActions, ui?.itemActions]
+        }),
+        labelActions: variantSlots.labelActions({
+            class: [config.slots.labelActions, ui?.labelActions]
         }),
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
         viewportWrapper: variantSlots.viewportWrapper({
@@ -394,7 +403,7 @@
     {@render leading(item, index, open)}
     {@render label(item, index, open)}
     {@render trailing(item, index, open, isTrigger)}
-    {#if effectiveCollapsed && item.badge !== undefined}
+    {#if (effectiveCollapsed || stacked) && item.badge !== undefined}
         <span class={classes.linkBadgeDot} data-navigation-menu-badge-dot="" aria-hidden="true"
         ></span>
     {/if}
@@ -556,7 +565,7 @@
 
 {#snippet verticalLeaf(item: NavigationMenuItem, index: number)}
     {@const active = isItemActive(item.active, item.href, item.exact)}
-    {@const collapsedTip = effectiveCollapsed && (item.tooltip ?? tooltip)}
+    {@const collapsedTip = effectiveCollapsed && !stacked && (item.tooltip ?? tooltip)}
     {#if collapsedTip}
         <Tooltip text={itemLabelText(item)} side="right" {...asProps(item.tooltip ?? tooltip)}>
             <Link
@@ -594,11 +603,18 @@
     {@const iv = itemValue(item, groupIndex, index)}
     {@const kind = resolvedType(item)}
     {@const open = openSet.has(iv)}
-    <li class={classes.item}>
+    <li class={[classes.item, itemActions ? 'group/nav-row relative' : '']}>
         {#if itemSlot}
             {@render itemSlot({ item, index, active: !!item.active, open })}
         {:else if kind === 'label'}
-            <span class={classes.label}>{itemLabelText(item)}</span>
+            <div class={classes.label}>
+                {itemLabelText(item)}
+                {#if itemActions}
+                    <span class={classes.labelActions}>
+                        {@render itemActions({ item, index, active: !!item.active, open })}
+                    </span>
+                {/if}
+            </div>
         {:else if isDropdown(item)}
             {#if effectiveCollapsed}
                 <Popover
@@ -663,6 +679,11 @@
             {/if}
         {:else}
             {@render verticalLeaf(item, index)}
+            {#if itemActions}
+                <div class={classes.itemActions}>
+                    {@render itemActions({ item, index, active: !!item.active, open })}
+                </div>
+            {/if}
         {/if}
     </li>
 {/snippet}
