@@ -29,6 +29,7 @@
         { href: '/footer', label: 'Footer', icon: 'lucide:panel-bottom-dashed' },
         { href: '/header', label: 'Header', icon: 'lucide:panel-top-dashed' },
         { href: '/main', label: 'Main', icon: 'lucide:layout-template' },
+        { href: '/sidebar', label: 'Sidebar', icon: 'lucide:panel-left' },
         { href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' },
         { href: '/drawer', label: 'Drawer', icon: 'lucide:panel-bottom' },
         { href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' },
