@@ -44,6 +44,8 @@ export const iconsDefaults = {
     trash: 'lucide:trash-2',
     search: 'lucide:search',
     star: 'lucide:star',
+    folder: 'lucide:folder',
+    folderOpen: 'lucide:folder-open',
     sortAsc: 'lucide:chevron-up',
     sortDesc: 'lucide:chevron-down',
     sortDefault: 'lucide:chevrons-up-down'
