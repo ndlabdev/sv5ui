@@ -1,0 +1,1028 @@
+<script lang="ts">
+    import {
+        NavigationMenu,
+        DropdownMenu,
+        Button,
+        Avatar,
+        Badge,
+        Link,
+        type NavigationMenuItem,
+        type DropdownMenuItem
+    } from '$lib/index.js'
+
+    const colors = [
+        'primary',
+        'secondary',
+        'tertiary',
+        'success',
+        'warning',
+        'error',
+        'info',
+        'surface'
+    ] as const
+
+    const simpleItems: NavigationMenuItem[] = [
+        { label: 'Home', icon: 'lucide:house', href: '/navigation-menu', active: true },
+        { label: 'Docs', icon: 'lucide:book-open', href: '/getting-started' },
+        { label: 'Components', icon: 'lucide:shapes', href: '/button' },
+        { label: 'GitHub', icon: 'lucide:github', href: 'https://github.com', target: '_blank' }
+    ]
+
+    const megaItems: NavigationMenuItem[] = [
+        {
+            label: 'Product',
+            icon: 'lucide:box',
+            children: [
+                {
+                    label: 'Analytics',
+                    description: 'Track engagement and conversions in real time.',
+                    icon: 'lucide:chart-line',
+                    href: '/analytics'
+                },
+                {
+                    label: 'Automation',
+                    description: 'Build no-code workflows across your stack.',
+                    icon: 'lucide:workflow',
+                    href: '/automation'
+                },
+                {
+                    label: 'Reports',
+                    description: 'Schedule and export shareable dashboards.',
+                    icon: 'lucide:file-chart-column',
+                    href: '/reports'
+                }
+            ]
+        },
+        {
+            label: 'Resources',
+            icon: 'lucide:library',
+            children: [
+                {
+                    label: 'Guides',
+                    description: 'Step-by-step tutorials.',
+                    icon: 'lucide:compass',
+                    href: '/guides'
+                },
+                {
+                    label: 'Blog',
+                    description: 'Product news and deep dives.',
+                    icon: 'lucide:rss',
+                    href: '/blog'
+                },
+                {
+                    label: 'Changelog',
+                    description: 'What shipped, and when.',
+                    icon: 'lucide:git-commit-horizontal',
+                    href: '/changelog'
+                }
+            ]
+        },
+        { label: 'Pricing', icon: 'lucide:credit-card', href: '/pricing' }
+    ]
+
+    const groupedMega: NavigationMenuItem[] = [
+        {
+            label: 'Product',
+            icon: 'lucide:box',
+            children: [
+                {
+                    label: 'Platform',
+                    children: [
+                        { label: 'Analytics', icon: 'lucide:chart-line', href: '/analytics' },
+                        { label: 'Automation', icon: 'lucide:workflow', href: '/automation' },
+                        { label: 'Reports', icon: 'lucide:file-chart-column', href: '/reports' }
+                    ]
+                },
+                {
+                    label: 'Developers',
+                    children: [
+                        { label: 'API', icon: 'lucide:code', href: '/api' },
+                        { label: 'CLI', icon: 'lucide:terminal', href: '/cli' },
+                        { label: 'Webhooks', icon: 'lucide:webhook', href: '/webhooks' }
+                    ]
+                }
+            ]
+        },
+        { label: 'Pricing', icon: 'lucide:credit-card', href: '/pricing' }
+    ]
+
+    const drawerItems: NavigationMenuItem[] = [
+        { label: 'Platform', type: 'label' },
+        { label: 'Home', icon: 'lucide:house', href: '/home' },
+        {
+            label: 'Products',
+            icon: 'lucide:box',
+            children: [
+                {
+                    label: 'Analytics',
+                    description: 'Track engagement and conversions in real time.',
+                    icon: 'lucide:chart-line',
+                    href: '/analytics'
+                },
+                {
+                    label: 'Automation',
+                    description: 'Build no-code workflows across your stack.',
+                    icon: 'lucide:workflow',
+                    href: '/automation'
+                },
+                {
+                    label: 'Reports',
+                    description: 'Schedule and export shareable dashboards.',
+                    icon: 'lucide:file-chart-column',
+                    href: '/reports'
+                },
+                {
+                    label: 'Integrations',
+                    description: 'Connect 100+ third-party tools.',
+                    icon: 'lucide:plug',
+                    href: '/integrations'
+                }
+            ]
+        },
+        {
+            label: 'Solutions',
+            icon: 'lucide:puzzle',
+            children: [
+                {
+                    label: 'By industry',
+                    children: [
+                        { label: 'E-commerce', icon: 'lucide:shopping-cart', href: '/x/ecommerce' },
+                        { label: 'Healthcare', icon: 'lucide:heart-pulse', href: '/x/healthcare' },
+                        { label: 'Finance', icon: 'lucide:landmark', href: '/x/finance' }
+                    ]
+                },
+                {
+                    label: 'By team',
+                    children: [
+                        { label: 'Engineering', icon: 'lucide:code', href: '/x/engineering' },
+                        { label: 'Marketing', icon: 'lucide:megaphone', href: '/x/marketing' },
+                        { label: 'Sales', icon: 'lucide:trending-up', href: '/x/sales' }
+                    ]
+                }
+            ]
+        },
+        {
+            label: 'Resources',
+            icon: 'lucide:library',
+            children: [
+                {
+                    label: 'Guides',
+                    description: 'Step-by-step tutorials.',
+                    icon: 'lucide:compass',
+                    href: '/guides'
+                },
+                {
+                    label: 'Blog',
+                    description: 'Product news and deep dives.',
+                    icon: 'lucide:rss',
+                    href: '/blog'
+                },
+                {
+                    label: 'Webinars',
+                    description: 'Live and on-demand sessions.',
+                    icon: 'lucide:video',
+                    href: '/webinars'
+                },
+                {
+                    label: 'Community',
+                    description: 'Join the discussion.',
+                    icon: 'lucide:users',
+                    href: '/community'
+                },
+                {
+                    label: 'Changelog',
+                    description: 'What shipped, and when.',
+                    icon: 'lucide:git-commit-horizontal',
+                    href: '/changelog'
+                }
+            ]
+        },
+        { label: 'Company', type: 'label' },
+        { label: 'Inbox', icon: 'lucide:inbox', href: '/inbox', badge: 24 },
+        { label: 'Pricing', icon: 'lucide:credit-card', href: '/pricing' },
+        { label: 'Docs', icon: 'lucide:book-open', href: '/docs' },
+        { label: 'Support', icon: 'lucide:life-buoy', href: '/support' },
+        { label: 'Status', icon: 'lucide:activity', href: '/status' },
+        { label: 'Careers', icon: 'lucide:briefcase', href: '/careers', badge: 'New' },
+        { label: 'Settings', icon: 'lucide:settings', href: '/settings' },
+        { label: 'GitHub', icon: 'lucide:github', href: 'https://github.com', target: '_blank' },
+        { label: 'Archived', icon: 'lucide:archive', href: '/archived', disabled: true }
+    ]
+
+    const badgedItems: NavigationMenuItem[] = [
+        { label: 'Inbox', icon: 'lucide:inbox', href: '/inbox', badge: 12 },
+        { label: 'Drafts', icon: 'lucide:file-pen', href: '/drafts', badge: 3 },
+        { label: 'Archive', icon: 'lucide:archive', href: '/archive' },
+        { label: 'Spam', icon: 'lucide:shield-alert', href: '/spam', disabled: true }
+    ]
+
+    const groupedItems: NavigationMenuItem[][] = [
+        [
+            { label: 'Dashboard', icon: 'lucide:layout-dashboard', href: '/dashboard' },
+            { label: 'Projects', icon: 'lucide:folder-kanban', href: '/projects' }
+        ],
+        [
+            { label: 'Settings', icon: 'lucide:settings', href: '/settings' },
+            { label: 'Members', icon: 'lucide:users', href: '/members' }
+        ]
+    ]
+
+    const verticalItems: NavigationMenuItem[] = [
+        { label: 'Getting Started', icon: 'lucide:rocket', href: '/getting-started' },
+        {
+            label: 'Components',
+            value: 'components',
+            icon: 'lucide:shapes',
+            defaultOpen: true,
+            children: [
+                { label: 'Button', href: '/button' },
+                { label: 'Tree', href: '/tree' },
+                { label: 'Navigation Menu', href: '/navigation-menu', active: true }
+            ]
+        },
+        {
+            label: 'Composables',
+            value: 'composables',
+            icon: 'lucide:function-square',
+            children: [
+                { label: 'useMediaQuery', href: '/use-media-query' },
+                { label: 'useClipboard', href: '/use-clipboard' }
+            ]
+        },
+        { label: 'Customization', icon: 'lucide:palette', href: '/customization' }
+    ]
+
+    const collapsedItems: NavigationMenuItem[] = [
+        { label: 'Home', icon: 'lucide:house', href: '/home' },
+        { label: 'Search', icon: 'lucide:search', href: '/search' },
+        { label: 'Notifications', icon: 'lucide:bell', href: '/notifications', badge: 5 },
+        { label: 'Profile', icon: 'lucide:user', href: '/profile' }
+    ]
+
+    const teamItems: NavigationMenuItem[] = [
+        {
+            label: 'Ada Lovelace',
+            value: 'ada',
+            avatar: { text: 'AL' },
+            chip: { color: 'success' },
+            children: [
+                {
+                    label: 'Profile',
+                    description: 'View and edit your profile',
+                    icon: 'lucide:user',
+                    href: '/profile'
+                },
+                {
+                    label: 'Billing',
+                    description: 'Plans and invoices',
+                    icon: 'lucide:credit-card',
+                    href: '/billing'
+                },
+                {
+                    label: 'Sign out',
+                    description: 'End your session',
+                    icon: 'lucide:log-out',
+                    href: '/logout'
+                }
+            ]
+        },
+        { label: 'Grace Hopper', avatar: { text: 'GH' }, href: '/u/grace' },
+        {
+            label: 'Alan Turing',
+            avatar: { text: 'AT' },
+            chip: { color: 'warning' },
+            href: '/u/alan'
+        }
+    ]
+
+    const featuredItems: NavigationMenuItem[] = [
+        { label: 'Solutions', value: 'solutions', type: 'trigger' },
+        { label: 'Enterprise', href: '/enterprise' }
+    ]
+
+    const ctaItems: NavigationMenuItem[] = [
+        { label: 'Features', href: '/features' },
+        { label: 'Pricing', href: '/pricing' },
+        { label: 'Docs', href: '/docs' }
+    ]
+
+    const tabBarItems: NavigationMenuItem[] = [
+        { label: 'Home', icon: 'lucide:house', href: '/home', active: true },
+        { label: 'Samples', icon: 'lucide:play-circle', href: '/samples' },
+        { label: 'Explore', icon: 'lucide:compass', href: '/explore' },
+        { label: 'Library', icon: 'lucide:bookmark', href: '/library', badge: 3 }
+    ]
+
+    const railLabelItems: NavigationMenuItem[] = [
+        { label: 'Home', icon: 'lucide:house', href: '/home' },
+        { label: 'Search', icon: 'lucide:search', href: '/search' },
+        { label: 'Users', icon: 'lucide:users', href: '/users', active: true },
+        { label: 'Settings', icon: 'lucide:settings', href: '/settings' }
+    ]
+
+    const sidebarItems: NavigationMenuItem[] = [
+        { label: 'Personal', type: 'label' },
+        { label: 'Design System', icon: 'lucide:folder', href: '/ds', active: true },
+        { label: 'Travel', icon: 'lucide:folder', href: '/travel' },
+        { label: 'Teams', type: 'label' },
+        { label: 'Engineering', icon: 'lucide:folder', href: '/eng' },
+        { label: 'Marketing', icon: 'lucide:folder', href: '/mkt' }
+    ]
+
+    const rowMenuItems: DropdownMenuItem[] = [
+        { label: 'Rename', icon: 'lucide:pencil' },
+        { label: 'Duplicate', icon: 'lucide:copy' },
+        { type: 'separator' },
+        { label: 'Delete', icon: 'lucide:trash-2', color: 'error' }
+    ]
+
+    let verticalValue = $state<string | string[]>(['components'])
+
+    // ---- v2: interactive animated highlight ----
+    let hlActive = $state('overview')
+    const hlItems = $derived<NavigationMenuItem[]>(
+        [
+            { label: 'Overview', value: 'overview', icon: 'lucide:layout-dashboard' },
+            { label: 'Analytics', value: 'analytics', icon: 'lucide:chart-line' },
+            { label: 'Reports', value: 'reports', icon: 'lucide:file-chart-column' },
+            { label: 'Settings', value: 'settings', icon: 'lucide:settings' }
+        ].map((it) => ({
+            ...it,
+            active: hlActive === it.value,
+            onSelect: (e: Event) => {
+                e.preventDefault()
+                hlActive = it.value
+            }
+        }))
+    )
+
+    let hlVerticalActive = $state('inbox')
+    const hlVerticalItems = $derived<NavigationMenuItem[]>(
+        [
+            { label: 'Inbox', value: 'inbox', icon: 'lucide:inbox' },
+            { label: 'Drafts', value: 'drafts', icon: 'lucide:file-pen' },
+            { label: 'Sent', value: 'sent', icon: 'lucide:send' },
+            { label: 'Archive', value: 'archive', icon: 'lucide:archive' }
+        ].map((it) => ({
+            ...it,
+            active: hlVerticalActive === it.value,
+            onSelect: (e: Event) => {
+                e.preventDefault()
+                hlVerticalActive = it.value
+            }
+        }))
+    )
+
+    // ---- Real-world: SaaS marketing header ----
+    const appNavItems: NavigationMenuItem[] = [
+        {
+            label: 'Product',
+            children: [
+                {
+                    label: 'Overview',
+                    description: 'The all-in-one platform',
+                    icon: 'lucide:layout-dashboard',
+                    href: '/product'
+                },
+                {
+                    label: 'Analytics',
+                    description: 'Real-time insights',
+                    icon: 'lucide:chart-line',
+                    href: '/analytics'
+                },
+                {
+                    label: 'Automations',
+                    description: 'Workflows without code',
+                    icon: 'lucide:workflow',
+                    href: '/automations'
+                },
+                {
+                    label: 'Integrations',
+                    description: '120+ connected apps',
+                    icon: 'lucide:blocks',
+                    href: '/integrations'
+                }
+            ]
+        },
+        {
+            label: 'Solutions',
+            children: [
+                {
+                    label: 'Startups',
+                    description: 'Ship fast on a budget',
+                    icon: 'lucide:rocket',
+                    href: '/startups'
+                },
+                {
+                    label: 'Enterprise',
+                    description: 'Security and scale',
+                    icon: 'lucide:building-2',
+                    href: '/enterprise'
+                },
+                {
+                    label: 'Agencies',
+                    description: 'Manage many clients',
+                    icon: 'lucide:users',
+                    href: '/agencies'
+                }
+            ]
+        },
+        { label: 'Pricing', href: '/pricing' },
+        { label: 'Customers', href: '/customers' },
+        { label: 'Blog', href: '/blog' }
+    ]
+
+    // ---- Real-world: documentation sidebar ----
+    const docsNavItems: NavigationMenuItem[] = [
+        { label: 'Get Started', type: 'label' },
+        { label: 'Introduction', icon: 'lucide:book-open', href: '/docs/introduction' },
+        { label: 'Installation', icon: 'lucide:download', href: '/docs/installation' },
+        { label: 'Reference', type: 'label' },
+        {
+            label: 'Components',
+            value: 'docs-components',
+            icon: 'lucide:shapes',
+            defaultOpen: true,
+            children: [
+                { label: 'Button', href: '/docs/button' },
+                { label: 'Navigation Menu', href: '/navigation-menu', active: true },
+                { label: 'Tree', href: '/docs/tree' },
+                { label: 'Table', href: '/docs/table' }
+            ]
+        },
+        {
+            label: 'Composables',
+            value: 'docs-composables',
+            icon: 'lucide:function-square',
+            children: [
+                { label: 'useMediaQuery', href: '/docs/use-media-query' },
+                { label: 'useClipboard', href: '/docs/use-clipboard' },
+                { label: 'useFocusTrap', href: '/docs/use-focus-trap' }
+            ]
+        },
+        {
+            label: 'Theming',
+            value: 'docs-theming',
+            icon: 'lucide:palette',
+            children: [
+                { label: 'Colors', href: '/docs/colors' },
+                { label: 'Dark mode', href: '/docs/dark-mode' }
+            ]
+        },
+        { label: 'Changelog', icon: 'lucide:history', href: '/docs/changelog' }
+    ]
+
+    // ---- Real-world: dashboard rail ----
+    const dashboardItems: NavigationMenuItem[][] = [
+        [
+            { label: 'Dashboard', icon: 'lucide:layout-dashboard', href: '/app', active: true },
+            { label: 'Inbox', icon: 'lucide:inbox', href: '/app/inbox', badge: 8 },
+            {
+                label: 'Projects',
+                value: 'projects',
+                icon: 'lucide:folder-kanban',
+                children: [
+                    {
+                        label: 'Active',
+                        description: '12 in progress',
+                        icon: 'lucide:circle-play',
+                        href: '/app/projects/active'
+                    },
+                    {
+                        label: 'Archived',
+                        description: 'Read-only history',
+                        icon: 'lucide:archive',
+                        href: '/app/projects/archived'
+                    },
+                    {
+                        label: 'Templates',
+                        description: 'Reusable blueprints',
+                        icon: 'lucide:copy',
+                        href: '/app/projects/templates'
+                    }
+                ]
+            },
+            { label: 'Calendar', icon: 'lucide:calendar', href: '/app/calendar' }
+        ],
+        [
+            { label: 'Team', icon: 'lucide:users', href: '/app/team' },
+            { label: 'Settings', icon: 'lucide:settings', href: '/app/settings' }
+        ]
+    ]
+
+    let railCollapsed = $state(false)
+</script>
+
+<div class="space-y-8">
+    <h1 class="text-2xl font-bold text-on-surface">Navigation Menu</h1>
+
+    <!-- Basic -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Basic Usage</h2>
+        <p class="text-sm text-on-surface-variant">
+            A horizontal navigation bar. Each item with an <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">href</code
+            >
+            renders a real
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">&lt;a&gt;</code
+            >
+            (crawlable for SEO); external links get an icon and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">rel</code> automatically.
+        </p>
+        <NavigationMenu items={simpleItems} />
+    </section>
+
+    <!-- v2: Animated highlight (interactive) -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">
+            Animated Highlight
+            <span
+                class="ms-1 rounded bg-primary-container px-1.5 py-0.5 align-middle text-xs font-medium text-on-primary-container"
+                >v2</span
+            >
+        </h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >highlight</code
+            >, a single indicator bar slides to the active item and resizes to match it (powered by
+            a resize observer). Click the items below to watch it move.
+        </p>
+        <div class="space-y-2">
+            <span class="text-xs font-medium text-on-surface-variant"
+                >Horizontal (link variant)</span
+            >
+            <div class="rounded-lg border border-outline-variant p-2">
+                <NavigationMenu items={hlItems} variant="link" highlight color="primary" />
+            </div>
+            <p class="text-xs text-on-surface-variant">
+                Active: <span class="font-mono text-on-surface">{hlActive}</span>
+            </p>
+        </div>
+        <div class="space-y-2">
+            <span class="text-xs font-medium text-on-surface-variant">Vertical (side bar)</span>
+            <div class="max-w-64 rounded-lg border border-outline-variant p-2">
+                <NavigationMenu
+                    items={hlVerticalItems}
+                    orientation="vertical"
+                    variant="pill"
+                    highlight
+                    color="success"
+                />
+            </div>
+            <p class="text-xs text-on-surface-variant">
+                Active: <span class="font-mono text-on-surface">{hlVerticalActive}</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Mega menu -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Dropdown / Mega Menu</h2>
+        <p class="text-sm text-on-surface-variant">
+            Items with <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >children</code
+            > open a dropdown on hover or click. Children support icons and descriptions for a mega-menu
+            layout. Keyboard, focus and dismissal are handled by the primitive.
+        </p>
+        <NavigationMenu items={megaItems} />
+    </section>
+
+    <!-- Grouped columns -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Grouped Columns</h2>
+        <p class="text-sm text-on-surface-variant">
+            A mega-menu child with its own <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">children</code
+            > renders as a labeled column (section header + links), for larger navigation menus.
+        </p>
+        <NavigationMenu items={groupedMega} />
+    </section>
+
+    <!-- Variants -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Variants</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">pill</code>
+            (default) vs
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">link</code>.
+            With
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">highlight</code
+            >, an indicator bar slides to and resizes with the active item.
+        </p>
+        <div class="space-y-3">
+            <NavigationMenu items={simpleItems} variant="pill" />
+            <NavigationMenu items={simpleItems} variant="link" highlight />
+        </div>
+    </section>
+
+    <!-- Colors -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Colors</h2>
+        <div class="space-y-2">
+            {#each colors as color (color)}
+                <div class="flex items-center gap-4">
+                    <span class="w-20 text-sm text-on-surface-variant">{color}</span>
+                    <NavigationMenu items={simpleItems} {color} />
+                </div>
+            {/each}
+        </div>
+    </section>
+
+    <!-- Badges -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Badges & Disabled</h2>
+        <p class="text-sm text-on-surface-variant">
+            Add a <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >badge</code
+            >
+            (count or
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >BadgeProps</code
+            >) to an item; disabled items are non-interactive.
+        </p>
+        <NavigationMenu items={badgedItems} />
+    </section>
+
+    <!-- Groups -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Groups</h2>
+        <p class="text-sm text-on-surface-variant">
+            Pass an array of arrays to render separated groups.
+        </p>
+        <NavigationMenu items={groupedItems} />
+    </section>
+
+    <!-- Vertical -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Vertical</h2>
+        <p class="text-sm text-on-surface-variant">
+            Vertical menus render a <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">&lt;nav&gt;</code
+            >
+            landmark with inline expandable sections.
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type="multiple"</code
+            >
+            (default) keeps several open;
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >type="single"</code
+            > closes others.
+        </p>
+        <div class="grid max-w-3xl gap-6 sm:grid-cols-2">
+            <div class="rounded-lg border border-outline-variant p-2">
+                <NavigationMenu
+                    items={verticalItems}
+                    orientation="vertical"
+                    bind:value={verticalValue}
+                />
+            </div>
+            <div class="rounded-lg border border-outline-variant p-2">
+                <NavigationMenu
+                    items={verticalItems}
+                    orientation="vertical"
+                    type="single"
+                    variant="link"
+                />
+            </div>
+        </div>
+    </section>
+
+    <!-- Collapsed -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Collapsed Rail</h2>
+        <p class="text-sm text-on-surface-variant">
+            A vertical menu with <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">collapsed</code
+            >
+            shows icons only; labels surface via
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">tooltip</code>.
+        </p>
+        <div class="w-14 rounded-lg border border-outline-variant p-2">
+            <NavigationMenu items={collapsedItems} orientation="vertical" collapsed tooltip />
+        </div>
+    </section>
+
+    <!-- Responsive drawer -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Responsive Drawer</h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >drawer</code
+            >, the menu collapses into a toggle button + Drawer below
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >mobileBreakpoint</code
+            > (default 768px). On desktop it stays a horizontal menu; resize the window below 768px to
+            see it swap to a toggle button + Drawer. It auto-closes on navigation.
+        </p>
+        <NavigationMenu items={megaItems} drawer />
+
+        <h3 class="pt-2 text-base font-semibold text-on-surface">Always-on drawer (stress test)</h3>
+        <p class="text-sm text-on-surface-variant">
+            Set <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >mobileBreakpoint</code
+            >
+            to
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >(min-width: 0px)</code
+            > to keep the drawer at every width, so you can exercise it on desktop too. This heavy set
+            mixes section labels, mega-menus (with descriptions), grouped-column submenus, badges, an
+            external link and a disabled item, plus enough entries to force the drawer to scroll. Panel
+            width stays fixed while sections expand/collapse.
+        </p>
+        <NavigationMenu items={drawerItems} drawer mobileBreakpoint="(min-width: 0px)" />
+    </section>
+
+    <!-- Avatars & Chips -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Avatars & Status Chips</h2>
+        <p class="text-sm text-on-surface-variant">
+            Items accept an <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >avatar</code
+            >
+            (leading) and a
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">chip</code>
+            status dot, useful for account or team switchers.
+        </p>
+        <NavigationMenu items={teamItems} variant="link" />
+    </section>
+
+    <!-- Custom content snippet -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Custom Dropdown Content</h2>
+        <p class="text-sm text-on-surface-variant">
+            Replace a dropdown's body entirely with the <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">itemContent</code
+            > snippet for a fully custom mega-menu (promos, grids, media).
+        </p>
+        <NavigationMenu items={featuredItems}>
+            {#snippet itemContent({ item })}
+                <div class="grid gap-4 p-4 sm:w-120 sm:grid-cols-2">
+                    <Link
+                        href="/get-started"
+                        raw
+                        class="flex flex-col justify-end gap-1 rounded-lg bg-primary p-4 text-on-primary"
+                    >
+                        <span class="text-base font-semibold">{item.label}</span>
+                        <span class="text-xs opacity-90">Start building in minutes.</span>
+                    </Link>
+                    <div class="grid gap-1">
+                        <Link
+                            href="/templates"
+                            raw
+                            class="rounded-md px-3 py-2 text-sm hover:bg-surface-container-high"
+                        >
+                            <span class="font-medium text-on-surface">Templates</span>
+                            <p class="text-xs text-on-surface-variant">
+                                Production-ready starters.
+                            </p>
+                        </Link>
+                        <Link
+                            href="/integrations"
+                            raw
+                            class="rounded-md px-3 py-2 text-sm hover:bg-surface-container-high"
+                        >
+                            <span class="font-medium text-on-surface">Integrations</span>
+                            <p class="text-xs text-on-surface-variant">Connect your tools.</p>
+                        </Link>
+                    </div>
+                </div>
+            {/snippet}
+        </NavigationMenu>
+    </section>
+
+    <!-- List trailing + arrow -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">List Slots & Arrow</h2>
+        <p class="text-sm text-on-surface-variant">
+            Add content around the items with <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">listLeading</code
+            >
+            /
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >listTrailing</code
+            >, and point an
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">arrow</code>
+            at the open dropdown.
+        </p>
+        <div
+            class="flex items-center justify-between gap-4 rounded-lg border border-outline-variant p-2"
+        >
+            <NavigationMenu items={ctaItems} variant="link" arrow>
+                {#snippet listLeading()}
+                    <li class="me-2 flex items-center gap-1.5 font-semibold text-on-surface">
+                        <Avatar text="S5" size="2xs" />
+                        <span>SV5UI</span>
+                    </li>
+                {/snippet}
+                {#snippet listTrailing()}
+                    <li class="ms-2 flex items-center gap-2">
+                        <Button size="sm" variant="ghost">Sign in</Button>
+                        <Button size="sm">Get started</Button>
+                    </li>
+                {/snippet}
+            </NavigationMenu>
+            <Badge label="v1" color="primary" variant="soft" />
+        </div>
+    </section>
+
+    <!-- ==================== REAL-WORLD EXAMPLES ==================== -->
+    <section class="space-y-4 border-t border-outline-variant pt-8">
+        <h2 class="text-xl font-bold text-on-surface">Real-world Examples</h2>
+        <p class="text-sm text-on-surface-variant">
+            Complete compositions to sanity-check stability: a marketing header, a docs sidebar and
+            a collapsible dashboard rail.
+        </p>
+    </section>
+
+    <!-- SaaS marketing header -->
+    <section class="space-y-3">
+        <h3 class="text-base font-semibold text-on-surface">SaaS Marketing Header</h3>
+        <div class="rounded-xl border border-outline-variant bg-surface-container-lowest">
+            <header
+                class="flex items-center gap-4 rounded-t-xl border-b border-outline-variant px-4 py-2.5"
+            >
+                <Link
+                    href="/navigation-menu"
+                    raw
+                    class="flex shrink-0 items-center gap-2 font-bold text-on-surface"
+                >
+                    <span
+                        class="grid size-7 place-items-center rounded-md bg-primary text-on-primary"
+                    >
+                        S5
+                    </span>
+                    <span class="hidden sm:inline">Acme</span>
+                </Link>
+                <NavigationMenu items={appNavItems} variant="link" class="hidden md:block" drawer />
+                <div class="ms-auto flex items-center gap-2">
+                    <Button size="sm" variant="ghost" class="hidden sm:inline-flex">Sign in</Button>
+                    <Button size="sm">Get started</Button>
+                </div>
+            </header>
+            <div class="grid place-items-center gap-2 px-4 py-14 text-center">
+                <h4 class="text-2xl font-bold text-on-surface">Build faster with Acme</h4>
+                <p class="max-w-md text-sm text-on-surface-variant">
+                    Hover the nav items to open the mega-menus. Resize below 768px to collapse into
+                    a drawer.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation layout -->
+    <section class="space-y-3">
+        <h3 class="text-base font-semibold text-on-surface">Documentation Sidebar</h3>
+        <div
+            class="flex overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest"
+        >
+            <aside class="w-60 shrink-0 border-e border-outline-variant p-3">
+                <NavigationMenu items={docsNavItems} orientation="vertical" variant="link" />
+            </aside>
+            <div class="min-w-0 flex-1 space-y-3 p-6">
+                <h4 class="text-xl font-bold text-on-surface">Navigation Menu</h4>
+                <p class="text-sm text-on-surface-variant">
+                    The active page is highlighted in the sidebar via <code
+                        class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                        >active</code
+                    >; sections expand inline and keep their scroll position.
+                </p>
+                <div class="h-24 rounded-lg bg-surface-container"></div>
+                <div class="h-24 rounded-lg bg-surface-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Horizontal overflow -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Horizontal Overflow</h2>
+        <p class="text-sm text-on-surface-variant">
+            When a horizontal menu has more items than fit its container, it scrolls sideways
+            instead of squeezing items: labels never collapse to bare icons, and mega-menus still
+            open below (the dropdown is not clipped by the scroll area). The narrow frame below
+            forces the overflow. Scroll it horizontally, then open Products.
+        </p>
+        <div class="max-w-xl rounded-lg border border-outline-variant p-2">
+            <NavigationMenu items={drawerItems.filter((i) => i.type !== 'label')} />
+        </div>
+    </section>
+
+    <!-- Bottom tab bar -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Bottom Tab Bar</h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >stacked</code
+            > on a horizontal menu, each item stacks its icon over a small label and the tabs share the
+            width equally, like a mobile app's bottom bar. A badge collapses to a dot on the icon (see
+            Library).
+        </p>
+        <div
+            class="mx-auto max-w-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-1.5"
+        >
+            <NavigationMenu items={tabBarItems} stacked color="primary" />
+        </div>
+    </section>
+
+    <!-- Rail with labels -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Rail With Labels</h2>
+        <p class="text-sm text-on-surface-variant">
+            With <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >stacked</code
+            > on a vertical menu, the rail stays compact but keeps a small label under each icon, so no
+            tooltip is needed.
+        </p>
+        <div class="w-24 rounded-lg border border-outline-variant p-1.5">
+            <NavigationMenu items={railLabelItems} orientation="vertical" stacked color="primary" />
+        </div>
+    </section>
+
+    <!-- Trailing actions on hover (Notion / Linear) -->
+    {#snippet sidebarActions({ item }: { item: NavigationMenuItem })}
+        {#if item.type === 'label'}
+            <Button icon="lucide:plus" size="xs" variant="ghost" color="surface" aria-label="Add" />
+        {:else}
+            <DropdownMenu items={rowMenuItems}>
+                {#snippet children({ props })}
+                    <Button
+                        {...props}
+                        icon="lucide:ellipsis"
+                        size="xs"
+                        variant="ghost"
+                        color="surface"
+                        aria-label="More actions"
+                    />
+                {/snippet}
+            </DropdownMenu>
+        {/if}
+    {/snippet}
+
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Trailing Actions On Hover</h2>
+        <p class="text-sm text-on-surface-variant">
+            The <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >itemActions</code
+            > snippet adds interactive controls (a DropdownMenu, an add button) that appear on row hover,
+            like Notion or Linear. They render outside the anchor so the menu stays valid and clickable.
+            Hover a row to reveal its menu; group headers show an add button.
+        </p>
+        <div class="max-w-72 rounded-lg border border-outline-variant p-2">
+            <NavigationMenu
+                items={sidebarItems}
+                orientation="vertical"
+                itemActions={sidebarActions}
+            />
+        </div>
+    </section>
+
+    <p class="text-sm text-on-surface-variant">
+        Keyboard and accessibility (roving focus, arrow keys, Escape, aria-current, real anchors)
+        are provided by the underlying primitive.
+    </p>
+
+    <!-- Dashboard rail -->
+    <section class="space-y-3">
+        <h3 class="text-base font-semibold text-on-surface">Dashboard Rail (collapsible)</h3>
+        <div
+            class="flex h-80 overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest"
+        >
+            <aside
+                class="flex shrink-0 flex-col border-e border-outline-variant transition-[width] duration-200"
+                class:w-16={railCollapsed}
+                class:w-52={!railCollapsed}
+            >
+                <div
+                    class="min-h-0 scrollbar-thin flex-1 overflow-y-auto p-2 [scrollbar-gutter:stable]"
+                >
+                    <NavigationMenu
+                        items={dashboardItems}
+                        orientation="vertical"
+                        collapsed={railCollapsed}
+                        tooltip
+                    />
+                </div>
+                <div class="p-2 pt-0">
+                    <Button
+                        variant="ghost"
+                        color="surface"
+                        class="w-full shrink-0"
+                        label={railCollapsed ? undefined : 'Collapse'}
+                        leadingIcon={railCollapsed
+                            ? 'lucide:panel-left-open'
+                            : 'lucide:panel-left-close'}
+                        onclick={() => (railCollapsed = !railCollapsed)}
+                    >
+                        <!-- {#if !railCollapsed}Collapse{/if} -->
+                    </Button>
+                </div>
+            </aside>
+            <div class="min-w-0 flex-1 p-6">
+                <h4 class="text-lg font-bold text-on-surface">Good morning, Ada</h4>
+                <p class="text-sm text-on-surface-variant">
+                    Toggle the rail to collapse it to icons; labels then surface as tooltips on
+                    hover. Badges (e.g. Inbox) stay hidden while collapsed.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
