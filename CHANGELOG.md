@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Sidebar** — collapsible dashboard sidebar rendering its navigation through NavigationMenu: `variant` `sidebar`/`floating`/`inset`, `side` left/right, `collapsible` `icon`/`offcanvas`/`none` with bindable `collapsed`/`open`, composable header, edge `rail` toggle, localStorage `persist`, and a `slideover`/`drawer` mobile menu. Header height follows `--ui-header-height` so it aligns with a sibling Header. ([#176](https://github.com/ndlabdev/sv5ui/pull/176))
 - **SidebarTrigger** — viewport-aware toggle button for the app header: collapses the sidebar on desktop, opens the mobile menu below `breakpoint`. ([#176](https://github.com/ndlabdev/sv5ui/pull/176))
 
+### Fixed
+
+- **Sidebar** — `collapsible="offcanvas"` now marks the collapsed sidebar `inert` and `aria-hidden`, so its links no longer take keyboard focus or reach assistive tech while off screen. ([#180](https://github.com/ndlabdev/sv5ui/pull/180))
+- **Sidebar** — the edge rail, footer toggle and `SidebarTrigger` expose `aria-expanded`. ([#180](https://github.com/ndlabdev/sv5ui/pull/180))
+
+### Changed
+
+- **Sidebar** — added a bindable `api` handle (`collapsed`, `open`, `below`, `state`, `toggle`, `expand`, `collapse`) that `SidebarTrigger` accepts, so a trigger rendered outside the sidebar no longer repeats `breakpoint` or the bindable state. ([#180](https://github.com/ndlabdev/sv5ui/pull/180))
+
 ## [2.4.0] - 2026-07-19
 
 ### Added

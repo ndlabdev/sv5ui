@@ -144,6 +144,34 @@ describe('Sidebar', () => {
             const root = container.firstElementChild as HTMLElement
             expect(root.style.width).toBe('0px')
         })
+
+        it('should make offcanvas-collapsed content inert and hidden from assistive tech', async () => {
+            const { container } = render(Sidebar, {
+                items,
+                collapsible: 'offcanvas',
+                collapsed: true
+            })
+            const root = container.firstElementChild as HTMLElement
+            expect(root.hasAttribute('inert')).toBe(true)
+            expect(root.getAttribute('aria-hidden')).toBe('true')
+
+            const link = container.querySelector('a') as HTMLAnchorElement
+            link.focus()
+            expect(document.activeElement).not.toBe(link)
+        })
+
+        it('should not be inert while expanded', async () => {
+            const { container } = render(Sidebar, { items, collapsible: 'offcanvas' })
+            const root = container.firstElementChild as HTMLElement
+            expect(root.hasAttribute('inert')).toBe(false)
+            expect(root.getAttribute('aria-hidden')).toBeNull()
+        })
+
+        it('should expose aria-expanded on the footer toggle', async () => {
+            const { container } = render(Sidebar, { items, toggle: true })
+            const toggle = container.querySelector('button[aria-label="Collapse sidebar"]')
+            expect(toggle!.getAttribute('aria-expanded')).toBe('true')
+        })
     })
 
     // ==================== VARIANT ====================
@@ -211,9 +239,11 @@ describe('Sidebar', () => {
             const root = container.firstElementChild as HTMLElement
             const rail = container.querySelector('button.cursor-col-resize') as HTMLButtonElement
             expect(rail).not.toBeNull()
+            expect(rail.getAttribute('aria-expanded')).toBe('true')
             rail.click()
             await tick()
             expect(root.dataset.collapsed).toBe('true')
+            expect(rail.getAttribute('aria-expanded')).toBe('false')
         })
     })
 })

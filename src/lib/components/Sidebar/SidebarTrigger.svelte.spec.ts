@@ -22,4 +22,29 @@ describe('SidebarTrigger', () => {
         const { container } = render(SidebarTrigger, { color: 'primary', variant: 'solid' })
         expect(container.querySelector('button')).not.toBeNull()
     })
+
+    it('should expose aria-expanded from the collapsed prop', async () => {
+        const { container } = render(SidebarTrigger, { collapsed: false })
+        expect(container.querySelector('button')!.getAttribute('aria-expanded')).toBe('true')
+    })
+
+    it('should delegate to the sidebar api when given one', async () => {
+        let toggled = 0
+        const api = {
+            collapsed: false,
+            open: false,
+            below: false,
+            state: 'expanded' as const,
+            toggle: () => {
+                toggled += 1
+            },
+            expand: () => {},
+            collapse: () => {}
+        }
+        const { container } = render(SidebarTrigger, { api })
+        const button = container.querySelector('button') as HTMLButtonElement
+        expect(button.getAttribute('aria-expanded')).toBe('true')
+        button.click()
+        expect(toggled).toBe(1)
+    })
 })

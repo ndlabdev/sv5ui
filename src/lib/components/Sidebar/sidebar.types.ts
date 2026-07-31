@@ -15,6 +15,29 @@ export type SidebarCollapsible = 'icon' | 'offcanvas' | 'none'
 export type SidebarMode = 'slideover' | 'drawer'
 export type SidebarState = 'expanded' | 'collapsed'
 
+export interface SidebarApi {
+    /** Desktop collapsed state. */
+    readonly collapsed: boolean
+
+    /** Mobile menu open state. */
+    readonly open: boolean
+
+    /** Whether the viewport is below `breakpoint`, so the mobile menu is in play. */
+    readonly below: boolean
+
+    /** `'collapsed'` when the desktop sidebar is collapsed, otherwise `'expanded'`. */
+    readonly state: SidebarState
+
+    /** Toggles the mobile menu below `breakpoint`, the collapsed rail above it. */
+    toggle: () => void
+
+    /** Opens the mobile menu below `breakpoint`, expands the sidebar above it. */
+    expand: () => void
+
+    /** Closes the mobile menu below `breakpoint`, collapses the sidebar above it. */
+    collapse: () => void
+}
+
 export type SidebarPersist =
     | boolean
     | {
@@ -66,6 +89,13 @@ export type SidebarProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
      * @default 'lg'
      */
     breakpoint?: SidebarBreakpoint
+
+    /**
+     * Bindable imperative controller, for external buttons such as a
+     * `SidebarTrigger` rendered in a Header. Carries the viewport awareness so
+     * the breakpoint only has to be declared here.
+     */
+    api?: SidebarApi
 
     /**
      * Bindable desktop collapsed state.

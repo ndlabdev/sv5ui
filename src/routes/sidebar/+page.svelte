@@ -10,7 +10,7 @@
         Avatar,
         Link
     } from '$lib/index.js'
-    import type { NavigationMenuItem, SidebarProps, SidebarMode } from '$lib/index.js'
+    import type { NavigationMenuItem, SidebarProps, SidebarMode, SidebarApi } from '$lib/index.js'
 
     const items: NavigationMenuItem[][] = [
         [
@@ -87,8 +87,7 @@
     let mode = $state<SidebarMode>('slideover')
     let mobileSide = $state<'left' | 'right'>('left')
 
-    let appCollapsed = $state(false)
-    let appOpen = $state(false)
+    let appApi = $state<SidebarApi>()
 
     const stats = [
         { label: 'Revenue', value: '$48.2k', delta: '+12.5%', icon: 'lucide:dollar-sign' },
@@ -168,11 +167,10 @@
         <div class="flex h-168 overflow-hidden rounded-xl bg-surface ring ring-outline-variant">
             <Sidebar
                 {items}
-                bind:collapsed={appCollapsed}
-                bind:open={appOpen}
+                bind:api={appApi}
+                breakpoint="md"
                 collapsible="icon"
                 rail
-                breakpoint="md"
                 mode="slideover"
                 header={brand}
                 footer={person}
@@ -187,11 +185,7 @@
                 >
                     {#snippet titleSlot()}
                         <div class="flex items-center gap-1">
-                            <SidebarTrigger
-                                bind:collapsed={appCollapsed}
-                                bind:open={appOpen}
-                                breakpoint="md"
-                            />
+                            <SidebarTrigger api={appApi} />
                             <span class="text-sm font-semibold text-on-surface">Dashboard</span>
                         </div>
                     {/snippet}
@@ -353,7 +347,7 @@
             {/if}
             <div class="flex min-w-0 flex-1 flex-col">
                 <div
-                    class="flex h-14 shrink-0 items-center gap-2 border-b border-outline-variant bg-surface px-3"
+                    class="flex h-(--ui-header-height) shrink-0 items-center gap-2 border-b border-outline-variant bg-surface px-3"
                 >
                     <SidebarTrigger bind:collapsed breakpoint="sm" />
                     <span class="text-sm font-semibold text-on-surface">Dashboard</span>

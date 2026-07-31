@@ -7,10 +7,14 @@
 <script lang="ts">
     import Button from '../Button/Button.svelte'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
+    import { useMediaQuery } from '../../hooks/useMediaQuery/index.js'
 
     const icons = getComponentConfig('icons', iconsDefaults)
 
+    const BREAKPOINT_PX = { sm: 640, md: 768, lg: 1024, xl: 1280 }
+
     let {
+        api,
         collapsed = $bindable(undefined),
         open = $bindable(undefined),
         breakpoint = 'lg',
@@ -21,19 +25,23 @@
         ...restProps
     }: Props = $props()
 
-    const breakpointPx = { sm: 640, md: 768, lg: 1024, xl: 1280 } as const
+    const media = useMediaQuery(() => `(max-width: ${BREAKPOINT_PX[breakpoint] - 0.02}px)`)
 
-    let below = $state(false)
-    $effect(() => {
-        if (typeof window === 'undefined' || !window.matchMedia) return
-        const mq = window.matchMedia(`(max-width: ${breakpointPx[breakpoint] - 0.02}px)`)
-        const update = () => (below = mq.matches)
-        update()
-        mq.addEventListener('change', update)
-        return () => mq.removeEventListener('change', update)
+    const below = $derived(api ? api.below : media.matches)
+
+    const expanded = $derived.by(() => {
+        if (api) return below ? api.open : !api.collapsed
+        if (below && open !== undefined) return open
+        if (collapsed !== undefined) return !collapsed
+        if (open !== undefined) return open
+        return undefined
     })
 
     function toggle() {
+        if (api) {
+            api.toggle()
+            return
+        }
         if (below && open !== undefined) {
             open = !open
             return
@@ -60,6 +68,7 @@
     {variant}
     icon={icon ?? icons.panelLeft}
     aria-label="Toggle sidebar"
+    aria-expanded={expanded}
     {...restProps}
     onclick={handleClick}
 />
