@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Sidebar** — collapsible dashboard sidebar: data-driven `items` (`NavigationMenuItem[]` or `NavigationMenuItem[][]` for separated groups) with a `menu` prop for menu options, `variant` `sidebar`/`floating`/`inset`, `side` left/right, `collapsible` `icon`/`offcanvas`/`none` with bindable `collapsed`/`open`, icons-only rail with tooltip labels and popover flyouts, composable header (`title`, `description`, `actions`, `close`) sized by `--ui-sidebar-header-height` (falls back to `--ui-header-height`) so it aligns with a sibling Header, footer row with `--ui-sidebar-footer-height` min-height, interactive edge `rail` toggle, localStorage `persist`, route-change auto-close, and a mobile menu below `breakpoint` opening as `slideover` or `drawer` from `side`. ([#174](https://github.com/ndlabdev/sv5ui/issues/174))
+- **SidebarTrigger** — viewport-aware header/navbar toggle button (extends ButtonProps, default `icons.panelLeft`): collapses the sidebar at or above `breakpoint` and opens the mobile menu below it via bindable `collapsed`/`open`. ([#174](https://github.com/ndlabdev/sv5ui/issues/174))
+
 ## [2.4.0] - 2026-07-19
 
 ### Added

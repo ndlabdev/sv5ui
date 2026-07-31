@@ -48,7 +48,8 @@ export const iconsDefaults = {
     folderOpen: 'lucide:folder-open',
     sortAsc: 'lucide:chevron-up',
     sortDesc: 'lucide:chevron-down',
-    sortDefault: 'lucide:chevrons-up-down'
+    sortDefault: 'lucide:chevrons-up-down',
+    panelLeft: 'lucide:panel-left'
 }
 
 // ==================== TYPES ====================
