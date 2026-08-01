@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-    import type { SidebarState } from './sidebar.types.js'
+    import type { SidebarApi, SidebarState } from './sidebar.types.js'
     import type { ButtonProps } from '../Button/button.types.js'
     import type { NavigationMenuItem } from '../NavigationMenu/navigation-menu.types.js'
     import { sidebarVariants, sidebarDefaults } from './sidebar.variants.js'
@@ -15,6 +15,7 @@
     import Slideover from '../Slideover/Slideover.svelte'
     import Drawer from '../Drawer/Drawer.svelte'
     import NavigationMenu from '../NavigationMenu/NavigationMenu.svelte'
+    import { useMediaQuery } from '../../hooks/useMediaQuery/index.js'
 
     const config = getComponentConfig('sidebar', sidebarDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -26,6 +27,7 @@
         side = config.defaultVariants.side ?? 'left',
         collapsible = 'icon',
         breakpoint = config.defaultVariants.breakpoint ?? 'lg',
+        api = $bindable(),
         collapsed = $bindable(false),
         open = $bindable(false),
         mode = 'slideover',
@@ -59,10 +61,23 @@
         ...restProps
     }: Props = $props()
 
-    const offcanvasHidden = $derived(collapsible === 'offcanvas' && collapsed)
+    const BREAKPOINT_PX = { sm: 640, md: 768, lg: 1024, xl: 1280 }
+
+    const collapsedValue = $derived(collapsed)
+    const openValue = $derived(open)
+    const activeBreakpoint = $derived(breakpoint)
+
+    const media = useMediaQuery(() => `(max-width: ${BREAKPOINT_PX[activeBreakpoint] - 0.02}px)`)
+
+    const offcanvasHidden = $derived(collapsible === 'offcanvas' && collapsedValue)
 
     const classes = $derived.by(() => {
-        const slots = sidebarVariants({ variant, side, breakpoint, transition })
+        const slots = sidebarVariants({
+            variant,
+            side,
+            breakpoint: activeBreakpoint,
+            transition
+        })
         const c = config.slots
         const u = ui ?? {}
         return {
@@ -83,8 +98,8 @@
     })
 
     const canCollapse = $derived(collapsible !== 'none')
-    const isCollapsed = $derived(canCollapse && collapsed)
-    const isRail = $derived(collapsible === 'icon' && collapsed)
+    const isCollapsed = $derived(canCollapse && collapsedValue)
+    const isRail = $derived(collapsible === 'icon' && collapsedValue)
 
     const currentWidth = $derived.by(() => {
         if (!isCollapsed) return width
@@ -107,7 +122,7 @@
     const userToggle: ButtonProps = $derived(typeof toggle === 'object' ? toggle : {})
 
     const toggleIcon = $derived.by(() => {
-        const expand = collapsed
+        const expand = collapsedValue
         if (side === 'left') return expand ? icons.chevronsRight : icons.chevronsLeft
         return expand ? icons.chevronsLeft : icons.chevronsRight
     })
@@ -117,7 +132,8 @@
         variant: 'ghost',
         block: true,
         icon: toggleIcon,
-        'aria-label': collapsed ? 'Expand sidebar' : 'Collapse sidebar',
+        'aria-label': collapsedValue ? 'Expand sidebar' : 'Collapse sidebar',
+        'aria-expanded': !collapsedValue,
         ...userToggle
     })
 
@@ -162,12 +178,16 @@
         return list.filter((entry) => entry.type !== 'label')
     }
 
-    function visibleItems(collapsedView: boolean) {
-        if (!collapsedView || !items) return items
+    const railItems = $derived.by(() => {
+        if (!items) return items
         if (Array.isArray(items[0])) {
             return (items as NavigationMenuItem[][]).map(stripLabels)
         }
         return stripLabels(items as NavigationMenuItem[])
+    })
+
+    function visibleItems(collapsedView: boolean) {
+        return collapsedView ? railItems : items
     }
 
     function setCollapsed(value: boolean) {
@@ -183,14 +203,43 @@
     function handleToggle(event: MouseEvent & { currentTarget: EventTarget & HTMLElement }) {
         userToggle.onclick?.(event)
         if (!event.defaultPrevented) {
-            setCollapsed(!collapsed)
+            setCollapsed(!collapsedValue)
         }
     }
+
+    const apiInstance: SidebarApi = {
+        get collapsed() {
+            return collapsed
+        },
+        get open() {
+            return open
+        },
+        get below() {
+            return media.matches
+        },
+        get state() {
+            return collapsed ? 'collapsed' : 'expanded'
+        },
+        toggle() {
+            if (media.matches) setOpen(!open)
+            else setCollapsed(!collapsed)
+        },
+        expand() {
+            if (media.matches) setOpen(true)
+            else setCollapsed(false)
+        },
+        collapse() {
+            if (media.matches) setOpen(false)
+            else setCollapsed(true)
+        }
+    }
+
+    api = apiInstance
 
     let hydrated = false
     $effect(() => {
         const key = storageKey
-        const value = collapsed
+        const value = collapsedValue
         if (typeof localStorage === 'undefined' || !key) return
         if (!hydrated) {
             hydrated = true
@@ -298,6 +347,8 @@
     data-side={side}
     data-collapsible={collapsible}
     data-collapsed={isCollapsed}
+    inert={offcanvasHidden || undefined}
+    aria-hidden={offcanvasHidden || undefined}
 >
     {@render inner(isRail, true)}
 
@@ -307,8 +358,9 @@
         {:else}
             <button
                 type="button"
-                aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                onclick={() => setCollapsed(!collapsed)}
+                aria-label={collapsedValue ? 'Expand sidebar' : 'Collapse sidebar'}
+                aria-expanded={!collapsedValue}
+                onclick={() => setCollapsed(!collapsedValue)}
                 class={classes.rail}
             >
                 <span class={classes.railHandle}></span>
@@ -319,7 +371,7 @@
 
 {#if mode === 'slideover'}
     <Slideover
-        {open}
+        open={openValue}
         onOpenChange={setOpen}
         {side}
         title="Navigation"
@@ -335,7 +387,7 @@
     </Slideover>
 {:else}
     <Drawer
-        {open}
+        open={openValue}
         onOpenChange={setOpen}
         direction={side}
         title="Navigation"
