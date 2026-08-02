@@ -2,6 +2,7 @@ import { page } from 'vitest/browser'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import Icon from './Icon.svelte'
+import { iconsDefaults } from '../../config.js'
 
 /** Helper: wait for SVG to render (iconify loads async) then return a locator */
 async function getSvg(container: HTMLElement) {
@@ -163,6 +164,19 @@ describe('Icon', () => {
             const svgHtml = container.querySelector('svg')!.innerHTML
             expect(svgHtml).toMatch(/rotate\(-90\b/)
         })
+    })
+
+    describe('bundled defaults', () => {
+        it.each(Object.entries(iconsDefaults))(
+            'renders %s synchronously without polling',
+            (_key, name) => {
+                const { container } = render(Icon, { name })
+                const svg = container.querySelector('svg')
+
+                expect(svg).toBeTruthy()
+                expect(svg!.innerHTML).not.toBe('')
+            }
+        )
     })
 
     // ==================== DIFFERENT ICONS ====================

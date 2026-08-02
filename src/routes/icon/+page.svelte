@@ -275,7 +275,7 @@
             <p class="text-xs font-medium text-on-surface-variant uppercase">Loading states</p>
             <div class="flex items-center gap-6">
                 <div class="flex flex-col items-center gap-2">
-                    <Icon name="lucide:loader-2" class="animate-spin text-primary" />
+                    <Icon name="lucide:loader-circle" class="animate-spin text-primary" />
                     <span class="text-xs text-on-surface-variant">Spinner</span>
                 </div>
                 <div class="flex flex-col items-center gap-2">

@@ -2,6 +2,36 @@ import type { IconProps as IconifyProps } from '@iconify/svelte'
 import type { SVGAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 
+/**
+ * A single icon inside a bundled collection.
+ * Mirrors Iconify's `IconifyIcon`, narrowed to the fields the generator emits.
+ * `width`/`height` are omitted when they match the collection defaults.
+ */
+export interface BundledIcon {
+    body: string
+    width?: number
+    height?: number
+    left?: number
+    top?: number
+    rotate?: number
+    hFlip?: boolean
+    vFlip?: boolean
+}
+
+/**
+ * An icon collection pre-registered with Iconify at module load, so the icons in
+ * `iconsDefaults` render synchronously during SSR instead of being fetched from
+ * the Iconify API after hydration.
+ *
+ * Generated into `bundled.ts` by `npm run generate:icons`.
+ */
+export interface BundledIconCollection {
+    prefix: string
+    width: number
+    height: number
+    icons: Record<string, BundledIcon>
+}
+
 export interface IconProps
     extends
         Omit<IconifyProps, 'icon' | 'width' | 'height' | 'rotate' | 'flip' | 'class'>,
