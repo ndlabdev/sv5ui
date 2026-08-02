@@ -1,5 +1,9 @@
 <script lang="ts" module>
     import type { IconProps } from './icon.types.js'
+    import { addCollection } from '@iconify/svelte'
+    import { bundledIcons } from './bundled.js'
+
+    for (const collection of bundledIcons) addCollection(collection)
 
     export type Props = IconProps
 </script>

@@ -241,7 +241,7 @@
         <div class="flex flex-wrap items-center gap-3 rounded-lg bg-surface-container-high p-4">
             <Button loading label="Loading..." />
             <Button variant="outline" color="secondary" loading label="Processing" />
-            <Button variant="soft" color="success" loading icon="lucide:loader-2" square />
+            <Button variant="soft" color="success" loading icon="lucide:loader-circle" square />
             <Button variant="solid" color="info" loading trailing label="Uploading" />
         </div>
     </section>

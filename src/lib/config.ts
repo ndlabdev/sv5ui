@@ -25,7 +25,7 @@
  * Default icons used across components
  */
 export const iconsDefaults = {
-    loading: 'lucide:loader-2',
+    loading: 'lucide:loader-circle',
     chevronDown: 'lucide:chevron-down',
     chevronLeft: 'lucide:chevron-left',
     chevronRight: 'lucide:chevron-right',
