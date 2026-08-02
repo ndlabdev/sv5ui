@@ -25,7 +25,7 @@
  * Default icons used across components
  */
 export const iconsDefaults = {
-    loading: 'lucide:loader-2',
+    loading: 'lucide:loader-circle',
     chevronDown: 'lucide:chevron-down',
     chevronLeft: 'lucide:chevron-left',
     chevronRight: 'lucide:chevron-right',
@@ -44,9 +44,12 @@ export const iconsDefaults = {
     trash: 'lucide:trash-2',
     search: 'lucide:search',
     star: 'lucide:star',
+    folder: 'lucide:folder',
+    folderOpen: 'lucide:folder-open',
     sortAsc: 'lucide:chevron-up',
     sortDesc: 'lucide:chevron-down',
-    sortDefault: 'lucide:chevrons-up-down'
+    sortDefault: 'lucide:chevrons-up-down',
+    panelLeft: 'lucide:panel-left'
 }
 
 // ==================== TYPES ====================

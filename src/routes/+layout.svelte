@@ -29,6 +29,7 @@
         { href: '/footer', label: 'Footer', icon: 'lucide:panel-bottom-dashed' },
         { href: '/header', label: 'Header', icon: 'lucide:panel-top-dashed' },
         { href: '/main', label: 'Main', icon: 'lucide:layout-template' },
+        { href: '/sidebar', label: 'Sidebar', icon: 'lucide:panel-left' },
         { href: '/skeleton', label: 'Skeleton', icon: 'lucide:loader-circle' },
         { href: '/drawer', label: 'Drawer', icon: 'lucide:panel-bottom' },
         { href: '/tooltip', label: 'Tooltip', icon: 'lucide:message-square' },
@@ -44,6 +45,7 @@
         { href: '/date-range-picker', label: 'Date Range Picker', icon: 'lucide:calendar-range' },
         { href: '/time-field', label: 'Time Field', icon: 'lucide:clock' },
         { href: '/dropdown-menu', label: 'Dropdown Menu', icon: 'lucide:chevron-down-square' },
+        { href: '/navigation-menu', label: 'Navigation Menu', icon: 'lucide:menu' },
         { href: '/tabs', label: 'Tabs', icon: 'lucide:panel-top' },
         { href: '/context-menu', label: 'Context Menu', icon: 'lucide:mouse-pointer' },
         { href: '/pagination', label: 'Pagination', icon: 'lucide:chevrons-left-right-ellipsis' },
@@ -70,10 +72,12 @@
         { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' },
         { href: '/table', label: 'Table', icon: 'lucide:table' },
         { href: '/carousel', label: 'Carousel', icon: 'lucide:gallery-horizontal' },
+        { href: '/lightbox', label: 'Lightbox', icon: 'lucide:image' },
         { href: '/editor', label: 'Editor', icon: 'lucide:pen-tool' },
         { href: '/banner', label: 'Banner', icon: 'lucide:megaphone' },
         { href: '/stepper', label: 'Stepper', icon: 'lucide:list-ordered' },
-        { href: '/tour', label: 'Tour', icon: 'lucide:route' }
+        { href: '/tour', label: 'Tour', icon: 'lucide:route' },
+        { href: '/tree', label: 'Tree', icon: 'lucide:folder-tree' }
     ]
 
     const hookItems = [

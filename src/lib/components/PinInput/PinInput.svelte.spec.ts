@@ -396,7 +396,7 @@ describe('PinInput', () => {
         })
 
         it('should accept custom loadingIcon', async () => {
-            render(PinInput, { loading: true, loadingIcon: 'lucide:loader-2' })
+            render(PinInput, { loading: true, loadingIcon: 'lucide:refresh-cw' })
             await vi.waitFor(() => {
                 const overlay = document.querySelector(
                     'span[aria-hidden="true"].pointer-events-none'

@@ -24,6 +24,11 @@ jobs:
 
             - run: pnpm install --frozen-lockfile
 
+            - name: Verify generated icons are current
+              run: |
+                  pnpm generate:icons
+                  git diff --exit-code src/lib/components/Icon/bundled.ts
+
             - name: Lint
               run: pnpm lint
 

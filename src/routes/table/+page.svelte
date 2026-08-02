@@ -851,7 +851,7 @@
         >
             {#snippet loadingSlot()}
                 <div class="flex items-center justify-center gap-2">
-                    <Icon name="lucide:loader-2" class="size-5 animate-spin text-primary" />
+                    <Icon name="lucide:loader-circle" class="size-5 animate-spin text-primary" />
                     <span class="text-sm text-on-surface-variant">Loading data...</span>
                 </div>
             {/snippet}

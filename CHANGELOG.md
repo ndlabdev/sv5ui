@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-08-02
+
+### Added
+
+- **Tree** — hierarchical tree view with multi-select and indeterminate state, full keyboard navigation, and `bind:api`. ([#178](https://github.com/ndlabdev/sv5ui/pull/178))
+- **Lightbox** — full-screen viewer for images, video and iframes, with zoom, swipe, thumbnails, captions and slideshow. ([#177](https://github.com/ndlabdev/sv5ui/pull/177))
+- **NavigationMenu** — horizontal mega-menu or vertical disclosures, with nested items, active-route detection, and a collapsed icon rail with flyouts. ([#175](https://github.com/ndlabdev/sv5ui/pull/175))
+- **Sidebar** — collapsible dashboard sidebar built on NavigationMenu: `sidebar`/`floating`/`inset` variants, icon or offcanvas collapse, persisted state, mobile drawer, and `bind:api` for control from outside. ([#176](https://github.com/ndlabdev/sv5ui/pull/176), [#180](https://github.com/ndlabdev/sv5ui/pull/180))
+- **SidebarTrigger** — header button that collapses the sidebar on desktop and opens the mobile menu on small screens. ([#176](https://github.com/ndlabdev/sv5ui/pull/176), [#180](https://github.com/ndlabdev/sv5ui/pull/180))
+
+### Changed
+
+- **Icon** — the default loading spinner is now `lucide:loader-circle`, replacing the deprecated `lucide:loader-2`. It looks the same. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
+
+### Fixed
+
+- **Icon** — built-in icons now render during SSR instead of loading from the Iconify API after hydration, so they no longer pop in and shift the layout on first paint. They also work offline. Adds ~1.2KB gzip. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
+
 ## [2.4.0] - 2026-07-19
 
 ### Added
@@ -377,7 +395,9 @@ New SSR-safe Svelte 5 hooks:
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/ndlabdev/sv5ui/compare/v2.4.0...v2.5.0
+[2.4.0]: https://github.com/ndlabdev/sv5ui/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/ndlabdev/sv5ui/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/ndlabdev/sv5ui/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/ndlabdev/sv5ui/compare/v2.0.0...v2.1.0
