@@ -9,23 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Tree** — hierarchical tree view (custom build): bindable `value`/`expanded`, `multiple` selection with `propagateSelect`/`bubbleSelect` and indeterminate state, full keyboard navigation, `api` handle for expand/collapse/select, custom item snippets. ([#178](https://github.com/ndlabdev/sv5ui/pull/178))
-- **Lightbox** — full-screen media viewer (bits-ui Dialog): image/video/iframe slides, zoom and pan, swipe and keyboard navigation, thumbnail filmstrip, captions, slideshow, fullscreen and rotate, bindable `open`/`index` plus `bind:api`. ([#177](https://github.com/ndlabdev/sv5ui/pull/177))
-- **NavigationMenu** — navigation menu (bits-ui): horizontal mega-menu or vertical disclosures, nested `items` with icons/avatars/badges and active-route detection, `collapsed` icon rail with tooltips and flyouts, `highlight` bar, `pill`/`link` variants, `stacked` tab bar, and an optional mobile drawer. ([#175](https://github.com/ndlabdev/sv5ui/pull/175))
-- **Sidebar** — collapsible dashboard sidebar rendering its navigation through NavigationMenu: `variant` `sidebar`/`floating`/`inset`, `side` left/right, `collapsible` `icon`/`offcanvas`/`none` with bindable `collapsed`/`open`, composable header, edge `rail` toggle, localStorage `persist`, and a `slideover`/`drawer` mobile menu. Header height follows `--ui-header-height` so it aligns with a sibling Header. ([#176](https://github.com/ndlabdev/sv5ui/pull/176))
-- **SidebarTrigger** — viewport-aware toggle button for the app header: collapses the sidebar on desktop, opens the mobile menu below `breakpoint`. ([#176](https://github.com/ndlabdev/sv5ui/pull/176))
-- `npm run generate:icons` regenerates `src/lib/components/Icon/bundled.ts` from `iconsDefaults`. It runs automatically in `prepack`, so the bundled set can never drift from the defaults. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
-
-### Fixed
-
-- **Sidebar** — `collapsible="offcanvas"` now marks the collapsed sidebar `inert` and `aria-hidden`, so its links no longer take keyboard focus or reach assistive tech while off screen. ([#180](https://github.com/ndlabdev/sv5ui/pull/180))
-- **Sidebar** — the edge rail, footer toggle and `SidebarTrigger` expose `aria-expanded`. ([#180](https://github.com/ndlabdev/sv5ui/pull/180))
-- **Icon** — the 24 icons referenced by `iconsDefaults` are now bundled and registered with Iconify at module load, so built-in chrome (chevrons, close, loading spinner, check, sort arrows) renders inline during SSR instead of being fetched from the Iconify API after hydration. This removes the first-paint layout shift and the network round-trip, and makes the defaults work offline or behind a CSP that blocks `api.iconify.design`. Costs ~1.2KB gzip; icons outside `iconsDefaults` are unaffected and still load on demand. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
+- **Tree** — hierarchical tree view with multi-select and indeterminate state, full keyboard navigation, and `bind:api`. ([#178](https://github.com/ndlabdev/sv5ui/pull/178))
+- **Lightbox** — full-screen viewer for images, video and iframes, with zoom, swipe, thumbnails, captions and slideshow. ([#177](https://github.com/ndlabdev/sv5ui/pull/177))
+- **NavigationMenu** — horizontal mega-menu or vertical disclosures, with nested items, active-route detection, and a collapsed icon rail with flyouts. ([#175](https://github.com/ndlabdev/sv5ui/pull/175))
+- **Sidebar** — collapsible dashboard sidebar built on NavigationMenu: `sidebar`/`floating`/`inset` variants, icon or offcanvas collapse, persisted state, mobile drawer, and `bind:api` for control from outside. ([#176](https://github.com/ndlabdev/sv5ui/pull/176), [#180](https://github.com/ndlabdev/sv5ui/pull/180))
+- **SidebarTrigger** — header button that collapses the sidebar on desktop and opens the mobile menu on small screens. ([#176](https://github.com/ndlabdev/sv5ui/pull/176), [#180](https://github.com/ndlabdev/sv5ui/pull/180))
 
 ### Changed
 
-- **Sidebar** — added a bindable `api` handle (`collapsed`, `open`, `below`, `state`, `toggle`, `expand`, `collapse`) that `SidebarTrigger` accepts, so a trigger rendered outside the sidebar no longer repeats `breakpoint` or the bindable state. ([#180](https://github.com/ndlabdev/sv5ui/pull/180))
-- **Icon** — the default loading icon is now `lucide:loader-circle` instead of `lucide:loader-2`. `loader-2` is a deprecated alias in `@iconify-json/lucide` that resolves to the same artwork, so the rendered spinner is pixel-identical. Only the name in `iconsDefaults` changed. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
+- **Icon** — the default loading spinner is now `lucide:loader-circle`, replacing the deprecated `lucide:loader-2`. It looks the same. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
+
+### Fixed
+
+- **Icon** — built-in icons now render during SSR instead of loading from the Iconify API after hydration, so they no longer pop in and shift the layout on first paint. They also work offline. Adds ~1.2KB gzip. ([#181](https://github.com/ndlabdev/sv5ui/pull/181))
 
 ## [2.4.0] - 2026-07-19
 
