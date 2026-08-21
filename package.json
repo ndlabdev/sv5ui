@@ -12,6 +12,10 @@
     "bugs": {
         "url": "https://github.com/ndlabdev/sv5ui/issues"
     },
+    "funding": {
+        "type": "ko_fi",
+        "url": "https://ko-fi.com/ndlabdev"
+    },
     "scripts": {
         "dev": "vite dev",
         "build": "vite build && npm run prepack",

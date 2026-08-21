@@ -13,6 +13,7 @@
   <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/v/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm version" /></a>
   <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/dm/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm downloads" /></a>
   <a href="https://github.com/ndlabdev/sv5ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="license" /></a>
+  <a href="https://ko-fi.com/ndlabdev"><img src="https://img.shields.io/badge/Ko--fi-donate-x?style=flat-square&colorA=18181b&colorB=ff3e00&logo=kofi&logoColor=white" alt="donate on Ko-fi" /></a>
 </p>
 
 <p align="center">
