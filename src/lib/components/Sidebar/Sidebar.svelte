@@ -15,6 +15,7 @@
     import Slideover from '../Slideover/Slideover.svelte'
     import Drawer from '../Drawer/Drawer.svelte'
     import NavigationMenu from '../NavigationMenu/NavigationMenu.svelte'
+    import ScrollArea from '../ScrollArea/ScrollArea.svelte'
     import { useMediaQuery } from '../../hooks/useMediaQuery/index.js'
 
     const config = getComponentConfig('sidebar', sidebarDefaults)
@@ -47,6 +48,7 @@
         autoClose = true,
         toggle = false,
         ui,
+        scrollArea,
         class: className,
         header: headerSlot,
         titleSlot,
@@ -304,7 +306,7 @@
 {#snippet inner(collapsedView: boolean, chrome: boolean)}
     {@render headerArea(collapsedView, chrome)}
 
-    <div class={classes.content}>
+    <ScrollArea class="min-h-0 flex-1" ui={{ content: classes.content }} {...scrollArea}>
         {#if items}
             <NavigationMenu
                 orientation="vertical"
@@ -317,7 +319,7 @@
             />
         {/if}
         {@render children?.({ collapsed: collapsedView, state: stateOf(collapsedView) })}
-    </div>
+    </ScrollArea>
 
     {#if footerSlot || (chrome && showToggleBtn)}
         <div class={classes.footer}>

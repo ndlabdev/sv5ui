@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { SidebarSlots, SidebarVariantProps } from './sidebar.variants.js'
+import type { ScrollAreaOptions } from '../ScrollArea/scroll-area.types.js'
 import type { ButtonProps } from '../Button/button.types.js'
 import type {
     NavigationMenuItem,
@@ -214,6 +215,11 @@ export type SidebarProps = Omit<HTMLAttributes<HTMLElement>, 'class'> & {
      * least `--ui-sidebar-footer-height` (4rem) tall.
      */
     ui?: Partial<Record<SidebarSlots, ClassNameValue>>
+
+    /**
+     * Options forwarded to the scroll area wrapping the sidebar content.
+     */
+    scrollArea?: ScrollAreaOptions
 
     /**
      * Additional CSS classes for the root element.

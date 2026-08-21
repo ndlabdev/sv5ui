@@ -4,6 +4,7 @@ export const navigationMenuVariants = tv({
     slots: {
         root: 'relative',
         list: 'relative isolate min-w-0',
+        scroll: 'w-full pb-2',
         highlight: 'absolute z-0 rounded-full transition-all duration-200',
         item: 'min-w-0',
         label: 'w-full flex items-center gap-1.5 px-2.5 pt-3 pb-1 font-semibold text-sm text-on-surface-variant',
@@ -86,7 +87,7 @@ export const navigationMenuVariants = tv({
         orientation: {
             horizontal: {
                 root: 'w-full',
-                list: 'flex items-center gap-1 overflow-x-auto scrollbar-thin',
+                list: 'flex items-center gap-1',
                 separator: 'mx-1 h-5 w-px self-center',
                 highlight: 'bottom-0 h-0.5'
             },
@@ -155,7 +156,7 @@ export const navigationMenuVariants = tv({
             orientation: 'horizontal',
             stacked: true,
             class: {
-                list: 'justify-around overflow-visible',
+                list: 'justify-around',
                 item: 'flex-1',
                 link: 'w-full'
             }

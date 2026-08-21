@@ -46,6 +46,25 @@ describe('Table', () => {
             expect(headers[2].textContent).toContain('Age')
         })
 
+        it('should scroll horizontally through a scroll area viewport', () => {
+            const { container } = render(Table, { data: testData, columns: testColumns } as any)
+            const viewport = container.querySelector<HTMLElement>('[data-scroll-area-viewport]')
+
+            expect(viewport).not.toBeNull()
+            expect(getComputedStyle(viewport!).overflowX).toBe('scroll')
+            expect(viewport!.querySelector('table')).not.toBeNull()
+        })
+
+        it('should forward scrollArea options to the table scroll area', () => {
+            const { container } = render(Table, {
+                data: testData,
+                columns: testColumns,
+                scrollArea: { type: 'always' }
+            } as any)
+
+            expect(container.querySelector('[data-scroll-area-scrollbar]')).not.toBeNull()
+        })
+
         it('should render data rows', () => {
             render(Table, { data: testData, columns: testColumns } as any)
             expect(getRows().length).toBe(3)

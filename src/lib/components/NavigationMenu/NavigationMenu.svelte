@@ -20,6 +20,7 @@
     import Chip from '../Chip/Chip.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
+    import ScrollArea from '../ScrollArea/ScrollArea.svelte'
     import Popover from '../Popover/Popover.svelte'
     import Drawer from '../Drawer/Drawer.svelte'
     import Button from '../Button/Button.svelte'
@@ -64,6 +65,7 @@
         drawerProps,
         class: className,
         ui,
+        scrollArea,
         item: itemSlot,
         itemLeading,
         itemLabel,
@@ -225,6 +227,7 @@
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, ui?.root, className] }),
         list: variantSlots.list({ class: [config.slots.list, ui?.list] }),
+        scroll: variantSlots.scroll({ class: [config.slots.scroll, ui?.scroll] }),
         highlight: variantSlots.highlight({ class: [config.slots.highlight, ui?.highlight] }),
         item: variantSlots.item({ class: [config.slots.item, ui?.item] }),
         label: variantSlots.label({ class: [config.slots.label, ui?.label] }),
@@ -479,84 +482,90 @@
         class={classes.root}
         {...restProps as Record<string, unknown>}
     >
-        <Bits.List bind:ref={listEl} class={classes.list}>
-            {#if showHighlight}
-                <div
-                    class={classes.highlight}
-                    style={highlightStyle}
-                    data-navigation-menu-highlight=""
-                    aria-hidden="true"
-                ></div>
-            {/if}
-            {#if listLeading}{@render listLeading()}{/if}
-            {#each groups as group, gi (gi)}
-                {#each group as item, index (itemValue(item, gi, index))}
-                    {@const iv = itemValue(item, gi, index)}
-                    {@const kind = resolvedType(item)}
-                    {@const open = openSet.has(iv)}
-                    {#if itemSlot}
-                        <Bits.Item value={iv} class={classes.item}>
-                            {@render itemSlot({ item, index, active: !!item.active, open })}
-                        </Bits.Item>
-                    {:else if kind === 'label'}
-                        <li class={classes.label}>{itemLabelText(item)}</li>
-                    {:else if isDropdown(item)}
-                        <Bits.Item
-                            value={iv}
-                            openOnHover={!disableHoverTrigger}
-                            class={classes.item}
-                        >
-                            <Bits.Trigger disabled={disabled || item.disabled}>
-                                {#snippet child({ props }: { props: Record<string, unknown> })}
-                                    <button
-                                        {...disableClickTrigger
-                                            ? { ...props, onclick: blockClick }
-                                            : props}
-                                        class={linkClass(item)}
-                                        data-active={item.active ? '' : undefined}
-                                    >
-                                        {@render linkBody(item, index, open, true)}
-                                    </button>
-                                {/snippet}
-                            </Bits.Trigger>
-                            <Bits.Content {...contentProps} class={classes.content}>
-                                {@render megaContent(item, index)}
-                            </Bits.Content>
-                        </Bits.Item>
-                    {:else}
-                        {@const active = isItemActive(item.active, item.href, item.exact)}
-                        {@const href = safeHref(item.href)}
-                        <Bits.Item value={iv} class={classes.item}>
-                            <Bits.Link {href} {active} onSelect={item.onSelect}>
-                                {#snippet child({ props }: { props: Record<string, unknown> })}
-                                    <Link
-                                        {href}
-                                        target={item.target}
-                                        raw
-                                        exact={item.exact ?? exact}
-                                        {active}
-                                        disabled={disabled || item.disabled}
-                                        {...props}
-                                        class={linkClass(item)}
-                                    >
-                                        {@render linkBody(item, index, open, false)}
-                                    </Link>
-                                {/snippet}
-                            </Bits.Link>
-                        </Bits.Item>
+        <ScrollArea orientation="horizontal" class={classes.scroll} {...scrollArea}>
+            <Bits.List bind:ref={listEl} class={classes.list}>
+                {#if showHighlight}
+                    <div
+                        class={classes.highlight}
+                        style={highlightStyle}
+                        data-navigation-menu-highlight=""
+                        aria-hidden="true"
+                    ></div>
+                {/if}
+                {#if listLeading}{@render listLeading()}{/if}
+                {#each groups as group, gi (gi)}
+                    {#each group as item, index (itemValue(item, gi, index))}
+                        {@const iv = itemValue(item, gi, index)}
+                        {@const kind = resolvedType(item)}
+                        {@const open = openSet.has(iv)}
+                        {#if itemSlot}
+                            <Bits.Item value={iv} class={classes.item}>
+                                {@render itemSlot({ item, index, active: !!item.active, open })}
+                            </Bits.Item>
+                        {:else if kind === 'label'}
+                            <li class={classes.label}>{itemLabelText(item)}</li>
+                        {:else if isDropdown(item)}
+                            <Bits.Item
+                                value={iv}
+                                openOnHover={!disableHoverTrigger}
+                                class={classes.item}
+                            >
+                                <Bits.Trigger disabled={disabled || item.disabled}>
+                                    {#snippet child({ props }: { props: Record<string, unknown> })}
+                                        <button
+                                            {...disableClickTrigger
+                                                ? { ...props, onclick: blockClick }
+                                                : props}
+                                            class={linkClass(item)}
+                                            data-active={item.active ? '' : undefined}
+                                        >
+                                            {@render linkBody(item, index, open, true)}
+                                        </button>
+                                    {/snippet}
+                                </Bits.Trigger>
+                                <Bits.Content {...contentProps} class={classes.content}>
+                                    {@render megaContent(item, index)}
+                                </Bits.Content>
+                            </Bits.Item>
+                        {:else}
+                            {@const active = isItemActive(item.active, item.href, item.exact)}
+                            {@const href = safeHref(item.href)}
+                            <Bits.Item value={iv} class={classes.item}>
+                                <Bits.Link {href} {active} onSelect={item.onSelect}>
+                                    {#snippet child({ props }: { props: Record<string, unknown> })}
+                                        <Link
+                                            {href}
+                                            target={item.target}
+                                            raw
+                                            exact={item.exact ?? exact}
+                                            {active}
+                                            disabled={disabled || item.disabled}
+                                            {...props}
+                                            class={linkClass(item)}
+                                        >
+                                            {@render linkBody(item, index, open, false)}
+                                        </Link>
+                                    {/snippet}
+                                </Bits.Link>
+                            </Bits.Item>
+                        {/if}
+                    {/each}
+                    {#if gi < groups.length - 1}
+                        <li
+                            role="separator"
+                            aria-orientation="vertical"
+                            class={classes.separator}
+                        ></li>
                     {/if}
                 {/each}
-                {#if gi < groups.length - 1}
-                    <li role="separator" aria-orientation="vertical" class={classes.separator}></li>
+                {#if listTrailing}{@render listTrailing()}{/if}
+                {#if arrow}
+                    <Bits.Indicator class={classes.indicator}>
+                        <div class={classes.arrow}></div>
+                    </Bits.Indicator>
                 {/if}
-            {/each}
-            {#if listTrailing}{@render listTrailing()}{/if}
-            {#if arrow}
-                <Bits.Indicator class={classes.indicator}>
-                    <div class={classes.arrow}></div>
-                </Bits.Indicator>
-            {/if}
-        </Bits.List>
+            </Bits.List>
+        </ScrollArea>
         <div class={classes.viewportWrapper}>
             <Bits.Viewport {...contentProps} class={classes.viewport} />
         </div>

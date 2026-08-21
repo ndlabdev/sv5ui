@@ -47,6 +47,35 @@ describe('Sidebar', () => {
             expect(root.style.getPropertyValue('--ui-sidebar-width-collapsed')).toBe('72px')
             expect(root.style.width).toBe('300px')
         })
+
+        it('should scroll the content through a scroll area viewport', async () => {
+            const { container } = render(Sidebar, { items })
+            const viewport = container.querySelector<HTMLElement>('[data-scroll-area-viewport]')
+
+            expect(viewport).not.toBeNull()
+            expect(getComputedStyle(viewport!).overflowY).toBe('scroll')
+            expect(viewport!.querySelector('nav')).not.toBeNull()
+        })
+
+        it('should scroll the mobile panel content without nesting scroll areas', async () => {
+            render(Sidebar, { items, open: true })
+            await tick()
+
+            const panel = document.querySelector('[data-dialog-content]')
+            expect(panel).not.toBeNull()
+
+            const viewports = panel!.querySelectorAll('[data-scroll-area-viewport]')
+            expect(viewports.length).toBe(1)
+            expect(getComputedStyle(viewports[0]).overflowY).toBe('scroll')
+            expect(viewports[0].querySelector('nav')).not.toBeNull()
+        })
+
+        it('should forward scrollArea options to the content scroll area', async () => {
+            const { container } = render(Sidebar, { items, scrollArea: { type: 'always' } })
+            const scrollbar = container.querySelector('[data-scroll-area-scrollbar]')
+
+            expect(scrollbar).not.toBeNull()
+        })
     })
 
     // ==================== ITEMS (delegated to NavigationMenu) ====================

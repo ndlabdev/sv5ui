@@ -2,7 +2,8 @@ import { tv, type VariantProps } from 'tailwind-variants'
 
 export const tableVariants = tv({
     slots: {
-        root: 'relative w-full overflow-x-auto scrollbar-thin rounded-xl border border-outline-variant/50 bg-surface [contain:inline-size]',
+        root: 'relative flex w-full flex-col overflow-hidden rounded-xl border border-outline-variant/50 bg-surface [contain:inline-size]',
+        scroll: 'min-h-0 w-full flex-1 rounded-[inherit]',
         base: 'min-w-full',
         caption: 'sr-only',
         thead: 'relative bg-surface-container-low',

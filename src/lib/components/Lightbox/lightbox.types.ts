@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { DialogRootPropsWithoutHTML, DialogContentPropsWithoutHTML } from 'bits-ui'
 import type { LightboxSlots, LightboxVariantProps } from './lightbox.variants.js'
+import type { ScrollAreaOptions } from '../ScrollArea/scroll-area.types.js'
 
 /**
  * The media kind rendered for a slide.
@@ -329,6 +330,11 @@ export interface LightboxProps extends RootProps, ContentProps {
      * Override classes for specific slots.
      */
     ui?: Partial<Record<LightboxSlots, ClassNameValue>>
+
+    /**
+     * Options forwarded to the scroll area wrapping the thumbnail strip.
+     */
+    scrollArea?: ScrollAreaOptions
 
     /**
      * Additional classes for the in-page gallery wrapper.
