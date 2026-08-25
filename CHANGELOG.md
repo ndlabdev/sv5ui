@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.1] - 2026-08-26
+
+### Fixed
+
+- **DropdownMenu**, **Popover** — the arrow now carries its own outline, so the ring flows around it instead of stopping at a borderless triangle with the ring line cutting across its base. New `arrowBorder` `ui` slot on both for overriding the stroke. Tooltip is unaffected: its surface has no ring.
+
+### Changed
+
+- **DropdownMenu docs** — added an Arrow section covering the four sides and custom `width`/`height`, aligned to `center` so the arrow sits under the middle of the menu.
+
 ## [2.6.0] - 2026-08-25
 
 ### Added
@@ -415,7 +425,8 @@ New SSR-safe Svelte 5 hooks:
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.6.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.6.1...HEAD
+[2.6.1]: https://github.com/ndlabdev/sv5ui/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/ndlabdev/sv5ui/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/ndlabdev/sv5ui/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/ndlabdev/sv5ui/compare/v2.3.0...v2.4.0
