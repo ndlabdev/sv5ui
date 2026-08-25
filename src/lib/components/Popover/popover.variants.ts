@@ -8,7 +8,7 @@ export const popoverVariants = tv({
             'rounded-md shadow-lg',
             'focus:outline-none pointer-events-auto'
         ],
-        arrow: ''
+        arrow: 'fill-surface-container-lowest text-surface-container-lowest'
     },
     variants: {
         transition: {
