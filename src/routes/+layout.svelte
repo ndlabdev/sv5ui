@@ -56,6 +56,7 @@
         { href: '/input', label: 'Input', icon: 'lucide:text-cursor' },
         { href: '/input-number', label: 'Input Number', icon: 'lucide:hash' },
         { href: '/input-tags', label: 'Input Tags', icon: 'lucide:tags' },
+        { href: '/color-picker', label: 'Color Picker', icon: 'lucide:palette' },
         { href: '/textarea', label: 'Textarea', icon: 'lucide:text' },
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
         { href: '/select-menu', label: 'Select Menu', icon: 'lucide:list-filter' },
