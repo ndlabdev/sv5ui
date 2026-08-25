@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **ScrollArea** — scrollable region with a custom overlay scrollbar that renders identically across browsers: `orientation` (`vertical`/`horizontal`/`both`), `type` (`hover`/`scroll`/`auto`/`always`), 4 sizes, 8 colors, optional permanent `track`, fade `transition`, `scrollHideDelay`, `bind:viewportRef` for programmatic scrolling, and `ui` overrides for every slot (`root`, `viewport`, `content`, `scrollbar`, `thumb`, `corner`).
+
+### Changed
+
+- **Table** — the table now scrolls inside a ScrollArea on both axes instead of a native scrollbar, so horizontal scrolling looks the same on every platform. Sticky headers, footers and pinned columns are unchanged. New `scrollArea` prop and `scroll` slot.
+- **Sidebar** — content scrolls through a ScrollArea instead of a native scrollbar, on desktop and in the mobile panel. New `scrollArea` prop.
+- **Slideover** — the body scrolls through a ScrollArea. New `scrollArea` prop.
+- **NavigationMenu** — a horizontal menu that overflows now scrolls through a ScrollArea. New `scrollArea` prop and `scroll` slot.
+- **Lightbox** — the thumbnail strip scrolls through a ScrollArea with a light thumb suited to the dark backdrop. New `scrollArea` prop and `thumbnailsScroll` slot.
+
 ### Fixed
 
 - **DropdownMenu** — the `arrow` prop now actually draws an arrow. Its slot classes were computed but never passed to the arrow, so it inherited the body text color, and `overflow-hidden` on the content clipped it away entirely. The arrow is now painted in the menu surface color, and the content switches to `overflow-visible` only while the arrow is enabled.

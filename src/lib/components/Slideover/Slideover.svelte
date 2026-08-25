@@ -9,6 +9,7 @@
     import { slideoverVariants, slideoverDefaults } from './slideover.variants.js'
     import { getComponentConfig } from '../../config.js'
     import Button from '../Button/Button.svelte'
+    import ScrollArea from '../ScrollArea/ScrollArea.svelte'
 
     const config = getComponentConfig('slideover', slideoverDefaults)
 
@@ -35,6 +36,7 @@
         close: closeProp = true,
         dismissible = true,
         ui,
+        scrollArea,
         class: className,
         children,
         content: contentSlot,
@@ -178,7 +180,9 @@
             {/if}
 
             {#if bodySlot}
-                <div class={classes.body}>{@render bodySlot()}</div>
+                <ScrollArea class="min-h-0 flex-1" ui={{ content: classes.body }} {...scrollArea}>
+                    {@render bodySlot()}
+                </ScrollArea>
             {/if}
 
             {#if footerSlot}

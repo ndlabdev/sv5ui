@@ -4,6 +4,7 @@ import type { Action } from 'svelte/action'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { TableVariantProps, TableSlots } from './table.variants.js'
+import type { ScrollAreaOptions } from '../ScrollArea/scroll-area.types.js'
 
 // ============================================================================
 // Column Definition
@@ -302,6 +303,9 @@ export interface TableProps<T extends Record<string, any> = Record<string, any>>
 
     /** Override styles for specific table slots. */
     ui?: Partial<Record<TableSlots, ClassNameValue>>
+
+    /** Options forwarded to the horizontal scroll area wrapping the table. */
+    scrollArea?: ScrollAreaOptions
 
     // ---- Snippet Slots ----
 

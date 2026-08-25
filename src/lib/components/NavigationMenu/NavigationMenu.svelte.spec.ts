@@ -135,7 +135,9 @@ describe('NavigationMenu', () => {
 
         it('keeps horizontal items from collapsing and scrolls on overflow', () => {
             const { container } = render(NavigationMenu, { items: linkItems })
-            expect(container.querySelector('.overflow-x-auto')).not.toBeNull()
+            const viewport = container.querySelector<HTMLElement>('[data-scroll-area-viewport]')
+            expect(viewport).not.toBeNull()
+            expect(getComputedStyle(viewport!).overflowX).toBe('scroll')
             const item = container.querySelector('[data-navigation-menu-item]')
             expect(item?.className).toContain('shrink-0')
         })
