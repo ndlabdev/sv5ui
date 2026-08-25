@@ -1,8 +1,16 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
+import { createRawSnippet } from 'svelte'
 import { page } from 'vitest/browser'
 import Slideover from './Slideover.svelte'
 import SlideoverTriggerTestWrapper from './SlideoverTriggerTestWrapper.svelte'
+
+function snippet(html: string) {
+    return createRawSnippet(() => ({
+        render: () => html,
+        setup: () => {}
+    }))
+}
 
 describe('Slideover', () => {
     const getOverlay = () => document.querySelector('[data-dialog-overlay]') as HTMLElement | null
@@ -31,6 +39,35 @@ describe('Slideover', () => {
             render(Slideover, { open: true, title: 'Test' })
             await vi.waitFor(() => {
                 expect(getOverlay()).not.toBeNull()
+            })
+        })
+
+        it('should scroll the body through a scroll area viewport', async () => {
+            render(Slideover, {
+                open: true,
+                title: 'Test',
+                body: snippet('<p>Body content</p>')
+            })
+
+            await vi.waitFor(() => {
+                expect(document.querySelector('[data-scroll-area-viewport]')).not.toBeNull()
+            })
+
+            const viewport = document.querySelector<HTMLElement>('[data-scroll-area-viewport]')!
+            expect(getComputedStyle(viewport).overflowY).toBe('scroll')
+            expect(viewport.textContent).toContain('Body content')
+        })
+
+        it('should forward scrollArea options to the body scroll area', async () => {
+            render(Slideover, {
+                open: true,
+                title: 'Test',
+                body: snippet('<p>Body content</p>'),
+                scrollArea: { type: 'always' }
+            })
+
+            await vi.waitFor(() => {
+                expect(document.querySelector('[data-scroll-area-scrollbar]')).not.toBeNull()
             })
         })
 

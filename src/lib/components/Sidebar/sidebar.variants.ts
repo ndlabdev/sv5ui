@@ -8,7 +8,7 @@ export const sidebarVariants = tv({
         title: 'truncate text-sm font-semibold text-on-surface',
         description: 'truncate text-xs text-on-surface-variant',
         headerActions: 'flex shrink-0 items-center gap-1',
-        content: 'flex flex-1 flex-col gap-2 overflow-y-auto overflow-x-hidden p-3',
+        content: 'flex flex-col gap-2 p-3',
         footer: 'mt-auto flex min-h-(--ui-sidebar-footer-height,4rem) shrink-0 flex-col justify-center gap-1 border-t border-outline-variant px-3 py-2',
         toggle: 'shrink-0',
         rail: 'group/rail absolute inset-y-0 z-20 hidden w-4 cursor-col-resize touch-none select-none sm:flex',

@@ -12,6 +12,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Button from '../Button/Button.svelte'
     import Checkbox from '../Checkbox/Checkbox.svelte'
+    import ScrollArea from '../ScrollArea/ScrollArea.svelte'
     import { useThrottle } from '../../hooks/useThrottle/index.js'
     import {
         autoGenerateColumns,
@@ -99,6 +100,7 @@
 
         // Styling
         ui,
+        scrollArea,
         class: className,
 
         // Slots
@@ -467,6 +469,7 @@
 
     const classes = $derived({
         root: variantSlots.root({ class: [config.slots.root, className, ui?.root] }),
+        scroll: variantSlots.scroll({ class: [config.slots.scroll, ui?.scroll] }),
         base: variantSlots.base({ class: [config.slots.base, ui?.base] }),
         caption: variantSlots.caption({ class: [config.slots.caption, ui?.caption] }),
         thead: variantSlots.thead({ class: [config.slots.thead, ui?.thead] }),
@@ -567,189 +570,191 @@
     aria-label={caption ?? 'Data table'}
     {...restProps}
 >
-    <table class={classes.base}>
-        {#if captionSlot}
-            <caption class={classes.caption}>
-                {@render captionSlot()}
-            </caption>
-        {:else if caption}
-            <caption class={classes.caption}>{caption}</caption>
-        {/if}
-
-        {#if visibleColumns.length > 0}
-            <colgroup>
-                {#if selection === 'multiple'}
-                    <col style="width: 48px" />
-                {/if}
-                {#each visibleColumns as col (col.key)}
-                    <col style:width={getColWidth(col)} />
-                {/each}
-            </colgroup>
-        {/if}
-
-        <!-- THEAD -->
-        <thead class={classes.thead}>
-            <tr class={classes.tr}>
-                {#if selection === 'multiple'}
-                    <th
-                        class={classes.th}
-                        scope="col"
-                        style="width: 48px"
-                        aria-label="Select all rows"
-                    >
-                        <Checkbox
-                            checked={allVisibleSelected}
-                            indeterminate={someVisibleSelected}
-                            onCheckedChange={toggleSelectAll}
-                            size="sm"
-                        />
-                    </th>
-                {/if}
-
-                {#each visibleColumns as col, colIdx (col.key)}
-                    {@const sortDir = getSortDirection(col.key)}
-                    {@const sortable = col.sortable === true}
-                    <th
-                        class="{thClass(col.key)} {getAlignClass(col.align)} {col.headerClass ??
-                            ''}"
-                        scope="col"
-                        data-pinned={isPinned(col.key) || undefined}
-                        style="{getPinStyle(col.key)}{getColWidth(col)
-                            ? `; width: ${getColWidth(col)}`
-                            : ''}"
-                        aria-sort={sortDir === 'asc'
-                            ? 'ascending'
-                            : sortDir === 'desc'
-                              ? 'descending'
-                              : undefined}
-                        colspan={col.colspan}
-                        rowspan={col.rowspan}
-                    >
-                        {#if col.header}
-                            {@render col.header({
-                                column: col,
-                                columnIndex: colIdx,
-                                sortDirection: sortDir,
-                                toggleSort: () => toggleSort(col.key)
-                            })}
-                        {:else if headerSlot}
-                            {@render headerSlot({
-                                column: col,
-                                columnIndex: colIdx,
-                                sortDirection: sortDir,
-                                toggleSort: () => toggleSort(col.key)
-                            })}
-                        {:else if sortable}
-                            <Button
-                                variant="ghost"
-                                color="surface"
-                                size="xs"
-                                label={col.label ?? col.key}
-                                trailingIcon={sortDir === 'asc'
-                                    ? icons.sortAsc
-                                    : sortDir === 'desc'
-                                      ? icons.sortDesc
-                                      : icons.sortDefault}
-                                onclick={(e) => toggleSort(col.key, e)}
-                                aria-label="Sort by {col.label ?? col.key}"
-                                class="-ms-2 font-semibold tracking-wider uppercase {sortDir
-                                    ? ''
-                                    : '*:last:opacity-30'}"
-                            />
-                        {:else}
-                            {col.label ?? col.key}
-                        {/if}
-
-                        {#if col.resizable}
-                            <!-- svelte-ignore a11y_no_static_element_interactions -->
-                            <span
-                                class="group/resize absolute top-0 -right-px flex h-full w-4 cursor-col-resize touch-none items-center justify-center select-none"
-                                onmousedown={(e) => onResizeStart(e, col)}
-                            >
-                                <span
-                                    class="h-4 w-0.5 rounded-full bg-outline-variant/50 transition-all group-hover/resize:h-5 group-hover/resize:bg-primary group-active/resize:bg-primary"
-                                ></span>
-                            </span>
-                        {/if}
-                    </th>
-                {/each}
-            </tr>
-        </thead>
-
-        <!-- TBODY -->
-        <tbody class={classes.tbody}>
-            {#if bodyTopSlot}
-                {@render bodyTopSlot()}
+    <ScrollArea orientation="both" class={classes.scroll} {...scrollArea}>
+        <table class={classes.base}>
+            {#if captionSlot}
+                <caption class={classes.caption}>
+                    {@render captionSlot()}
+                </caption>
+            {:else if caption}
+                <caption class={classes.caption}>{caption}</caption>
             {/if}
 
-            {#if hasVisibleRows}
-                <!-- Pinned rows at top -->
-                {#each pinnedData as row, rowIdx (getRowKey(row, rowKey, rowIdx))}
-                    {@const rowKeyVal = getRowKey(row, rowKey, rowIdx)}
-                    {@render tableRow(row, rowIdx, rowKeyVal, true)}
-                {/each}
-
-                <!-- Separator between pinned and unpinned -->
-                {#if pinnedData.length > 0 && unpinnedPaginatedData.length > 0}
-                    <tr><td colspan={totalColspan} class="h-0.5 bg-primary/20 p-0"></td></tr>
-                {/if}
-
-                <!-- Regular rows -->
-                {#each unpinnedPaginatedData as row, rowIdx (getRowKey(row, rowKey, page * pageSize + rowIdx))}
-                    {@const absIdx = manualPagination ? rowIdx : page * pageSize + rowIdx}
-                    {@const rowKeyVal = getRowKey(row, rowKey, absIdx)}
-                    {@render tableRow(row, absIdx, rowKeyVal, false)}
-                {/each}
-            {:else if loading && loadingSlot}
-                <tr>
-                    <td colspan={totalColspan} class={classes.loading}>
-                        {@render loadingSlot()}
-                    </td>
-                </tr>
-            {:else}
-                <tr>
-                    <td colspan={totalColspan} class={classes.empty}>
-                        {#if emptySlot}
-                            {@render emptySlot()}
-                        {:else}
-                            {empty}
-                        {/if}
-                    </td>
-                </tr>
+            {#if visibleColumns.length > 0}
+                <colgroup>
+                    {#if selection === 'multiple'}
+                        <col style="width: 48px" />
+                    {/if}
+                    {#each visibleColumns as col (col.key)}
+                        <col style:width={getColWidth(col)} />
+                    {/each}
+                </colgroup>
             {/if}
 
-            {#if bodyBottomSlot}
-                {@render bodyBottomSlot()}
-            {/if}
-        </tbody>
-
-        <!-- TFOOT -->
-        {#if hasFooter}
-            <tfoot class={classes.tfoot}>
+            <!-- THEAD -->
+            <thead class={classes.thead}>
                 <tr class={classes.tr}>
                     {#if selection === 'multiple'}
-                        <th class={classes.th}></th>
+                        <th
+                            class={classes.th}
+                            scope="col"
+                            style="width: 48px"
+                            aria-label="Select all rows"
+                        >
+                            <Checkbox
+                                checked={allVisibleSelected}
+                                indeterminate={someVisibleSelected}
+                                onCheckedChange={toggleSelectAll}
+                                size="sm"
+                            />
+                        </th>
                     {/if}
 
                     {#each visibleColumns as col, colIdx (col.key)}
+                        {@const sortDir = getSortDirection(col.key)}
+                        {@const sortable = col.sortable === true}
                         <th
-                            class="{thClass(col.key)} {getAlignClass(col.align)}"
+                            class="{thClass(col.key)} {getAlignClass(col.align)} {col.headerClass ??
+                                ''}"
+                            scope="col"
                             data-pinned={isPinned(col.key) || undefined}
-                            style={getPinStyle(col.key)}
+                            style="{getPinStyle(col.key)}{getColWidth(col)
+                                ? `; width: ${getColWidth(col)}`
+                                : ''}"
+                            aria-sort={sortDir === 'asc'
+                                ? 'ascending'
+                                : sortDir === 'desc'
+                                  ? 'descending'
+                                  : undefined}
+                            colspan={col.colspan}
+                            rowspan={col.rowspan}
                         >
-                            {#if col.footer}
-                                {@render col.footer({
+                            {#if col.header}
+                                {@render col.header({
                                     column: col,
                                     columnIndex: colIdx,
-                                    rows: sortedData
+                                    sortDirection: sortDir,
+                                    toggleSort: () => toggleSort(col.key)
                                 })}
+                            {:else if headerSlot}
+                                {@render headerSlot({
+                                    column: col,
+                                    columnIndex: colIdx,
+                                    sortDirection: sortDir,
+                                    toggleSort: () => toggleSort(col.key)
+                                })}
+                            {:else if sortable}
+                                <Button
+                                    variant="ghost"
+                                    color="surface"
+                                    size="xs"
+                                    label={col.label ?? col.key}
+                                    trailingIcon={sortDir === 'asc'
+                                        ? icons.sortAsc
+                                        : sortDir === 'desc'
+                                          ? icons.sortDesc
+                                          : icons.sortDefault}
+                                    onclick={(e) => toggleSort(col.key, e)}
+                                    aria-label="Sort by {col.label ?? col.key}"
+                                    class="-ms-2 font-semibold tracking-wider uppercase {sortDir
+                                        ? ''
+                                        : '*:last:opacity-30'}"
+                                />
+                            {:else}
+                                {col.label ?? col.key}
+                            {/if}
+
+                            {#if col.resizable}
+                                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                                <span
+                                    class="group/resize absolute top-0 -right-px flex h-full w-4 cursor-col-resize touch-none items-center justify-center select-none"
+                                    onmousedown={(e) => onResizeStart(e, col)}
+                                >
+                                    <span
+                                        class="h-4 w-0.5 rounded-full bg-outline-variant/50 transition-all group-hover/resize:h-5 group-hover/resize:bg-primary group-active/resize:bg-primary"
+                                    ></span>
+                                </span>
                             {/if}
                         </th>
                     {/each}
                 </tr>
-            </tfoot>
-        {/if}
-    </table>
+            </thead>
+
+            <!-- TBODY -->
+            <tbody class={classes.tbody}>
+                {#if bodyTopSlot}
+                    {@render bodyTopSlot()}
+                {/if}
+
+                {#if hasVisibleRows}
+                    <!-- Pinned rows at top -->
+                    {#each pinnedData as row, rowIdx (getRowKey(row, rowKey, rowIdx))}
+                        {@const rowKeyVal = getRowKey(row, rowKey, rowIdx)}
+                        {@render tableRow(row, rowIdx, rowKeyVal, true)}
+                    {/each}
+
+                    <!-- Separator between pinned and unpinned -->
+                    {#if pinnedData.length > 0 && unpinnedPaginatedData.length > 0}
+                        <tr><td colspan={totalColspan} class="h-0.5 bg-primary/20 p-0"></td></tr>
+                    {/if}
+
+                    <!-- Regular rows -->
+                    {#each unpinnedPaginatedData as row, rowIdx (getRowKey(row, rowKey, page * pageSize + rowIdx))}
+                        {@const absIdx = manualPagination ? rowIdx : page * pageSize + rowIdx}
+                        {@const rowKeyVal = getRowKey(row, rowKey, absIdx)}
+                        {@render tableRow(row, absIdx, rowKeyVal, false)}
+                    {/each}
+                {:else if loading && loadingSlot}
+                    <tr>
+                        <td colspan={totalColspan} class={classes.loading}>
+                            {@render loadingSlot()}
+                        </td>
+                    </tr>
+                {:else}
+                    <tr>
+                        <td colspan={totalColspan} class={classes.empty}>
+                            {#if emptySlot}
+                                {@render emptySlot()}
+                            {:else}
+                                {empty}
+                            {/if}
+                        </td>
+                    </tr>
+                {/if}
+
+                {#if bodyBottomSlot}
+                    {@render bodyBottomSlot()}
+                {/if}
+            </tbody>
+
+            <!-- TFOOT -->
+            {#if hasFooter}
+                <tfoot class={classes.tfoot}>
+                    <tr class={classes.tr}>
+                        {#if selection === 'multiple'}
+                            <th class={classes.th}></th>
+                        {/if}
+
+                        {#each visibleColumns as col, colIdx (col.key)}
+                            <th
+                                class="{thClass(col.key)} {getAlignClass(col.align)}"
+                                data-pinned={isPinned(col.key) || undefined}
+                                style={getPinStyle(col.key)}
+                            >
+                                {#if col.footer}
+                                    {@render col.footer({
+                                        column: col,
+                                        columnIndex: colIdx,
+                                        rows: sortedData
+                                    })}
+                                {/if}
+                            </th>
+                        {/each}
+                    </tr>
+                </tfoot>
+            {/if}
+        </table>
+    </ScrollArea>
 
     {#if loading && hasVisibleRows}
         <div

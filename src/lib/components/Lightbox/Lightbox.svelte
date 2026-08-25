@@ -15,6 +15,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Button from '../Button/Button.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
+    import ScrollArea from '../ScrollArea/ScrollArea.svelte'
     import LightboxSlide from './LightboxSlide.svelte'
     import type {
         LightboxApi,
@@ -51,6 +52,7 @@
         transition = config.defaultVariants.transition ?? 'fade',
         icons,
         ui,
+        scrollArea,
         class: className,
         trigger,
         slide: slideSlot,
@@ -200,6 +202,9 @@
         }),
         captionDescription: variantSlots.captionDescription({
             class: [config.slots.captionDescription, ui?.captionDescription]
+        }),
+        thumbnailsScroll: variantSlots.thumbnailsScroll({
+            class: [config.slots.thumbnailsScroll, ui?.thumbnailsScroll]
         }),
         thumbnails: variantSlots.thumbnails({ class: [config.slots.thumbnails, ui?.thumbnails] }),
         spinner: variantSlots.spinner({ class: [config.slots.spinner, ui?.spinner] })
@@ -787,29 +792,36 @@
             </div>
 
             {#if showThumbnails}
-                <div class={classes.thumbnails} role="tablist" aria-label="Thumbnails">
-                    {#each slides as slide, i (i)}
-                        <button
-                            type="button"
-                            role="tab"
-                            aria-selected={i === index}
-                            aria-label={slide.alt}
-                            class={thumbnailClass(i === index)}
-                            onclick={() => goTo(i)}
-                        >
-                            {#if thumbnailSlot}
-                                {@render thumbnailSlot({
-                                    slide,
-                                    index: i,
-                                    active: i === index,
-                                    select: () => goTo(i)
-                                })}
-                            {:else}
-                                {@render mediaThumb(slide, 'size-full object-cover', true)}
-                            {/if}
-                        </button>
-                    {/each}
-                </div>
+                <ScrollArea
+                    orientation="horizontal"
+                    class={classes.thumbnailsScroll}
+                    ui={{ thumb: 'bg-white/40 hover:bg-white/70' }}
+                    {...scrollArea}
+                >
+                    <div class={classes.thumbnails} role="tablist" aria-label="Thumbnails">
+                        {#each slides as slide, i (i)}
+                            <button
+                                type="button"
+                                role="tab"
+                                aria-selected={i === index}
+                                aria-label={slide.alt}
+                                class={thumbnailClass(i === index)}
+                                onclick={() => goTo(i)}
+                            >
+                                {#if thumbnailSlot}
+                                    {@render thumbnailSlot({
+                                        slide,
+                                        index: i,
+                                        active: i === index,
+                                        select: () => goTo(i)
+                                    })}
+                                {:else}
+                                    {@render mediaThumb(slide, 'size-full object-cover', true)}
+                                {/if}
+                            </button>
+                        {/each}
+                    </div>
+                </ScrollArea>
             {/if}
         </Dialog.Content>
     </Dialog.Portal>

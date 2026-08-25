@@ -190,6 +190,30 @@ describe('Lightbox', () => {
             })
         })
 
+        it('should scroll the thumbnail strip through a scroll area viewport', async () => {
+            render(Lightbox, { slides, open: true })
+            await vi.waitFor(() => {
+                expect(document.querySelector('[data-scroll-area-viewport]')).not.toBeNull()
+            })
+
+            const viewport = document.querySelector<HTMLElement>('[data-scroll-area-viewport]')!
+            expect(getComputedStyle(viewport).overflowX).toBe('scroll')
+            expect(viewport.querySelector('[role="tablist"]')).not.toBeNull()
+        })
+
+        it('should keep the tabs as direct children of the tablist', async () => {
+            render(Lightbox, { slides, open: true })
+            await vi.waitFor(() => {
+                expect(document.querySelector('[role="tablist"]')).not.toBeNull()
+            })
+
+            const strip = document.querySelector('[role="tablist"]')!
+            const tabs = Array.from(strip.children).filter(
+                (el) => el.getAttribute('role') === 'tab'
+            )
+            expect(tabs.length).toBe(slides.length)
+        })
+
         it('should mark the active thumbnail as selected', async () => {
             render(Lightbox, { slides, open: true })
             await vi.waitFor(() => {

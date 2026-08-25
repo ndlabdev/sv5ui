@@ -28,8 +28,8 @@ export const lightboxVariants = tv({
             'pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 p-4 pb-6 text-center bg-gradient-to-t from-black/70 to-transparent',
         captionTitle: 'text-base font-semibold text-white',
         captionDescription: 'max-w-2xl text-sm text-white/70',
-        thumbnails:
-            'relative z-20 hidden md:flex items-center justify-center gap-2 overflow-x-auto p-3 bg-black/40',
+        thumbnailsScroll: 'relative z-20 hidden md:block',
+        thumbnails: 'flex items-center justify-center gap-2 bg-black/40 p-3',
         thumbnail:
             'relative h-14 w-20 shrink-0 overflow-hidden rounded-md opacity-50 ring-2 ring-transparent transition hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70',
         thumbnailImage: 'size-full object-cover',
