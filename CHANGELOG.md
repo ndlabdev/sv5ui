@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **ColorPicker** — new inline color picker: pointer- and keyboard-driven saturation/brightness area, hue slider, optional `alpha` slider, live preview swatch, eyedropper (auto-hidden where the browser has no EyeDropper API), editable text field with an optional `formatSelect` cycle button, and preset `swatches`. Emits `hex`/`rgb`/`hsl` strings through `bind:value` (alpha only appended when the color is translucent), accepts any hex, `rgb()` or `hsl()` string on the way in, and integrates with `FormField`/`Form` (hidden input, error color, `aria-describedby`). 5 sizes, 8 colors, `onValueChange`/`onValueCommit`, and `ui` overrides for all 16 slots.
 - **ScrollArea** — scrollable region with a custom overlay scrollbar that renders identically across browsers: `orientation` (`vertical`/`horizontal`/`both`), `type` (`hover`/`scroll`/`auto`/`always`), 4 sizes, 8 colors, optional permanent `track`, fade `transition`, `scrollHideDelay`, `bind:viewportRef` for programmatic scrolling, and `ui` overrides for every slot (`root`, `viewport`, `content`, `scrollbar`, `thumb`, `corner`).
 
 ### Changed
