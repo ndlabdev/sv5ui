@@ -17,6 +17,7 @@
         { href: '/link', label: 'Link', icon: 'lucide:link' },
         { href: '/button', label: 'Button', icon: 'lucide:mouse-pointer-click' },
         { href: '/separator', label: 'Separator', icon: 'lucide:minus' },
+        { href: '/scroll-area', label: 'Scroll Area', icon: 'lucide:scroll-text' },
         { href: '/chip', label: 'Chip', icon: 'lucide:circle-dot' },
         { href: '/progress', label: 'Progress', icon: 'lucide:loader' },
         { href: '/badge', label: 'Badge', icon: 'lucide:tag' },
@@ -55,6 +56,7 @@
         { href: '/input', label: 'Input', icon: 'lucide:text-cursor' },
         { href: '/input-number', label: 'Input Number', icon: 'lucide:hash' },
         { href: '/input-tags', label: 'Input Tags', icon: 'lucide:tags' },
+        { href: '/color-picker', label: 'Color Picker', icon: 'lucide:palette' },
         { href: '/textarea', label: 'Textarea', icon: 'lucide:text' },
         { href: '/select', label: 'Select', icon: 'lucide:chevrons-up-down' },
         { href: '/select-menu', label: 'Select Menu', icon: 'lucide:list-filter' },
@@ -144,6 +146,14 @@
                 <span class="hidden text-sm text-on-surface-variant capitalize sm:inline">
                     {mode.current}
                 </span>
+                <Button
+                    href="https://ko-fi.com/ndlabdev"
+                    variant="soft"
+                    color="error"
+                    icon="lucide:heart"
+                    label="Donate"
+                    size="sm"
+                />
                 <Button
                     variant="ghost"
                     color="secondary"
@@ -240,7 +250,7 @@
         </aside>
 
         <!-- Main Content -->
-        <Main class="flex-1 p-6 lg:p-8">
+        <Main class="min-w-0 flex-1 p-6 lg:p-8">
             <div class="mx-auto max-w-5xl">
                 {@render children()}
             </div>

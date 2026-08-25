@@ -1,6 +1,6 @@
 {
     "name": "sv5ui",
-    "version": "2.5.0",
+    "version": "2.6.0",
     "description": "A modern Svelte 5 UI component library with Tailwind CSS",
     "author": "ndlabdev",
     "license": "MIT",
@@ -11,6 +11,10 @@
     "homepage": "https://sv5ui.vercel.app",
     "bugs": {
         "url": "https://github.com/ndlabdev/sv5ui/issues"
+    },
+    "funding": {
+        "type": "ko_fi",
+        "url": "https://ko-fi.com/ndlabdev"
     },
     "scripts": {
         "dev": "vite dev",

@@ -13,6 +13,7 @@
   <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/v/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm version" /></a>
   <a href="https://www.npmjs.com/package/sv5ui"><img src="https://img.shields.io/npm/dm/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="npm downloads" /></a>
   <a href="https://github.com/ndlabdev/sv5ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/sv5ui?style=flat-square&colorA=18181b&colorB=ff3e00" alt="license" /></a>
+  <a href="https://ko-fi.com/ndlabdev"><img src="https://img.shields.io/badge/Ko--fi-donate-x?style=flat-square&colorA=18181b&colorB=ff3e00&logo=kofi&logoColor=white" alt="donate on Ko-fi" /></a>
 </p>
 
 <p align="center">
@@ -176,6 +177,16 @@ Swap `zod` for `valibot`, `yup`, or `joi` — the API is identical.
 | `mode-watcher`                    | `^1.0.0` | Yes (dark mode)            |
 | `zod` / `valibot` / `yup` / `joi` | —        | Optional (form validation) |
 | `@tiptap/*`, `tiptap-markdown`    | `^3.0.0` | Optional (`Editor`)        |
+
+## Support
+
+SV5UI is free and MIT licensed, built and maintained in the open. If it saves you time, a coffee goes a long way toward keeping it maintained.
+
+<p>
+  <a href="https://ko-fi.com/ndlabdev"><img src="https://img.shields.io/badge/Ko--fi-Support%20this%20project-ff3e00?style=for-the-badge&logo=kofi&logoColor=white&colorA=18181b" alt="Support SV5UI on Ko-fi" /></a>
+</p>
+
+You can also help without spending anything: star the repo, report a bug, or send a pull request.
 
 ## Contributing
 

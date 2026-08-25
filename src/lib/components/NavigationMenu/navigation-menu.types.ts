@@ -2,6 +2,7 @@ import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { HTMLAttributes } from 'svelte/elements'
 import type { NavigationMenuSlots, NavigationMenuVariantProps } from './navigation-menu.variants.js'
+import type { ScrollAreaOptions } from '../ScrollArea/scroll-area.types.js'
 import type { AvatarProps } from '../Avatar/avatar.types.js'
 import type { BadgeProps } from '../Badge/badge.types.js'
 import type { ChipProps } from '../Chip/chip.types.js'
@@ -290,6 +291,10 @@ export interface NavigationMenuProps extends Omit<
 
     /** Slot class overrides. */
     ui?: Partial<Record<NavigationMenuSlots, ClassNameValue>>
+    /**
+     * Options forwarded to the scroll area wrapping a horizontal menu list.
+     */
+    scrollArea?: ScrollAreaOptions
 
     // -------------------------------------------------------------------------
     // Snippets

@@ -49,7 +49,8 @@ export const iconsDefaults = {
     sortAsc: 'lucide:chevron-up',
     sortDesc: 'lucide:chevron-down',
     sortDefault: 'lucide:chevrons-up-down',
-    panelLeft: 'lucide:panel-left'
+    panelLeft: 'lucide:panel-left',
+    eyeDropper: 'lucide:pipette'
 }
 
 // ==================== TYPES ====================

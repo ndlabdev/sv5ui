@@ -206,6 +206,26 @@ describe('DropdownMenu', () => {
             })
         })
 
+        it('should apply arrow classes matching the content background', async () => {
+            render(DropdownMenu, { open: true, items: basicItems, arrow: true })
+            await vi.waitFor(() => {
+                const arrow = getArrow()
+                expect(arrow).not.toBeNull()
+                expect(arrow!.className).toContain('text-surface-container-low')
+                expect(arrow!.className).toContain('fill-surface-container-low')
+            })
+        })
+
+        it('should not clip the arrow with content overflow', async () => {
+            render(DropdownMenu, { open: true, items: basicItems, arrow: true })
+            await vi.waitFor(() => {
+                const content = getContent()
+                expect(content).not.toBeNull()
+                expect(content!.className).toContain('overflow-visible')
+                expect(content!.className).not.toContain('overflow-hidden')
+            })
+        })
+
         it('should accept custom arrow dimensions', async () => {
             render(DropdownMenu, { open: true, items: basicItems, arrow: { width: 16, height: 8 } })
             await vi.waitFor(() => {

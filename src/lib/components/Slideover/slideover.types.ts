@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte'
 import type { ClassNameValue } from 'tailwind-merge'
 import type { SlideoverSlots, SlideoverVariantProps } from './slideover.variants.js'
+import type { ScrollAreaOptions } from '../ScrollArea/scroll-area.types.js'
 import type { DialogRootPropsWithoutHTML, DialogContentPropsWithoutHTML } from 'bits-ui'
 import type { ButtonVariantProps } from '../Button/button.variants.js'
 
@@ -126,6 +127,11 @@ export interface SlideoverProps extends RootProps, ContentProps {
      * Override classes for specific slideover slots.
      */
     ui?: Partial<Record<SlideoverSlots, ClassNameValue>>
+
+    /**
+     * Options forwarded to the scroll area wrapping the slideover body.
+     */
+    scrollArea?: ScrollAreaOptions
 
     /**
      * Additional CSS classes for the trigger element,
