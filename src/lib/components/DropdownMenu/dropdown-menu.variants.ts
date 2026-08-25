@@ -100,6 +100,11 @@ export const dropdownMenuVariants = tv({
                 ]
             }
         },
+        arrow: {
+            true: {
+                content: 'overflow-visible'
+            }
+        },
         size: {
             xs: {
                 item: 'py-1 text-xs',

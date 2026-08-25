@@ -66,7 +66,7 @@
     const hasRadioItems = $derived(items.some((i) => i.type === 'radio'))
     const firstRadioGroup = $derived(radioGroups[0])
 
-    const variantSlots = $derived(dropdownMenuVariants({ transition, size }))
+    const variantSlots = $derived(dropdownMenuVariants({ transition, size, arrow: !!arrow }))
     const classes = $derived({
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
         arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] }),
@@ -339,7 +339,11 @@
         {/if}
 
         {#if !!arrow}
-            <DropdownMenu.Arrow width={arrowProps.width} height={arrowProps.height} />
+            <DropdownMenu.Arrow
+                width={arrowProps.width}
+                height={arrowProps.height}
+                class={classes.arrow}
+            />
         {/if}
     </DropdownMenu.Content>
 {/snippet}
