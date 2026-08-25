@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-08-25
+
 ### Added
 
 - **ColorPicker** — inline color picker (custom saturation area, bits-ui Slider for the channels): hue and optional `alpha` sliders, preview swatch, eyedropper, editable text field with optional `formatSelect`, and preset `swatches`. Bindable `value` emits `hex`/`rgb`/`hsl` with alpha appended only when translucent; 5 sizes, 8 colors, `onValueChange`/`onValueCommit`, FormField integration, and `ui` overrides for all 16 slots. ([#190](https://github.com/ndlabdev/sv5ui/pull/190))
@@ -413,7 +415,8 @@ New SSR-safe Svelte 5 hooks:
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/ndlabdev/sv5ui/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/ndlabdev/sv5ui/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/ndlabdev/sv5ui/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/ndlabdev/sv5ui/compare/v2.2.0...v2.3.0
