@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **DropdownMenu** — the `arrow` prop now actually draws an arrow. Its slot classes were computed but never passed to the arrow, so it inherited the body text color, and `overflow-hidden` on the content clipped it away entirely. The arrow is now painted in the menu surface color, and the content switches to `overflow-visible` only while the arrow is enabled.
+
 ## [2.5.0] - 2026-08-02
 
 ### Added
