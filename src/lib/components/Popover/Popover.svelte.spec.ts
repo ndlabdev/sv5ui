@@ -127,6 +127,27 @@ describe('Popover', () => {
                 expect(svg!.getAttribute('height')).toBe('8')
             })
         })
+
+        it('should outline the arrow edges with the content ring color', async () => {
+            render(Popover, { open: true, arrow: true })
+            await vi.waitFor(() => {
+                const border = getArrow()!.querySelectorAll('path')[1]
+                expect(border).not.toBeUndefined()
+                expect(border.getAttribute('d')).toBe('M0 0L6 6L12 0')
+                expect(border.getAttribute('class')).toContain('stroke-surface-container-highest')
+                expect(getContent()!.className).toContain('ring-surface-container-highest')
+            })
+        })
+
+        it('should mask the content ring across the arrow base', async () => {
+            render(Popover, { open: true, arrow: { width: 20, height: 10 } })
+            await vi.waitFor(() => {
+                const fill = getArrow()!.querySelector('path')
+                expect(fill).not.toBeNull()
+                expect(fill!.getAttribute('d')).toBe('M0 -1H20V1H0Z M0 0H20L10 10Z')
+                expect(fill!.getAttribute('fill')).toBe('currentColor')
+            })
+        })
     })
 
     // ==================== DISMISSIBLE ====================

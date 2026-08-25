@@ -46,7 +46,10 @@
     const variantSlots = $derived(popoverVariants({ transition }))
     const classes = $derived({
         content: variantSlots.content({ class: [config.slots.content, ui?.content] }),
-        arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] })
+        arrow: variantSlots.arrow({ class: [config.slots.arrow, ui?.arrow] }),
+        arrowBorder: variantSlots.arrowBorder({
+            class: [config.slots.arrowBorder, ui?.arrowBorder]
+        })
     })
 
     const arrowProps = $derived.by(() => {
@@ -54,6 +57,14 @@
             return { width: 12, height: 6, ...arrow }
         }
         return { width: 12, height: 6 }
+    })
+
+    const arrowPaths = $derived.by(() => {
+        const { width: w, height: h } = arrowProps
+        return {
+            fill: `M0 -1H${w}V1H0Z M0 0H${w}L${w / 2} ${h}Z`,
+            border: `M0 0L${w / 2} ${h}L${w} 0`
+        }
     })
 
     const dismissBehavior = $derived(dismissible ? ('close' as const) : ('ignore' as const))
@@ -96,7 +107,26 @@
                 width={arrowProps.width}
                 height={arrowProps.height}
                 class={classes.arrow}
-            />
+            >
+                <svg
+                    width={arrowProps.width}
+                    height={arrowProps.height}
+                    viewBox="0 0 {arrowProps.width} {arrowProps.height}"
+                    class="block overflow-visible"
+                    aria-hidden="true"
+                    data-arrow=""
+                >
+                    <path d={arrowPaths.fill} fill="currentColor" stroke="none" />
+                    <path
+                        d={arrowPaths.border}
+                        fill="none"
+                        stroke-width="1"
+                        stroke-linejoin="round"
+                        vector-effect="non-scaling-stroke"
+                        class={classes.arrowBorder}
+                    />
+                </svg>
+            </Popover.Arrow>
         {/if}
     </Popover.Content>
 {/snippet}

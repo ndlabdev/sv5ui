@@ -53,6 +53,7 @@ export const dropdownMenuVariants = tv({
             'overflow-hidden'
         ],
         arrow: 'fill-surface-container-low text-surface-container-low',
+        arrowBorder: 'stroke-outline-variant/50',
         group: 'p-1',
         separator: '-mx-1 my-1 h-px bg-outline-variant',
         label: 'px-2 py-1.5 text-xs font-semibold text-on-surface-variant',

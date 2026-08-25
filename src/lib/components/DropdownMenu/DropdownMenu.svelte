@@ -88,12 +88,23 @@
         subTriggerIcon: variantSlots.subTriggerIcon({
             class: [config.slots.subTriggerIcon, ui?.subTriggerIcon]
         }),
-        subContent: variantSlots.subContent({ class: [config.slots.subContent, ui?.subContent] })
+        subContent: variantSlots.subContent({ class: [config.slots.subContent, ui?.subContent] }),
+        arrowBorder: variantSlots.arrowBorder({
+            class: [config.slots.arrowBorder, ui?.arrowBorder]
+        })
     })
 
     const arrowProps = $derived.by(() => {
         if (typeof arrow === 'object') return { width: 12, height: 6, ...arrow }
         return { width: 12, height: 6 }
+    })
+
+    const arrowPaths = $derived.by(() => {
+        const { width: w, height: h } = arrowProps
+        return {
+            fill: `M0 -1H${w}V1H0Z M0 0H${w}L${w / 2} ${h}Z`,
+            border: `M0 0L${w / 2} ${h}L${w} 0`
+        }
     })
 
     function close() {
@@ -343,7 +354,26 @@
                 width={arrowProps.width}
                 height={arrowProps.height}
                 class={classes.arrow}
-            />
+            >
+                <svg
+                    width={arrowProps.width}
+                    height={arrowProps.height}
+                    viewBox="0 0 {arrowProps.width} {arrowProps.height}"
+                    class="block overflow-visible"
+                    aria-hidden="true"
+                    data-arrow=""
+                >
+                    <path d={arrowPaths.fill} fill="currentColor" stroke="none" />
+                    <path
+                        d={arrowPaths.border}
+                        fill="none"
+                        stroke-width="1"
+                        stroke-linejoin="round"
+                        vector-effect="non-scaling-stroke"
+                        class={classes.arrowBorder}
+                    />
+                </svg>
+            </DropdownMenu.Arrow>
         {/if}
     </DropdownMenu.Content>
 {/snippet}

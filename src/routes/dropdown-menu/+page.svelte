@@ -210,6 +210,46 @@
         </div>
     </section>
 
+    <!-- Arrow -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Arrow</h2>
+        <p class="text-sm text-on-surface-variant">
+            Add a pointer to the trigger with the
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">arrow</code>
+            prop. Pass an object to customize its
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">width</code>
+            and
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">height</code>.
+        </p>
+        <div class="grid gap-4 sm:grid-cols-2">
+            {#each [{ side: 'top' as const, label: 'Top' }, { side: 'right' as const, label: 'Right' }, { side: 'bottom' as const, label: 'Bottom' }, { side: 'left' as const, label: 'Left' }] as item (item.side)}
+                <div
+                    class="flex items-center justify-center rounded-lg bg-surface-container-high p-6"
+                >
+                    <DropdownMenu
+                        items={basicItems.slice(0, 4)}
+                        arrow
+                        align="center"
+                        side={item.side}
+                    >
+                        {#snippet children({ props })}
+                            <Button {...props} variant="soft">{item.label}</Button>
+                        {/snippet}
+                    </DropdownMenu>
+                </div>
+            {/each}
+        </div>
+        <div class="flex flex-wrap items-center gap-4 rounded-lg bg-surface-container-high p-6">
+            {#each [{ label: 'Small', size: { width: 8, height: 4 } }, { label: 'Default', size: { width: 12, height: 6 } }, { label: 'Large', size: { width: 20, height: 10 } }] as item (item.label)}
+                <DropdownMenu items={basicItems.slice(0, 4)} arrow={item.size} align="center">
+                    {#snippet children({ props })}
+                        <Button {...props} variant="outline">{item.label}</Button>
+                    {/snippet}
+                </DropdownMenu>
+            {/each}
+        </div>
+    </section>
+
     <!-- Sizes -->
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Sizes</h2>
