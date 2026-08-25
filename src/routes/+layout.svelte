@@ -147,6 +147,14 @@
                     {mode.current}
                 </span>
                 <Button
+                    href="https://ko-fi.com/ndlabdev"
+                    variant="soft"
+                    color="error"
+                    icon="lucide:heart"
+                    label="Donate"
+                    size="sm"
+                />
+                <Button
                     variant="ghost"
                     color="secondary"
                     icon={mode.current === 'dark' ? 'lucide:sun' : 'lucide:moon'}
