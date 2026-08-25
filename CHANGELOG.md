@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **NavigationMenu** — a horizontal menu that overflows now scrolls through a ScrollArea. New `scrollArea` prop and `scroll` slot.
 - **Lightbox** — the thumbnail strip scrolls through a ScrollArea with a light thumb suited to the dark backdrop. New `scrollArea` prop and `thumbnailsScroll` slot.
 
+### Fixed
+
+- **Popover** — the arrow is now painted in the popover surface color instead of inheriting the body text color, so it no longer renders as a black triangle under a light panel. It follows the surface in dark mode too.
+
 ## [2.5.0] - 2026-08-02
 
 ### Added

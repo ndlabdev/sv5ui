@@ -203,6 +203,8 @@ describe('Popover', () => {
             await vi.waitFor(() => {
                 const arrow = getArrow()
                 expect(arrow).not.toBeNull()
+                expect(arrow!.className).toContain('text-surface-container-lowest')
+                expect(arrow!.className).toContain('fill-surface-container-lowest')
             })
         })
     })
