@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **useSessionStorage** — the storage hook backed by `sessionStorage`, for state that should live for the life of the tab.
+
+### Changed
+
+- **useLocalStorage** — the key may now be a getter, and a `null` key turns the hook inert, so a component can offer opt-in persistence without branching. Adds `storage: 'local' | 'session'`, a `remove()` that deletes the entry instead of writing the initial value back, and an `enabled` flag. Existing calls are unchanged.
+
 ## [2.6.1] - 2026-08-26
 
 ### Fixed
