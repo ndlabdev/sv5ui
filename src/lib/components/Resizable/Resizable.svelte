@@ -11,7 +11,7 @@
     import { resizableVariants, resizableDefaults } from './resizable.variants.js'
     import { getComponentConfig } from '../../config.js'
     import { useElementSize } from '../../hooks/useResizeObserver/useResizeObserver.svelte.js'
-    import { useEventListener } from '../../hooks/useEventListener/useEventListener.svelte.js'
+    import { usePointerDrag } from '../../hooks/usePointerDrag/index.js'
     import {
         clampLayout,
         collapsePane,
@@ -206,83 +206,35 @@
     }
 
     let startSizes: number[] = []
-    let startPointer = 0
     let dragSize = 0
-    let lastDelta = 0
-    let rafId = 0
 
-    function capturePointer(element: HTMLElement, pointerId: number) {
-        try {
-            element.setPointerCapture(pointerId)
-        } catch {
-            return
-        }
-    }
-
-    useEventListener(
-        () => (activeHandle === null ? null : window),
-        'pointermove',
-        (event) => handlePointerMove(event as PointerEvent)
-    )
-
-    useEventListener(
-        () => (activeHandle === null ? null : window),
-        'pointerup',
-        () => handlePointerUp()
-    )
-
-    useEventListener(
-        () => (activeHandle === null ? null : window),
-        'pointercancel',
-        () => handlePointerUp()
-    )
-
-    function applyDrag() {
-        if (activeHandle === null) return
-
-        layout = resizeAt(startSizes, activeHandle, lastDelta, constraints)
-    }
-
-    function handlePointerDown(event: PointerEvent, index: number) {
-        if (disabled || isHandleLocked(index)) return
-        if (event.button !== 0 && event.pointerType === 'mouse') return
-
-        capturePointer(event.currentTarget as HTMLElement, event.pointerId)
-        activeHandle = index
-        startSizes = [...layout]
-        startPointer = resolvedDirection === 'horizontal' ? event.clientX : event.clientY
-        dragSize = contentSize()
-        lastDelta = 0
-        rememberSize(index)
-        rememberSize(index + 1)
-        onResizeStart?.(index)
-    }
-
-    function handlePointerMove(event: PointerEvent) {
+    function applyDrag(dx: number, dy: number) {
         if (activeHandle === null || dragSize <= 0) return
 
-        const position = resolvedDirection === 'horizontal' ? event.clientX : event.clientY
-        lastDelta = ((position - startPointer) / dragSize) * 100
-
-        if (rafId) return
-        rafId = requestAnimationFrame(() => {
-            rafId = 0
-            applyDrag()
-        })
+        const distance = resolvedDirection === 'horizontal' ? dx : dy
+        layout = resizeAt(startSizes, activeHandle, (distance / dragSize) * 100, constraints)
     }
 
-    function handlePointerUp() {
-        if (activeHandle === null) return
+    const drag = usePointerDrag({
+        axis: () => (resolvedDirection === 'horizontal' ? 'x' : 'y'),
+        disabled: () => disabled,
+        onStart: ({ event }) => {
+            const index = Number((event.currentTarget as HTMLElement).dataset.index)
+            if (!Number.isInteger(index) || isHandleLocked(index)) return false
 
-        if (rafId) {
-            cancelAnimationFrame(rafId)
-            rafId = 0
+            activeHandle = index
+            startSizes = [...layout]
+            dragSize = contentSize()
+            rememberSize(index)
+            rememberSize(index + 1)
+            onResizeStart?.(index)
+        },
+        onMove: ({ dx, dy }) => applyDrag(dx, dy),
+        onEnd: () => {
+            activeHandle = null
+            onResizeEnd?.(layout)
         }
-
-        applyDrag()
-        activeHandle = null
-        onResizeEnd?.(layout)
-    }
+    })
 
     function toggleAt(index: number) {
         const pane = panes[index]
@@ -380,12 +332,6 @@
         api = currentApi
     })
 
-    $effect(() => {
-        return () => {
-            if (rafId) cancelAnimationFrame(rafId)
-        }
-    })
-
     const variantSlots = $derived(
         resizableVariants({ direction: resolvedDirection, color, size, disabled })
     )
@@ -441,7 +387,6 @@
         {#if index < panes.length - 1}
             {@const locked = isHandleLocked(index)}
             <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
             <div
                 role="separator"
                 tabindex={disabled || locked ? -1 : 0}
@@ -457,10 +402,7 @@
                 data-locked={locked ? '' : undefined}
                 data-active={activeHandle === index ? '' : undefined}
                 data-index={index}
-                onpointerdown={(event) => handlePointerDown(event, index)}
-                onpointermove={handlePointerMove}
-                onpointerup={handlePointerUp}
-                onpointercancel={handlePointerUp}
+                {...drag.handlers}
                 ondblclick={() => handleDoubleClick(index)}
                 onkeydown={(event) => handleKeydown(event, index)}
             >

@@ -16,6 +16,8 @@ export interface PointerDragContext {
     dy: number
 }
 
+export type DragAxis = 'x' | 'y' | 'both'
+
 export interface UsePointerDragOptions {
     /**
      * Called on the pointer down that starts a drag. Return exactly `false` to
@@ -40,10 +42,11 @@ export interface UsePointerDragOptions {
     onEnd?: (context: PointerDragContext) => void
 
     /**
-     * Lock the reported delta to one direction.
+     * Lock the reported delta to one direction. May be a getter, for a component
+     * whose orientation can change while it is mounted.
      * @default 'both'
      */
-    axis?: 'x' | 'y' | 'both'
+    axis?: DragAxis | (() => DragAxis)
 
     /**
      * Coalesce moves into one update per animation frame.
@@ -103,7 +106,8 @@ export interface UsePointerDragReturn {
  * ```
  */
 export function usePointerDrag(options: UsePointerDragOptions = {}): UsePointerDragReturn {
-    const { axis = 'both', throttle = true } = options
+    const { throttle = true } = options
+    const resolveAxis = toGetter<DragAxis>(options.axis ?? 'both')
     const isDisabled = toGetter(options.disabled ?? false)
 
     let active = $state(false)
@@ -117,6 +121,8 @@ export function usePointerDrag(options: UsePointerDragOptions = {}): UsePointerD
     let frame = 0
 
     function context(event: PointerEvent): PointerDragContext {
+        const axis = resolveAxis()
+
         return {
             event,
             pointerId,
