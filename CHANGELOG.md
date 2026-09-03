@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **usePointerDrag** — pointer dragging with the parts every component gets wrong: pointer capture with a `window` fallback, moves coalesced to one update per frame, and the final position always flushed on release so the result matches the pointer. Reports `dx`/`dy` from the start of the gesture, locks to one `axis`, and lets `onStart` return `false` to decline a drag.
+
+### Changed
+
+- **ColorPicker** — the saturation area now drags through `usePointerDrag` instead of its own pointer handling. Behaviour is unchanged.
+
 ## [2.6.1] - 2026-08-26
 
 ### Fixed
