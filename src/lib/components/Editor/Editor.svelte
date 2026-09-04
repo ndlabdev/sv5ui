@@ -25,6 +25,7 @@
     import Tooltip from '../Tooltip/Tooltip.svelte'
     import EditorUrlPrompt from './EditorUrlPrompt.svelte'
     import type { UrlPromptResult } from './EditorUrlPrompt.svelte'
+    import EditorImageCropDialog from './EditorImageCropDialog.svelte'
     import {
         httpUrlSchema,
         youtubeUrlSchema,
@@ -58,6 +59,7 @@
         linkOpenInNewTab = true,
         markdownAllowHtml = false,
         image = false,
+        imageCrop = false,
         onImageUpload,
         onImageUploadError,
         tables = false,
@@ -482,11 +484,41 @@
 
     let fileInput: HTMLInputElement | null = $state(null)
 
+    const cropOptions = $derived(
+        imageCrop === false || imageCrop === undefined
+            ? undefined
+            : imageCrop === true
+              ? {}
+              : imageCrop
+    )
+
+    let cropPrompt = $state<{
+        open: boolean
+        file: File | null
+        settle?: (value: File | null) => void
+    }>({ open: false, file: null })
+
+    function cropBeforeUpload(file: File): Promise<File | null> {
+        return new Promise((resolve) => {
+            let done = false
+            const settle = (value: File | null): void => {
+                if (done) return
+                done = true
+                resolve(value)
+            }
+
+            cropPrompt = { open: true, file, settle }
+        })
+    }
+
     async function uploadImage(file: File, position?: number): Promise<void> {
         if (!editor || !onImageUpload) return
 
+        const source = cropOptions ? await cropBeforeUpload(file) : file
+        if (!source) return
+
         try {
-            const url = await onImageUpload(file)
+            const url = await onImageUpload(source)
             if (!isSafeImageSrc(url)) {
                 // eslint-disable-next-line no-console
                 console.warn('[Editor] blocked unsafe image src from onImageUpload:', url)
@@ -830,6 +862,16 @@
         </div>
     {/if}
 </div>
+
+{#if cropOptions}
+    <EditorImageCropDialog
+        bind:open={cropPrompt.open}
+        file={cropPrompt.file}
+        options={cropOptions}
+        onConfirm={(cropped) => cropPrompt.settle?.(cropped)}
+        onCancel={() => cropPrompt.settle?.(null)}
+    />
+{/if}
 
 <EditorUrlPrompt
     bind:open={urlPrompt.open}

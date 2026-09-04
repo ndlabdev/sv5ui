@@ -183,6 +183,44 @@ export interface EditorReactiveState {
  * <Button onclick={() => api?.clear()}>Clear</Button>
  * ```
  */
+/**
+ * Options for the crop step that can run before an image is uploaded.
+ */
+export interface EditorImageCropOptions {
+    /** Aspect ratio of the crop frame, or `'free'`. @default 'free' */
+    aspect?: number | 'free'
+
+    /** Crop shape. @default 'rect' */
+    shape?: 'rect' | 'circle'
+
+    /**
+     * Interaction model. `box` gives a draggable frame over a fitted image,
+     * `fixed` pans and zooms the image behind a centred frame.
+     * @default 'box'
+     */
+    mode?: 'fixed' | 'box'
+
+    /** Dialog title. @default 'Crop image' */
+    title?: string
+
+    /** Dialog description. */
+    description?: string
+
+    /** Label of the confirm button. @default 'Insert' */
+    confirmLabel?: string
+
+    /**
+     * Encoding of the cropped file. The type defaults to the source file's own
+     * format for JPEG and WebP, and to PNG otherwise.
+     */
+    output?: {
+        type?: 'image/png' | 'image/jpeg' | 'image/webp'
+        quality?: number
+        maxWidth?: number
+        maxHeight?: number
+    }
+}
+
 export interface EditorApi {
     /** The underlying Tiptap editor instance — `null` until mounted client-side. */
     readonly editor: TiptapEditor | null
@@ -359,6 +397,19 @@ export interface EditorProps extends Omit<
      * @default false
      */
     image?: boolean
+
+    /**
+     * Let the user crop an image before it is uploaded. Applies to every route
+     * that produces a file: the toolbar picker, a paste and a drop. Pass an
+     * object to configure the dialog.
+     *
+     * Only takes effect together with `onImageUpload`; images inserted by URL
+     * are left alone, since cropping a remote image would taint the canvas
+     * unless the host serves it with CORS headers.
+     *
+     * @default false
+     */
+    imageCrop?: boolean | EditorImageCropOptions
 
     /**
      * Async upload handler. Called with the selected/pasted/dropped file;

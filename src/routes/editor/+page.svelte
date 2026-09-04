@@ -1,7 +1,17 @@
 <script lang="ts">
     import { Editor } from '$lib/components/Editor/index.js'
     import type { EditorApi, EditorJSON, MentionItem } from '$lib/components/Editor/index.js'
-    import { Button, Badge, Separator, Card, Icon, Form, FormField, Input } from '$lib/index.js'
+    import {
+        Button,
+        Badge,
+        Separator,
+        Card,
+        Icon,
+        Form,
+        FormField,
+        Input,
+        Link
+    } from '$lib/index.js'
 
     let basicHtml = $state('<p>Start writing here…</p>')
 
@@ -28,6 +38,7 @@
 
     let markdownValue = $state('# Hello\n\nThis editor outputs **Markdown**.')
 
+    let cropValue = $state('<p>Paste a screenshot, or use the image button.</p>')
     let imageValue = $state('<p>Click the image button to upload.</p>')
     async function fakeUploadImage(file: File): Promise<string> {
         // Demo: convert to data URL. Real apps would upload to a backend.
@@ -430,6 +441,28 @@
     </section>
 
     <Separator />
+
+    <!-- Crop before upload -->
+    <section class="space-y-3">
+        <h2 class="text-lg font-semibold">Crop before upload</h2>
+        <p class="text-sm text-on-surface-variant">
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">imageCrop</code
+            >
+            puts <Link href="/image-cropper">ImageCropper</Link> in front of
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >onImageUpload</code
+            >, so what leaves the browser is the crop rather than the original. It covers every
+            route that produces a file: the toolbar picker, a paste and a drop. Cancelling the
+            dialog uploads nothing.
+        </p>
+        <Editor
+            bind:value={cropValue}
+            image
+            imageCrop={{ title: 'Crop before uploading', confirmLabel: 'Insert image' }}
+            onImageUpload={fakeUploadImage}
+            toolbar={['bold', 'italic', '|', 'image']}
+        />
+    </section>
 
     <!-- Phase 3: Slash commands -->
     <section class="space-y-3">
