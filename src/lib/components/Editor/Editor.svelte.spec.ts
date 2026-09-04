@@ -954,6 +954,120 @@ describe('Editor', () => {
         })
     })
 
+    describe('crop before upload', () => {
+        // a real bitmap: the cropper has to decode it before it can crop
+        const pngFile = async () => {
+            const canvas = document.createElement('canvas')
+            canvas.width = 48
+            canvas.height = 32
+            const context = canvas.getContext('2d')!
+            context.fillStyle = '#3b82f6'
+            context.fillRect(0, 0, 48, 32)
+            const blob = await new Promise<Blob | null>((resolve) =>
+                canvas.toBlob(resolve, 'image/png')
+            )
+
+            return new File([blob!], 'shot.png', { type: 'image/png' })
+        }
+
+        const pasteFile = (container: Element, file: File) => {
+            const data = new DataTransfer()
+            data.items.add(file)
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: data
+                })
+            )
+        }
+
+        const cropDialog = () =>
+            document.querySelector(
+                '[role="dialog"] [aria-label="Image cropper"]'
+            ) as HTMLElement | null
+
+        const dialogButton = (label: string) =>
+            Array.from(document.querySelectorAll('[role="dialog"] button')).find(
+                (button) => button.textContent?.trim() === label
+            ) as HTMLButtonElement | undefined
+
+        it('does not open a crop dialog unless asked', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            expect(cropDialog()).toBeNull()
+        })
+
+        it('offers the cropper before uploading a pasted image', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            expect(onImageUpload).not.toHaveBeenCalled()
+        })
+
+        it('uploads the cropped file once the user confirms', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            // wait for the cropper to decode the image, otherwise there is
+            // nothing to crop and the dialog stays open
+            await vi.waitFor(() =>
+                expect(document.querySelector('[role="dialog"] img')).not.toBeNull()
+            )
+            await vi.waitFor(() => expect(dialogButton('Insert')).toBeDefined())
+            dialogButton('Insert')!.click()
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            const uploaded = onImageUpload.mock.calls[0][0] as File
+            expect(uploaded).toBeInstanceOf(File)
+            expect(uploaded.type).toBe('image/png')
+        })
+
+        it('uploads nothing when the user cancels the crop', async () => {
+            const onImageUpload = vi.fn()
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+            await vi.waitFor(() => expect(dialogButton('Cancel')).toBeDefined())
+            dialogButton('Cancel')!.click()
+
+            await new Promise((resolve) => setTimeout(resolve, 150))
+            expect(onImageUpload).not.toHaveBeenCalled()
+            expect(getProseMirror(container)?.querySelector('img')).toBeNull()
+        })
+
+        it('takes the dialog wording from the options', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, {
+                image: true,
+                imageCrop: { title: 'Trim the shot', confirmLabel: 'Use it', aspect: 1 },
+                onImageUpload
+            })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+                'Trim the shot'
+            )
+            expect(dialogButton('Use it')).toBeDefined()
+        })
+    })
+
     describe('popup accessibility', () => {
         it('slash popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
             let api: EditorApi | undefined
