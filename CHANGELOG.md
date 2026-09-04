@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Editor** — pasting or dropping an image file now calls `onImageUpload`, which the props documented but nothing implemented: the handler was only ever reached through the toolbar's file picker. Every image in one paste is uploaded, a drop inserts at the position it was released, a paste without image files is left to the editor, and failures still go through `onImageUploadError`.
+
 ## [2.6.1] - 2026-08-26
 
 ### Fixed
