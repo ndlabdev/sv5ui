@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **ImageCropper** — client-side image cropper with two interaction models: `mode="fixed"` pans and zooms the image behind a centred frame, `mode="box"` gives a draggable frame with eight resize handles. Drag, pinch, wheel and keyboard control, rotate and flip, `aspect` ratios (including `'free'`), `shape="circle"` and a rule-of-thirds `grid`. `src` takes a URL, `File` or `Blob`; `crop()` renders the selection on a canvas and returns a `Blob` and a `File` at the source resolution, with `output` size and format limits, `autoCrop` for live results, and two-way `bind:area` to reopen a stored crop. 5 sizes, 8 colors, 16 `ui` slots, plus `labels` and `icons` overrides.
 - **useSessionStorage** — the storage hook backed by `sessionStorage`, for state that should live for the life of the tab.
 
 ### Changed
