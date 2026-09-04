@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **usePointerDrag** — pointer dragging with the parts every component gets wrong: pointer capture with a `window` fallback, moves coalesced to one update per frame, and the final position always flushed on release so the result matches the pointer. Reports `dx`/`dy` from the start of the gesture, locks to one `axis`, and lets `onStart` return `false` to decline a drag.
+- **usePointerDrag** — pointer dragging with the parts every component gets wrong: pointer capture with a `window` fallback, moves coalesced to one update per frame, and the final position always flushed on release so the result matches the pointer. Reports `dx`/`dy` measured from the start of the gesture, locks to one `axis`, lets `onStart` return `false` to decline a drag, and ends the gesture if the component becomes disabled while it runs. `axis` and `disabled` accept a getter, so a component whose orientation or state changes at runtime stays correct.
 
 ### Changed
 
