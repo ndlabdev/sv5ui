@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. The prompt focused the url field itself while the dialog was moving focus to its first element, and the resulting blur made the form validate a field the user had never touched. The prompt now takes over the dialog's own opening focus instead of racing it.
+- **Editor** — pasting or dropping an image file now calls `onImageUpload`, which the props documented but nothing implemented: the handler was only ever reached through the toolbar's file picker. Every image in one paste is uploaded, a drop inserts at the position it was released, a paste without image files is left to the editor, and failures still go through `onImageUploadError`.
 
 ## [2.6.1] - 2026-08-26
 

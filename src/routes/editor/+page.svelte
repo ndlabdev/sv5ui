@@ -367,7 +367,9 @@
             <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
                 >onImageUpload(file)</code
             >
-            → inserts the returned URL. Demo here converts to a data URL client-side.
+            → inserts the returned URL. Pasting or dropping an image file onto the editor goes through
+            the same handler, and a drop lands where you release it. Demo here converts to a data URL
+            client-side.
         </p>
         <Editor
             bind:value={imageValue}

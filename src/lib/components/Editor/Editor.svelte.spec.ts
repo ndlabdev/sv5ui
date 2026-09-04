@@ -874,6 +874,130 @@ describe('Editor', () => {
         })
     })
 
+    describe('pasted and dropped images', () => {
+        const pngFile = () =>
+            new File([new Uint8Array([137, 80, 78, 71])], 'shot.png', { type: 'image/png' })
+
+        const transferWith = (...files: File[]) => {
+            const data = new DataTransfer()
+            files.forEach((file) => data.items.add(file))
+
+            return data
+        }
+
+        it('uploads an image pasted into the editor', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: transferWith(pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            expect(onImageUpload.mock.calls[0][0].name).toBe('shot.png')
+            await vi.waitFor(() => {
+                expect(getProseMirror(container)?.querySelector('img')?.getAttribute('src')).toBe(
+                    'https://cdn.test/a.png'
+                )
+            })
+        })
+
+        it('uploads an image dropped onto the editor', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/b.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const view = getProseMirror(container)!
+            const box = view.getBoundingClientRect()
+            view.dispatchEvent(
+                new DragEvent('drop', {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: box.left + 4,
+                    clientY: box.top + 4,
+                    dataTransfer: transferWith(pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            await vi.waitFor(() => {
+                expect(getProseMirror(container)?.querySelector('img')).not.toBeNull()
+            })
+        })
+
+        it('uploads every image in one paste', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/c.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: transferWith(pngFile(), pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(2))
+        })
+
+        it('leaves a text paste to the editor', async () => {
+            const onImageUpload = vi.fn()
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const data = new DataTransfer()
+            data.setData('text/plain', 'just words')
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: data
+                })
+            )
+
+            await new Promise((resolve) => setTimeout(resolve, 100))
+            expect(onImageUpload).not.toHaveBeenCalled()
+        })
+
+        it('does nothing without an upload handler', async () => {
+            const { container } = render(Editor, { image: true })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const event = new ClipboardEvent('paste', {
+                bubbles: true,
+                cancelable: true,
+                clipboardData: transferWith(pngFile())
+            })
+            getProseMirror(container)!.dispatchEvent(event)
+
+            await new Promise((resolve) => setTimeout(resolve, 100))
+            expect(getProseMirror(container)?.querySelector('img')).toBeNull()
+        })
+
+        it('reports an upload failure through onImageUploadError', async () => {
+            const onImageUploadError = vi.fn()
+            const onImageUpload = vi.fn().mockRejectedValue(new Error('nope'))
+            const { container } = render(Editor, { image: true, onImageUpload, onImageUploadError })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: transferWith(pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
+        })
+    })
+
     describe('popup accessibility', () => {
         it('slash popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
             let api: EditorApi | undefined
