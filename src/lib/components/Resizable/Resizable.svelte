@@ -212,6 +212,8 @@
         if (activeHandle === null || dragSize <= 0) return
 
         const distance = resolvedDirection === 'horizontal' ? dx : dy
+        if (distance === 0) return
+
         layout = resizeAt(startSizes, activeHandle, (distance / dragSize) * 100, constraints)
     }
 

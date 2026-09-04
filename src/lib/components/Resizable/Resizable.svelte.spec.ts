@@ -602,6 +602,24 @@ describe('Resizable', () => {
             })
         })
 
+        it('should not touch the layout when a handle is clicked without moving', async () => {
+            const onSizesChange = vi.fn()
+            const api = await renderGroup({ onSizesChange })
+            await vi.waitFor(() => expect(onSizesChange).toHaveBeenCalled())
+            onSizesChange.mockClear()
+
+            const handle = getHandle()
+            const rect = handle.getBoundingClientRect()
+            const point = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+
+            handle.dispatchEvent(pointerEvent('pointerdown', point.x, point.y))
+            handle.dispatchEvent(pointerEvent('pointerup', point.x, point.y))
+            await new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
+
+            expect(api().sizes[0]).toBeCloseTo(50, 1)
+            expect(onSizesChange).not.toHaveBeenCalled()
+        })
+
         it('should keep resizing when the pointer leaves the handle', async () => {
             const api = await renderGroup()
             const handle = getHandle()
