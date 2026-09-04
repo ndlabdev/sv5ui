@@ -220,9 +220,15 @@ export class FormContext<T = unknown> {
 
     onFocus(name: string): void {
         this.touchedFields.add(name)
-        if (this.#getValidateOnSet().has('focus')) {
-            void this.#validateField(name)
-        }
+        if (!this.#getValidateOnSet().has('focus')) return
+
+        // Same rule as onInput: an error before the user has ever left the field
+        // is noise, and merely focusing it is not an edit. Focusing a field the
+        // user already left wrong does re-check it.
+        const entryEager = this.#fieldRegistry.get(name)?.eagerValidation
+        if (!entryEager && !this.blurredFields.has(name)) return
+
+        void this.#validateField(name)
     }
 
     onBlur(name: string): void {

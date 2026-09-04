@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **useLocalStorage** — the key may now be a getter, and a `null` key turns the hook inert, so a component can offer opt-in persistence without branching. Adds `storage: 'local' | 'session'`, a `remove()` that deletes the entry instead of writing the initial value back, and an `enabled` flag. Existing calls are unchanged.
 - **ColorPicker** — the saturation area now drags through `usePointerDrag` instead of its own pointer handling. Behaviour is unchanged.
+- **Form** — `validateOn: 'focus'` now waits for the first blur before it reports an error, the same rule `input` already followed. Focusing a field, whether by tabbing through a form or because a dialog focused it on open, no longer paints untouched fields red; coming back to a field the user already left wrong still re-checks it. A field can opt back into validating on its very first focus with `eagerValidation`.
 
 ### Fixed
 
