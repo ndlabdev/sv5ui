@@ -7,8 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **ImageCropper** — client-side image cropper with two interaction models: `mode="fixed"` pans and zooms the image behind a centred frame, `mode="box"` gives a draggable frame with eight resize handles. Drag, pinch, wheel and keyboard control, rotate and flip, `aspect` ratios (including `'free'`), `shape="circle"` and a rule-of-thirds `grid`. `src` takes a URL, `File` or `Blob`; `crop()` renders the selection on a canvas and returns a `Blob` and a `File` at the source resolution, with `output` size and format limits, `autoCrop` for live results, and two-way `bind:area` to reopen a stored crop. 5 sizes, 8 colors, 16 `ui` slots, plus `labels` and `icons` overrides.
+- **useSessionStorage** — the storage hook backed by `sessionStorage`, for state that should live for the life of the tab.
+- **usePointerDrag** — pointer dragging with the parts every component gets wrong: pointer capture with a `window` fallback, moves coalesced to one update per frame, and the final position always flushed on release so the result matches the pointer. Reports `dx`/`dy` measured from the start of the gesture, locks to one `axis`, lets `onStart` return `false` to decline a drag, and ends the gesture if the component becomes disabled while it runs. `axis` and `disabled` accept a getter, so a component whose orientation or state changes at runtime stays correct.
+
+### Changed
+
+- **useLocalStorage** — the key may now be a getter, and a `null` key turns the hook inert, so a component can offer opt-in persistence without branching. Adds `storage: 'local' | 'session'`, a `remove()` that deletes the entry instead of writing the initial value back, and an `enabled` flag. Existing calls are unchanged.
+- **ColorPicker** — the saturation area now drags through `usePointerDrag` instead of its own pointer handling. Behaviour is unchanged.
+- **Form** — `validateOn: 'focus'` now waits for the first blur before it reports an error, the same rule `input` already followed. Focusing a field, whether by tabbing through a form or because a dialog focused it on open, no longer paints untouched fields red; coming back to a field the user already left wrong still re-checks it. A field can opt back into validating on its very first focus with `eagerValidation`.
+
 ### Fixed
 
+- **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. The prompt focused the url field itself while the dialog was moving focus to its first element, and the resulting blur made the form validate a field the user had never touched. The prompt now takes over the dialog's own opening focus instead of racing it.
 - **Editor** — pasting or dropping an image file now calls `onImageUpload`, which the props documented but nothing implemented: the handler was only ever reached through the toolbar's file picker. Every image in one paste is uploaded, a drop inserts at the position it was released, a paste without image files is left to the editor, and failures still go through `onImageUploadError`.
 
 ## [2.6.1] - 2026-08-26

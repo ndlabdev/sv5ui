@@ -830,6 +830,50 @@ describe('Editor', () => {
 
     // ==================== POPUP ACCESSIBILITY ====================
 
+    describe('link prompt', () => {
+        const openLinkPrompt = async (container: Element) => {
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const link = container.querySelector(
+                '[role="toolbar"] button[data-action="link"]'
+            ) as HTMLButtonElement | null
+            expect(link).not.toBeNull()
+            link!.click()
+
+            await vi.waitFor(() => {
+                expect(document.querySelector('[role="dialog"]')).not.toBeNull()
+            })
+        }
+
+        const promptInput = () =>
+            document.querySelector('[role="dialog"] input') as HTMLInputElement | null
+        const promptError = () =>
+            document.querySelector('[role="dialog"] [id$="-error"]') as HTMLElement | null
+
+        it('does not validate the url before the user has touched it', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            // the dialog focuses the input itself; a rival programmatic focus used
+            // to blur it again, which validated an untouched field
+            await vi.waitFor(() => expect(document.activeElement).toBe(promptInput()))
+            await new Promise((resolve) => setTimeout(resolve, 150))
+
+            expect(promptError()).toBeNull()
+        })
+
+        it('still validates once the user leaves the field empty', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const input = promptInput()!
+            input.focus()
+            input.dispatchEvent(new FocusEvent('blur', { bubbles: true }))
+
+            await vi.waitFor(() => expect(promptError()?.textContent).toContain('URL is required'))
+        })
+    })
+
     describe('pasted and dropped images', () => {
         const pngFile = () =>
             new File([new Uint8Array([137, 80, 78, 71])], 'shot.png', { type: 'image/png' })

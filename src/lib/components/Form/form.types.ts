@@ -190,6 +190,12 @@ export type FormProps<
     /**
      * Input events that trigger field-level validation.
      * Submit always triggers full validation regardless.
+     *
+     * `input` and `focus` only report an error once the field has been left
+     * for the first time, so a form does not turn red while the user is still
+     * filling it in. A field can opt out of that wait with `eagerValidation`
+     * on its `FormField`.
+     *
      * @default ['input', 'blur', 'change']
      */
     validateOn?: FormInputEvents[]

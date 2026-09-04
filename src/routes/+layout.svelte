@@ -75,6 +75,7 @@
         { href: '/table', label: 'Table', icon: 'lucide:table' },
         { href: '/carousel', label: 'Carousel', icon: 'lucide:gallery-horizontal' },
         { href: '/lightbox', label: 'Lightbox', icon: 'lucide:image' },
+        { href: '/image-cropper', label: 'Image Cropper', icon: 'lucide:crop' },
         { href: '/editor', label: 'Editor', icon: 'lucide:pen-tool' },
         { href: '/banner', label: 'Banner', icon: 'lucide:megaphone' },
         { href: '/stepper', label: 'Stepper', icon: 'lucide:list-ordered' },
@@ -84,6 +85,7 @@
 
     const hookItems = [
         { href: '/use-media-query', label: 'useMediaQuery', icon: 'lucide:monitor-smartphone' },
+        { href: '/use-pointer-drag', label: 'usePointerDrag', icon: 'lucide:move' },
         { href: '/use-clipboard', label: 'useClipboard', icon: 'lucide:clipboard' },
         { href: '/use-form-field', label: 'useFormField', icon: 'lucide:text-cursor-input' },
         { href: '/use-click-outside', label: 'useClickOutside', icon: 'lucide:pointer' },
