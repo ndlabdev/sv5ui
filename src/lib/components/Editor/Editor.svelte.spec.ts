@@ -830,6 +830,154 @@ describe('Editor', () => {
 
     // ==================== POPUP ACCESSIBILITY ====================
 
+    describe('link prompt', () => {
+        const openLinkPrompt = async (container: Element) => {
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const link = container.querySelector(
+                '[role="toolbar"] button[data-action="link"]'
+            ) as HTMLButtonElement | null
+            expect(link).not.toBeNull()
+            link!.click()
+
+            await vi.waitFor(() => {
+                expect(document.querySelector('[role="dialog"]')).not.toBeNull()
+            })
+        }
+
+        const promptInput = () =>
+            document.querySelector('[role="dialog"] input') as HTMLInputElement | null
+        const promptError = () =>
+            document.querySelector('[role="dialog"] [id$="-error"]') as HTMLElement | null
+
+        it('does not validate the url before the user has touched it', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            // the dialog focuses the input itself; a rival programmatic focus used
+            // to blur it again, which validated an untouched field
+            await vi.waitFor(() => expect(document.activeElement).toBe(promptInput()))
+            await new Promise((resolve) => setTimeout(resolve, 150))
+
+            expect(promptError()).toBeNull()
+        })
+
+        it('asks for a url and an optional display text', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const labels = Array.from(document.querySelectorAll('[role="dialog"] label')).map(
+                (el) => el.textContent?.trim()
+            )
+
+            expect(labels).toEqual(['Link URL', 'Display text'])
+            expect(document.querySelectorAll('[role="dialog"] input')).toHaveLength(2)
+        })
+
+        it('prefills the display text from the selection', async () => {
+            let api = $state<EditorApi>()
+            const { container } = render(Editor, {
+                value: '<p>read the docs</p>',
+                get api() {
+                    return api
+                },
+                set api(next: EditorApi | undefined) {
+                    api = next
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).toBeTruthy())
+            api!.editor!.commands.selectAll()
+
+            await openLinkPrompt(container)
+
+            const text = document.querySelectorAll('[role="dialog"] input')[1] as HTMLInputElement
+            expect(text.value).toBe('read the docs')
+        })
+
+        it('inserts the link with the display text the user typed', async () => {
+            let api = $state<EditorApi>()
+            const { container } = render(Editor, {
+                value: '<p>replace me</p>',
+                get api() {
+                    return api
+                },
+                set api(next: EditorApi | undefined) {
+                    api = next
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).toBeTruthy())
+            api!.editor!.commands.selectAll()
+
+            await openLinkPrompt(container)
+
+            const [url, text] = Array.from(
+                document.querySelectorAll('[role="dialog"] input')
+            ) as HTMLInputElement[]
+            url.value = 'https://example.com'
+            url.dispatchEvent(new Event('input', { bubbles: true }))
+            text.value = 'the docs'
+            text.dispatchEvent(new Event('input', { bubbles: true }))
+
+            const confirm = Array.from(document.querySelectorAll('[role="dialog"] button')).find(
+                (button) => button.textContent?.trim() === 'Insert'
+            ) as HTMLButtonElement
+            confirm.click()
+
+            await vi.waitFor(() => {
+                const anchor = getProseMirror(container)?.querySelector('a')
+                expect(anchor?.getAttribute('href')).toBe('https://example.com')
+                expect(anchor?.textContent).toBe('the docs')
+            })
+        })
+
+        it('falls back to the url as the label when nothing is selected', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const url = document.querySelector('[role="dialog"] input') as HTMLInputElement
+            url.value = 'https://example.com'
+            url.dispatchEvent(new Event('input', { bubbles: true }))
+
+            const confirm = Array.from(document.querySelectorAll('[role="dialog"] button')).find(
+                (button) => button.textContent?.trim() === 'Insert'
+            ) as HTMLButtonElement
+            confirm.click()
+
+            await vi.waitFor(() => {
+                const anchor = getProseMirror(container)?.querySelector('a')
+                expect(anchor?.textContent).toBe('https://example.com')
+            })
+        })
+
+        it('keeps a single url field for the youtube prompt', async () => {
+            const { container } = render(Editor, { youtube: true, toolbar: ['youtube'] })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const button = container.querySelector(
+                '[role="toolbar"] button[data-action="youtube"]'
+            ) as HTMLButtonElement
+            button.click()
+
+            await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull())
+            const labels = Array.from(document.querySelectorAll('[role="dialog"] label')).map(
+                (el) => el.textContent?.trim()
+            )
+
+            expect(labels).toEqual(['Video URL'])
+        })
+
+        it('still validates once the user leaves the field empty', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const input = promptInput()!
+            input.focus()
+            input.dispatchEvent(new FocusEvent('blur', { bubbles: true }))
+
+            await vi.waitFor(() => expect(promptError()?.textContent).toContain('URL is required'))
+        })
+    })
+
     describe('pasted and dropped images', () => {
         const pngFile = () =>
             new File([new Uint8Array([137, 80, 78, 71])], 'shot.png', { type: 'image/png' })

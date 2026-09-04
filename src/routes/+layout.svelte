@@ -18,6 +18,7 @@
         { href: '/button', label: 'Button', icon: 'lucide:mouse-pointer-click' },
         { href: '/separator', label: 'Separator', icon: 'lucide:minus' },
         { href: '/scroll-area', label: 'Scroll Area', icon: 'lucide:scroll-text' },
+        { href: '/resizable', label: 'Resizable', icon: 'lucide:columns-2' },
         { href: '/chip', label: 'Chip', icon: 'lucide:circle-dot' },
         { href: '/progress', label: 'Progress', icon: 'lucide:loader' },
         { href: '/badge', label: 'Badge', icon: 'lucide:tag' },
@@ -85,6 +86,7 @@
 
     const hookItems = [
         { href: '/use-media-query', label: 'useMediaQuery', icon: 'lucide:monitor-smartphone' },
+        { href: '/use-pointer-drag', label: 'usePointerDrag', icon: 'lucide:move' },
         { href: '/use-clipboard', label: 'useClipboard', icon: 'lucide:clipboard' },
         { href: '/use-form-field', label: 'useFormField', icon: 'lucide:text-cursor-input' },
         { href: '/use-click-outside', label: 'useClickOutside', icon: 'lucide:pointer' },

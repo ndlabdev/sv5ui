@@ -24,6 +24,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
     import EditorUrlPrompt from './EditorUrlPrompt.svelte'
+    import type { UrlPromptResult } from './EditorUrlPrompt.svelte'
     import EditorImageCropDialog from './EditorImageCropDialog.svelte'
     import {
         httpUrlSchema,
@@ -198,7 +199,7 @@
                     }
                     openUrlPrompt({
                         ...opts,
-                        onConfirm: (value) => settle(value),
+                        onConfirm: (result) => settle(result.url),
                         onCancel: () => settle(null)
                     })
                 })
@@ -425,7 +426,14 @@
         initialValue: string
         confirmLabel: string
         schema?: UrlSchema
-        onConfirm?: (url: string) => void
+        urlLabel?: string
+        urlHelp?: string
+        urlIcon?: string
+        textField?: boolean
+        textLabel?: string
+        textPlaceholder?: string
+        initialText?: string
+        onConfirm?: (result: UrlPromptResult) => void
         onCancel?: () => void
     }
 
@@ -444,7 +452,14 @@
         initialValue?: string
         confirmLabel?: string
         schema?: UrlSchema
-        onConfirm: (url: string) => void
+        urlLabel?: string
+        urlHelp?: string
+        urlIcon?: string
+        textField?: boolean
+        textLabel?: string
+        textPlaceholder?: string
+        initialText?: string
+        onConfirm: (result: UrlPromptResult) => void
         onCancel?: () => void
     }): void {
         urlPrompt = {
@@ -455,6 +470,13 @@
             initialValue: opts.initialValue ?? '',
             confirmLabel: opts.confirmLabel ?? 'Insert',
             schema: opts.schema,
+            urlLabel: opts.urlLabel,
+            urlHelp: opts.urlHelp,
+            urlIcon: opts.urlIcon,
+            textField: opts.textField,
+            textLabel: opts.textLabel,
+            textPlaceholder: opts.textPlaceholder,
+            initialText: opts.initialText,
             onConfirm: opts.onConfirm,
             onCancel: opts.onCancel
         }
@@ -543,10 +565,13 @@
         if (!editor) return
         if (!onImageUpload) {
             openUrlPrompt({
-                title: 'Image URL',
+                title: 'Insert image',
+                description: 'Paste a link to the image you want to insert.',
                 placeholder: 'https://example.com/image.png',
                 schema: httpUrlSchema,
-                onConfirm: (url) => {
+                urlLabel: 'Image URL',
+                urlIcon: 'lucide:image',
+                onConfirm: ({ url }) => {
                     editor?.chain().focus().setImage({ src: url }).run()
                 }
             })
@@ -563,23 +588,57 @@
             placeholder: 'https://youtu.be/...',
             confirmLabel: 'Embed',
             schema: youtubeUrlSchema,
-            onConfirm: (url) => {
+            urlLabel: 'Video URL',
+            urlIcon: 'lucide:youtube',
+            onConfirm: ({ url }) => {
                 editor?.commands.setYoutubeVideo({ src: url })
             }
         })
     }
 
+    function applyLink(url: string, text: string): void {
+        if (!editor) return
+
+        // With nothing selected and no text to show, a bare setLink would only
+        // arm the mark for whatever the user types next, leaving the document
+        // unchanged. Fall back to the url as its own label.
+        const fresh = editor.state.selection.empty && !editor.isActive('link')
+        const label = text || (fresh ? url : '')
+
+        const chain = editor.chain().focus().extendMarkRange('link')
+        if (!label) {
+            chain.setLink({ href: url }).run()
+            return
+        }
+
+        chain
+            .insertContent({
+                type: 'text',
+                text: label,
+                marks: [{ type: 'link', attrs: { href: url } }]
+            })
+            .run()
+    }
+
     function openLinkPrompt(): void {
         if (!editor) return
+
         const previous = (editor.getAttributes('link').href as string | undefined) ?? ''
+        const { from, to, empty } = editor.state.selection
+        const selected = empty ? '' : editor.state.doc.textBetween(from, to, ' ')
+
         openUrlPrompt({
-            title: 'Insert link',
-            placeholder: 'https://',
+            title: previous ? 'Edit link' : 'Insert link',
+            description: 'Link the selected text, or insert a new one.',
+            placeholder: 'https://example.com',
             initialValue: previous,
+            confirmLabel: previous ? 'Update' : 'Insert',
             schema: httpUrlSchema,
-            onConfirm: (url) => {
-                editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-            }
+            urlLabel: 'Link URL',
+            urlHelp: 'Include the protocol, for example https://',
+            textField: true,
+            initialText: selected,
+            onConfirm: ({ url, text }) => applyLink(url, text)
         })
     }
 
@@ -822,6 +881,13 @@
     initialValue={urlPrompt.initialValue}
     confirmLabel={urlPrompt.confirmLabel}
     schema={urlPrompt.schema}
-    onConfirm={(url) => urlPrompt.onConfirm?.(url)}
+    urlLabel={urlPrompt.urlLabel}
+    urlHelp={urlPrompt.urlHelp}
+    urlIcon={urlPrompt.urlIcon}
+    textField={urlPrompt.textField}
+    textLabel={urlPrompt.textLabel}
+    textPlaceholder={urlPrompt.textPlaceholder}
+    initialText={urlPrompt.initialText}
+    onConfirm={(result) => urlPrompt.onConfirm?.(result)}
     onCancel={() => urlPrompt.onCancel?.()}
 />
