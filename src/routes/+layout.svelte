@@ -85,6 +85,7 @@
 
     const hookItems = [
         { href: '/use-media-query', label: 'useMediaQuery', icon: 'lucide:monitor-smartphone' },
+        { href: '/use-pointer-drag', label: 'usePointerDrag', icon: 'lucide:move' },
         { href: '/use-clipboard', label: 'useClipboard', icon: 'lucide:clipboard' },
         { href: '/use-form-field', label: 'useFormField', icon: 'lucide:text-cursor-input' },
         { href: '/use-click-outside', label: 'useClickOutside', icon: 'lucide:pointer' },
