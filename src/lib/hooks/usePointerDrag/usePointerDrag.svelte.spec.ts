@@ -284,6 +284,45 @@ describe('usePointerDrag', () => {
         cleanup()
     })
 
+    it('keeps the same handler object across reads', () => {
+        let drag: ReturnType<typeof usePointerDrag>
+        const cleanup = $effect.root(() => {
+            drag = usePointerDrag()
+        })
+        flushSync()
+
+        // spreading a fresh object into markup would re-attach the listeners on
+        // every render
+        expect(drag!.handlers).toBe(drag!.handlers)
+        expect(drag!.handlers.onpointerdown).toBe(drag!.handlers.onpointerdown)
+        cleanup()
+    })
+
+    it('ends the gesture when it becomes disabled mid-drag', async () => {
+        const onEnd = vi.fn()
+        let disabled = $state(false)
+        let drag: ReturnType<typeof usePointerDrag>
+        const cleanup = $effect.root(() => {
+            drag = usePointerDrag({ disabled: () => disabled, onEnd })
+        })
+        flushSync()
+
+        const node = mount()
+        node.addEventListener('pointerdown', (event) =>
+            drag.handlers.onpointerdown(event as PointerEvent)
+        )
+        node.dispatchEvent(pointer('pointerdown', 0, 0))
+        flushSync()
+        expect(drag!.active).toBe(true)
+
+        disabled = true
+        flushSync()
+
+        expect(drag!.active).toBe(false)
+        expect(onEnd).toHaveBeenCalledTimes(1)
+        cleanup()
+    })
+
     it('ignores events from another pointer', async () => {
         const onMove = vi.fn()
         let drag: ReturnType<typeof usePointerDrag>
