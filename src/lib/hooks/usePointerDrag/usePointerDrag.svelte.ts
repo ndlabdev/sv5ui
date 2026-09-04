@@ -1,8 +1,12 @@
+import { untrack } from 'svelte'
 import { toGetter } from '../utils.js'
 import { useEventListener } from '../useEventListener/index.js'
 
 export interface PointerDragContext {
-    /** The pointer event that produced this update. */
+    /**
+     * The pointer event that produced this update. Its `currentTarget` is only
+     * meaningful inside `onStart`, since a dispatched event clears it afterwards.
+     */
     event: PointerEvent
     pointerId: number
     /** Current pointer position, in client coordinates. */
@@ -31,7 +35,8 @@ export interface UsePointerDragOptions {
 
     /**
      * Called for every pointer move, coalesced to one call per frame unless
-     * `throttle` is off.
+     * `throttle` is off. It is also called once more with the final position
+     * just before `onEnd`, so the result always matches the pointer.
      */
     onMove?: (context: PointerDragContext) => void
 
@@ -49,7 +54,8 @@ export interface UsePointerDragOptions {
     axis?: DragAxis | (() => DragAxis)
 
     /**
-     * Coalesce moves into one update per animation frame.
+     * Coalesce moves into one update per animation frame. Read once, when the
+     * hook is created.
      * @default true
      */
     throttle?: boolean
@@ -248,21 +254,25 @@ export function usePointerDrag(options: UsePointerDragOptions = {}): UsePointerD
     )
 
     $effect(() => {
+        if (active && isDisabled()) untrack(() => stop(null))
+    })
+
+    $effect(() => {
         return () => cancelFrame()
     })
+
+    const handlers: UsePointerDragHandlers = {
+        onpointerdown: handlePointerDown,
+        onpointermove: handlePointerMove,
+        onpointerup: handlePointerUp,
+        onpointercancel: handlePointerUp
+    }
 
     return {
         get active() {
             return active
         },
-        get handlers(): UsePointerDragHandlers {
-            return {
-                onpointerdown: handlePointerDown,
-                onpointermove: handlePointerMove,
-                onpointerup: handlePointerUp,
-                onpointercancel: handlePointerUp
-            }
-        },
+        handlers,
         cancel() {
             stop(null)
         }

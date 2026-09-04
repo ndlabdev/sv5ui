@@ -215,6 +215,7 @@
             tables,
             youtube,
             dragHandle,
+            onImageFiles: onImageUpload ? handleImageFiles : undefined,
             markdown: resolvedOutput === 'markdown',
             markdownAllowHtml,
             mentionTrigger,
@@ -459,13 +460,9 @@
 
     let fileInput: HTMLInputElement | null = $state(null)
 
-    async function handleFileSelected(event: Event): Promise<void> {
-        if (!editor) return
-        const input = event.currentTarget as HTMLInputElement
-        const file = input.files?.[0]
-        input.value = ''
-        if (!file) return
-        if (!onImageUpload) return
+    async function uploadImage(file: File, position?: number): Promise<void> {
+        if (!editor || !onImageUpload) return
+
         try {
             const url = await onImageUpload(file)
             if (!isSafeImageSrc(url)) {
@@ -473,7 +470,17 @@
                 console.warn('[Editor] blocked unsafe image src from onImageUpload:', url)
                 return
             }
-            editor.chain().focus().setImage({ src: url }).run()
+
+            if (position === undefined) {
+                editor.chain().focus().setImage({ src: url }).run()
+                return
+            }
+
+            editor
+                .chain()
+                .focus()
+                .insertContentAt(position, { type: 'image', attrs: { src: url } })
+                .run()
         } catch (err) {
             if (onImageUploadError) {
                 onImageUploadError(err)
@@ -482,6 +489,22 @@
                 console.error('[Editor] image upload failed', err)
             }
         }
+    }
+
+    function handleImageFiles(files: File[], position?: number): void {
+        void files.reduce(
+            (queue, file) => queue.then(() => uploadImage(file, position)),
+            Promise.resolve()
+        )
+    }
+
+    async function handleFileSelected(event: Event): Promise<void> {
+        const input = event.currentTarget as HTMLInputElement
+        const file = input.files?.[0]
+        input.value = ''
+        if (!file) return
+
+        await uploadImage(file)
     }
 
     function openImagePicker(): void {
