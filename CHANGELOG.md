@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. The prompt focused the url field itself while the dialog was moving focus to its first element, and the resulting blur made the form validate a field the user had never touched. The prompt now takes over the dialog's own opening focus instead of racing it.
+
 ## [2.6.1] - 2026-08-26
 
 ### Fixed
