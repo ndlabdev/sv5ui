@@ -47,12 +47,19 @@
             formState = { url: initial }
             settled = false
             untrack(() => formApi?.reset())
-            requestAnimationFrame(() => inputRef?.focus())
         } else if (!settled) {
             settled = true
             onCancel?.()
         }
     })
+
+    function focusInput(event: Event): void {
+        // Take over the dialog's own opening focus. Focusing the input on the
+        // side, while the dialog moves focus to its first element, blurs the
+        // input again and the form validates an untouched field.
+        event.preventDefault()
+        inputRef?.focus()
+    }
 
     async function validate(state: object): Promise<FormError[]> {
         const url = (state as Partial<UrlFormState>).url ?? ''
@@ -77,7 +84,7 @@
     }
 </script>
 
-<Modal bind:open {title} {description} size="sm">
+<Modal bind:open {title} {description} size="sm" onOpenAutoFocus={focusInput}>
     {#snippet body()}
         <Form
             bind:api={formApi}
