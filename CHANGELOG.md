@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Form** — `validateOn: 'focus'` now waits for the first blur before it reports an error, the same rule `input` already followed. Focusing a field, whether by tabbing through a form or because a dialog focused it on open, no longer paints untouched fields red; coming back to a field the user already left wrong still re-checks it. A field can opt back into validating on its very first focus with `eagerValidation`.
+
 ## [2.6.1] - 2026-08-26
 
 ### Fixed
