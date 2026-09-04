@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Editor** — the link, image and YouTube dialogs now read as forms: a labelled, required URL field with a matching icon and help text, and, for links, an optional **Display text** field prefilled from the selection. Inserting with a display text replaces the selected text, and inserting with nothing selected now uses the URL as its own label instead of leaving the document unchanged. The dialog says "Edit link" and "Update" when the cursor sits inside an existing link.
+
 ### Fixed
 
 - **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. The prompt focused the url field itself while the dialog was moving focus to its first element, and the resulting blur made the form validate a field the user had never touched. The prompt now takes over the dialog's own opening focus instead of racing it.
