@@ -20,6 +20,7 @@
         areaEquals,
         centerForArea,
         centerFrameWithin,
+        FREE_FRAME_SCALE,
         clamp,
         computeFrame,
         constrainCenter,
@@ -114,6 +115,7 @@
         disabled = false,
         icons,
         label = 'Image cropper',
+        initialFrame = 'inset',
         labels,
         placeholder,
         toolbarSlot,
@@ -259,7 +261,13 @@
         })
     )
 
-    const boxFrame: Rect = $derived(centerFrameWithin(cropBounds, resolvedAspect))
+    const boxFrame: Rect = $derived(
+        centerFrameWithin(
+            cropBounds,
+            resolvedAspect,
+            initialFrame === 'full' ? 1 : FREE_FRAME_SCALE
+        )
+    )
     const cropRect: Rect = $derived(mode === 'box' ? (boxRect ?? boxFrame) : fixedFrame)
 
     let sliderRotation = $state(0)
@@ -414,10 +422,27 @@
         applyNatural(event.currentTarget as HTMLImageElement)
     }
 
+    function isCrossOrigin(value: string): boolean {
+        try {
+            const url = new URL(value, window.location.href)
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') return false
+
+            return url.origin !== window.location.origin
+        } catch {
+            return false
+        }
+    }
+
     function handleImageError() {
         natural = { width: 0, height: 0 }
         failed = true
-        onError?.({ code: 'load', message: 'The image failed to load' })
+
+        const needsCors = crossorigin !== null && !!resolvedSrc && isCrossOrigin(resolvedSrc)
+        const hint = needsCors
+            ? ' A cross-origin image needs an Access-Control-Allow-Origin header.'
+            : ''
+
+        onError?.({ code: 'load', message: `The image failed to load.${hint}` })
     }
 
     let seenSrc: string | null = null

@@ -55,6 +55,12 @@ export interface ImageCropperError {
 export interface ImageCropperOutput {
     /**
      * MIME type of the produced blob.
+     *
+     * PNG is the default so a circular crop, or any source with an alpha
+     * channel, survives the export. The crop is written at the source
+     * resolution, so a large photo produces a multi-megabyte file: for avatars
+     * and covers, pair this with `maxWidth` or switch to `image/jpeg`.
+     *
      * @default 'image/png'
      */
     type?: 'image/png' | 'image/jpeg' | 'image/webp'
@@ -168,7 +174,8 @@ export type ImageCropperProps = Omit<
 
     /**
      * Aspect ratio of the crop frame as `width / height`, or `'free'` to let the
-     * user resize both axes independently (`box` mode only).
+     * user resize both axes independently (`box` mode only). A `'free'` frame
+     * opens inset from the image, so the crop region is visible from the start.
      *
      * Ignored when `shape` is `'circle'`, which always crops 1:1.
      *
@@ -279,6 +286,21 @@ export type ImageCropperProps = Omit<
     padding?: number
 
     /**
+     * Where the crop frame starts in `box` mode with a free `aspect`.
+     *
+     * - `inset`: slightly smaller than the image, so the crop region reads as a
+     *   frame the moment the cropper opens
+     * - `full`: the whole image, so confirming without dragging keeps
+     *   everything. Use it when the cropper sits in an upload flow where a
+     *   silent crop would be surprising.
+     *
+     * A fixed `aspect` always opens at the largest frame that fits.
+     *
+     * @default 'inset'
+     */
+    initialFrame?: 'inset' | 'full'
+
+    /**
      * Smallest allowed crop frame size in pixels (`box` mode only).
      * @default 48
      */
@@ -314,7 +336,13 @@ export type ImageCropperProps = Omit<
 
     /**
      * `crossorigin` attribute for the underlying `<img>`. Required when cropping
-     * a remote image, otherwise the canvas is tainted and the export fails.
+     * a remote image.
+     *
+     * With the default, a host that sends no `Access-Control-Allow-Origin`
+     * header fails the image request itself: the image never appears and
+     * `onError` reports `load`. With `null` the image displays, but the canvas
+     * is tainted and the export fails with `tainted`.
+     *
      * @default 'anonymous'
      */
     crossorigin?: 'anonymous' | 'use-credentials' | null

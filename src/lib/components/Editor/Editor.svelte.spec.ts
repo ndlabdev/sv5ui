@@ -1183,6 +1183,27 @@ describe('Editor', () => {
             expect(uploaded.type).toBe('image/png')
         })
 
+        it('keeps the whole image when the user confirms without dragging', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            await vi.waitFor(() =>
+                expect(document.querySelector('[role="dialog"] img')).not.toBeNull()
+            )
+            await vi.waitFor(() => expect(dialogButton('Insert')).toBeDefined())
+            dialogButton('Insert')!.click()
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            const uploaded = onImageUpload.mock.calls[0][0] as File
+            const bitmap = await createImageBitmap(uploaded)
+
+            expect(bitmap.width).toBe(48)
+            expect(bitmap.height).toBe(32)
+        })
+
         it('uploads nothing when the user cancels the crop', async () => {
             const onImageUpload = vi.fn()
             const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })

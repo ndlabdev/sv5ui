@@ -65,6 +65,8 @@ export function containScale(natural: Size, area: Size, rotation: number): numbe
 
 export const EDGE_MARGIN = 1
 
+export const FREE_FRAME_SCALE = 0.8
+
 function inflate(size: Size, margin: number): Size {
     return { width: size.width + margin * 2, height: size.height + margin * 2 }
 }
@@ -262,8 +264,22 @@ export function clampRectWithin(rect: Rect, bounds: Rect): Rect {
     }
 }
 
-export function centerFrameWithin(bounds: Rect, aspect: number | 'free'): Rect {
-    if (aspect === 'free' || aspect <= 0) return { ...bounds }
+export function centerFrameWithin(
+    bounds: Rect,
+    aspect: number | 'free',
+    freeScale: number = FREE_FRAME_SCALE
+): Rect {
+    if (aspect === 'free' || aspect <= 0) {
+        const freeWidth = bounds.width * freeScale
+        const freeHeight = bounds.height * freeScale
+
+        return {
+            x: bounds.x + (bounds.width - freeWidth) / 2,
+            y: bounds.y + (bounds.height - freeHeight) / 2,
+            width: freeWidth,
+            height: freeHeight
+        }
+    }
 
     let width = bounds.width
     let height = width / aspect
