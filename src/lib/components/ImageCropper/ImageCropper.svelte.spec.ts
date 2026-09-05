@@ -380,6 +380,21 @@ describe('ImageCropper', () => {
             expect(api().area.x).toBeGreaterThan(before.x)
         })
 
+        it('should open a free frame inset from the image', async () => {
+            const api = await renderLoaded({ mode: 'box', aspect: 'free' })
+
+            expect(api().area.width).toBeLessThan(60)
+            expect(api().area.height).toBeLessThan(40)
+            expect(api().area.x).toBeGreaterThan(0)
+        })
+
+        it('should open on the whole image when initialFrame is full', async () => {
+            const api = await renderLoaded({ mode: 'box', aspect: 'free', initialFrame: 'full' })
+
+            expect(api().area.width).toBeCloseTo(60, 0)
+            expect(api().area.height).toBeCloseTo(40, 0)
+        })
+
         it('should resize the crop frame from a handle', async () => {
             const api = await renderLoaded({ mode: 'box', aspect: 'free' })
             const before = { ...api().area }
@@ -1077,6 +1092,28 @@ describe('ImageCropper', () => {
 
             await vi.waitFor(() =>
                 expect(onError).toHaveBeenCalledWith(expect.objectContaining({ code: 'load' }))
+            )
+        })
+
+        it('should not blame CORS for a same-origin failure', async () => {
+            const onError = vi.fn()
+            render(ImageCropper, { props: { src: 'data:image/png;base64,not-an-image', onError } })
+
+            await vi.waitFor(() => expect(onError).toHaveBeenCalled())
+            expect(onError.mock.calls[0][0].message).not.toContain('Access-Control-Allow-Origin')
+        })
+
+        it('should point at CORS when a cross-origin image fails to load', async () => {
+            const onError = vi.fn()
+            render(ImageCropper, { props: { src: 'http://127.0.0.1:1/missing.png', onError } })
+
+            await vi.waitFor(() =>
+                expect(onError).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        code: 'load',
+                        message: expect.stringContaining('Access-Control-Allow-Origin')
+                    })
+                )
             )
         })
     })

@@ -9,23 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Editor** — `imageCrop` puts the cropper in front of `onImageUpload`, so what leaves the browser is the crop rather than the original. It covers every route that produces a file: the toolbar picker, a paste and a drop. Pass an object to set the aspect, shape, mode, dialog wording and output limits; cancelling uploads nothing, and images inserted by URL are left alone.
-- **ImageCropper** — client-side image cropper with two interaction models: `mode="fixed"` pans and zooms the image behind a centred frame, `mode="box"` gives a draggable frame with eight resize handles. Drag, pinch, wheel and keyboard control, rotate and flip, `aspect` ratios (including `'free'`), `shape="circle"` and a rule-of-thirds `grid`. `src` takes a URL, `File` or `Blob`; `crop()` renders the selection on a canvas and returns a `Blob` and a `File` at the source resolution, with `output` size and format limits, `autoCrop` for live results, and two-way `bind:area` to reopen a stored crop. 5 sizes, 8 colors, 16 `ui` slots, plus `labels` and `icons` overrides.
-- **useSessionStorage** — the storage hook backed by `sessionStorage`, for state that should live for the life of the tab.
-- **usePointerDrag** — pointer dragging with the parts every component gets wrong: pointer capture with a `window` fallback, moves coalesced to one update per frame, and the final position always flushed on release so the result matches the pointer. Reports `dx`/`dy` measured from the start of the gesture, locks to one `axis`, lets `onStart` return `false` to decline a drag, and ends the gesture if the component becomes disabled while it runs. `axis` and `disabled` accept a getter, so a component whose orientation or state changes at runtime stays correct.
-- **Resizable** — split a layout into draggable panes, horizontally or vertically, nested freely. Sizes are percentages that always add up to 100 so a split survives a window resize, while `minSize` and `maxSize` also accept pixels; a drag cascades into the next pane once a neighbour hits its minimum, and a `collapsible` pane snaps shut and springs back. Each handle is a `role="separator"` driven by arrows, Home, End and Enter. `storageKey` remembers the split, `bind:sizes` and an `api` (`collapse`, `expand`, `toggle`, `resize`, `setSizes`, `reset`) drive it from outside, `resizable: false` pins a pane, plus a `handle` snippet, 8 colors, 5 thicknesses and `ui` overrides.
+- **ImageCropper** — client-side image cropper: `mode="fixed"` pans and zooms behind a centred frame, `mode="box"` drags a frame with eight handles. Rotate, flip, `aspect` ratios, `shape="circle"`, wheel and keyboard control; `crop()` returns a `Blob` and a `File` at source resolution. 5 sizes, 8 colors, 16 `ui` slots. ([#202](https://github.com/ndlabdev/sv5ui/pull/202))
+- **Resizable** — draggable panes, horizontal or vertical, nestable. Percentage sizes that survive a window resize, `minSize`/`maxSize` in px or %, collapsible panes, keyboard-driven separators, `storageKey` persistence, `bind:sizes` and an imperative `api`. ([#205](https://github.com/ndlabdev/sv5ui/pull/205))
+- **usePointerDrag** — shared drag hook: pointer capture with a `window` fallback, one update per frame, the final position flushed on release, optional `axis` lock. ([#204](https://github.com/ndlabdev/sv5ui/pull/204))
+- **useSessionStorage** — the storage hook backed by `sessionStorage`. ([#203](https://github.com/ndlabdev/sv5ui/pull/203))
+- **Editor** — `imageCrop` opens the cropper before `onImageUpload`, for the toolbar picker, a paste and a drop alike. ([#210](https://github.com/ndlabdev/sv5ui/pull/210))
 
 ### Changed
 
-- **useLocalStorage** — the key may now be a getter, and a `null` key turns the hook inert, so a component can offer opt-in persistence without branching. Adds `storage: 'local' | 'session'`, a `remove()` that deletes the entry instead of writing the initial value back, and an `enabled` flag. Existing calls are unchanged.
-- **ColorPicker** — the saturation area now drags through `usePointerDrag` instead of its own pointer handling. Behaviour is unchanged.
-- **Form** — `validateOn: 'focus'` now waits for the first blur before it reports an error, the same rule `input` already followed. Focusing a field, whether by tabbing through a form or because a dialog focused it on open, no longer paints untouched fields red; coming back to a field the user already left wrong still re-checks it. A field can opt back into validating on its very first focus with `eagerValidation`.
-- **Editor** — the link, image and YouTube dialogs now read as forms: a labelled, required URL field with a matching icon and help text, and, for links, an optional **Display text** field prefilled from the selection. Inserting with a display text replaces the selected text, and inserting with nothing selected now uses the URL as its own label instead of leaving the document unchanged. The dialog says "Edit link" and "Update" when the cursor sits inside an existing link.
+- **useLocalStorage** — the key may be a getter, and a `null` key turns the hook inert. Adds `storage`, `remove()` and `enabled`; existing calls are unchanged. ([#203](https://github.com/ndlabdev/sv5ui/pull/203))
+- **ColorPicker** — the saturation area drags through `usePointerDrag`. Behaviour is unchanged. ([#204](https://github.com/ndlabdev/sv5ui/pull/204))
+- **Form** — `validateOn: 'focus'` waits for the first blur before reporting an error, the rule `input` already followed. `eagerValidation` opts a field back in. ([#207](https://github.com/ndlabdev/sv5ui/pull/207))
+- **Editor** — the link, image and YouTube dialogs read as forms: labelled required URL field with help text, plus an optional **Display text** for links. ([#208](https://github.com/ndlabdev/sv5ui/pull/208))
 
 ### Fixed
 
-- **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. The prompt focused the url field itself while the dialog was moving focus to its first element, and the resulting blur made the form validate a field the user had never touched. The prompt now takes over the dialog's own opening focus instead of racing it.
-- **Editor** — pasting or dropping an image file now calls `onImageUpload`, which the props documented but nothing implemented: the handler was only ever reached through the toolbar's file picker. Every image in one paste is uploaded, a drop inserts at the position it was released, a paste without image files is left to the editor, and failures still go through `onImageUploadError`.
+- **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. ([#206](https://github.com/ndlabdev/sv5ui/pull/206))
+- **Editor** — pasting or dropping an image now calls `onImageUpload`; only the toolbar picker did before. ([#209](https://github.com/ndlabdev/sv5ui/pull/209))
 
 ## [2.6.1] - 2026-08-26
 

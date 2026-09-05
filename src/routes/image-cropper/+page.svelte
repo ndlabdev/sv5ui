@@ -199,7 +199,9 @@
         <div class="flex items-baseline justify-between gap-2">
             <h2 class="text-lg font-semibold">Crop box</h2>
             <p class="text-xs text-on-surface-variant">
-                mode="box" · drag the frame, resize the handles, drag outside to pan
+                mode="box" · drag the frame, resize the handles, drag outside to pan. A free aspect
+                opens inset from the image; pass initialFrame="full" to start on the whole image
+                instead.
             </p>
         </div>
         <div

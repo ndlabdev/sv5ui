@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
     applyTransform,
+    centerFrameWithin,
     clamp,
     clampRectWithin,
     computeFrame,
@@ -204,6 +205,23 @@ describe('image cropper frame', () => {
             width: 360,
             height: 160
         })
+    })
+
+    it('insets a free box frame so the image shows around it', () => {
+        const bounds = { x: 10, y: 20, width: 400, height: 200 }
+
+        expect(centerFrameWithin(bounds, 'free')).toEqual({
+            x: 50,
+            y: 40,
+            width: 320,
+            height: 160
+        })
+    })
+
+    it('keeps a fixed aspect box frame centred inside the image', () => {
+        const bounds = { x: 0, y: 0, width: 400, height: 200 }
+
+        expect(centerFrameWithin(bounds, 1)).toEqual({ x: 100, y: 0, width: 200, height: 200 })
     })
 
     it('clamps a rect inside its bounds', () => {

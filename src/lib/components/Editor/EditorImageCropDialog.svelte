@@ -71,6 +71,7 @@
                 src={file}
                 mode={options?.mode ?? 'box'}
                 aspect={options?.aspect ?? 'free'}
+                initialFrame="full"
                 shape={options?.shape ?? 'rect'}
                 grid
                 output={{ ...options?.output, type: outputType }}

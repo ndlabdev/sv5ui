@@ -62,7 +62,7 @@
         )
     )
     let activeHandle = $state<number | null>(null)
-    const paneEls: (HTMLElement | null)[] = []
+    let paneEls = $state<(HTMLElement | null)[]>([])
 
     const resolvedDirection = $derived<'horizontal' | 'vertical'>(direction ?? 'horizontal')
 
