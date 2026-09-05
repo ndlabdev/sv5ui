@@ -1135,6 +1135,9 @@ describe('Editor', () => {
                 '[role="dialog"] [aria-label="Image cropper"]'
             ) as HTMLElement | null
 
+        const cropperReady = () =>
+            document.querySelector('[role="dialog"] [data-handle="se"]') as HTMLElement | null
+
         const dialogButton = (label: string) =>
             Array.from(document.querySelectorAll('[role="dialog"] button')).find(
                 (button) => button.textContent?.trim() === label
@@ -1169,11 +1172,9 @@ describe('Editor', () => {
 
             pasteFile(container, await pngFile())
             await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
-            // wait for the cropper to decode the image, otherwise there is
-            // nothing to crop and the dialog stays open
-            await vi.waitFor(() =>
-                expect(document.querySelector('[role="dialog"] img')).not.toBeNull()
-            )
+            // the resize handles only render once the image is decoded, so this
+            // is the point where there is something to crop
+            await vi.waitFor(() => expect(cropperReady()).not.toBeNull())
             await vi.waitFor(() => expect(dialogButton('Insert')).toBeDefined())
             dialogButton('Insert')!.click()
 
@@ -1190,9 +1191,7 @@ describe('Editor', () => {
 
             pasteFile(container, await pngFile())
             await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
-            await vi.waitFor(() =>
-                expect(document.querySelector('[role="dialog"] img')).not.toBeNull()
-            )
+            await vi.waitFor(() => expect(cropperReady()).not.toBeNull())
             await vi.waitFor(() => expect(dialogButton('Insert')).toBeDefined())
             dialogButton('Insert')!.click()
 
