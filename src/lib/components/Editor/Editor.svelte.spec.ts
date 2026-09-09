@@ -830,6 +830,412 @@ describe('Editor', () => {
 
     // ==================== POPUP ACCESSIBILITY ====================
 
+    describe('link prompt', () => {
+        const openLinkPrompt = async (container: Element) => {
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const link = container.querySelector(
+                '[role="toolbar"] button[data-action="link"]'
+            ) as HTMLButtonElement | null
+            expect(link).not.toBeNull()
+            link!.click()
+
+            await vi.waitFor(() => {
+                expect(document.querySelector('[role="dialog"]')).not.toBeNull()
+            })
+        }
+
+        const promptInput = () =>
+            document.querySelector('[role="dialog"] input') as HTMLInputElement | null
+        const promptError = () =>
+            document.querySelector('[role="dialog"] [id$="-error"]') as HTMLElement | null
+
+        it('does not validate the url before the user has touched it', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            // the dialog focuses the input itself; a rival programmatic focus used
+            // to blur it again, which validated an untouched field
+            await vi.waitFor(() => expect(document.activeElement).toBe(promptInput()))
+            await new Promise((resolve) => setTimeout(resolve, 150))
+
+            expect(promptError()).toBeNull()
+        })
+
+        it('asks for a url and an optional display text', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const labels = Array.from(document.querySelectorAll('[role="dialog"] label')).map(
+                (el) => el.textContent?.trim()
+            )
+
+            expect(labels).toEqual(['Link URL', 'Display text'])
+            expect(document.querySelectorAll('[role="dialog"] input')).toHaveLength(2)
+        })
+
+        it('prefills the display text from the selection', async () => {
+            let api = $state<EditorApi>()
+            const { container } = render(Editor, {
+                value: '<p>read the docs</p>',
+                get api() {
+                    return api
+                },
+                set api(next: EditorApi | undefined) {
+                    api = next
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).toBeTruthy())
+            api!.editor!.commands.selectAll()
+
+            await openLinkPrompt(container)
+
+            const text = document.querySelectorAll('[role="dialog"] input')[1] as HTMLInputElement
+            expect(text.value).toBe('read the docs')
+        })
+
+        it('inserts the link with the display text the user typed', async () => {
+            let api = $state<EditorApi>()
+            const { container } = render(Editor, {
+                value: '<p>replace me</p>',
+                get api() {
+                    return api
+                },
+                set api(next: EditorApi | undefined) {
+                    api = next
+                }
+            })
+            await vi.waitFor(() => expect(api?.editor).toBeTruthy())
+            api!.editor!.commands.selectAll()
+
+            await openLinkPrompt(container)
+
+            const [url, text] = Array.from(
+                document.querySelectorAll('[role="dialog"] input')
+            ) as HTMLInputElement[]
+            url.value = 'https://example.com'
+            url.dispatchEvent(new Event('input', { bubbles: true }))
+            text.value = 'the docs'
+            text.dispatchEvent(new Event('input', { bubbles: true }))
+
+            const confirm = Array.from(document.querySelectorAll('[role="dialog"] button')).find(
+                (button) => button.textContent?.trim() === 'Insert'
+            ) as HTMLButtonElement
+            confirm.click()
+
+            await vi.waitFor(() => {
+                const anchor = getProseMirror(container)?.querySelector('a')
+                expect(anchor?.getAttribute('href')).toBe('https://example.com')
+                expect(anchor?.textContent).toBe('the docs')
+            })
+        })
+
+        it('falls back to the url as the label when nothing is selected', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const url = document.querySelector('[role="dialog"] input') as HTMLInputElement
+            url.value = 'https://example.com'
+            url.dispatchEvent(new Event('input', { bubbles: true }))
+
+            const confirm = Array.from(document.querySelectorAll('[role="dialog"] button')).find(
+                (button) => button.textContent?.trim() === 'Insert'
+            ) as HTMLButtonElement
+            confirm.click()
+
+            await vi.waitFor(() => {
+                const anchor = getProseMirror(container)?.querySelector('a')
+                expect(anchor?.textContent).toBe('https://example.com')
+            })
+        })
+
+        it('keeps a single url field for the youtube prompt', async () => {
+            const { container } = render(Editor, { youtube: true, toolbar: ['youtube'] })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const button = container.querySelector(
+                '[role="toolbar"] button[data-action="youtube"]'
+            ) as HTMLButtonElement
+            button.click()
+
+            await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull())
+            const labels = Array.from(document.querySelectorAll('[role="dialog"] label')).map(
+                (el) => el.textContent?.trim()
+            )
+
+            expect(labels).toEqual(['Video URL'])
+        })
+
+        it('still validates once the user leaves the field empty', async () => {
+            const { container } = render(Editor, {})
+            await openLinkPrompt(container)
+
+            const input = promptInput()!
+            input.focus()
+            input.dispatchEvent(new FocusEvent('blur', { bubbles: true }))
+
+            await vi.waitFor(() => expect(promptError()?.textContent).toContain('URL is required'))
+        })
+    })
+
+    describe('pasted and dropped images', () => {
+        const pngFile = () =>
+            new File([new Uint8Array([137, 80, 78, 71])], 'shot.png', { type: 'image/png' })
+
+        const transferWith = (...files: File[]) => {
+            const data = new DataTransfer()
+            files.forEach((file) => data.items.add(file))
+
+            return data
+        }
+
+        it('uploads an image pasted into the editor', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: transferWith(pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            expect(onImageUpload.mock.calls[0][0].name).toBe('shot.png')
+            await vi.waitFor(() => {
+                expect(getProseMirror(container)?.querySelector('img')?.getAttribute('src')).toBe(
+                    'https://cdn.test/a.png'
+                )
+            })
+        })
+
+        it('uploads an image dropped onto the editor', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/b.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const view = getProseMirror(container)!
+            const box = view.getBoundingClientRect()
+            view.dispatchEvent(
+                new DragEvent('drop', {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: box.left + 4,
+                    clientY: box.top + 4,
+                    dataTransfer: transferWith(pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            await vi.waitFor(() => {
+                expect(getProseMirror(container)?.querySelector('img')).not.toBeNull()
+            })
+        })
+
+        it('uploads every image in one paste', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/c.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: transferWith(pngFile(), pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(2))
+        })
+
+        it('leaves a text paste to the editor', async () => {
+            const onImageUpload = vi.fn()
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const data = new DataTransfer()
+            data.setData('text/plain', 'just words')
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: data
+                })
+            )
+
+            await new Promise((resolve) => setTimeout(resolve, 100))
+            expect(onImageUpload).not.toHaveBeenCalled()
+        })
+
+        it('does nothing without an upload handler', async () => {
+            const { container } = render(Editor, { image: true })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            const event = new ClipboardEvent('paste', {
+                bubbles: true,
+                cancelable: true,
+                clipboardData: transferWith(pngFile())
+            })
+            getProseMirror(container)!.dispatchEvent(event)
+
+            await new Promise((resolve) => setTimeout(resolve, 100))
+            expect(getProseMirror(container)?.querySelector('img')).toBeNull()
+        })
+
+        it('reports an upload failure through onImageUploadError', async () => {
+            const onImageUploadError = vi.fn()
+            const onImageUpload = vi.fn().mockRejectedValue(new Error('nope'))
+            const { container } = render(Editor, { image: true, onImageUpload, onImageUploadError })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: transferWith(pngFile())
+                })
+            )
+
+            await vi.waitFor(() => expect(onImageUploadError).toHaveBeenCalledTimes(1))
+        })
+    })
+
+    describe('crop before upload', () => {
+        // a real bitmap: the cropper has to decode it before it can crop
+        const pngFile = async () => {
+            const canvas = document.createElement('canvas')
+            canvas.width = 48
+            canvas.height = 32
+            const context = canvas.getContext('2d')!
+            context.fillStyle = '#3b82f6'
+            context.fillRect(0, 0, 48, 32)
+            const blob = await new Promise<Blob | null>((resolve) =>
+                canvas.toBlob(resolve, 'image/png')
+            )
+
+            return new File([blob!], 'shot.png', { type: 'image/png' })
+        }
+
+        const pasteFile = (container: Element, file: File) => {
+            const data = new DataTransfer()
+            data.items.add(file)
+            getProseMirror(container)!.dispatchEvent(
+                new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: data
+                })
+            )
+        }
+
+        const cropDialog = () =>
+            document.querySelector(
+                '[role="dialog"] [aria-label="Image cropper"]'
+            ) as HTMLElement | null
+
+        const cropperReady = () =>
+            document.querySelector('[role="dialog"] [data-handle="se"]') as HTMLElement | null
+
+        const dialogButton = (label: string) =>
+            Array.from(document.querySelectorAll('[role="dialog"] button')).find(
+                (button) => button.textContent?.trim() === label
+            ) as HTMLButtonElement | undefined
+
+        it('does not open a crop dialog unless asked', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            expect(cropDialog()).toBeNull()
+        })
+
+        it('offers the cropper before uploading a pasted image', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            expect(onImageUpload).not.toHaveBeenCalled()
+        })
+
+        it('uploads the cropped file once the user confirms', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            // the resize handles only render once the image is decoded, so this
+            // is the point where there is something to crop
+            await vi.waitFor(() => expect(cropperReady()).not.toBeNull())
+            await vi.waitFor(() => expect(dialogButton('Insert')).toBeDefined())
+            dialogButton('Insert')!.click()
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            const uploaded = onImageUpload.mock.calls[0][0] as File
+            expect(uploaded).toBeInstanceOf(File)
+            expect(uploaded.type).toBe('image/png')
+        })
+
+        it('keeps the whole image when the user confirms without dragging', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            await vi.waitFor(() => expect(cropperReady()).not.toBeNull())
+            await vi.waitFor(() => expect(dialogButton('Insert')).toBeDefined())
+            dialogButton('Insert')!.click()
+
+            await vi.waitFor(() => expect(onImageUpload).toHaveBeenCalledTimes(1))
+            const uploaded = onImageUpload.mock.calls[0][0] as File
+            const bitmap = await createImageBitmap(uploaded)
+
+            expect(bitmap.width).toBe(48)
+            expect(bitmap.height).toBe(32)
+        })
+
+        it('uploads nothing when the user cancels the crop', async () => {
+            const onImageUpload = vi.fn()
+            const { container } = render(Editor, { image: true, imageCrop: true, onImageUpload })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+            await vi.waitFor(() => expect(dialogButton('Cancel')).toBeDefined())
+            dialogButton('Cancel')!.click()
+
+            await new Promise((resolve) => setTimeout(resolve, 150))
+            expect(onImageUpload).not.toHaveBeenCalled()
+            expect(getProseMirror(container)?.querySelector('img')).toBeNull()
+        })
+
+        it('takes the dialog wording from the options', async () => {
+            const onImageUpload = vi.fn().mockResolvedValue('https://cdn.test/a.png')
+            const { container } = render(Editor, {
+                image: true,
+                imageCrop: { title: 'Trim the shot', confirmLabel: 'Use it', aspect: 1 },
+                onImageUpload
+            })
+            await vi.waitFor(() => expect(getProseMirror(container)).not.toBeNull())
+
+            pasteFile(container, await pngFile())
+
+            await vi.waitFor(() => expect(cropDialog()).not.toBeNull())
+            expect(document.querySelector('[role="dialog"]')?.textContent).toContain(
+                'Trim the shot'
+            )
+            expect(dialogButton('Use it')).toBeDefined()
+        })
+    })
+
     describe('popup accessibility', () => {
         it('slash popup exposes role=option, aria-selected, and editor aria-activedescendant', async () => {
             let api: EditorApi | undefined

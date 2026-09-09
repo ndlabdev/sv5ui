@@ -1,4 +1,5 @@
-import type { AnyExtension } from '@tiptap/core'
+import { Extension, type AnyExtension } from '@tiptap/core'
+import { Plugin, PluginKey } from '@tiptap/pm/state'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign from '@tiptap/extension-text-align'
@@ -11,6 +12,60 @@ import { DragHandle } from '@tiptap/extension-drag-handle'
 import type { SuggestionOptions } from '@tiptap/suggestion'
 import type { SlashCommand } from './editor.types.js'
 import { buildSlashExtension } from './editor.slash.svelte.js'
+
+export type ImageFileDropHandler = (files: File[], position?: number) => void
+
+const imageFileDropKey = new PluginKey('sv5uiImageFileDrop')
+
+function imageFilesFrom(list: FileList | null | undefined): File[] {
+    if (!list) return []
+
+    return Array.from(list).filter((file) => file.type.startsWith('image/'))
+}
+
+/**
+ * Routes pasted and dropped image files to the component's upload handler.
+ * Only registered when images are enabled and an upload handler exists, so
+ * without one ProseMirror keeps its default paste and drop behaviour.
+ */
+function buildImageFileExt(onFiles: ImageFileDropHandler): AnyExtension {
+    return Extension.create({
+        name: 'sv5uiImageFileDrop',
+        addProseMirrorPlugins() {
+            return [
+                new Plugin({
+                    key: imageFileDropKey,
+                    props: {
+                        handlePaste: (_view, event) => {
+                            const files = imageFilesFrom(event.clipboardData?.files)
+                            if (files.length === 0) return false
+
+                            event.preventDefault()
+                            onFiles(files)
+
+                            return true
+                        },
+                        handleDrop: (view, event, _slice, moved) => {
+                            if (moved) return false
+
+                            const files = imageFilesFrom(event.dataTransfer?.files)
+                            if (files.length === 0) return false
+
+                            event.preventDefault()
+                            const at = view.posAtCoords({
+                                left: event.clientX,
+                                top: event.clientY
+                            })
+                            onFiles(files, at?.pos)
+
+                            return true
+                        }
+                    }
+                })
+            ]
+        }
+    })
+}
 
 interface BuildExtensionsOptions {
     headingLevels?: (1 | 2 | 3 | 4 | 5 | 6)[]
@@ -28,6 +83,7 @@ interface BuildExtensionsOptions {
     slashTrigger?: string
     youtube?: boolean
     dragHandle?: boolean
+    onImageFiles?: ImageFileDropHandler
     extra?: AnyExtension[]
 }
 
@@ -139,6 +195,7 @@ type OptionalBuilder = (o: BuildExtensionsOptions) => OptionalBuilderResult | nu
 const OPTIONAL_BUILDERS: OptionalBuilder[] = [
     (o) => (o.placeholder ? Placeholder.configure({ placeholder: o.placeholder }) : null),
     (o) => (o.image ? buildImageExt() : null),
+    (o) => (o.image && o.onImageFiles ? buildImageFileExt(o.onImageFiles) : null),
     (o) => (o.tables ? buildTableExts() : null),
     (o) => (o.youtube ? buildYoutubeExt() : null),
     (o) => (o.markdown ? buildMarkdownExt(o.markdownAllowHtml ?? false) : null),

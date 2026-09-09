@@ -21,6 +21,8 @@
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import { usePointerDrag } from '../../hooks/usePointerDrag/index.js'
+    import type { PointerDragContext } from '../../hooks/usePointerDrag/index.js'
 
     const config = getComponentConfig('colorPicker', colorPickerDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -161,9 +163,8 @@
 
     let areaEl = $state<HTMLElement | null>(null)
     let areaThumbEl = $state<HTMLElement | null>(null)
-    let dragging = $state(false)
 
-    function updateFromPointer(event: PointerEvent, commit: boolean) {
+    function updateFromPointer(context: PointerDragContext, commit: boolean) {
         if (!areaEl) return
 
         const rect = areaEl.getBoundingClientRect()
@@ -172,47 +173,23 @@
         applyColor(
             {
                 ...hsva,
-                s: clamp((event.clientX - rect.left) / rect.width, 0, 1),
-                v: clamp(1 - (event.clientY - rect.top) / rect.height, 0, 1)
+                s: clamp((context.x - rect.left) / rect.width, 0, 1),
+                v: clamp(1 - (context.y - rect.top) / rect.height, 0, 1)
             },
             commit
         )
     }
 
-    function capturePointer(pointerId: number) {
-        try {
-            areaEl?.setPointerCapture(pointerId)
-        } catch {
-            return
-        }
-    }
-
-    function releasePointer(pointerId: number) {
-        if (areaEl?.hasPointerCapture(pointerId)) areaEl.releasePointerCapture(pointerId)
-    }
-
-    function handleAreaPointerDown(event: PointerEvent) {
-        if (disabled) return
-        if (event.button !== 0 && event.pointerType === 'mouse') return
-
-        dragging = true
-        capturePointer(event.pointerId)
-        areaThumbEl?.focus()
-        updateFromPointer(event, false)
-    }
-
-    function handleAreaPointerMove(event: PointerEvent) {
-        if (!dragging) return
-        updateFromPointer(event, false)
-    }
-
-    function handleAreaPointerUp(event: PointerEvent) {
-        if (!dragging) return
-
-        dragging = false
-        releasePointer(event.pointerId)
-        updateFromPointer(event, true)
-    }
+    const areaDrag = usePointerDrag({
+        disabled: () => disabled,
+        throttle: false,
+        onStart: (context) => {
+            areaThumbEl?.focus()
+            updateFromPointer(context, false)
+        },
+        onMove: (context) => updateFromPointer(context, false),
+        onEnd: (context) => updateFromPointer(context, true)
+    })
 
     function handleAreaKeydown(event: KeyboardEvent) {
         if (disabled) return
@@ -331,10 +308,7 @@
         role="none"
         class={classes.area}
         style={areaStyle}
-        onpointerdown={handleAreaPointerDown}
-        onpointermove={handleAreaPointerMove}
-        onpointerup={handleAreaPointerUp}
-        onpointercancel={handleAreaPointerUp}
+        {...areaDrag.handlers}
     >
         <span
             bind:this={areaThumbEl}

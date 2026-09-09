@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 import { FormContext, type FormContextOptions } from './form.context.svelte.js'
-import { FormValidationException, type StandardSchemaV1 } from './form.types.js'
+import {
+    FormValidationException,
+    type FormInputEvents,
+    type StandardSchemaV1
+} from './form.types.js'
 
 // ==================== TEST HELPERS ====================
 
@@ -645,6 +649,61 @@ describe('FormContext — dispose() clears reactive state', () => {
         expect(ctx.dirtyFields.size).toBe(0)
         expect(ctx.touchedFields.size).toBe(0)
         expect(ctx.blurredFields.size).toBe(0)
+        cleanup()
+    })
+})
+
+describe('FormContext — validateOn focus waits for the first blur', () => {
+    const focusOpts = {
+        getValidateOn: () => ['input', 'blur', 'change', 'focus'] as FormInputEvents[],
+        getState: () => ({ email: '', age: 30 }),
+        getSchema: () => makeSchema()
+    }
+
+    it('does not validate a field the user has never left', async () => {
+        const { ctx, cleanup } = makeCtx(focusOpts)
+
+        ctx.onFocus('email')
+        await vi.waitFor(() => expect(ctx.touchedFields.has('email')).toBe(true))
+
+        expect(ctx.errors).toEqual([])
+        cleanup()
+    })
+
+    it('validates on focus once the field has been left', async () => {
+        const { ctx, cleanup } = makeCtx(focusOpts)
+
+        ctx.onBlur('email')
+        await vi.waitFor(() => expect(ctx.errors.length).toBeGreaterThan(0))
+        ctx.errors = []
+
+        ctx.onFocus('email')
+        await vi.waitFor(() => expect(ctx.errors[0]?.message).toBe('Invalid email'))
+        cleanup()
+    })
+
+    it('validates on the first focus for a field that opted in', async () => {
+        const { ctx, cleanup } = makeCtx(focusOpts)
+        ctx.registerField('email', { eagerValidation: true })
+
+        ctx.onFocus('email')
+
+        await vi.waitFor(() => expect(ctx.errors[0]?.message).toBe('Invalid email'))
+        cleanup()
+    })
+
+    it('leaves focus inert when validateOn does not list it', async () => {
+        const { ctx, cleanup } = makeCtx({
+            getValidateOn: () => ['blur'] as FormInputEvents[],
+            getState: () => ({ email: '', age: 30 }),
+            getSchema: () => makeSchema()
+        })
+
+        ctx.blurredFields.add('email')
+        ctx.onFocus('email')
+        await new Promise((resolve) => setTimeout(resolve, 50))
+
+        expect(ctx.errors).toEqual([])
         cleanup()
     })
 })

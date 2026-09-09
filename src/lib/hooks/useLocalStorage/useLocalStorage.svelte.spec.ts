@@ -1,11 +1,12 @@
 import { flushSync } from 'svelte'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { useLocalStorage } from './useLocalStorage.svelte.js'
+import { useLocalStorage, useSessionStorage } from './useLocalStorage.svelte.js'
 
 const KEY = 'sv5ui-test-key'
 
 afterEach(() => {
     localStorage.clear()
+    sessionStorage.clear()
 })
 
 describe('useLocalStorage', () => {
@@ -167,6 +168,164 @@ describe('useLocalStorage', () => {
         flushSync()
         expect(setSpy.mock.calls.some((c) => c[0] === KEY)).toBe(false)
         setSpy.mockRestore()
+        cleanup()
+    })
+})
+
+describe('useLocalStorage with an optional key', () => {
+    it('stays inert while the key is null', () => {
+        let store: ReturnType<typeof useLocalStorage<number>>
+        const cleanup = $effect.root(() => {
+            store = useLocalStorage(null, 5)
+        })
+        flushSync()
+
+        expect(store!.enabled).toBe(false)
+        expect(store!.current).toBe(5)
+
+        store!.current = 9
+        flushSync()
+
+        expect(store!.current).toBe(9)
+        expect(localStorage.length).toBe(0)
+        cleanup()
+    })
+
+    it('starts persisting once a key appears', () => {
+        let key = $state<string | null>(null)
+        let store: ReturnType<typeof useLocalStorage<number>>
+        const cleanup = $effect.root(() => {
+            store = useLocalStorage(() => key, 1)
+        })
+        flushSync()
+
+        store!.current = 7
+        flushSync()
+        expect(localStorage.length).toBe(0)
+
+        key = KEY
+        flushSync()
+
+        expect(store!.enabled).toBe(true)
+        expect(localStorage.getItem(KEY)).toBe('1')
+        cleanup()
+    })
+
+    it('reads the new slot when the key changes', () => {
+        localStorage.setItem('sv5ui-a', JSON.stringify('from a'))
+        localStorage.setItem('sv5ui-b', JSON.stringify('from b'))
+
+        let key = $state('sv5ui-a')
+        let store: ReturnType<typeof useLocalStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useLocalStorage(() => key, 'fallback')
+        })
+        flushSync()
+        expect(store!.current).toBe('from a')
+
+        key = 'sv5ui-b'
+        flushSync()
+        expect(store!.current).toBe('from b')
+        cleanup()
+    })
+
+    it('falls back to the initial value when the new slot is empty', () => {
+        localStorage.setItem('sv5ui-a', JSON.stringify('from a'))
+
+        let key = $state('sv5ui-a')
+        let store: ReturnType<typeof useLocalStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useLocalStorage(() => key, 'fallback')
+        })
+        flushSync()
+
+        key = 'sv5ui-empty'
+        flushSync()
+
+        expect(store!.current).toBe('fallback')
+        cleanup()
+    })
+})
+
+describe('useLocalStorage remove', () => {
+    it('clears the entry and returns to the initial value', () => {
+        localStorage.setItem(KEY, JSON.stringify('stored'))
+        let store: ReturnType<typeof useLocalStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useLocalStorage(KEY, 'fallback')
+        })
+        flushSync()
+
+        store!.remove()
+        flushSync()
+
+        expect(store!.current).toBe('fallback')
+        expect(localStorage.getItem(KEY)).toBeNull()
+        cleanup()
+    })
+
+    it('keeps persisting after a removal', () => {
+        let store: ReturnType<typeof useLocalStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useLocalStorage(KEY, 'fallback')
+        })
+        flushSync()
+
+        store!.remove()
+        flushSync()
+        store!.current = 'again'
+        flushSync()
+
+        expect(localStorage.getItem(KEY)).toBe(JSON.stringify('again'))
+        cleanup()
+    })
+})
+
+describe('useSessionStorage', () => {
+    it('writes to sessionStorage and leaves localStorage alone', () => {
+        let store: ReturnType<typeof useSessionStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useSessionStorage(KEY, 'draft')
+        })
+        flushSync()
+
+        store!.current = 'edited'
+        flushSync()
+
+        expect(sessionStorage.getItem(KEY)).toBe(JSON.stringify('edited'))
+        expect(localStorage.getItem(KEY)).toBeNull()
+        cleanup()
+    })
+
+    it('reads an existing session value on mount', () => {
+        sessionStorage.setItem(KEY, JSON.stringify('kept'))
+        let store: ReturnType<typeof useSessionStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useSessionStorage(KEY, 'draft')
+        })
+        flushSync()
+
+        expect(store!.current).toBe('kept')
+        cleanup()
+    })
+
+    it('ignores a storage event from the other storage area', () => {
+        let store: ReturnType<typeof useSessionStorage<string>>
+        const cleanup = $effect.root(() => {
+            store = useSessionStorage(KEY, 'draft')
+        })
+        flushSync()
+
+        window.dispatchEvent(
+            new StorageEvent('storage', {
+                key: KEY,
+                newValue: JSON.stringify('from another tab'),
+                storageArea: localStorage
+            })
+        )
+        flushSync()
+
+        expect(store!.current).toBe('draft')
         cleanup()
     })
 })

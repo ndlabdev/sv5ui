@@ -24,6 +24,8 @@
     import Icon from '../Icon/Icon.svelte'
     import Tooltip from '../Tooltip/Tooltip.svelte'
     import EditorUrlPrompt from './EditorUrlPrompt.svelte'
+    import type { UrlPromptResult } from './EditorUrlPrompt.svelte'
+    import EditorImageCropDialog from './EditorImageCropDialog.svelte'
     import {
         httpUrlSchema,
         youtubeUrlSchema,
@@ -57,6 +59,7 @@
         linkOpenInNewTab = true,
         markdownAllowHtml = false,
         image = false,
+        imageCrop = false,
         onImageUpload,
         onImageUploadError,
         tables = false,
@@ -196,7 +199,7 @@
                     }
                     openUrlPrompt({
                         ...opts,
-                        onConfirm: (value) => settle(value),
+                        onConfirm: (result) => settle(result.url),
                         onCancel: () => settle(null)
                     })
                 })
@@ -215,6 +218,7 @@
             tables,
             youtube,
             dragHandle,
+            onImageFiles: onImageUpload ? handleImageFiles : undefined,
             markdown: resolvedOutput === 'markdown',
             markdownAllowHtml,
             mentionTrigger,
@@ -422,7 +426,14 @@
         initialValue: string
         confirmLabel: string
         schema?: UrlSchema
-        onConfirm?: (url: string) => void
+        urlLabel?: string
+        urlHelp?: string
+        urlIcon?: string
+        textField?: boolean
+        textLabel?: string
+        textPlaceholder?: string
+        initialText?: string
+        onConfirm?: (result: UrlPromptResult) => void
         onCancel?: () => void
     }
 
@@ -441,7 +452,14 @@
         initialValue?: string
         confirmLabel?: string
         schema?: UrlSchema
-        onConfirm: (url: string) => void
+        urlLabel?: string
+        urlHelp?: string
+        urlIcon?: string
+        textField?: boolean
+        textLabel?: string
+        textPlaceholder?: string
+        initialText?: string
+        onConfirm: (result: UrlPromptResult) => void
         onCancel?: () => void
     }): void {
         urlPrompt = {
@@ -452,6 +470,13 @@
             initialValue: opts.initialValue ?? '',
             confirmLabel: opts.confirmLabel ?? 'Insert',
             schema: opts.schema,
+            urlLabel: opts.urlLabel,
+            urlHelp: opts.urlHelp,
+            urlIcon: opts.urlIcon,
+            textField: opts.textField,
+            textLabel: opts.textLabel,
+            textPlaceholder: opts.textPlaceholder,
+            initialText: opts.initialText,
             onConfirm: opts.onConfirm,
             onCancel: opts.onCancel
         }
@@ -459,21 +484,57 @@
 
     let fileInput: HTMLInputElement | null = $state(null)
 
-    async function handleFileSelected(event: Event): Promise<void> {
-        if (!editor) return
-        const input = event.currentTarget as HTMLInputElement
-        const file = input.files?.[0]
-        input.value = ''
-        if (!file) return
-        if (!onImageUpload) return
+    const cropOptions = $derived(
+        imageCrop === false || imageCrop === undefined
+            ? undefined
+            : imageCrop === true
+              ? {}
+              : imageCrop
+    )
+
+    let cropPrompt = $state<{
+        open: boolean
+        file: File | null
+        settle?: (value: File | null) => void
+    }>({ open: false, file: null })
+
+    function cropBeforeUpload(file: File): Promise<File | null> {
+        return new Promise((resolve) => {
+            let done = false
+            const settle = (value: File | null): void => {
+                if (done) return
+                done = true
+                resolve(value)
+            }
+
+            cropPrompt = { open: true, file, settle }
+        })
+    }
+
+    async function uploadImage(file: File, position?: number): Promise<void> {
+        if (!editor || !onImageUpload) return
+
+        const source = cropOptions ? await cropBeforeUpload(file) : file
+        if (!source) return
+
         try {
-            const url = await onImageUpload(file)
+            const url = await onImageUpload(source)
             if (!isSafeImageSrc(url)) {
                 // eslint-disable-next-line no-console
                 console.warn('[Editor] blocked unsafe image src from onImageUpload:', url)
                 return
             }
-            editor.chain().focus().setImage({ src: url }).run()
+
+            if (position === undefined) {
+                editor.chain().focus().setImage({ src: url }).run()
+                return
+            }
+
+            editor
+                .chain()
+                .focus()
+                .insertContentAt(position, { type: 'image', attrs: { src: url } })
+                .run()
         } catch (err) {
             if (onImageUploadError) {
                 onImageUploadError(err)
@@ -484,14 +545,33 @@
         }
     }
 
+    function handleImageFiles(files: File[], position?: number): void {
+        void files.reduce(
+            (queue, file) => queue.then(() => uploadImage(file, position)),
+            Promise.resolve()
+        )
+    }
+
+    async function handleFileSelected(event: Event): Promise<void> {
+        const input = event.currentTarget as HTMLInputElement
+        const file = input.files?.[0]
+        input.value = ''
+        if (!file) return
+
+        await uploadImage(file)
+    }
+
     function openImagePicker(): void {
         if (!editor) return
         if (!onImageUpload) {
             openUrlPrompt({
-                title: 'Image URL',
+                title: 'Insert image',
+                description: 'Paste a link to the image you want to insert.',
                 placeholder: 'https://example.com/image.png',
                 schema: httpUrlSchema,
-                onConfirm: (url) => {
+                urlLabel: 'Image URL',
+                urlIcon: 'lucide:image',
+                onConfirm: ({ url }) => {
                     editor?.chain().focus().setImage({ src: url }).run()
                 }
             })
@@ -508,23 +588,57 @@
             placeholder: 'https://youtu.be/...',
             confirmLabel: 'Embed',
             schema: youtubeUrlSchema,
-            onConfirm: (url) => {
+            urlLabel: 'Video URL',
+            urlIcon: 'lucide:youtube',
+            onConfirm: ({ url }) => {
                 editor?.commands.setYoutubeVideo({ src: url })
             }
         })
     }
 
+    function applyLink(url: string, text: string): void {
+        if (!editor) return
+
+        // With nothing selected and no text to show, a bare setLink would only
+        // arm the mark for whatever the user types next, leaving the document
+        // unchanged. Fall back to the url as its own label.
+        const fresh = editor.state.selection.empty && !editor.isActive('link')
+        const label = text || (fresh ? url : '')
+
+        const chain = editor.chain().focus().extendMarkRange('link')
+        if (!label) {
+            chain.setLink({ href: url }).run()
+            return
+        }
+
+        chain
+            .insertContent({
+                type: 'text',
+                text: label,
+                marks: [{ type: 'link', attrs: { href: url } }]
+            })
+            .run()
+    }
+
     function openLinkPrompt(): void {
         if (!editor) return
+
         const previous = (editor.getAttributes('link').href as string | undefined) ?? ''
+        const { from, to, empty } = editor.state.selection
+        const selected = empty ? '' : editor.state.doc.textBetween(from, to, ' ')
+
         openUrlPrompt({
-            title: 'Insert link',
-            placeholder: 'https://',
+            title: previous ? 'Edit link' : 'Insert link',
+            description: 'Link the selected text, or insert a new one.',
+            placeholder: 'https://example.com',
             initialValue: previous,
+            confirmLabel: previous ? 'Update' : 'Insert',
             schema: httpUrlSchema,
-            onConfirm: (url) => {
-                editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-            }
+            urlLabel: 'Link URL',
+            urlHelp: 'Include the protocol, for example https://',
+            textField: true,
+            initialText: selected,
+            onConfirm: ({ url, text }) => applyLink(url, text)
         })
     }
 
@@ -749,6 +863,16 @@
     {/if}
 </div>
 
+{#if cropOptions}
+    <EditorImageCropDialog
+        bind:open={cropPrompt.open}
+        file={cropPrompt.file}
+        options={cropOptions}
+        onConfirm={(cropped) => cropPrompt.settle?.(cropped)}
+        onCancel={() => cropPrompt.settle?.(null)}
+    />
+{/if}
+
 <EditorUrlPrompt
     bind:open={urlPrompt.open}
     title={urlPrompt.title}
@@ -757,6 +881,13 @@
     initialValue={urlPrompt.initialValue}
     confirmLabel={urlPrompt.confirmLabel}
     schema={urlPrompt.schema}
-    onConfirm={(url) => urlPrompt.onConfirm?.(url)}
+    urlLabel={urlPrompt.urlLabel}
+    urlHelp={urlPrompt.urlHelp}
+    urlIcon={urlPrompt.urlIcon}
+    textField={urlPrompt.textField}
+    textLabel={urlPrompt.textLabel}
+    textPlaceholder={urlPrompt.textPlaceholder}
+    initialText={urlPrompt.initialText}
+    onConfirm={(result) => urlPrompt.onConfirm?.(result)}
     onCancel={() => urlPrompt.onCancel?.()}
 />

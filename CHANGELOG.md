@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-09-09
+
+### Added
+
+- **ImageCropper** — client-side image cropper: `mode="fixed"` pans and zooms behind a centred frame, `mode="box"` drags a frame with eight handles. Rotate, flip, `aspect` ratios, `shape="circle"`, wheel and keyboard control; `crop()` returns a `Blob` and a `File` at source resolution. 5 sizes, 8 colors, 16 `ui` slots. ([#202](https://github.com/ndlabdev/sv5ui/pull/202))
+- **Resizable** — draggable panes, horizontal or vertical, nestable. Percentage sizes that survive a window resize, `minSize`/`maxSize` in px or %, collapsible panes, keyboard-driven separators, `storageKey` persistence, `bind:sizes` and an imperative `api`. ([#205](https://github.com/ndlabdev/sv5ui/pull/205))
+- **usePointerDrag** — shared drag hook: pointer capture with a `window` fallback, one update per frame, the final position flushed on release, optional `axis` lock. ([#204](https://github.com/ndlabdev/sv5ui/pull/204))
+- **useSessionStorage** — the storage hook backed by `sessionStorage`. ([#203](https://github.com/ndlabdev/sv5ui/pull/203))
+- **Editor** — `imageCrop` opens the cropper before `onImageUpload`, for the toolbar picker, a paste and a drop alike. ([#210](https://github.com/ndlabdev/sv5ui/pull/210))
+
+### Changed
+
+- **useLocalStorage** — the key may be a getter, and a `null` key turns the hook inert. Adds `storage`, `remove()` and `enabled`; existing calls are unchanged. ([#203](https://github.com/ndlabdev/sv5ui/pull/203))
+- **ColorPicker** — the saturation area drags through `usePointerDrag`. Behaviour is unchanged. ([#204](https://github.com/ndlabdev/sv5ui/pull/204))
+- **Form** — `validateOn: 'focus'` waits for the first blur before reporting an error, the rule `input` already followed. `eagerValidation` opts a field back in. ([#207](https://github.com/ndlabdev/sv5ui/pull/207))
+- **Editor** — the link, image and YouTube dialogs read as forms: labelled required URL field with help text, plus an optional **Display text** for links. ([#208](https://github.com/ndlabdev/sv5ui/pull/208))
+
+### Fixed
+
+- **Editor** — the Insert link dialog no longer opens with "URL is required" already showing. ([#206](https://github.com/ndlabdev/sv5ui/pull/206))
+- **Editor** — pasting or dropping an image now calls `onImageUpload`; only the toolbar picker did before. ([#209](https://github.com/ndlabdev/sv5ui/pull/209))
+
 ## [2.6.1] - 2026-08-26
 
 ### Fixed

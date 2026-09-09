@@ -58,6 +58,7 @@ export type {
     EditorApi,
     EditorJSON,
     EditorReactiveState,
+    EditorImageCropOptions,
     MentionItem,
     SlashCommand,
     ToolbarAction
