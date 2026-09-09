@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-09-09
+
 ### Added
 
 - **ImageCropper** — client-side image cropper: `mode="fixed"` pans and zooms behind a centred frame, `mode="box"` drags a frame with eight handles. Rotate, flip, `aspect` ratios, `shape="circle"`, wheel and keyboard control; `crop()` returns a `Blob` and a `File` at source resolution. 5 sizes, 8 colors, 16 `ui` slots. ([#202](https://github.com/ndlabdev/sv5ui/pull/202))
