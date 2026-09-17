@@ -4,7 +4,7 @@ export const navigationMenuVariants = tv({
     slots: {
         root: 'relative',
         list: 'relative isolate min-w-0',
-        scroll: 'w-full pb-2',
+        scroll: 'w-full data-[overflow]:pb-2',
         highlight: 'absolute z-0 rounded-full transition-all duration-200',
         item: 'min-w-0',
         label: 'w-full flex items-center gap-1.5 px-2.5 pt-3 pb-1 font-semibold text-sm text-on-surface-variant',
@@ -55,7 +55,8 @@ export const navigationMenuVariants = tv({
         viewport: [
             'relative h-(--bits-navigation-menu-viewport-height) w-full origin-[top_center] overflow-hidden sm:w-(--bits-navigation-menu-viewport-width)',
             'rounded-xl border border-outline-variant bg-surface-container-low shadow-lg',
-            'transition-[width,height] duration-200',
+            'sm:[inset-inline-start:clamp(0px,calc(var(--sv5ui-nav-trigger-start)_+_(var(--sv5ui-nav-trigger-width)_-_var(--bits-navigation-menu-viewport-width))_*_var(--sv5ui-nav-align)),calc(100%_-_var(--bits-navigation-menu-viewport-width)))]',
+            'transition-[width,height,inset-inline-start] duration-200 data-[instant]:transition-none',
             'data-[state=open]:animate-[nav-scale-in_200ms_ease]',
             'data-[state=closed]:animate-[nav-scale-out_200ms_ease]'
         ],
@@ -119,6 +120,11 @@ export const navigationMenuVariants = tv({
         contentOrientation: {
             horizontal: {},
             vertical: {}
+        },
+        align: {
+            start: { viewport: '[--sv5ui-nav-align:0]' },
+            center: { viewport: '[--sv5ui-nav-align:0.5]' },
+            end: { viewport: '[--sv5ui-nav-align:1]' }
         },
         disabled: {
             true: '',
@@ -283,6 +289,7 @@ export const navigationMenuVariants = tv({
         collapsed: false,
         stacked: false,
         contentOrientation: 'horizontal',
+        align: 'center',
         disabled: false
     }
 })

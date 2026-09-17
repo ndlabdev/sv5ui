@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **NavigationMenu** — `align` prop (`'start'`, `'center'`, `'end'`, default `'center'`) places the dropdown panel of a horizontal menu relative to the open trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+
+### Fixed
+
+- **NavigationMenu** — the dropdown panel of a horizontal menu now opens under the trigger that opened it instead of always at the menu's left edge. It slides between triggers, stays inside the menu when the trigger sits near an edge, follows the list when it scrolls, and respects `dir="rtl"`. Below the `sm` breakpoint the panel keeps its full width. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+- **NavigationMenu** — a horizontal menu no longer leaves an 8px gap under its items. The room for the scrollbar is now reserved only while the list overflows and can scroll, which also brings the dropdown 8px closer to the trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+
 ## [2.7.0] - 2026-09-09
 
 ### Added
