@@ -8,6 +8,7 @@
     import { Popover } from 'bits-ui'
     import { popoverVariants, popoverDefaults } from './popover.variants.js'
     import { getComponentConfig } from '../../config.js'
+    import PortalScope from '../../internal/PortalScope.svelte'
 
     const config = getComponentConfig('popover', popoverDefaults)
 
@@ -147,6 +148,6 @@
             {@render popoverContentEl()}
         </Popover.Portal>
     {:else}
-        {@render popoverContentEl()}
+        <PortalScope active={open || !!ref}>{@render popoverContentEl()}</PortalScope>
     {/if}
 </Popover.Root>

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Modal**, **Slideover**, **Drawer**, **Popover** — with `portal={false}`, a Select, DatePicker, DropdownMenu, Tooltip or other floating layer opened inside the container no longer renders behind it when an ancestor sets a `z-index` above 50. Nested layers now render in the container's stacking context, above its panel. Portalled containers are unchanged. ([#217](https://github.com/ndlabdev/sv5ui/issues/217))
+
 ## [2.7.0] - 2026-09-09
 
 ### Added
