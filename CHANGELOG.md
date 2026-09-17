@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **DatePicker**, **DateRangePicker** — the calendar is now anchored to the whole field instead of the calendar icon at its end, so with the default `align="start"` it opens flush under the field's left edge rather than floating to the right over neighbouring content. `align="center"` now centres on the field; `align="end"` is unchanged. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
+
 ## [2.7.0] - 2026-09-09
 
 ### Added
