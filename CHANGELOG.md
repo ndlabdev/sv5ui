@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Modal**, **Slideover**, **Drawer**, **Popover** — with `portal={false}`, a Select, DatePicker, DropdownMenu, Tooltip or other floating layer opened inside the container no longer renders behind it when an ancestor sets a `z-index` above 50. Nested layers now render in the container's stacking context, above its panel. Portalled containers are unchanged. ([#217](https://github.com/ndlabdev/sv5ui/issues/217))
+- **DatePicker**, **DateRangePicker** — the calendar is now anchored to the whole field instead of the calendar icon at its end, so with the default `align="start"` it opens flush under the field's left edge rather than floating to the right over neighbouring content. `align="center"` now centres on the field; `align="end"` is unchanged. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
 - **NavigationMenu** — the dropdown panel of a horizontal menu now opens under the trigger that opened it instead of always at the menu's left edge. It slides between triggers, stays inside the menu when the trigger sits near an edge, follows the list when it scrolls, and respects `dir="rtl"`. Below the `sm` breakpoint the panel keeps its full width. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
 - **NavigationMenu** — a horizontal menu no longer leaves an 8px gap under its items. The room for the scrollbar is now reserved only while the list overflows and can scroll, which also brings the dropdown 8px closer to the trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
 
