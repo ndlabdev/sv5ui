@@ -9,15 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **NavigationMenu** — `align` prop (`'start'`, `'center'`, `'end'`, default `'center'`) places the dropdown panel of a horizontal menu relative to the open trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+- **NavigationMenu** — `align` prop (`start` | `center` | `end`, default `center`) places the dropdown under the open trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
 
 ### Fixed
 
-- **Modal**, **Slideover**, **Drawer**, **Popover** — with `portal={false}`, a Select, DatePicker, DropdownMenu, Tooltip or other floating layer opened inside the container no longer renders behind it when an ancestor sets a `z-index` above 50. Nested layers now render in the container's stacking context, above its panel. Portalled containers are unchanged. ([#217](https://github.com/ndlabdev/sv5ui/issues/217))
-- **DatePicker**, **DateRangePicker** — the calendar is now anchored to the whole field instead of the calendar icon at its end, so with the default `align="start"` it opens flush under the field's left edge rather than floating to the right over neighbouring content. `align="center"` now centres on the field; `align="end"` is unchanged. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
-- **NavigationMenu** — the dropdown panel of a horizontal menu now opens under the trigger that opened it instead of always at the menu's left edge. It slides between triggers, stays inside the menu when the trigger sits near an edge, follows the list when it scrolls, and respects `dir="rtl"`. Below the `sm` breakpoint the panel keeps its full width. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
-- **NavigationMenu** — a horizontal menu no longer leaves an 8px gap under its items. The room for the scrollbar is now reserved only while the list overflows and can scroll, which also brings the dropdown 8px closer to the trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
-- **Tabs** — the sliding indicator now follows the active tab when the text direction changes at runtime, for example a language switch that flips the page from `ltr` to `rtl`. The triggers moved to their mirrored positions while the indicator kept its old offset, so it sat under the wrong tab. ([#216](https://github.com/ndlabdev/sv5ui/issues/216))
+- **Modal**, **Slideover**, **Drawer**, **Popover** — with `portal={false}`, nested floating layers (Select, DatePicker, DropdownMenu, Tooltip, ...) no longer hide behind the container when an ancestor has a `z-index` above 50. ([#217](https://github.com/ndlabdev/sv5ui/issues/217))
+- **DatePicker**, **DateRangePicker** — the calendar is anchored to the field instead of the calendar icon, so it opens under the field's start edge. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
+- **NavigationMenu** — the dropdown opens under the trigger that opened it, slides between triggers and stays inside the menu. The 8px gap under the items is now reserved only while the list overflows. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+- **Tabs** — the indicator follows the active tab when the text direction flips between `ltr` and `rtl`. ([#216](https://github.com/ndlabdev/sv5ui/issues/216))
 
 ## [2.7.0] - 2026-09-09
 
