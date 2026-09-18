@@ -10,6 +10,7 @@
     import { getComponentConfig } from '../../config.js'
     import Button from '../Button/Button.svelte'
     import ScrollArea from '../ScrollArea/ScrollArea.svelte'
+    import PortalScope from '../../internal/PortalScope.svelte'
 
     const config = getComponentConfig('slideover', slideoverDefaults)
 
@@ -48,6 +49,8 @@
         footer: footerSlot,
         closeSlot
     }: Props = $props()
+
+    let contentEl = $state<HTMLElement | null>(null)
 
     const showClose = $derived(!!closeProp)
     const closeProps = $derived(typeof closeProp === 'object' ? closeProp : {})
@@ -119,7 +122,11 @@
 {/snippet}
 
 {#snippet slideoverContentInner()}
-    <Dialog.Content {...contentProps} class={[classes.content, !children ? className : undefined]}>
+    <Dialog.Content
+        {...contentProps}
+        bind:ref={contentEl}
+        class={[classes.content, !children ? className : undefined]}
+    >
         {#if contentSlot}
             {#if hasHeading}
                 <div class="sr-only">
@@ -196,7 +203,9 @@
     {#if showOverlay}
         <Dialog.Overlay class={classes.overlay} />
     {/if}
-    {@render slideoverContentInner()}
+    <PortalScope active={!portal && (open || !!contentEl)}>
+        {@render slideoverContentInner()}
+    </PortalScope>
 {/snippet}
 
 <Dialog.Root bind:open onOpenChange={handleOpenChange} {onOpenChangeComplete}>
