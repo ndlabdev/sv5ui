@@ -8,6 +8,7 @@
     import { Drawer } from 'vaul-svelte'
     import { drawerVariants, drawerDefaults } from './drawer.variants.js'
     import { getComponentConfig } from '../../config.js'
+    import PortalScope from '../../internal/PortalScope.svelte'
 
     const config = getComponentConfig('drawer', drawerDefaults)
 
@@ -47,6 +48,8 @@
         footer: footerSlot,
         ...rest
     }: Props = $props()
+
+    let contentEl = $state<HTMLElement | null>(null)
 
     const hasTitle = $derived(!!title || !!titleSlot)
     const hasDescription = $derived(!!description || !!descriptionSlot)
@@ -167,12 +170,17 @@
         <Drawer.Overlay class={classes.overlay} />
     {/if}
 
-    <Drawer.Content class={[classes.content, !children ? className : undefined]}>
-        {#if showHandle}
-            <Drawer.Handle class={classes.handle} />
-        {/if}
-        {@render drawerInner()}
-    </Drawer.Content>
+    <PortalScope active={!portal && (open || !!contentEl)}>
+        <Drawer.Content
+            bind:ref={contentEl}
+            class={[classes.content, !children ? className : undefined]}
+        >
+            {#if showHandle}
+                <Drawer.Handle class={classes.handle} />
+            {/if}
+            {@render drawerInner()}
+        </Drawer.Content>
+    </PortalScope>
 {/snippet}
 
 {#snippet drawerBody()}
