@@ -227,6 +227,13 @@ export interface NavigationMenuProps extends Omit<
     /** Layout of the mega-menu content (horizontal only). @default 'horizontal' */
     contentOrientation?: NonNullable<NavigationMenuVariantProps['contentOrientation']>
 
+    /**
+     * Where the dropdown panel sits relative to the open trigger (horizontal only).
+     * The panel stays inside the menu, so a wide panel shifts back when it would overflow.
+     * @default 'center'
+     */
+    align?: NonNullable<NavigationMenuVariantProps['align']>
+
     /** Item field used as the label. @default 'label' */
     labelKey?: string
 
