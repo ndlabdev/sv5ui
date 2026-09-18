@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Tabs** — the sliding indicator now follows the active tab when the text direction changes at runtime, for example a language switch that flips the page from `ltr` to `rtl`. The triggers moved to their mirrored positions while the indicator kept its old offset, so it sat under the wrong tab. ([#216](https://github.com/ndlabdev/sv5ui/issues/216))
+
 ## [2.7.0] - 2026-09-09
 
 ### Added
