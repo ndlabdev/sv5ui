@@ -1,3 +1,4 @@
+import '../../../routes/layout.css'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { page } from 'vitest/browser'
@@ -510,6 +511,59 @@ describe('Tabs', () => {
                 const indicator = getList()!.querySelector('.transition-all')
                 expect(indicator).not.toBeNull()
                 expect(indicator!.getAttribute('aria-hidden')).toBe('true')
+            })
+        })
+    })
+
+    describe('text direction', () => {
+        const dirItems = [
+            { label: 'Day', value: 'day' },
+            { label: 'Week (long label)', value: 'week' },
+            { label: 'Month', value: 'month' }
+        ]
+
+        function measure() {
+            const active = document.querySelector(
+                '[data-tabs-trigger][data-state="active"]'
+            ) as HTMLElement
+            const indicator = document.querySelector(
+                '[data-tabs-list] [aria-hidden="true"]'
+            ) as HTMLElement
+            return {
+                activeLeft: active.offsetLeft,
+                activeWidth: active.offsetWidth,
+                left: parseFloat(indicator.style.left),
+                width: parseFloat(indicator.style.width)
+            }
+        }
+
+        it('follows the active trigger when the text direction flips', async () => {
+            await page.viewport(1280, 800)
+            const { container } = render(Tabs, {
+                items: dirItems,
+                value: 'day',
+                content: false
+            })
+            await vi.waitFor(() => {
+                const m = measure()
+                expect(m.left).toBe(m.activeLeft)
+                expect(m.width).toBe(m.activeWidth)
+            })
+
+            const ltr = measure()
+            container.setAttribute('dir', 'rtl')
+            await vi.waitFor(() => {
+                const m = measure()
+                expect(m.activeLeft).not.toBe(ltr.activeLeft)
+                expect(m.left).toBe(m.activeLeft)
+                expect(m.width).toBe(m.activeWidth)
+            })
+
+            container.setAttribute('dir', 'ltr')
+            await vi.waitFor(() => {
+                const m = measure()
+                expect(m.left).toBe(m.activeLeft)
+                expect(m.width).toBe(m.activeWidth)
             })
         })
     })

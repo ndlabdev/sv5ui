@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **DatePicker**, **DateRangePicker** — the calendar is now anchored to the whole field instead of the calendar icon at its end, so with the default `align="start"` it opens flush under the field's left edge rather than floating to the right over neighbouring content. `align="center"` now centres on the field; `align="end"` is unchanged. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
 - **NavigationMenu** — the dropdown panel of a horizontal menu now opens under the trigger that opened it instead of always at the menu's left edge. It slides between triggers, stays inside the menu when the trigger sits near an edge, follows the list when it scrolls, and respects `dir="rtl"`. Below the `sm` breakpoint the panel keeps its full width. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
 - **NavigationMenu** — a horizontal menu no longer leaves an 8px gap under its items. The room for the scrollbar is now reserved only while the list overflows and can scroll, which also brings the dropdown 8px closer to the trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+- **Tabs** — the sliding indicator now follows the active tab when the text direction changes at runtime, for example a language switch that flips the page from `ltr` to `rtl`. The triggers moved to their mirrored positions while the indicator kept its old offset, so it sat under the wrong tab. ([#216](https://github.com/ndlabdev/sv5ui/issues/216))
 
 ## [2.7.0] - 2026-09-09
 
