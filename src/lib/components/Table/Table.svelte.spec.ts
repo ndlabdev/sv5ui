@@ -453,6 +453,103 @@ describe('Table', () => {
 
     // ==================== GLOBAL FILTER ====================
 
+    // ==================== COLUMN RESIZE ====================
+
+    describe('column resize', () => {
+        const resizableColumns = [
+            { key: 'name', label: 'Name', resizable: true, width: 200, minWidth: 80 },
+            { key: 'age', label: 'Age' }
+        ] as any
+
+        const rows = [{ id: 1, name: 'Ada', email: 'a@b.c', age: 36 }]
+
+        const setup = () => {
+            const { container } = render(Table, { columns: resizableColumns, data: rows })
+            const handle = container.querySelector<HTMLElement>('th [role="separator"]')!
+            const width = () => Number(handle.getAttribute('aria-valuenow'))
+            return { handle, width }
+        }
+
+        const press = async (handle: HTMLElement, key: string, shiftKey = false) => {
+            handle.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, bubbles: true }))
+            await vi.waitFor(() => expect(handle.getAttribute('aria-valuenow')).toBeTruthy())
+        }
+
+        it('should expose the handle as a focusable separator', () => {
+            const { handle } = setup()
+
+            expect(handle.getAttribute('role')).toBe('separator')
+            expect(handle.getAttribute('tabindex')).toBe('0')
+            expect(handle.getAttribute('aria-orientation')).toBe('vertical')
+            expect(handle.getAttribute('aria-label')).toBe('Resize Name')
+            expect(handle.getAttribute('aria-valuenow')).toBe('200')
+            expect(handle.getAttribute('aria-valuemin')).toBe('80')
+            expect(handle.getAttribute('aria-valuetext')).toBe('200px')
+        })
+
+        it('should be reachable with the keyboard', () => {
+            const { handle } = setup()
+            handle.focus()
+
+            expect(document.activeElement).toBe(handle)
+        })
+
+        it('should resize with the arrow keys', async () => {
+            const { handle, width } = setup()
+            const start = width()
+
+            await press(handle, 'ArrowRight')
+            const grown = width()
+            await press(handle, 'ArrowLeft')
+
+            expect(grown).toBeGreaterThan(start)
+            expect(width()).toBe(start)
+        })
+
+        it('should take a larger step while shift is held', async () => {
+            const { handle, width } = setup()
+            const start = width()
+
+            await press(handle, 'ArrowRight')
+            const small = width() - start
+
+            await press(handle, 'ArrowRight', true)
+            const large = width() - start - small
+
+            expect(large).toBeGreaterThan(small)
+        })
+
+        it('should clamp to minWidth and not go below it', async () => {
+            const { handle, width } = setup()
+
+            await press(handle, 'Home')
+            expect(width()).toBe(80)
+
+            await press(handle, 'ArrowLeft')
+            expect(width()).toBe(80)
+        })
+
+        it('should resize from a touch pointer, not just a mouse', async () => {
+            const { handle, width } = setup()
+            const start = width()
+            const opts = { bubbles: true, pointerType: 'touch', pointerId: 7, isPrimary: true }
+
+            handle.dispatchEvent(new PointerEvent('pointerdown', { ...opts, clientX: 0 }))
+            handle.dispatchEvent(new PointerEvent('pointermove', { ...opts, clientX: 70 }))
+            handle.dispatchEvent(new PointerEvent('pointerup', { ...opts, clientX: 70 }))
+
+            await vi.waitFor(() => expect(width()).toBeGreaterThan(start))
+        })
+
+        it('should render no handle for a column that is not resizable', () => {
+            const { container } = render(Table, { columns: resizableColumns, data: rows })
+            const headers = Array.from(container.querySelectorAll('th'))
+            const withHandle = headers.filter((th) => th.querySelector('[role="separator"]'))
+
+            expect(withHandle).toHaveLength(1)
+        })
+    })
+
     describe('global filter', () => {
         it('should filter data by global filter', () => {
             render(Table, {
