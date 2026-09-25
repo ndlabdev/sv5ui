@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Table** — the column resize handle is a focusable `separator` with `aria-valuenow`, arrow key resizing and a larger step while shift is held, plus `Home` and `End` for the bounds. It was mouse only before: no role, no tabindex and no key handler, so keyboard users could not resize a column at all. The drag also moves to the shared pointer hook, so touch and pen work rather than mouse alone. ([#226](https://github.com/ndlabdev/sv5ui/issues/226))
 - **Modal**, **Slideover**, **Drawer**, **Popover** — with `portal={false}`, nested floating layers (Select, DatePicker, DropdownMenu, Tooltip, ...) no longer hide behind the container when an ancestor has a `z-index` above 50. ([#217](https://github.com/ndlabdev/sv5ui/issues/217))
 - **DatePicker**, **DateRangePicker** — the calendar is anchored to the field instead of the calendar icon, so it opens under the field's start edge. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
 - **NavigationMenu** — the dropdown opens under the trigger that opened it, slides between triggers and stays inside the menu. The 8px gap under the items is now reserved only while the list overflows. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))

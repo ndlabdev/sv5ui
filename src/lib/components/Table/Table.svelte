@@ -14,6 +14,7 @@
     import Checkbox from '../Checkbox/Checkbox.svelte'
     import ScrollArea from '../ScrollArea/ScrollArea.svelte'
     import { useThrottle } from '../../hooks/useThrottle/index.js'
+    import { usePointerDrag } from '../../hooks/usePointerDrag/index.js'
     import {
         autoGenerateColumns,
         getRowKey,
@@ -353,35 +354,84 @@
     // =========================================================================
     // Column Resizing
     // =========================================================================
-    let resizing = $state<{ key: string; startX: number; startWidth: number } | null>(null)
+    let resizing: { key: string; startWidth: number } | null = null
     const resizeThrottle = useThrottle({ delay: 16 })
+    const resizeKeyStep = 16
 
-    function onResizeStart(e: MouseEvent, col: TableColumn<T>) {
-        e.preventDefault()
-        const currentWidth = columnSizing[col.key] ?? col.width ?? 150
-        resizing = { key: col.key, startX: e.clientX, startWidth: currentWidth }
+    function columnByKey(key: string): TableColumn<T> | undefined {
+        return visibleColumns.find((col) => String(col.key) === key)
+    }
 
-        const onMove = (ev: MouseEvent) => {
-            if (!resizing) return
-            const { key, startX, startWidth } = resizing
-            const diff = ev.clientX - startX
-            const min = col.minWidth ?? 50
-            const max = col.maxWidth ?? Infinity
-            const newWidth = Math.max(min, Math.min(max, startWidth + diff))
-            resizeThrottle.run(() => {
-                columnSizing = { ...columnSizing, [key]: newWidth }
-                onColumnSizingChange?.(columnSizing)
-            })
-        }
+    function columnWidth(col: TableColumn<T>): number {
+        return columnSizing[col.key] ?? col.width ?? 150
+    }
 
-        const onUp = () => {
+    function columnBounds(col: TableColumn<T>) {
+        return { min: col.minWidth ?? 50, max: col.maxWidth ?? Infinity }
+    }
+
+    function applyColumnWidth(col: TableColumn<T>, width: number) {
+        const { min, max } = columnBounds(col)
+        const next = Math.max(min, Math.min(max, Math.round(width)))
+        if (next === columnWidth(col)) return
+
+        columnSizing = { ...columnSizing, [col.key]: next }
+        onColumnSizingChange?.(columnSizing)
+    }
+
+    const resize = usePointerDrag({
+        axis: 'x',
+        onStart: ({ event }) => {
+            const key = (event.currentTarget as HTMLElement).dataset.columnKey
+            if (!key) return false
+
+            const col = columnByKey(key)
+            if (!col) return false
+
+            resizing = { key, startWidth: columnWidth(col) }
+        },
+        onMove: ({ dx }) => {
+            const current = resizing
+            if (!current) return
+
+            const col = columnByKey(current.key)
+            if (!col) return
+
+            resizeThrottle.run(() => applyColumnWidth(col, current.startWidth + dx))
+        },
+        onEnd: () => {
             resizing = null
-            document.removeEventListener('mousemove', onMove)
-            document.removeEventListener('mouseup', onUp)
+        }
+    })
+
+    function resizeKeyDelta(event: KeyboardEvent): number | null {
+        const step = event.shiftKey ? resizeKeyStep * 4 : resizeKeyStep
+        if (event.key === 'ArrowRight') return step
+        if (event.key === 'ArrowLeft') return -step
+
+        return null
+    }
+
+    function handleResizeKeydown(event: KeyboardEvent, col: TableColumn<T>) {
+        const { min, max } = columnBounds(col)
+
+        if (event.key === 'Home') {
+            event.preventDefault()
+            applyColumnWidth(col, min)
+            return
         }
 
-        document.addEventListener('mousemove', onMove)
-        document.addEventListener('mouseup', onUp)
+        if (event.key === 'End' && Number.isFinite(max)) {
+            event.preventDefault()
+            applyColumnWidth(col, max)
+            return
+        }
+
+        const delta = resizeKeyDelta(event)
+        if (delta === null) return
+
+        event.preventDefault()
+        applyColumnWidth(col, columnWidth(col) + delta)
     }
 
     // =========================================================================
@@ -665,10 +715,24 @@
                             {/if}
 
                             {#if col.resizable}
-                                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                                {@const width = columnWidth(col)}
+                                {@const bounds = columnBounds(col)}
+                                <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
                                 <span
-                                    class="group/resize absolute top-0 -right-px flex h-full w-4 cursor-col-resize touch-none items-center justify-center select-none"
-                                    onmousedown={(e) => onResizeStart(e, col)}
+                                    role="separator"
+                                    tabindex="0"
+                                    data-column-key={col.key}
+                                    aria-orientation="vertical"
+                                    aria-label="Resize {col.label ?? col.key}"
+                                    aria-valuenow={width}
+                                    aria-valuemin={bounds.min}
+                                    aria-valuemax={Number.isFinite(bounds.max)
+                                        ? bounds.max
+                                        : undefined}
+                                    aria-valuetext="{width}px"
+                                    class="group/resize absolute top-0 -right-px flex h-full w-4 cursor-col-resize touch-none items-center justify-center select-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
+                                    onkeydown={(event) => handleResizeKeydown(event, col)}
+                                    {...resize.handlers}
                                 >
                                     <span
                                         class="h-4 w-0.5 rounded-full bg-outline-variant/50 transition-all group-hover/resize:h-5 group-hover/resize:bg-primary group-active/resize:bg-primary"
