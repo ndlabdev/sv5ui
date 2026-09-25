@@ -1,7 +1,11 @@
+import '../../../routes/layout.css'
 import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
+import { createRawSnippet } from 'svelte'
 import Input from './Input.svelte'
+
+const snippet = (html: string) => createRawSnippet(() => ({ render: () => html, setup: () => {} }))
 
 const AVATAR_SRC =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
@@ -401,6 +405,68 @@ describe('Input', () => {
     })
 
     // ==================== ACCESSIBILITY ====================
+
+    // ==================== LEADING & TRAILING SLOTS ====================
+
+    describe('leading and trailing slots', () => {
+        const button = () => snippet('<button type="button" id="slot-btn">x</button>')
+
+        const wrapperOf = (container: Element, side: 'first' | 'last') => {
+            const spans = Array.from(container.querySelectorAll<HTMLElement>('div > span'))
+            return side === 'first' ? spans[0] : spans[spans.length - 1]
+        }
+
+        it('should reserve room for a leading slot, like the leadingIcon prop does', () => {
+            const { container } = render(Input, { leadingSlot: button() })
+            const input = container.querySelector('input')!
+
+            expect(input.className).toMatch(/\bps-\d/)
+        })
+
+        it('should reserve room for a trailing slot', () => {
+            const { container } = render(Input, { trailingSlot: button() })
+            const input = container.querySelector('input')!
+
+            expect(input.className).toMatch(/\bpe-\d/)
+        })
+
+        it('should let pointer events reach interactive slot content', () => {
+            const { container } = render(Input, { trailingSlot: button() })
+
+            expect(getComputedStyle(wrapperOf(container, 'last')).pointerEvents).toBe('auto')
+        })
+
+        it('should keep a decorative icon click through so it focuses the input', () => {
+            const { container } = render(Input, { trailingIcon: 'lucide:check' })
+
+            expect(getComputedStyle(wrapperOf(container, 'last')).pointerEvents).toBe('none')
+        })
+
+        it.each([
+            ['disabled', { disabled: true }],
+            ['loading', { loading: true }]
+        ])('should block slot interaction while the field is %s', (_label, props) => {
+            const { container } = render(Input, { ...props, trailingSlot: button() })
+
+            expect(getComputedStyle(wrapperOf(container, 'last')).pointerEvents).toBe('none')
+        })
+
+        it('should still show the loading spinner when a slot is present', async () => {
+            const { container } = render(Input, { loading: true, leadingSlot: button() })
+
+            await vi.waitFor(() => {
+                expect(container.querySelector('.animate-spin')).not.toBeNull()
+            })
+            expect(container.querySelector('#slot-btn')).toBeNull()
+        })
+
+        it('should render slot content when not loading', () => {
+            const { container } = render(Input, { leadingSlot: button() })
+
+            expect(container.querySelector('#slot-btn')).not.toBeNull()
+            expect(container.querySelector('.animate-spin')).toBeNull()
+        })
+    })
 
     describe('accessibility', () => {
         it('should support aria-label', () => {
