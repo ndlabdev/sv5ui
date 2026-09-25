@@ -11,9 +11,12 @@
         themeModeButtonDefaults
     } from './theme-mode-button.variants.js'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
+    import { buttonDefaults } from '../Button/button.variants.js'
     import Button from '../Button/Button.svelte'
+    import Icon from '../Icon/Icon.svelte'
 
     const config = getComponentConfig('themeModeButton', themeModeButtonDefaults)
+    const buttonConfig = getComponentConfig('button', buttonDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
 
     let {
@@ -33,24 +36,32 @@
     }: Props = $props()
 
     const isDark = $derived(mode.current === 'dark')
+    const resolvedSize = $derived(
+        size ?? config.defaultVariants.size ?? buttonConfig.defaultVariants.size
+    )
 
-    const slots = themeModeButtonVariants()
-    const baseClass = $derived(slots.base({ class: [config.slots.base, className, ui?.base] }))
-
-    const iconName = $derived(isDark ? lightIcon : darkIcon)
+    const classes = $derived.by(() => {
+        const slots = themeModeButtonVariants({ size: resolvedSize })
+        return {
+            base: slots.base({ class: [config.slots.base, className, ui?.base] }),
+            icon: slots.icon({ class: [config.slots.icon, ui?.icon] }),
+            lightIcon: slots.lightIcon({ class: [config.slots.lightIcon, ui?.lightIcon] }),
+            darkIcon: slots.darkIcon({ class: [config.slots.darkIcon, ui?.darkIcon] })
+        }
+    })
 </script>
 
 {#if children}
     <Button
         {color}
         {variant}
-        {size}
+        size={resolvedSize}
         {loading}
         {disabled}
         {square}
         {block}
-        class={baseClass}
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        class={classes.base}
+        aria-label="Toggle theme"
         onclick={toggleMode}
         {...restProps}
     >
@@ -60,15 +71,19 @@
     <Button
         {color}
         {variant}
-        {size}
+        size={resolvedSize}
         {loading}
         {disabled}
         {square}
         {block}
-        icon={iconName}
-        class={baseClass}
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        class={classes.base}
+        aria-label="Toggle theme"
         onclick={toggleMode}
         {...restProps}
-    />
+    >
+        {#snippet leadingSlot()}
+            <Icon name={darkIcon} class={[classes.icon, classes.darkIcon]} />
+            <Icon name={lightIcon} class={[classes.icon, classes.lightIcon]} />
+        {/snippet}
+    </Button>
 {/if}

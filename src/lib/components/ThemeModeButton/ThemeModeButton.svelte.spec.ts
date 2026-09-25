@@ -1,7 +1,10 @@
+import '../../../routes/layout.css'
 import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import ThemeModeButton from './ThemeModeButton.svelte'
+import { buttonVariants } from '../Button/button.variants.js'
+import { themeModeButtonVariants } from './theme-mode-button.variants.js'
 
 describe('ThemeModeButton', () => {
     // ==================== RENDERING ====================
@@ -13,21 +16,95 @@ describe('ThemeModeButton', () => {
             await expect.element(btn).toBeInTheDocument()
         })
 
-        it('should render with aria-label for switching mode', async () => {
+        it('should render with a mode-independent aria-label', async () => {
             render(ThemeModeButton)
             const btn = page.getByRole('button')
             const ariaLabel = btn.element().getAttribute('aria-label')
-            expect(ariaLabel).toMatch(/Switch to (light|dark) mode/)
+            expect(ariaLabel).toBe('Toggle theme')
         })
 
-        it('should render an icon inside the button', async () => {
+        it('should render both mode icons so CSS picks the visible one', async () => {
             render(ThemeModeButton)
             const btn = page.getByRole('button')
             await expect.element(btn).toBeInTheDocument()
             await vi.waitFor(() => {
-                const svg = document.querySelector('button svg')
-                expect(svg).not.toBeNull()
+                const svgs = btn.element().querySelectorAll('svg')
+                expect(svgs.length).toBe(2)
             })
+        })
+    })
+
+    // ==================== SSR-SAFE MODE ICONS ====================
+
+    describe('ssr-safe mode icons', () => {
+        const withDarkClass = async (fn: () => void | Promise<void>) => {
+            document.documentElement.classList.add('dark')
+            try {
+                await fn()
+            } finally {
+                document.documentElement.classList.remove('dark')
+            }
+        }
+
+        const iconsOf = async (el: HTMLElement) => {
+            await vi.waitFor(() => {
+                expect(el.querySelectorAll('svg').length).toBe(2)
+            })
+            const [darkModeOff, darkModeOn] = Array.from(el.querySelectorAll('svg'))
+            return { darkModeOff, darkModeOn }
+        }
+
+        it('should show only the dark-mode icon in light mode', async () => {
+            render(ThemeModeButton)
+            const btn = page.getByRole('button').element() as HTMLElement
+            const { darkModeOff, darkModeOn } = await iconsOf(btn)
+
+            expect(getComputedStyle(darkModeOff).display).not.toBe('none')
+            expect(getComputedStyle(darkModeOn).display).toBe('none')
+        })
+
+        it('should swap the visible icon when the dark class is present', async () => {
+            render(ThemeModeButton)
+            const btn = page.getByRole('button').element() as HTMLElement
+            const { darkModeOff, darkModeOn } = await iconsOf(btn)
+
+            await withDarkClass(() => {
+                expect(getComputedStyle(darkModeOff).display).toBe('none')
+                expect(getComputedStyle(darkModeOn).display).not.toBe('none')
+            })
+        })
+
+        it('should size its icons for every size the button offers', () => {
+            expect(Object.keys(themeModeButtonVariants.variants.size)).toEqual(
+                Object.keys(buttonVariants.variants.size)
+            )
+        })
+
+        it.each(['xs', 'sm', 'md', 'lg', 'xl'] as const)(
+            'should give both icons a size class at size=%s',
+            async (size) => {
+                render(ThemeModeButton, { size })
+                const btn = page.getByRole('button').element() as HTMLElement
+                const { darkModeOff, darkModeOn } = await iconsOf(btn)
+
+                for (const icon of [darkModeOff, darkModeOn]) {
+                    expect(icon.getAttribute('class')).toMatch(/\bsize-[\d.]+\b/)
+                }
+            }
+        )
+
+        it('should keep the same markup regardless of the resolved mode', async () => {
+            render(ThemeModeButton)
+            const btn = page.getByRole('button').element() as HTMLElement
+            await iconsOf(btn)
+            const lightHtml = btn.innerHTML
+
+            let darkHtml = ''
+            await withDarkClass(() => {
+                darkHtml = btn.innerHTML
+            })
+
+            expect(darkHtml).toBe(lightHtml)
         })
     })
 
