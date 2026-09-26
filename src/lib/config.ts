@@ -50,7 +50,9 @@ export const iconsDefaults = {
     sortDesc: 'lucide:chevron-down',
     sortDefault: 'lucide:chevrons-up-down',
     panelLeft: 'lucide:panel-left',
-    eyeDropper: 'lucide:pipette'
+    eyeDropper: 'lucide:pipette',
+    passwordShow: 'lucide:eye',
+    passwordHide: 'lucide:eye-off'
 }
 
 // ==================== TYPES ====================
