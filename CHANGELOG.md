@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-09-27
+
 ### Added
 
 - **InputPassword** — password field built on `Input`. A visibility toggle whose accessible name follows the next action, `purpose` mapping to the right `autocomplete` value for sign in, sign up and password change, a caps lock warning, and a guarantee that pasting is never blocked. An optional strength meter renders a score you supply: the library never judges a password itself, since scoring without a dictionary is misleading and a rule set that suits one policy penalises another. The screen reader announcement is debounced and fires on level changes rather than on every keystroke. ([#228](https://github.com/ndlabdev/sv5ui/issues/228))
