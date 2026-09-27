@@ -295,6 +295,26 @@
         }
     ]
 
+    const alignOptions = ['start', 'center', 'end'] as const
+    let alignValue = $state<(typeof alignOptions)[number]>('center')
+
+    const alignItems: NavigationMenuItem[] = [
+        ['Products', 'lucide:package'],
+        ['Solutions', 'lucide:lightbulb'],
+        ['Resources', 'lucide:book-open'],
+        ['Customers', 'lucide:users'],
+        ['Company', 'lucide:building-2'],
+        ['Support', 'lucide:life-buoy']
+    ].map(([label, icon]) => ({
+        label,
+        icon,
+        children: [
+            { label: `${label} overview`, href: `#${label.toLowerCase()}-overview` },
+            { label: `${label} updates`, href: `#${label.toLowerCase()}-updates` },
+            { label: `${label} contact`, href: `#${label.toLowerCase()}-contact` }
+        ]
+    }))
+
     const featuredItems: NavigationMenuItem[] = [
         { label: 'Solutions', value: 'solutions', type: 'trigger' },
         { label: 'Enterprise', href: '/enterprise' }
@@ -596,6 +616,39 @@
             > renders as a labeled column (section header + links), for larger navigation menus.
         </p>
         <NavigationMenu items={groupedMega} />
+    </section>
+
+    <!-- Dropdown alignment -->
+    <section class="space-y-4">
+        <h2 class="text-lg font-semibold text-on-surface">Dropdown Alignment</h2>
+        <p class="text-sm text-on-surface-variant">
+            The dropdown panel opens under the trigger that opened it. Use <code
+                class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">align</code
+            >
+            to place it at the trigger's
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">start</code>,
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">center</code>
+            (default) or
+            <code class="rounded bg-surface-container-highest px-1.5 py-0.5 text-xs">end</code>.
+            Near the edges of the menu the panel shifts back so it never overflows, and it slides
+            from one trigger to the next.
+        </p>
+        <div class="flex flex-wrap items-center gap-2">
+            {#each alignOptions as option (option)}
+                <Button
+                    size="sm"
+                    variant={alignValue === option ? 'solid' : 'outline'}
+                    label={option}
+                    onclick={() => (alignValue = option)}
+                />
+            {/each}
+            <code class="ms-2 rounded bg-surface-container-highest px-1.5 py-0.5 text-xs"
+                >align="{alignValue}"</code
+            >
+        </div>
+        <div class="rounded-lg border border-outline-variant p-2">
+            <NavigationMenu items={alignItems} align={alignValue} contentOrientation="vertical" />
+        </div>
     </section>
 
     <!-- Variants -->

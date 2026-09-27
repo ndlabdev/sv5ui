@@ -1,3 +1,4 @@
+import '../../../routes/layout.css'
 import { describe, expect, it, vi } from 'vitest'
 import { createRawSnippet } from 'svelte'
 import { render } from 'vitest-browser-svelte'
@@ -496,6 +497,101 @@ describe('NavigationMenu', () => {
                 itemActions: actions
             })
             expect(container.querySelectorAll('[data-test-action]').length).toBe(2)
+        })
+    })
+
+    describe('dropdown panel position', () => {
+        const navItems: NavigationMenuItem[] = [
+            'Alpha',
+            'Bravo',
+            'Charlie',
+            'Delta',
+            'Echo',
+            'Foxtrot'
+        ].map((label, i) => ({
+            label,
+            children: [
+                { label: `${label} one`, href: `#${i}-1` },
+                { label: `${label} two`, href: `#${i}-2` }
+            ]
+        }))
+
+        function measure(label: string) {
+            const trigger = [...document.querySelectorAll('[data-navigation-menu-trigger]')]
+                .find((el) => el.textContent?.trim() === label)!
+                .getBoundingClientRect()
+            const panel = document
+                .querySelector('[data-navigation-menu-viewport]')!
+                .getBoundingClientRect()
+            const nav = document.querySelector('nav')!.getBoundingClientRect()
+            return { trigger, panel, nav }
+        }
+
+        async function openMenu(label: string, align?: 'start' | 'center' | 'end') {
+            await page.viewport(1280, 800)
+            render(NavigationMenu, { items: navItems, contentOrientation: 'vertical', align })
+            await page.getByRole('button', { name: label, exact: true }).click()
+            await vi.waitFor(() =>
+                expect(document.querySelector('[data-navigation-menu-viewport]')).not.toBeNull()
+            )
+        }
+
+        it('centres the panel on the open trigger by default', async () => {
+            await openMenu('Delta')
+            await vi.waitFor(() => {
+                const { trigger, panel } = measure('Delta')
+                const offset = panel.left + panel.width / 2 - (trigger.left + trigger.width / 2)
+                expect(Math.abs(offset)).toBeLessThanOrEqual(1)
+            })
+        })
+
+        it('aligns the panel start with the trigger when align is start', async () => {
+            await openMenu('Delta', 'start')
+            await vi.waitFor(() => {
+                const { trigger, panel } = measure('Delta')
+                expect(Math.abs(panel.left - trigger.left)).toBeLessThanOrEqual(1)
+            })
+        })
+
+        it('aligns the panel end with the trigger when align is end', async () => {
+            await openMenu('Delta', 'end')
+            await vi.waitFor(() => {
+                const { trigger, panel } = measure('Delta')
+                expect(Math.abs(panel.right - trigger.right)).toBeLessThanOrEqual(1)
+            })
+        })
+
+        it('keeps the panel inside the menu for a trigger at its edge', async () => {
+            await openMenu('Alpha')
+            await vi.waitFor(() => {
+                const { panel, nav } = measure('Alpha')
+                expect(Math.abs(panel.left - nav.left)).toBeLessThanOrEqual(1)
+                expect(panel.right).toBeLessThanOrEqual(nav.right + 1)
+            })
+        })
+    })
+
+    describe('scroll spacing', () => {
+        const getScrollRoot = () =>
+            document.querySelector('[data-scroll-area-viewport]')!.parentElement as HTMLElement
+
+        it('reserves room for the scrollbar only while the list overflows', async () => {
+            await page.viewport(1280, 800)
+            const { container } = render(NavigationMenu, { items: linkItems })
+            await vi.waitFor(() => {
+                expect(getScrollRoot().hasAttribute('data-overflow')).toBe(false)
+                expect(getComputedStyle(getScrollRoot()).paddingBottom).toBe('0px')
+            })
+            container.style.width = '120px'
+            await vi.waitFor(() => {
+                expect(getScrollRoot().hasAttribute('data-overflow')).toBe(true)
+                expect(getComputedStyle(getScrollRoot()).paddingBottom).toBe('8px')
+            })
+            container.style.width = ''
+            await vi.waitFor(() => {
+                expect(getScrollRoot().hasAttribute('data-overflow')).toBe(false)
+                expect(getComputedStyle(getScrollRoot()).paddingBottom).toBe('0px')
+            })
         })
     })
 })

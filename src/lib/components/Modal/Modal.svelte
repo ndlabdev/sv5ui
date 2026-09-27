@@ -9,6 +9,7 @@
     import { modalVariants, modalDefaults } from './modal.variants.js'
     import { getComponentConfig } from '../../config.js'
     import Button from '../Button/Button.svelte'
+    import PortalScope from '../../internal/PortalScope.svelte'
 
     const config = getComponentConfig('modal', modalDefaults)
 
@@ -46,6 +47,8 @@
         footer: footerSlot,
         closeSlot
     }: Props = $props()
+
+    let contentEl = $state<HTMLElement | null>(null)
 
     const resolvedSize = $derived(fullscreen ? 'full' : size)
     const resolvedTransition = $derived(
@@ -117,7 +120,11 @@
 {/snippet}
 
 {#snippet modalContentInner()}
-    <Dialog.Content {...contentProps} class={[classes.content, !children ? className : undefined]}>
+    <Dialog.Content
+        {...contentProps}
+        bind:ref={contentEl}
+        class={[classes.content, !children ? className : undefined]}
+    >
         {#if contentSlot}
             {#if hasHeading}
                 <div class="sr-only">
@@ -189,16 +196,18 @@
 {/snippet}
 
 {#snippet modalPortalContent()}
-    {#if scrollable}
-        <Dialog.Overlay class={classes.overlay}>
-            {@render modalContentInner()}
-        </Dialog.Overlay>
-    {:else}
-        {#if showOverlay}
-            <Dialog.Overlay class={classes.overlay} />
-        {/if}
-        {@render modalContentInner()}
+    {#if showOverlay && !scrollable}
+        <Dialog.Overlay class={classes.overlay} />
     {/if}
+    <PortalScope active={!portal && (open || !!contentEl)}>
+        {#if scrollable}
+            <Dialog.Overlay class={classes.overlay}>
+                {@render modalContentInner()}
+            </Dialog.Overlay>
+        {:else}
+            {@render modalContentInner()}
+        {/if}
+    </PortalScope>
 {/snippet}
 
 <Dialog.Root bind:open onOpenChange={handleOpenChange} {onOpenChangeComplete}>

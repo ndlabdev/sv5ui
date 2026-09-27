@@ -11,6 +11,7 @@
     import { slide } from 'svelte/transition'
     import { page } from '$app/state'
     import { useResizeObserver } from '../../hooks/useResizeObserver/index.js'
+    import { useEventListener } from '../../hooks/useEventListener/index.js'
     import { navigationMenuVariants, navigationMenuDefaults } from './navigation-menu.variants.js'
     import type { NavigationMenuItem, NavigationMenuChildItem } from './navigation-menu.types.js'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
@@ -50,6 +51,7 @@
         tooltip = false,
         popover = false,
         contentOrientation = 'horizontal',
+        align = 'center',
         labelKey = 'label',
         exact = true,
         delayDuration = 0,
@@ -220,6 +222,7 @@
             collapsed: effectiveCollapsed,
             stacked,
             contentOrientation,
+            align,
             disabled
         })
     )
@@ -329,7 +332,20 @@
         rafId = requestAnimationFrame(updateIndicator)
     }
 
-    useResizeObserver(() => listEl, scheduleIndicator)
+    let listOverflow = $state(false)
+
+    function updateListOverflow() {
+        const viewport = listEl?.closest<HTMLElement>('[data-scroll-area-viewport]')
+        listOverflow = !!viewport && viewport.scrollWidth > viewport.clientWidth
+    }
+
+    useResizeObserver(
+        () => listEl,
+        () => {
+            scheduleIndicator()
+            updateListOverflow()
+        }
+    )
 
     $effect(() => {
         void value
@@ -340,7 +356,67 @@
         if (showHighlight) tick().then(updateIndicator)
     })
 
-    $effect(() => () => cancelAnimationFrame(rafId))
+    const VIEWPORT_OPEN_MS = 250
+
+    let viewportAnchor = $state('')
+    let viewportInstant = $state(false)
+    let anchorRafId = 0
+    let instantTimer: ReturnType<typeof setTimeout> | undefined
+    let wasOpen = false
+
+    function updateViewportAnchor() {
+        const trigger = listEl?.querySelector<HTMLElement>(
+            '[data-navigation-menu-trigger][data-state="open"]'
+        )
+        if (!ref || !trigger) return
+        const root = ref.getBoundingClientRect()
+        const rect = trigger.getBoundingClientRect()
+        const start =
+            getComputedStyle(ref).direction === 'rtl'
+                ? root.right - rect.right
+                : rect.left - root.left
+        viewportAnchor = `--sv5ui-nav-trigger-start:${start}px;--sv5ui-nav-trigger-width:${rect.width}px`
+    }
+
+    function scheduleViewportAnchor() {
+        if (!horizontalValue) return
+        cancelAnimationFrame(anchorRafId)
+        anchorRafId = requestAnimationFrame(updateViewportAnchor)
+    }
+
+    $effect(() => {
+        if (!horizontalValue) {
+            wasOpen = false
+            return
+        }
+        if (!wasOpen) {
+            wasOpen = true
+            viewportInstant = true
+            clearTimeout(instantTimer)
+            instantTimer = setTimeout(() => (viewportInstant = false), VIEWPORT_OPEN_MS)
+        }
+        tick().then(updateViewportAnchor)
+    })
+
+    useResizeObserver(
+        () => ref,
+        () => {
+            scheduleViewportAnchor()
+            updateListOverflow()
+        }
+    )
+    useEventListener(
+        () => listEl?.closest<HTMLElement>('[data-scroll-area-viewport]'),
+        'scroll',
+        scheduleViewportAnchor,
+        { passive: true }
+    )
+
+    $effect(() => () => {
+        cancelAnimationFrame(rafId)
+        cancelAnimationFrame(anchorRafId)
+        clearTimeout(instantTimer)
+    })
     $effect(() => () => clearTimeout(flyoutTimer))
 </script>
 
@@ -482,7 +558,12 @@
         class={classes.root}
         {...restProps as Record<string, unknown>}
     >
-        <ScrollArea orientation="horizontal" class={classes.scroll} {...scrollArea}>
+        <ScrollArea
+            orientation="horizontal"
+            class={classes.scroll}
+            data-overflow={listOverflow || undefined}
+            {...scrollArea}
+        >
             <Bits.List bind:ref={listEl} class={classes.list}>
                 {#if showHighlight}
                     <div
@@ -567,7 +648,12 @@
             </Bits.List>
         </ScrollArea>
         <div class={classes.viewportWrapper}>
-            <Bits.Viewport {...contentProps} class={classes.viewport} />
+            <Bits.Viewport
+                {...contentProps}
+                class={classes.viewport}
+                style={viewportAnchor}
+                data-instant={viewportInstant || undefined}
+            />
         </div>
     </Bits.Root>
 {/snippet}

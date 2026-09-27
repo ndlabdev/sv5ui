@@ -97,8 +97,15 @@
     const loadingLeading = $derived(loading && !trailing)
     const loadingTrailing = $derived(loading && trailing)
 
-    const isLeading = $derived((!!icon && !trailing) || !!leadingIcon || !!avatar || loadingLeading)
-    const isTrailing = $derived((!!icon && trailing) || !!trailingIcon || loadingTrailing)
+    const isInert = $derived(disabled || loading)
+    const leadingInteractive = $derived(!!leadingSlot && !isInert)
+    const trailingInteractive = $derived(!!trailingSlot && !isInert)
+    const isLeading = $derived(
+        !!leadingSlot || (!!icon && !trailing) || !!leadingIcon || !!avatar || loadingLeading
+    )
+    const isTrailing = $derived(
+        !!trailingSlot || (!!icon && trailing) || !!trailingIcon || loadingTrailing
+    )
 
     const leadingIconName = $derived(leadingIcon || (!!icon && !trailing ? icon : undefined))
     const trailingIconName = $derived(trailingIcon || (!!icon && trailing ? icon : undefined))
@@ -128,7 +135,9 @@
         base: variantSlots.base({
             class: [config.slots.base, fieldGroupClass?.base, ui?.base]
         }),
-        leading: variantSlots.leading({ class: [config.slots.leading, ui?.leading] }),
+        leading: variantSlots.leading({
+            class: [config.slots.leading, leadingInteractive && 'pointer-events-auto', ui?.leading]
+        }),
         leadingIcon: variantSlots.leadingIcon({
             class: [config.slots.leadingIcon, ui?.leadingIcon]
         }),
@@ -136,7 +145,13 @@
             class: [config.slots.leadingAvatar, ui?.leadingAvatar]
         }),
         leadingAvatarSize: variantSlots.leadingAvatarSize() as AvatarSize,
-        trailing: variantSlots.trailing({ class: [config.slots.trailing, ui?.trailing] }),
+        trailing: variantSlots.trailing({
+            class: [
+                config.slots.trailing,
+                trailingInteractive && 'pointer-events-auto',
+                ui?.trailing
+            ]
+        }),
         trailingIcon: variantSlots.trailingIcon({
             class: [config.slots.trailingIcon, ui?.trailingIcon]
         })
@@ -144,15 +159,15 @@
 </script>
 
 <div class={classes.root}>
-    {#if leadingSlot}
-        <span class={classes.leading}>
-            {@render leadingSlot()}
-        </span>
-    {:else if loadingLeading}
+    {#if loadingLeading}
         <span class={classes.leading}>
             <span class="inline-flex animate-spin">
                 <Icon name={loadingIcon} class={classes.leadingIcon} />
             </span>
+        </span>
+    {:else if leadingSlot}
+        <span class={classes.leading}>
+            {@render leadingSlot()}
         </span>
     {:else if avatar}
         <span class={classes.leading}>
@@ -181,15 +196,15 @@
         onfocus={handleFocus}
     />
 
-    {#if trailingSlot}
-        <span class={classes.trailing}>
-            {@render trailingSlot()}
-        </span>
-    {:else if loadingTrailing}
+    {#if loadingTrailing}
         <span class={classes.trailing}>
             <span class="inline-flex animate-spin">
                 <Icon name={loadingIcon} class={classes.trailingIcon} />
             </span>
+        </span>
+    {:else if trailingSlot}
+        <span class={classes.trailing}>
+            {@render trailingSlot()}
         </span>
     {:else if trailingIconName}
         <span class={classes.trailing}>

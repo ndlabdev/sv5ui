@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-09-27
+
+### Added
+
+- **InputPassword** — password field built on `Input`. A visibility toggle whose accessible name follows the next action, `purpose` mapping to the right `autocomplete` value for sign in, sign up and password change, a caps lock warning, and a guarantee that pasting is never blocked. An optional strength meter renders a score you supply: the library never judges a password itself, since scoring without a dictionary is misleading and a rule set that suits one policy penalises another. The screen reader announcement is debounced and fires on level changes rather than on every keystroke. ([#228](https://github.com/ndlabdev/sv5ui/issues/228))
+- **ThemeMode** — dark mode handler for the root layout, replacing the setup that required a second package. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **Exports** — `toggleMode`, `setMode`, `resetMode`, `mode`, `userPrefersMode` and `systemPrefersMode` are re-exported from the package root, alongside `resetConfig`. The docs already referenced these; now they resolve. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **NavigationMenu** — `align` prop (`start` | `center` | `end`, default `center`) places the dropdown under the open trigger. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+
+### Changed
+
+- `mode-watcher` moved from `peerDependencies` to `dependencies`, matching every other runtime library. Dark mode now works without installing anything beyond `sv5ui`, including on package managers that do not auto install peers. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+
+### Fixed
+
+- **Input** — `leadingSlot` and `trailingSlot` now reserve room in the field, so their content no longer sits on top of the text, and pointer events reach them, so a button placed in a slot is clickable. A decorative `leadingIcon` or `trailingIcon` stays click through, and slot content is inert while the field is disabled or loading. The loading spinner also takes precedence over a slot instead of being swallowed by it. ([#229](https://github.com/ndlabdev/sv5ui/issues/229))
+- **Table** — the column resize handle is a focusable `separator` with `aria-valuenow`, arrow key resizing and a larger step while shift is held, plus `Home` and `End` for the bounds. It was mouse only before: no role, no tabindex and no key handler, so keyboard users could not resize a column at all. The drag also moves to the shared pointer hook, so touch and pen work rather than mouse alone. ([#226](https://github.com/ndlabdev/sv5ui/issues/226))
+- **ThemeModeButton** — renders both mode icons and lets CSS pick the visible one, so server and client markup are identical. The wrong glyph no longer sticks after a reload in dark mode. The accessible name is now a mode-independent `Toggle theme`. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **Modal**, **Slideover**, **Drawer**, **Popover** — with `portal={false}`, nested floating layers (Select, DatePicker, DropdownMenu, Tooltip, ...) no longer hide behind the container when an ancestor has a `z-index` above 50. ([#217](https://github.com/ndlabdev/sv5ui/issues/217))
+- **DatePicker**, **DateRangePicker** — the calendar is anchored to the field instead of the calendar icon, so it opens under the field's start edge. ([#218](https://github.com/ndlabdev/sv5ui/issues/218))
+- **NavigationMenu** — the dropdown opens under the trigger that opened it, slides between triggers and stays inside the menu. The 8px gap under the items is now reserved only while the list overflows. ([#220](https://github.com/ndlabdev/sv5ui/issues/220))
+- **Tabs** — the indicator follows the active tab when the text direction flips between `ltr` and `rtl`. ([#216](https://github.com/ndlabdev/sv5ui/issues/216))
+
 ## [2.7.0] - 2026-09-09
 
 ### Added

@@ -1,3 +1,4 @@
+import '../../../routes/layout.css'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import DatePicker from './DatePicker.svelte'
@@ -862,6 +863,22 @@ describe('DatePicker', () => {
             day.blur()
             await vi.waitFor(() => {
                 expect(document.body.textContent).toContain('Birthday is required')
+            })
+        })
+    })
+
+    describe('popover anchor', () => {
+        it('aligns the calendar with the start of the field instead of the trigger icon', async () => {
+            const { container } = render(DatePicker)
+            container.style.paddingLeft = '48px'
+            await vi.waitFor(() => expect(getTrigger()).not.toBeNull())
+            getTrigger()!.click()
+            await vi.waitFor(() => {
+                const field = getTrigger()!.parentElement!.getBoundingClientRect()
+                const trigger = getTrigger()!.getBoundingClientRect()
+                const content = getContent()!.getBoundingClientRect()
+                expect(trigger.left - field.left).toBeGreaterThan(100)
+                expect(Math.abs(content.left - field.left)).toBeLessThanOrEqual(1)
             })
         })
     })

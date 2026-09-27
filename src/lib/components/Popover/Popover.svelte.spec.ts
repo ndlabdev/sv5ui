@@ -1,3 +1,4 @@
+import '../../../routes/layout.css'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import Popover from './Popover.svelte'
@@ -313,6 +314,43 @@ describe('Popover', () => {
                 expect(getContent()).not.toBeNull()
                 expect(getArrow()).not.toBeNull()
             })
+        })
+    })
+
+    describe('nested portals', () => {
+        const getHost = () => document.querySelector('[data-portal-host]') as HTMLElement | null
+        const getLayer = () =>
+            document.querySelector('[data-popover-content]')?.parentElement as HTMLElement | null
+        const zIndex = (el: Element) => Number(getComputedStyle(el).zIndex)
+
+        it('adds no portal host while closed', () => {
+            render(Popover, { portal: false })
+            expect(getHost()).toBeNull()
+        })
+
+        it('adds no portal host when portalled', async () => {
+            render(Popover, { open: true })
+            await vi.waitFor(() => expect(getLayer()).not.toBeNull())
+            expect(getHost()).toBeNull()
+        })
+
+        it('mounts nested layers above the inline content without becoming the last child', async () => {
+            render(Popover, { open: true, portal: false })
+            await vi.waitFor(() => expect(getHost()).not.toBeNull())
+            const host = getHost()!
+            const layer = getLayer()!
+            expect(
+                host.compareDocumentPosition(layer) & Node.DOCUMENT_POSITION_FOLLOWING
+            ).toBeTruthy()
+            expect(host.parentElement!.lastElementChild).not.toBe(host)
+            expect(zIndex(host)).toBeGreaterThan(zIndex(layer))
+        })
+
+        it('removes the portal host once closed', async () => {
+            const { rerender } = render(Popover, { open: true, portal: false })
+            await vi.waitFor(() => expect(getHost()).not.toBeNull())
+            await rerender({ open: false })
+            await vi.waitFor(() => expect(getHost()).toBeNull())
         })
     })
 })

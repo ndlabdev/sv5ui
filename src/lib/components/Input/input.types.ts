@@ -66,7 +66,7 @@ export type InputProps<T extends InputValue = InputValue> = Omit<
     highlight?: boolean
 
     /**
-     * Renders a loading spinner and optionally disables interaction.
+     * Renders a loading spinner. The input is disabled while loading.
      * @default false
      */
     loading?: boolean

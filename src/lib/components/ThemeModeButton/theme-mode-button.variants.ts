@@ -4,9 +4,19 @@ import type { ButtonVariantProps } from '../Button/button.variants.js'
 export const themeModeButtonVariants = tv({
     slots: {
         base: '',
-        icon: 'shrink-0'
+        icon: 'shrink-0',
+        lightIcon: 'hidden dark:block',
+        darkIcon: 'block dark:hidden'
     },
-    variants: {},
+    variants: {
+        size: {
+            xs: { icon: 'size-3.5' },
+            sm: { icon: 'size-4' },
+            md: { icon: 'size-5' },
+            lg: { icon: 'size-5' },
+            xl: { icon: 'size-6' }
+        }
+    },
     defaultVariants: {}
 })
 

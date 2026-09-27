@@ -47,6 +47,7 @@ export * from './components/Form/index.js'
 export * from './components/Input/index.js'
 export * from './components/InputNumber/index.js'
 export * from './components/InputTags/index.js'
+export * from './components/InputPassword/index.js'
 export * from './components/Textarea/index.js'
 export * from './components/Select/index.js'
 export * from './components/SelectMenu/index.js'
@@ -61,6 +62,7 @@ export * from './components/FileUpload/index.js'
 export * from './components/Slider/index.js'
 export * from './components/PinInput/index.js'
 export * from './components/ColorPicker/index.js'
+export * from './components/ThemeMode/index.js'
 export * from './components/ThemeModeButton/index.js'
 export * from './components/Table/index.js'
 export * from './components/Toast/index.js'
@@ -75,6 +77,16 @@ export * from './components/Tree/index.js'
 // Composables
 export * from './hooks/index.js'
 
+// Theme mode
+export {
+    toggleMode,
+    setMode,
+    resetMode,
+    mode,
+    userPrefersMode,
+    systemPrefersMode
+} from 'mode-watcher'
+
 // Configuration
-export { defineConfig } from './config.js'
+export { defineConfig, resetConfig } from './config.js'
 export type { UIConfig } from './config.js'

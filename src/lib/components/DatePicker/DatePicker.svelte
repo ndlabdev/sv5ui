@@ -241,6 +241,7 @@
         {align}
         {alignOffset}
         collisionPadding={8}
+        customAnchor={rootEl}
         bind:ref={contentEl}
         class={classes.content}
     >

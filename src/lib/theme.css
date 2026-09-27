@@ -12,7 +12,8 @@
 
 /* ============================================
  * DARK MODE CONFIGURATION
- * Supports both class="dark" and prefers-color-scheme
+ * Matches the `dark` class on the root element. The system preference is
+ * resolved to that class by the ThemeMode component, so no media query here.
  * ============================================ */
 @custom-variant dark (&:where(.dark, .dark *));
 

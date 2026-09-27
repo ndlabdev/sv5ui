@@ -92,7 +92,7 @@
 
     function updateIndicator() {
         if (!listEl) return
-        const activeTrigger = listEl.querySelector('[data-state="active"]') as HTMLElement
+        const activeTrigger = listEl.querySelector<HTMLElement>('[data-state="active"]')
         if (!activeTrigger) {
             indicatorStyle = 'opacity: 0;'
             return
@@ -120,7 +120,19 @@
 
     // Handle resize with rAF debouncing
     useResizeObserver(() => listEl, scheduleIndicatorUpdate)
-    $effect(() => () => cancelAnimationFrame(rafId))
+
+    $effect(() => {
+        const observer = new MutationObserver(scheduleIndicatorUpdate)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['dir'],
+            subtree: true
+        })
+        return () => {
+            observer.disconnect()
+            cancelAnimationFrame(rafId)
+        }
+    })
 </script>
 
 <Tabs.Root
