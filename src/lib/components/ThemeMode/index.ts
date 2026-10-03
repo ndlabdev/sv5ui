@@ -1,5 +1,11 @@
 export { default as ThemeMode } from './ThemeMode.svelte'
-export type { ThemeModeProps } from './theme-mode.types.js'
+export type {
+    ThemeModeProps,
+    ColorMode,
+    ResolvedColorMode,
+    ThemeColors,
+    InitialModeConfig
+} from './theme-mode.types.js'
 export {
     toggleMode,
     setMode,
@@ -7,4 +13,5 @@ export {
     mode,
     userPrefersMode,
     systemPrefersMode
-} from 'mode-watcher'
+} from './mode.svelte.js'
+export { createInitialModeExpression } from './mode-script.js'

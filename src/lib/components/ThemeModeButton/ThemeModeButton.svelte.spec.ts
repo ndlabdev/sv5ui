@@ -1,10 +1,17 @@
 import '../../../routes/layout.css'
 import { page } from 'vitest/browser'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import ThemeModeButton from './ThemeModeButton.svelte'
+import { setMode } from '../ThemeMode/index.js'
 import { buttonVariants } from '../Button/button.variants.js'
 import { themeModeButtonVariants } from './theme-mode-button.variants.js'
+
+beforeEach(async () => {
+    setMode('light')
+    localStorage.clear()
+    await vi.waitFor(() => expect(document.documentElement.classList.contains('dark')).toBe(false))
+})
 
 describe('ThemeModeButton', () => {
     // ==================== RENDERING ====================

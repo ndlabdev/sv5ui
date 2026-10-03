@@ -1,6 +1,6 @@
 import '../../../routes/layout.css'
 import { page } from 'vitest/browser'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { ThemeMode, mode, resetMode, setMode, toggleMode, userPrefersMode } from './index.js'
 import ThemeModeButton from '../ThemeModeButton/ThemeModeButton.svelte'
@@ -22,6 +22,14 @@ const headScript = () =>
 
 const themeColorMeta = () =>
     document.head.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+
+const warn = vi.spyOn(console, 'warn')
+
+afterAll(() => {
+    const legacy = warn.mock.calls.filter((call) => String(call[0]).includes('[sv5ui ThemeMode]'))
+    expect(legacy).toHaveLength(0)
+    warn.mockRestore()
+})
 
 beforeEach(() => {
     resetMode()
@@ -196,34 +204,42 @@ describe('ThemeMode', () => {
         })
     })
 
-    describe('known defects, #224', () => {
-        it('finding 10: an invalid stored mode makes the head script apply dark on a light system', () => {
+    describe('fixed in #224', () => {
+        it('finding 10: the head script ignores an invalid stored mode', () => {
             render(ThemeMode)
             const script = headScript()
             html.className = ''
             localStorage.setItem(KEY, 'garbage')
             new Function(script?.textContent ?? '')()
-            expect(isDark()).toBe(true)
+            expect(isDark()).toBe(false)
+            expect(localStorage.getItem(KEY)).toBe('system')
         })
 
-        it('finding 11: the head script picks the dark meta color for system on a light system', () => {
+        it('finding 11: the head script picks the meta color of the resolved mode', () => {
             render(ThemeMode, { themeColors: { light: '#ffffff', dark: '#000000' } })
             const script = headScript()
             localStorage.setItem(KEY, 'system')
             new Function(script?.textContent ?? '')()
-            expect(themeColorMeta()?.content).toBe('#000000')
+            expect(themeColorMeta()?.content).toBe('#ffffff')
         })
 
-        it('finding 12: a user onclick replaces the toggle', async () => {
+        it('finding 12: a user onclick runs and the mode still toggles', async () => {
             const onclick = vi.fn()
             render(ThemeMode)
             render(ThemeModeButton, { onclick })
             await expectMode('light')
             await page.getByRole('button').click()
             expect(onclick).toHaveBeenCalledOnce()
+            await expectMode('dark')
+        })
+
+        it('finding 12: a user onclick that prevents default cancels the toggle', async () => {
+            render(ThemeMode)
+            render(ThemeModeButton, { onclick: (event: MouseEvent) => event.preventDefault() })
+            await expectMode('light')
+            await page.getByRole('button').click()
             await new Promise((resolve) => setTimeout(resolve, 100))
             expect(isDark()).toBe(false)
-            expect(localStorage.getItem(KEY)).toBe('system')
         })
     })
 })

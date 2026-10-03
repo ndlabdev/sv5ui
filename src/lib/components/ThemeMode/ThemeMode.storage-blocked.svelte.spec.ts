@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 Object.defineProperty(window, 'localStorage', {
     configurable: true,
@@ -8,7 +8,15 @@ Object.defineProperty(window, 'localStorage', {
 })
 
 describe('ThemeMode with storage access denied', () => {
-    it('finding 13: importing the module throws', async () => {
-        await expect(import('./index.js')).rejects.toThrow('Storage access denied')
+    it('finding 13: imports and keeps the mode in memory', async () => {
+        const { setMode, toggleMode, userPrefersMode, mode } = await import('./index.js')
+        setMode('dark')
+        expect(userPrefersMode.current).toBe('dark')
+        expect(mode.current).toBe('dark')
+        await vi.waitFor(() =>
+            expect(document.documentElement.classList.contains('dark')).toBe(true)
+        )
+        toggleMode()
+        expect(userPrefersMode.current).toBe('light')
     })
 })

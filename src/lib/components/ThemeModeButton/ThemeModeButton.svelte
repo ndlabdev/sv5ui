@@ -5,7 +5,8 @@
 </script>
 
 <script lang="ts">
-    import { toggleMode, mode } from 'mode-watcher'
+    import { onMount } from 'svelte'
+    import { mode, toggleMode, warnOnForeignWatcher } from '../ThemeMode/mode.svelte.js'
     import {
         themeModeButtonVariants,
         themeModeButtonDefaults
@@ -32,8 +33,17 @@
         block = false,
         children,
         class: className,
+        onclick,
         ...restProps
     }: Props = $props()
+
+    function handleClick(event: MouseEvent & { currentTarget: EventTarget & HTMLElement }) {
+        const result = onclick?.(event)
+        if (!event.defaultPrevented) toggleMode()
+        return result
+    }
+
+    onMount(warnOnForeignWatcher)
 
     const isDark = $derived(mode.current === 'dark')
     const resolvedSize = $derived(
@@ -62,7 +72,7 @@
         {block}
         class={classes.base}
         aria-label="Toggle theme"
-        onclick={toggleMode}
+        onclick={handleClick}
         {...restProps}
     >
         {@render children({ isDark })}
@@ -78,7 +88,7 @@
         {block}
         class={classes.base}
         aria-label="Toggle theme"
-        onclick={toggleMode}
+        onclick={handleClick}
         {...restProps}
     >
         {#snippet leadingSlot()}

@@ -45,19 +45,24 @@ describe('ThemeMode SSR', () => {
         expect(mode.current).toBeUndefined()
     })
 
-    describe('known defects, #224', () => {
-        it('finding 8: a crafted nonce breaks out of the script tag', () => {
+    describe('fixed in #224', () => {
+        it('finding 8: quotes the nonce and drops one outside the nonce character set', () => {
+            expect(scriptTag(render(ThemeMode, { props: { nonce: 'abc123' } }).head)).toBe(
+                '<script nonce="abc123">'
+            )
             const { head } = render(ThemeMode, {
                 props: { nonce: 'x><img src=x onerror=alert(1)>' }
             })
-            expect(head).toContain('<img src=x onerror=alert(1)>')
+            expect(head).not.toContain('<img')
+            expect(scriptTag(head)).toBe('<script>')
         })
 
-        it('finding 9: a crafted config value closes the script early', () => {
+        it('finding 9: escapes config values so they cannot close the script', () => {
             const { head } = render(ThemeMode, {
                 props: { defaultTheme: '</script><img src=x onerror=alert(1)>' }
             })
-            expect(head).toContain('</script><img src=x onerror=alert(1)>')
+            expect(head).not.toContain('<img')
+            expect(head.match(/<\/script>/g)).toHaveLength(1)
         })
     })
 })
