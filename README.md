@@ -55,7 +55,7 @@ npm install sv5ui
 # pnpm add sv5ui · yarn add sv5ui · bun add sv5ui
 ```
 
-> **Peer dependencies:** `svelte@^5`, `tailwindcss@^4`, and `mode-watcher@^1`. The rich-text `Editor` and `Form` validators (TipTap, Zod/Valibot/Yup/Joi) are **optional** peers — install only what you use.
+> **Peer dependencies:** `svelte@^5` and `tailwindcss@^4`. The rich-text `Editor` and `Form` validators (TipTap, Zod/Valibot/Yup/Joi) are **optional** peers — install only what you use.
 
 **2. Import the theme**
 
@@ -68,11 +68,13 @@ npm install sv5ui
 
 ```svelte
 <script>
-    import { ModeWatcher } from 'mode-watcher'
+    import { ThemeMode } from 'sv5ui'
 </script>
 
-<ModeWatcher />
+<ThemeMode />
 ```
+
+> **Coming from `mode-watcher`?** Replace `<ModeWatcher />` with `<ThemeMode />` and import `toggleMode`, `setMode`, `resetMode`, `mode`, `userPrefersMode` and `systemPrefersMode` from `sv5ui` instead. `ThemeMode` accepts the same props and keeps the same storage keys, so stored preferences carry over.
 
 **4. Use components**
 
@@ -174,7 +176,6 @@ Swap `zod` for `valibot`, `yup`, or `joi` — the API is identical.
 | --------------------------------- | -------- | -------------------------- |
 | `svelte`                          | `^5.0.0` | Yes                        |
 | `tailwindcss`                     | `^4.0.0` | Yes                        |
-| `mode-watcher`                    | `^1.0.0` | Yes (dark mode)            |
 | `zod` / `valibot` / `yup` / `joi` | —        | Optional (form validation) |
 | `@tiptap/*`, `tiptap-markdown`    | `^3.0.0` | Optional (`Editor`)        |
 

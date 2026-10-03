@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **ThemeMode** — `createInitialModeExpression` for apps that inject the dark mode script themselves with `disableHeadScriptInjection`, plus the `ColorMode`, `ResolvedColorMode`, `ThemeColors` and `InitialModeConfig` types. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+
+### Changed
+
+- **ThemeMode** — dark mode is handled by sv5ui itself instead of wrapping `mode-watcher`. Props, exports and the `localStorage` keys (`mode-watcher-mode`, `mode-watcher-theme`) are unchanged, so stored preferences carry over. `mode-watcher` stays in `dependencies` until the next major so apps that import it directly keep building, but importing from `sv5ui` is the supported path. An app that still mounts its own `<ModeWatcher />` stays in sync with sv5ui and gets a one time console warning. Each mode change is also dispatched as a `storage` event on `window` in the same tab, so a `storage` listener that does not filter by key will see it. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+
+### Fixed
+
+- **ThemeMode** — the script injected by `ThemeMode` quotes the `nonce` and drops one outside the CSP nonce character set, and config values are escaped, so neither can break out of the script tag. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **ThemeMode** — an invalid stored mode no longer applies dark before mount on a light system. Like the other script fixes, this applies to `<ThemeMode />`; an app that still mounts `<ModeWatcher />` keeps that package's script. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **ThemeMode** — with `themeColors`, the `theme-color` meta on first paint follows the resolved mode instead of the stored one, so `system` on a light system gets the light color. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **ThemeMode** — importing `sv5ui` no longer throws when `localStorage` is unavailable, such as in a sandboxed iframe or with storage blocked. The mode is kept in memory instead. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **ThemeModeButton** — an `onclick` handler no longer replaces the toggle. It runs first, and calling `preventDefault()` in it cancels the toggle. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **ThemeModeButton** — toggles the `dark` class even when `ThemeMode` is not mounted. The class applied on page load still comes from `ThemeMode`. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+
 ## [2.8.0] - 2026-09-27
 
 ### Added
