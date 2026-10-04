@@ -89,11 +89,12 @@
         class={classes.base}
         aria-label="Toggle theme"
         onclick={handleClick}
+        leadingSlot={loading ? undefined : modeIcons}
         {...restProps}
-    >
-        {#snippet leadingSlot()}
-            <Icon name={darkIcon} class={[classes.icon, classes.darkIcon]} />
-            <Icon name={lightIcon} class={[classes.icon, classes.lightIcon]} />
-        {/snippet}
-    </Button>
+    />
 {/if}
+
+{#snippet modeIcons()}
+    <Icon name={darkIcon} class={[classes.icon, classes.darkIcon]} />
+    <Icon name={lightIcon} class={[classes.icon, classes.lightIcon]} />
+{/snippet}

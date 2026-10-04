@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ThemeMode** — an invalid stored mode no longer applies dark before mount on a light system. Like the other script fixes, this applies to `<ThemeMode />`; an app that still mounts `<ModeWatcher />` keeps that package's script. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
 - **ThemeMode** — with `themeColors`, the `theme-color` meta on first paint follows the resolved mode instead of the stored one, so `system` on a light system gets the light color. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
 - **ThemeMode** — importing `sv5ui` no longer throws when `localStorage` is unavailable, such as in a sandboxed iframe or with storage blocked. The mode is kept in memory instead. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **ThemeModeButton** — `loading` shows the spinner again instead of the mode icon. It was hidden since 2.8.0, when the button started rendering both mode icons through a slot that took precedence over the spinner.
 - **ThemeModeButton** — an `onclick` handler no longer replaces the toggle. It runs first, and calling `preventDefault()` in it cancels the toggle. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
 - **ThemeModeButton** — toggles the `dark` class even when `ThemeMode` is not mounted. The class applied on page load still comes from `ThemeMode`. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
 
