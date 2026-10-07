@@ -17,6 +17,10 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('select', selectDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -100,13 +104,11 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
     // ---- ARIA ----
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, { invalid: true })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     // ---- Items lookup (O(1) via Map) ----
     const itemsMap = $derived(
@@ -375,8 +377,7 @@
             {...restProps}
             id={resolvedId}
             name={resolvedName}
-            aria-describedby={ariaDescribedBy}
-            aria-invalid={resolvedHighlight ? true : undefined}
+            {...controlAttributes}
             class={baseClass}
         >
             {#if selectedSlot && hasSelection}

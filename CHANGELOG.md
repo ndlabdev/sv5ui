@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Checkbox**, **CheckboxGroup**, **RadioGroup**, **Switch**, **Slider** — `aria-*` props now land on the control instead of the wrapper (`aria-hidden`, `class`, `style` and `data-*` stay on the wrapper). Selectors such as `[aria-label="…"] [role="slider"]` become `[role="slider"][aria-label="…"]`. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
+
+### Fixed
+
+- **Form controls** — a user `aria-describedby` or `aria-invalid` is no longer overwritten, and inside a `FormField` it merges with the field ids. User event handlers no longer get replaced. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
+- **FormField** — the label names every control, slot content and the description stay announced next to an error, `required` sets `aria-required` on text inputs, and a user `id` keeps the label and `Form` errors linked. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
+
 ## [2.8.0] - 2026-09-27
 
 ### Added

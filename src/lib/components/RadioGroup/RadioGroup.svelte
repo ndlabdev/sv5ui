@@ -10,6 +10,12 @@
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        composeHandlers,
+        fieldControlAttributes,
+        groupFocusHandlers,
+        splitControlProps
+    } from '../../hooks/useFormField/field-control.svelte.js'
     import type { RadioGroupItem } from './radio-group.types.js'
 
     const config = getComponentConfig('radioGroup', radioGroupDefaults)
@@ -56,12 +62,13 @@
     const isDisabled = $derived(disabled || loading)
     const legendId = $derived(`${resolvedId}-legend`)
 
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const splitProps = $derived(splitControlProps(restProps))
+    const groupFocus = $derived(groupFocusHandlers(splitProps.root))
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, splitProps.control, hasError, {
+            invalid: true,
+            labelledBy: !legend && !legendSlot
+        })
     )
 
     const slots = $derived(
@@ -162,17 +169,19 @@
 {/snippet}
 
 <div
-    {...restProps}
+    {...splitProps.root}
     bind:this={ref}
     class={layoutClasses.root}
-    onfocusin={() => emit.onFocus()}
-    onfocusout={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+    onfocusin={composeHandlers(() => emit.onFocus(), groupFocus.onfocusin)}
+    onfocusout={composeHandlers((e: FocusEvent) => {
+        const root = e.currentTarget as HTMLElement
+        if (!root.contains(e.relatedTarget as Node | null)) {
             emit.onBlur()
         }
-    }}
+    }, groupFocus.onfocusout)}
 >
     <RadioGroup.Root
+        {...splitProps.control}
         bind:value
         onValueChange={(val) => {
             emit.onChange()
@@ -185,9 +194,9 @@
         {readonly}
         {loop}
         {orientation}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={hasError ? true : undefined}
-        aria-labelledby={legend && !legendSlot ? legendId : undefined}
+        aria-labelledby={(splitProps.control['aria-labelledby'] as string | undefined) ??
+            (legend && !legendSlot ? legendId : undefined)}
+        {...controlAttributes}
         class={layoutClasses.fieldset}
     >
         {#if legend || legendSlot}
