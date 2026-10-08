@@ -93,17 +93,21 @@
     const resolvedId = $derived(id ?? formFieldContext?.ariaId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
-    const isLeading = $derived((!!icon && !trailing) || (loading && !trailing) || !!leadingIcon)
-    const isTrailing = $derived((!!icon && trailing) || (loading && trailing) || !!trailingIcon)
+    const loadingLeading = $derived(loading && !trailing)
+    const loadingTrailing = $derived(loading && trailing)
 
-    const leadingIconName = $derived(
-        loading && isLeading
-            ? loadingIcon
-            : leadingIcon || (isLeading && !trailing ? icon : undefined)
+    const isInert = $derived(disabled || loading)
+    const leadingInteractive = $derived(!!leadingSlot && !isInert)
+    const trailingInteractive = $derived(!!trailingSlot && !isInert)
+    const isLeading = $derived(
+        !!leadingSlot || (!!icon && !trailing) || !!leadingIcon || loadingLeading
     )
-    const trailingIconName = $derived(
-        loading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
+    const isTrailing = $derived(
+        !!trailingSlot || (!!icon && trailing) || !!trailingIcon || loadingTrailing
     )
+
+    const leadingIconName = $derived(leadingIcon || (!!icon && !trailing ? icon : undefined))
+    const trailingIconName = $derived(trailingIcon || (!!icon && trailing ? icon : undefined))
 
     const ariaDescribedBy = $derived(
         !formFieldContext
@@ -132,11 +136,19 @@
         base: variantSlots.base({
             class: [config.slots.base, fieldGroupClass?.base, ui?.base]
         }),
-        leading: variantSlots.leading({ class: [config.slots.leading, ui?.leading] }),
+        leading: variantSlots.leading({
+            class: [config.slots.leading, leadingInteractive && 'pointer-events-auto', ui?.leading]
+        }),
         leadingIcon: variantSlots.leadingIcon({
             class: [config.slots.leadingIcon, ui?.leadingIcon]
         }),
-        trailing: variantSlots.trailing({ class: [config.slots.trailing, ui?.trailing] }),
+        trailing: variantSlots.trailing({
+            class: [
+                config.slots.trailing,
+                trailingInteractive && 'pointer-events-auto',
+                ui?.trailing
+            ]
+        }),
         trailingIcon: variantSlots.trailingIcon({
             class: [config.slots.trailingIcon, ui?.trailingIcon]
         })
@@ -176,11 +188,15 @@
 </script>
 
 <div class={classes.root}>
-    {#if leadingSlot}
+    {#if loadingLeading}
+        <span class={classes.leading}>
+            <Icon name={loadingIcon} class={classes.leadingIcon} />
+        </span>
+    {:else if leadingSlot}
         <span class={classes.leading}>
             {@render leadingSlot()}
         </span>
-    {:else if isLeading && leadingIconName}
+    {:else if leadingIconName}
         <span class={classes.leading}>
             <Icon name={leadingIconName} class={classes.leadingIcon} />
         </span>
@@ -203,11 +219,15 @@
         onfocus={handleFocus}
     ></textarea>
 
-    {#if trailingSlot}
+    {#if loadingTrailing}
+        <span class={classes.trailing}>
+            <Icon name={loadingIcon} class={classes.trailingIcon} />
+        </span>
+    {:else if trailingSlot}
         <span class={classes.trailing}>
             {@render trailingSlot()}
         </span>
-    {:else if isTrailing && trailingIconName}
+    {:else if trailingIconName}
         <span class={classes.trailing}>
             <Icon name={trailingIconName} class={classes.trailingIcon} />
         </span>

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Textarea**, **InputTags** — `leadingSlot` and `trailingSlot` reserve room so they no longer cover the text, and a control inside them can be clicked, matching `Input`. ([#237](https://github.com/ndlabdev/sv5ui/issues/237))
+- **Textarea**, **Select**, **SelectMenu**, **Button** — `loading` shows the spinner instead of a slot on the same side. ([#237](https://github.com/ndlabdev/sv5ui/issues/237))
+
 ## [2.8.0] - 2026-09-27
 
 ### Added

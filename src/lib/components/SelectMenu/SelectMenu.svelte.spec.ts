@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
+import { createRawSnippet } from 'svelte'
 import SelectMenu from './SelectMenu.svelte'
 import SelectMenuFormFieldTestWrapper from './SelectMenuFormFieldTestWrapper.svelte'
 import type { SelectMenuItem, SelectMenuItemType } from './select-menu.types.js'
@@ -826,5 +827,52 @@ describe('SelectMenu', () => {
             ) as HTMLInputElement
             expect(search.id).not.toBe('form-field-fruit')
         })
+    })
+})
+
+const slotSnippet = (id: string) =>
+    createRawSnippet(() => ({
+        render: () => `<button type="button" id="${id}">x</button>`,
+        setup: () => {}
+    }))
+
+const wrapperOf = (container: Element, id: string) =>
+    container.querySelector(`#${id}`)?.parentElement as HTMLElement
+
+describe('SelectMenu leading and trailing slots, #237', () => {
+    const base = { items: [{ label: 'Option A', value: 'a' }] }
+
+    it.each(['leadingSlot', 'trailingSlot'])(
+        'shows the spinner instead of a %s while loading',
+        async (slot) => {
+            const { container } = render(SelectMenu, {
+                ...base,
+                loading: true,
+                [slot]: slotSnippet('slot-btn')
+            })
+            await vi.waitFor(() => expect(container.querySelector('.animate-spin')).not.toBeNull())
+            expect(container.querySelector('#slot-btn')).toBeNull()
+        }
+    )
+
+    it('renders both slots when not loading', () => {
+        const { container } = render(SelectMenu, {
+            ...base,
+            leadingSlot: slotSnippet('lead-btn'),
+            trailingSlot: slotSnippet('trail-btn')
+        })
+        expect(container.querySelector('#lead-btn')).not.toBeNull()
+        expect(container.querySelector('#trail-btn')).not.toBeNull()
+        expect(container.querySelector('.animate-spin')).toBeNull()
+    })
+
+    it('keeps slot content click through, since it belongs to the trigger', () => {
+        const { container } = render(SelectMenu, {
+            ...base,
+            leadingSlot: slotSnippet('lead-btn'),
+            trailingSlot: slotSnippet('trail-btn')
+        })
+        expect(wrapperOf(container, 'lead-btn').className).toMatch(/\bpointer-events-none\b/)
+        expect(wrapperOf(container, 'trail-btn').className).toMatch(/\bpointer-events-none\b/)
     })
 })
