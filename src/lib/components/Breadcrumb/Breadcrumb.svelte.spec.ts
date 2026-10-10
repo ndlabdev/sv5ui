@@ -55,6 +55,19 @@ describe('Breadcrumb', () => {
             await expect.element(link).not.toBeInTheDocument()
             await expect.element(page.getByText('No Link')).toBeInTheDocument()
         })
+
+        it('should render items that share a label', async () => {
+            render(Breadcrumb, {
+                items: [
+                    { label: 'Docs', href: '/docs' },
+                    { label: 'Button', href: '/docs/button' },
+                    { label: 'Button' }
+                ]
+            })
+            await expect.element(page.getByRole('link', { name: 'Button' })).toBeInTheDocument()
+            expect(page.getByText('Button').elements()).toHaveLength(2)
+            expect(page.getByRole('listitem').elements()).toHaveLength(3)
+        })
     })
 
     // ==================== ACCESSIBILITY ====================

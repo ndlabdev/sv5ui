@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Breadcrumb** — two items with the same `label` render side by side instead of crashing the page with a duplicate key error. ([#241](https://github.com/ndlabdev/sv5ui/issues/241))
+
 ## [2.8.0] - 2026-09-27
 
 ### Added
