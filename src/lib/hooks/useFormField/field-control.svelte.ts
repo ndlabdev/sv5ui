@@ -83,11 +83,12 @@ export function composeHandlers<E extends Event>(...handlers: unknown[]): (event
 
 export function reportControlId(
     field: FormFieldContext | undefined,
-    id: () => string | undefined
+    id: () => string | undefined,
+    labelable = true
 ): void {
     $effect(() => {
         const current = id()
-        field?.setControlId?.(current)
+        field?.setControlId?.(current, labelable)
         return () => field?.setControlId?.(undefined)
     })
 }

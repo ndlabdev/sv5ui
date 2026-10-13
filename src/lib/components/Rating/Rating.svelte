@@ -58,7 +58,7 @@
         })
     )
 
-    reportControlId(formFieldContext, () => resolvedId)
+    reportControlId(formFieldContext, () => resolvedId, false)
 
     const slots = $derived(
         ratingVariants({

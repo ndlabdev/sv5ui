@@ -484,4 +484,18 @@ describe('Textarea leading and trailing slots, #237', () => {
         await vi.waitFor(() => expect(container.querySelector('.animate-spin')).not.toBeNull())
         expect(container.querySelector('#slot-btn')).toBeNull()
     })
+
+    it.each([
+        ['a leading slot', { leadingSlot: slotSnippet('lead-btn') }],
+        ['a leading icon', { leadingIcon: 'lucide:search' }]
+    ])('spins only the trailing spinner next to %s', async (_case, props) => {
+        const { container } = render(Textarea, { ...props, loading: true, trailing: true })
+        await vi.waitFor(() => expect(container.querySelectorAll('svg').length).toBeGreaterThan(0))
+        const spinning = container.querySelectorAll('.animate-spin')
+        expect(spinning).toHaveLength(1)
+        const textarea = container.querySelector('textarea') as HTMLTextAreaElement
+        expect(
+            textarea.compareDocumentPosition(spinning[0]) & Node.DOCUMENT_POSITION_FOLLOWING
+        ).toBeTruthy()
+    })
 })

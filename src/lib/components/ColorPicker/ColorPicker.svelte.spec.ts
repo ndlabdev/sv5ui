@@ -593,10 +593,13 @@ describe('ColorPicker', () => {
             expect(getHiddenInput()!.name).toBe('brand')
         })
 
-        it('should link the handle to the FormField label', () => {
-            render(ColorPickerFormTestWrapper)
+        it('should name the group with the FormField label without a label for', async () => {
+            const { container } = render(ColorPickerFormTestWrapper)
             const label = document.querySelector('label') as HTMLLabelElement
-            expect(label.getAttribute('for')).toBe(getAreaThumb()!.id)
+            await vi.waitFor(() => expect(label.hasAttribute('for')).toBe(false))
+            expect(container.querySelector('[role=group]')?.getAttribute('aria-labelledby')).toBe(
+                label.id
+            )
         })
 
         it('should describe the handle with the FormField description', () => {

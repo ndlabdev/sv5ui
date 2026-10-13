@@ -13,6 +13,7 @@
     import {
         fieldControlAttributes,
         groupFocusHandlers,
+        reportControlId,
         splitControlProps
     } from '../../hooks/useFormField/field-control.svelte.js'
     import type { CheckboxGroupItem } from './checkbox-group.types.js'
@@ -66,6 +67,8 @@
             labelledBy: !legend && !legendSlot
         })
     )
+
+    reportControlId(formFieldContext, () => resolvedId, false)
 
     const slots = $derived(
         checkboxGroupVariants({
@@ -185,6 +188,7 @@
     <fieldset
         {...splitProps.control}
         {...controlAttributes}
+        id={resolvedId}
         class={layoutClasses.fieldset}
         onfocusin={() => emit.onFocus()}
         onfocusout={(e) => {

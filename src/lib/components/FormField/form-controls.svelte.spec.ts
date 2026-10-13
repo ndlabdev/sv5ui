@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
-import { createRawSnippet, type Component } from 'svelte'
+import { createRawSnippet, getContext, mount as mountIn, unmount, type Component } from 'svelte'
 import { FORM_FIELD_CONTEXT_KEY, type FormFieldContext } from '../../hooks/useFormField/index.js'
 import FormField from './FormField.svelte'
 import Input from '../Input/Input.svelte'
@@ -26,7 +26,6 @@ type Case = {
     control: string
     support: Support
     focus: 'control' | 'group'
-    reportsId?: boolean
 }
 
 const items = [
@@ -42,32 +41,28 @@ const cases: Case[] = [
         component: as(Input),
         control: 'input',
         support: { invalid: true, required: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'Textarea',
         component: as(Textarea),
         control: 'textarea',
         support: { invalid: true, required: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'InputNumber',
         component: as(InputNumber),
         control: '[role=spinbutton]',
         support: { invalid: true, required: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'InputTags',
         component: as(InputTags),
         control: 'input',
         support: { invalid: true, required: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'Select',
@@ -75,8 +70,7 @@ const cases: Case[] = [
         props: { items },
         control: 'button',
         support: { invalid: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'SelectMenu',
@@ -84,16 +78,14 @@ const cases: Case[] = [
         props: { items },
         control: '[role=button]',
         support: { invalid: true, labelledBy: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'Rating',
         component: as(Rating),
         control: '[role=slider]',
         support: { invalid: true, labelledBy: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'Checkbox',
@@ -101,8 +93,7 @@ const cases: Case[] = [
         props: { label: 'Accept' },
         control: '[role=checkbox]',
         support: { invalid: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'Switch',
@@ -110,8 +101,7 @@ const cases: Case[] = [
         props: { label: 'Notify' },
         control: '[role=switch]',
         support: { invalid: true },
-        focus: 'control',
-        reportsId: true
+        focus: 'control'
     },
     {
         name: 'Slider',
@@ -238,13 +228,12 @@ describe('form controls contract, #236', () => {
                 })
             }
 
-            if (c.reportsId) {
-                it('reports a user id to the field', () => {
-                    const setControlId = vi.fn()
-                    mount(c, { id: 'my-id' }, field({ setControlId }))
-                    expect(setControlId).toHaveBeenCalledWith('my-id')
-                })
-            }
+            it('reports a user id that it renders to the field', () => {
+                const setControlId = vi.fn()
+                const { container } = mount(c, { id: 'my-id' }, field({ setControlId }))
+                expect(setControlId).toHaveBeenCalledWith('my-id', expect.any(Boolean))
+                expect(container.querySelector('#my-id')).not.toBeNull()
+            })
 
             if (c.focus === 'control') {
                 it('runs the user onfocus and onblur when the control is focused', () => {
@@ -372,5 +361,57 @@ describe('FormField published ids, #236', () => {
         })
         expect(document.getElementById('form-field-email-description')).not.toBeNull()
         expect(document.getElementById('form-field-email-error')).not.toBeNull()
+    })
+})
+
+describe('FormField label target', () => {
+    const LABELABLE = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'METER', 'OUTPUT', 'PROGRESS']
+
+    const inField = (c: Case) =>
+        createRawSnippet(() => {
+            const context = getContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY)
+            return {
+                render: () => '<div></div>',
+                setup: (target) => {
+                    const instance = mountIn(c.component, {
+                        target,
+                        props: { ...c.props },
+                        context: new Map([[FORM_FIELD_CONTEXT_KEY, context]])
+                    })
+                    return () => unmount(instance)
+                }
+            }
+        })
+
+    const labelOf = () => document.getElementById('form-field-probe-label') as HTMLLabelElement
+
+    it.each(cases.map((c) => [c.name, c] as const))(
+        '%s leaves no label for pointing at a missing or non-labelable element',
+        async (_name, c) => {
+            render(FormField, { name: 'probe', label: 'Probe', children: inField(c) })
+            await vi.waitFor(() => expect(labelOf()).not.toBeNull())
+            await vi.waitFor(() => {
+                const target = labelOf().htmlFor
+                if (!target) return
+                expect(LABELABLE).toContain(document.getElementById(target)?.tagName)
+            })
+        }
+    )
+
+    it('keeps for on the field id when the content does not report a control', () => {
+        const child = createRawSnippet(() => ({
+            render: () => '<input id="form-field-probe" />'
+        }))
+        render(FormField, { name: 'probe', label: 'Probe', children: child })
+        expect(labelOf().htmlFor).toBe('form-field-probe')
+    })
+
+    it('gives the CheckboxGroup fieldset the reported id', async () => {
+        const group = cases.find((c) => c.name === 'CheckboxGroup') as Case
+        render(FormField, { name: 'probe', label: 'Probe', children: inField(group) })
+        await vi.waitFor(() =>
+            expect(document.getElementById('form-field-probe')?.tagName).toBe('FIELDSET')
+        )
+        expect(labelOf().hasAttribute('for')).toBe(false)
     })
 })

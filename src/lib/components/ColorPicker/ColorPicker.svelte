@@ -25,7 +25,8 @@
         composeHandlers,
         fieldControlAttributes,
         fieldLabelledBy,
-        groupFocusHandlers
+        groupFocusHandlers,
+        reportControlId
     } from '../../hooks/useFormField/field-control.svelte.js'
     import { usePointerDrag } from '../../hooks/usePointerDrag/index.js'
     import type { PointerDragContext } from '../../hooks/usePointerDrag/index.js'
@@ -87,6 +88,8 @@
     const areaAttributes = $derived(
         fieldControlAttributes(formFieldContext, {}, hasError, { invalid: true })
     )
+
+    reportControlId(formFieldContext, () => resolvedId, false)
 
     let hsva = $state<Hsva>(parseColor(value) ?? { h: 0, s: 0, v: 0, a: 1 })
     let lastEmitted = value

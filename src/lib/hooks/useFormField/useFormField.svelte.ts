@@ -26,8 +26,12 @@ export interface FormFieldContext {
     labelId?: string
     /** Whether the field is marked as required. */
     required?: boolean
-    /** Reports the id the control actually renders, so the label and the form follow it. */
-    setControlId?: (id: string | undefined) => void
+    /**
+     * Reports the id the control actually renders, so the label and the form follow it.
+     * Pass `labelable: false` when that element cannot be the target of `<label for>`,
+     * such as a `div` with a role, so the label keeps its id but drops `for`.
+     */
+    setControlId?: (id: string | undefined, labelable?: boolean) => void
 }
 
 /**

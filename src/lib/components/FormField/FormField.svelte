@@ -45,6 +45,7 @@
     const id = useId()
     const ariaId = $derived(name ? `form-field-${name}` : id)
     let controlId = $state<string | undefined>()
+    let controlLabelable = $state(true)
     const fieldId = $derived(controlId ?? ariaId)
 
     // Form-level context (undefined when FormField is used standalone).
@@ -161,8 +162,9 @@
         get required() {
             return required
         },
-        setControlId(next: string | undefined) {
+        setControlId(next: string | undefined, labelable = true) {
             controlId = next
+            controlLabelable = next === undefined || labelable
         }
     })
 </script>
@@ -174,7 +176,11 @@
                 {#if labelSlot}
                     {@render labelSlot({ label })}
                 {:else if label}
-                    <Label.Root id={labelId} for={fieldId} class={classes.label}>
+                    <Label.Root
+                        id={labelId}
+                        for={controlLabelable ? fieldId : undefined}
+                        class={classes.label}
+                    >
                         {label}
                     </Label.Root>
                 {/if}

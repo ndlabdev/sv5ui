@@ -14,6 +14,7 @@
         composeHandlers,
         fieldControlAttributes,
         groupFocusHandlers,
+        reportControlId,
         splitControlProps
     } from '../../hooks/useFormField/field-control.svelte.js'
     import type { RadioGroupItem } from './radio-group.types.js'
@@ -70,6 +71,8 @@
             labelledBy: !legend && !legendSlot
         })
     )
+
+    reportControlId(formFieldContext, () => resolvedId, false)
 
     const slots = $derived(
         radioGroupVariants({

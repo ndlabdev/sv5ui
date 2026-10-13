@@ -12,6 +12,7 @@
     import {
         composeHandlers,
         fieldControlAttributes,
+        reportControlId,
         splitControlProps
     } from '../../hooks/useFormField/field-control.svelte.js'
 
@@ -59,6 +60,8 @@
             labelledBy: true
         })
     )
+
+    reportControlId(formFieldContext, () => resolvedId, false)
 
     const asArray = $derived(Array.isArray(value) ? value : [value ?? min])
     const isMultiple = $derived(Array.isArray(value))
