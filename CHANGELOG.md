@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-10-13
+
 ### Added
 
 - **ThemeMode** — `createInitialModeExpression` for apps that inject the dark mode script themselves with `disableHeadScriptInjection`, plus the `ColorMode`, `ResolvedColorMode`, `ThemeColors` and `InitialModeConfig` types. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
@@ -494,7 +496,10 @@ New SSR-safe Svelte 5 hooks:
 - Tailwind CSS 4 + Tailwind Variants integration
 - bits-ui and Vaul Svelte headless primitives
 
-[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.6.1...HEAD
+[Unreleased]: https://github.com/ndlabdev/sv5ui/compare/v2.9.0...HEAD
+[2.9.0]: https://github.com/ndlabdev/sv5ui/compare/v2.8.0...v2.9.0
+[2.8.0]: https://github.com/ndlabdev/sv5ui/compare/v2.7.0...v2.8.0
+[2.7.0]: https://github.com/ndlabdev/sv5ui/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/ndlabdev/sv5ui/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/ndlabdev/sv5ui/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/ndlabdev/sv5ui/compare/v2.4.0...v2.5.0
