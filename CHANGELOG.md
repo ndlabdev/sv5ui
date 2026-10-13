@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ThemeModeButton** — toggles the `dark` class even when `ThemeMode` is not mounted. The class applied on page load still comes from `ThemeMode`. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
 - **Form controls** — a user `aria-describedby` or `aria-invalid` is no longer overwritten, and inside a `FormField` it merges with the field ids. User event handlers no longer get replaced. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
 - **FormField** — the label names every control, slot content and the description stay announced next to an error, `required` sets `aria-required` on text inputs, and a user `id` keeps the label and `Form` errors linked. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
+- **Textarea**, **InputTags** — `leadingSlot` and `trailingSlot` reserve room so they no longer cover the text, and a control inside them can be clicked, matching `Input`. ([#237](https://github.com/ndlabdev/sv5ui/issues/237))
+- **Textarea**, **Select**, **SelectMenu**, **Button** — `loading` shows the spinner instead of a slot on the same side. ([#237](https://github.com/ndlabdev/sv5ui/issues/237))
 
 ## [2.8.0] - 2026-09-27
 

@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
+import { createRawSnippet } from 'svelte'
 import Button from './Button.svelte'
 
 const AVATAR_SRC =
@@ -565,5 +566,37 @@ describe('Button', () => {
                 spinner.compareDocumentPosition(label) & Node.DOCUMENT_POSITION_PRECEDING
             ).toBeTruthy()
         })
+    })
+})
+
+const slotSnippet = (id: string) =>
+    createRawSnippet(() => ({
+        render: () => `<button type="button" id="${id}">x</button>`,
+        setup: () => {}
+    }))
+
+describe('Button slots while loading, #237', () => {
+    it.each([
+        ['leading', {}, 'leadingSlot'],
+        ['trailing', { trailing: true }, 'trailingSlot']
+    ])('shows the %s spinner instead of the slot on the same side', async (_side, props, slot) => {
+        const { container } = render(Button, {
+            label: 'Save',
+            ...props,
+            loading: true,
+            [slot]: slotSnippet('slot-btn')
+        })
+        await vi.waitFor(() => expect(container.querySelector('.animate-spin')).not.toBeNull())
+        expect(container.querySelector('#slot-btn')).toBeNull()
+    })
+
+    it('keeps a slot on the other side of the spinner', async () => {
+        const { container } = render(Button, {
+            label: 'Save',
+            loading: true,
+            trailingSlot: slotSnippet('slot-btn')
+        })
+        await vi.waitFor(() => expect(container.querySelector('.animate-spin')).not.toBeNull())
+        expect(container.querySelector('#slot-btn')).not.toBeNull()
     })
 })

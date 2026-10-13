@@ -1,6 +1,7 @@
 import { page } from 'vitest/browser'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
+import { createRawSnippet } from 'svelte'
 import Textarea from './Textarea.svelte'
 
 const getTextarea = () => document.querySelector('textarea') as HTMLTextAreaElement | null
@@ -425,5 +426,62 @@ describe('Textarea', () => {
             await expect.element(textarea).toHaveClass(/resize-none/)
             expect(getTextarea()!.rows).toBe(5)
         })
+    })
+})
+
+const slotSnippet = (id: string) =>
+    createRawSnippet(() => ({
+        render: () => `<button type="button" id="${id}">x</button>`,
+        setup: () => {}
+    }))
+
+const wrapperOf = (container: Element, id: string) =>
+    container.querySelector(`#${id}`)?.parentElement as HTMLElement
+
+describe('Textarea leading and trailing slots, #237', () => {
+    it('reserves room for a leading slot', () => {
+        const { container } = render(Textarea, { leadingSlot: slotSnippet('lead-btn') })
+        expect(container.querySelector('textarea')!.className).toMatch(/\bps-\d/)
+    })
+
+    it('reserves room for a trailing slot', () => {
+        const { container } = render(Textarea, { trailingSlot: slotSnippet('trail-btn') })
+        expect(container.querySelector('textarea')!.className).toMatch(/\bpe-\d/)
+    })
+
+    it('lets pointer events reach interactive slot content', () => {
+        const { container } = render(Textarea, {
+            leadingSlot: slotSnippet('lead-btn'),
+            trailingSlot: slotSnippet('trail-btn')
+        })
+        expect(wrapperOf(container, 'lead-btn').className).toMatch(/\bpointer-events-auto\b/)
+        expect(wrapperOf(container, 'trail-btn').className).toMatch(/\bpointer-events-auto\b/)
+    })
+
+    it('keeps a decorative icon click through', () => {
+        const { container } = render(Textarea, { trailingIcon: 'lucide:check' })
+        const wrapper = container.querySelector('svg')?.closest('span') as HTMLElement
+        expect(wrapper.className).not.toMatch(/\bpointer-events-auto\b/)
+    })
+
+    it('blocks slot interaction while disabled', () => {
+        const { container } = render(Textarea, {
+            disabled: true,
+            trailingSlot: slotSnippet('trail-btn')
+        })
+        expect(wrapperOf(container, 'trail-btn').className).not.toMatch(/\bpointer-events-auto\b/)
+    })
+
+    it.each([
+        ['leading', {}, 'leadingSlot'],
+        ['trailing', { trailing: true }, 'trailingSlot']
+    ])('shows the %s spinner instead of the slot while loading', async (_side, props, slot) => {
+        const { container } = render(Textarea, {
+            ...props,
+            loading: true,
+            [slot]: slotSnippet('slot-btn')
+        })
+        await vi.waitFor(() => expect(container.querySelector('.animate-spin')).not.toBeNull())
+        expect(container.querySelector('#slot-btn')).toBeNull()
     })
 })
