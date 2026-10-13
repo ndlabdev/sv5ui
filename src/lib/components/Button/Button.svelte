@@ -155,7 +155,9 @@
     class={classes.base}
     onclick={handleClick}
 >
-    {#if leadingSlot}
+    {#if spinLeading}
+        <Icon name={loadingIcon} class={classes.leadingIcon} />
+    {:else if leadingSlot}
         {@render leadingSlot()}
     {:else if isLeading && leadingIconName}
         <Icon name={leadingIconName} class={classes.leadingIcon} />
@@ -169,7 +171,9 @@
         <span class={classes.label}>{@render children()}</span>
     {/if}
 
-    {#if trailingSlot}
+    {#if spinTrailing}
+        <Icon name={loadingIcon} class={classes.trailingIcon} />
+    {:else if trailingSlot}
         {@render trailingSlot()}
     {:else if isTrailing && trailingIconName}
         <Icon name={trailingIconName} class={classes.trailingIcon} />

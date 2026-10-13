@@ -1,10 +1,17 @@
 import '../../../routes/layout.css'
 import { page } from 'vitest/browser'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import ThemeModeButton from './ThemeModeButton.svelte'
+import { setMode } from '../ThemeMode/index.js'
 import { buttonVariants } from '../Button/button.variants.js'
 import { themeModeButtonVariants } from './theme-mode-button.variants.js'
+
+beforeEach(async () => {
+    setMode('light')
+    localStorage.clear()
+    await vi.waitFor(() => expect(document.documentElement.classList.contains('dark')).toBe(false))
+})
 
 describe('ThemeModeButton', () => {
     // ==================== RENDERING ====================
@@ -257,6 +264,29 @@ describe('ThemeModeButton', () => {
             const btn = page.getByRole('button')
             await btn.click({ force: true })
             expect(onclick).not.toHaveBeenCalled()
+        })
+
+        it('should show only the spinner while loading', async () => {
+            render(ThemeModeButton, { loading: true })
+            const btn = page.getByRole('button').element() as HTMLElement
+            await vi.waitFor(() => {
+                const svgs = btn.querySelectorAll('svg')
+                expect(svgs).toHaveLength(1)
+                expect(svgs[0].getAttribute('class')).toMatch(/\banimate-spin\b/)
+            })
+        })
+
+        it('should bring back both mode icons once loading ends', async () => {
+            const { rerender } = render(ThemeModeButton, { loading: true })
+            const btn = page.getByRole('button').element() as HTMLElement
+            await rerender({ loading: false })
+            await vi.waitFor(() => {
+                const svgs = Array.from(btn.querySelectorAll('svg'))
+                expect(svgs).toHaveLength(2)
+                for (const svg of svgs) {
+                    expect(svg.getAttribute('class')).not.toMatch(/\banimate-spin\b/)
+                }
+            })
         })
     })
 

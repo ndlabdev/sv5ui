@@ -553,7 +553,7 @@ describe('InputTags', () => {
             const label = document.querySelector('label') as HTMLLabelElement
             expect(label).not.toBeNull()
             expect(label.htmlFor).toBe(getInput()!.id)
-            expect(getInput()!.getAttribute('aria-describedby')).not.toBeNull()
+            expect(getInput()!.getAttribute('aria-describedby')).toBeNull()
         })
 
         it('should show the error state after blurring with no tags', async () => {
@@ -587,5 +587,43 @@ describe('InputTags', () => {
                 expect(getInput()!.getAttribute('aria-invalid')).toBeNull()
             })
         })
+    })
+})
+
+const slotSnippet = (id: string) =>
+    createRawSnippet(() => ({
+        render: () => `<button type="button" id="${id}">x</button>`,
+        setup: () => {}
+    }))
+
+const wrapperOf = (container: Element, id: string) =>
+    container.querySelector(`#${id}`)?.parentElement as HTMLElement
+
+describe('InputTags leading and trailing slots, #237', () => {
+    it('reserves room for both slots', () => {
+        const { container } = render(InputTags, {
+            leadingSlot: slotSnippet('lead-btn'),
+            trailingSlot: slotSnippet('trail-btn')
+        })
+        const root = container.firstElementChild as HTMLElement
+        expect(root.className).toMatch(/\bps-\d/)
+        expect(root.className).toMatch(/\bpe-\d/)
+    })
+
+    it('lets pointer events reach interactive slot content', () => {
+        const { container } = render(InputTags, {
+            leadingSlot: slotSnippet('lead-btn'),
+            trailingSlot: slotSnippet('trail-btn')
+        })
+        expect(wrapperOf(container, 'lead-btn').className).toMatch(/\bpointer-events-auto\b/)
+        expect(wrapperOf(container, 'trail-btn').className).toMatch(/\bpointer-events-auto\b/)
+    })
+
+    it('blocks slot interaction while disabled', () => {
+        const { container } = render(InputTags, {
+            disabled: true,
+            leadingSlot: slotSnippet('lead-btn')
+        })
+        expect(wrapperOf(container, 'lead-btn').className).not.toMatch(/\bpointer-events-auto\b/)
     })
 })

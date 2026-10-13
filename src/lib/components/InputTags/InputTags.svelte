@@ -15,6 +15,10 @@
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import type { BadgeProps } from '../Badge/badge.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('inputTags', inputTagsDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -231,16 +235,19 @@
     const resolvedHighlight = $derived(highlight ?? hasError)
     const resolvedId = $derived(id ?? formFieldContext?.ariaId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, {
+            invalid: true,
+            required: true
+        })
     )
 
-    const isLeading = $derived((!!icon && !trailing) || !!leadingIcon || !!avatar)
-    const isTrailing = $derived((!!icon && trailing) || !!trailingIcon)
+    reportControlId(formFieldContext, () => resolvedId)
+
+    const leadingInteractive = $derived(!!leadingSlot && !disabled)
+    const trailingInteractive = $derived(!!trailingSlot && !disabled)
+    const isLeading = $derived(!!leadingSlot || (!!icon && !trailing) || !!leadingIcon || !!avatar)
+    const isTrailing = $derived(!!trailingSlot || (!!icon && trailing) || !!trailingIcon)
     const leadingIconName = $derived(leadingIcon || (!!icon && !trailing ? icon : undefined))
     const trailingIconName = $derived(trailingIcon || (!!icon && trailing ? icon : undefined))
 
@@ -274,11 +281,15 @@
             class: [config.slots.tagDeleteIcon, ui?.tagDeleteIcon]
         }),
         tagSize: variantSlots.tagSize() as NonNullable<BadgeProps['size']>,
-        leading: inputSlotFns.leading({ class: [ui?.leading] }),
+        leading: inputSlotFns.leading({
+            class: [leadingInteractive && 'pointer-events-auto', ui?.leading]
+        }),
         leadingIcon: inputSlotFns.leadingIcon({ class: [ui?.leadingIcon] }),
         leadingAvatar: inputSlotFns.leadingAvatar({ class: [ui?.leadingAvatar] }),
         leadingAvatarSize: inputSlotFns.leadingAvatarSize() as AvatarSize,
-        trailing: inputSlotFns.trailing({ class: [ui?.trailing] }),
+        trailing: inputSlotFns.trailing({
+            class: [trailingInteractive && 'pointer-events-auto', ui?.trailing]
+        }),
         trailingIcon: inputSlotFns.trailingIcon({ class: [ui?.trailingIcon] })
     })
 </script>
@@ -341,8 +352,7 @@
         required={required && value.length === 0}
         {disabled}
         {readonly}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={resolvedHighlight ? true : undefined}
+        {...controlAttributes}
         class={classes.base}
         oninput={handleInput}
         onchange={handleChange}

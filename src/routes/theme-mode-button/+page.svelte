@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { ThemeModeButton } from '$lib/index.js'
-    import { mode } from 'mode-watcher'
+    import { ThemeModeButton, mode } from '$lib/index.js'
 
     const variants = ['solid', 'outline', 'soft', 'subtle', 'ghost', 'link'] as const
     const colors = [
@@ -21,7 +20,7 @@
         <h1 class="text-2xl font-bold">ThemeModeButton</h1>
         <p class="text-on-surface-variant">
             A button to switch between light and dark mode. Built on top of the Button component and
-            mode-watcher.
+            the ThemeMode handler.
         </p>
     </div>
 

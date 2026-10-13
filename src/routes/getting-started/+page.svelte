@@ -4,12 +4,13 @@
     const layoutCode =
         '// src/routes/+layout.svelte\n' +
         '<script>\n' +
-        "    import 'sv5ui/theme.css'          // Theme with dark mode support\n" +
-        "    import { ModeWatcher } from 'sv5ui' // Dark mode handler\n" +
+        "    import 'sv5ui/theme.css'        // Theme with dark mode support\n" +
+        "    import { ThemeMode } from 'sv5ui' // Dark mode handler\n\n" +
+        '    let { children } = $props()\n' +
         '<' +
         '/script>\n\n' +
-        '<ModeWatcher />\n' +
-        '<slot />'
+        '<ThemeMode />\n' +
+        '{@render children()}'
 
     const usageCode =
         '<script>\n' +
@@ -41,7 +42,7 @@
     <section class="space-y-3">
         <h2 class="text-lg font-semibold">Step 2: Setup Layout</h2>
         <p class="text-sm text-on-surface-variant">
-            Import theme CSS and ModeWatcher in your root layout:
+            Import theme CSS and ThemeMode in your root layout:
         </p>
         <div class="rounded-lg bg-surface-container-highest p-4">
             <pre class="overflow-x-auto text-sm"><code class="text-on-surface">{layoutCode}</code

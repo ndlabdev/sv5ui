@@ -12,6 +12,10 @@
     import { getComponentConfig } from '../../config.js'
     import Button from '../Button/Button.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
     import { useEventListener } from '../../hooks/useEventListener/index.js'
     import { useTimeout, useInterval } from '../../hooks/useTimers/index.js'
 
@@ -302,13 +306,14 @@
     const resolvedHighlight = $derived(highlight ?? hasError)
     const resolvedId = $derived(id ?? formFieldContext?.ariaId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, {
+            invalid: true,
+            required: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     const isVertical = $derived(orientation === 'vertical')
     const resolvedIncrementIcon = $derived(
@@ -362,8 +367,7 @@
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuetext={inputValue === '' ? undefined : inputValue}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={resolvedHighlight ? true : undefined}
+        {...controlAttributes}
         class={classes.base}
         oninput={handleInput}
         onchange={handleChange}

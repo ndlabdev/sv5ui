@@ -20,6 +20,14 @@ export interface FormFieldContext {
     validateOnInputDelay?: number
     /** Regex pattern used to match form errors for this field (in addition to exact name). */
     errorPattern?: RegExp
+    /** Ids of the description, help and error elements currently rendered, space separated. */
+    describedBy?: string
+    /** Id of the rendered label element, for controls that a `<label for>` cannot name. */
+    labelId?: string
+    /** Whether the field is marked as required. */
+    required?: boolean
+    /** Reports the id the control actually renders, so the label and the form follow it. */
+    setControlId?: (id: string | undefined) => void
 }
 
 /**
