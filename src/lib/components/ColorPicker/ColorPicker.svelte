@@ -21,6 +21,12 @@
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        composeHandlers,
+        fieldControlAttributes,
+        fieldLabelledBy,
+        groupFocusHandlers
+    } from '../../hooks/useFormField/field-control.svelte.js'
     import { usePointerDrag } from '../../hooks/usePointerDrag/index.js'
     import type { PointerDragContext } from '../../hooks/usePointerDrag/index.js'
 
@@ -77,12 +83,9 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const resolvedSize = $derived(size ?? formFieldContext?.size ?? config.defaultVariants.size)
     const resolvedColor = $derived(hasError ? 'error' : color)
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const groupFocus = $derived(groupFocusHandlers(restProps))
+    const areaAttributes = $derived(
+        fieldControlAttributes(formFieldContext, {}, hasError, { invalid: true })
     )
 
     let hsva = $state<Hsva>(parseColor(value) ?? { h: 0, s: 0, v: 0, a: 1 })
@@ -293,11 +296,13 @@
 </script>
 
 <div
+    role="group"
+    aria-labelledby={fieldLabelledBy(formFieldContext, restProps) as string | undefined}
     {...restProps}
     bind:this={ref}
     class={classes.root}
-    onfocusin={() => emit.onFocus()}
-    onfocusout={handleFocusOut}
+    onfocusin={composeHandlers(() => emit.onFocus(), groupFocus.onfocusin)}
+    onfocusout={composeHandlers(handleFocusOut, groupFocus.onfocusout)}
 >
     {#if resolvedName}
         <input type="hidden" name={resolvedName} value={serializedValue} />
@@ -324,9 +329,8 @@
             aria-valuetext="Saturation {Math.round(hsva.s * 100)}%, brightness {Math.round(
                 hsva.v * 100
             )}%"
-            aria-describedby={ariaDescribedBy}
+            {...areaAttributes}
             aria-disabled={disabled ? true : undefined}
-            aria-invalid={hasError ? true : undefined}
             data-disabled={disabled ? '' : undefined}
             onkeydown={handleAreaKeydown}
         ></span>

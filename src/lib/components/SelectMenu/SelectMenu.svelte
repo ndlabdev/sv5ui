@@ -23,6 +23,10 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
     import { useDebouncedState } from '../../hooks/useDebouncedState/index.js'
 
     const config = getComponentConfig('selectMenu', selectMenuDefaults)
@@ -115,13 +119,14 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
     // ---- ARIA ----
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, {
+            invalid: true,
+            labelledBy: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     // ---- Created items (internal state for createItem) ----
     let createdItems = $state<SelectMenuItem[]>([])
@@ -274,14 +279,14 @@
         multiple ? (leadingIcon ?? icon) : (singleSelectedItem?.icon ?? leadingIcon ?? icon)
     )
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
-    const leadingIconName = $derived(
-        loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
-    )
+    const loadingLeading = $derived(loading && isLeading)
+    const loadingTrailing = $derived(loading && !isLeading)
+    const leadingIconName = $derived(!displayAvatar ? displayIcon : undefined)
 
     // ---- Trailing icon ----
-    const trailingIconName = $derived(loading && !isLeading ? loadingIcon : trailingIcon)
+    const trailingIconName = $derived(loadingTrailing ? loadingIcon : trailingIcon)
     const trailingIconClass = $derived(
-        `${loading && !isLeading ? 'animate-spin' : 'transition-transform'} ${open && !loading ? 'rotate-180' : ''}`
+        `${loadingTrailing ? 'animate-spin' : 'transition-transform'} ${open && !loading ? 'rotate-180' : ''}`
     )
 
     // ---- Variant slots ----
@@ -521,11 +526,15 @@
 
 {#snippet rootChildren()}
     <div bind:this={ref} class={rootClass}>
-        {#if leadingSlot}
+        {#if loadingLeading}
+            <span class={leadingClass}>
+                <Icon name={loadingIcon} class={leadingIconStyleClass} />
+            </span>
+        {:else if leadingSlot}
             <span class={leadingClass}>
                 {@render leadingSlot()}
             </span>
-        {:else if isLeading && leadingIconName}
+        {:else if leadingIconName}
             <span class={leadingClass}>
                 <Icon name={leadingIconName} class={leadingIconStyleClass} />
             </span>
@@ -545,13 +554,7 @@
             aria-label={searchPlaceholder}
         />
 
-        <Combobox.Trigger
-            {...restProps}
-            id={resolvedId}
-            aria-describedby={ariaDescribedBy}
-            aria-invalid={resolvedHighlight ? true : undefined}
-            class={baseClass}
-        >
+        <Combobox.Trigger {...restProps} id={resolvedId} {...controlAttributes} class={baseClass}>
             {#snippet child({ props })}
                 <div {...props} role="button" tabindex={disabled ? -1 : 0}>
                     {#if selectedSlot && hasSelection}
@@ -569,7 +572,7 @@
             {/snippet}
         </Combobox.Trigger>
 
-        {#if trailingSlot}
+        {#if trailingSlot && !loadingTrailing}
             <span class={trailingStyleClass}>
                 {@render trailingSlot()}
             </span>

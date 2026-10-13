@@ -62,7 +62,7 @@
     {...restProps}
 >
     <ol class={classes.list}>
-        {#each items as item, index (item.label ?? index)}
+        {#each items as item, index (index)}
             {@const active = index === items.length - 1}
             {@const disabled = item.disabled ?? false}
             {@const itemClasses = getLinkClasses(active, disabled, !!item.href, item.class)}

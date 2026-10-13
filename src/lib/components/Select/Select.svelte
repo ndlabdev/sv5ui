@@ -17,6 +17,10 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('select', selectDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -100,13 +104,11 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
     // ---- ARIA ----
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, { invalid: true })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     // ---- Items lookup (O(1) via Map) ----
     const itemsMap = $derived(
@@ -156,9 +158,9 @@
         multiple ? (leadingIcon ?? icon) : (singleSelectedItem?.icon ?? leadingIcon ?? icon)
     )
     const isLeading = $derived(!!leadingSlot || !!displayAvatar || !!displayIcon)
-    const leadingIconName = $derived(
-        loading && isLeading ? loadingIcon : !displayAvatar ? displayIcon : undefined
-    )
+    const loadingLeading = $derived(loading && isLeading)
+    const loadingTrailing = $derived(loading && !isLeading)
+    const leadingIconName = $derived(!displayAvatar ? displayIcon : undefined)
 
     // ---- bits-ui items for typeahead ----
     const bitsItems = $derived(
@@ -170,9 +172,9 @@
     )
 
     // ---- Trailing icon ----
-    const trailingIconName = $derived(loading && !isLeading ? loadingIcon : trailingIcon)
+    const trailingIconName = $derived(loadingTrailing ? loadingIcon : trailingIcon)
     const trailingIconClass = $derived(
-        `${loading && !isLeading ? 'animate-spin' : 'transition-transform'} ${open && !loading ? 'rotate-180' : ''}`
+        `${loadingTrailing ? 'animate-spin' : 'transition-transform'} ${open && !loading ? 'rotate-180' : ''}`
     )
 
     // ---- Variant slots ----
@@ -353,11 +355,15 @@
 
 {#snippet rootChildren()}
     <div bind:this={ref} class={rootClass}>
-        {#if leadingSlot}
+        {#if loadingLeading}
+            <span class={leadingClass}>
+                <Icon name={loadingIcon} class={leadingIconClass} />
+            </span>
+        {:else if leadingSlot}
             <span class={leadingClass}>
                 {@render leadingSlot()}
             </span>
-        {:else if isLeading && leadingIconName}
+        {:else if leadingIconName}
             <span class={leadingClass}>
                 <Icon name={leadingIconName} class={leadingIconClass} />
             </span>
@@ -375,8 +381,7 @@
             {...restProps}
             id={resolvedId}
             name={resolvedName}
-            aria-describedby={ariaDescribedBy}
-            aria-invalid={resolvedHighlight ? true : undefined}
+            {...controlAttributes}
             class={baseClass}
         >
             {#if selectedSlot && hasSelection}
@@ -392,7 +397,7 @@
             {/if}
         </Select.Trigger>
 
-        {#if trailingSlot}
+        {#if trailingSlot && !loadingTrailing}
             <span class={trailingClass}>
                 {@render trailingSlot()}
             </span>

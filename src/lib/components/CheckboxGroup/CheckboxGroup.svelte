@@ -10,6 +10,11 @@
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        groupFocusHandlers,
+        splitControlProps
+    } from '../../hooks/useFormField/field-control.svelte.js'
     import type { CheckboxGroupItem } from './checkbox-group.types.js'
 
     const config = getComponentConfig('checkboxGroup', checkboxGroupDefaults)
@@ -54,12 +59,12 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const splitProps = $derived(splitControlProps(restProps))
+    const groupFocus = $derived(groupFocusHandlers(splitProps.root))
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, splitProps.control, hasError, {
+            labelledBy: !legend && !legendSlot
+        })
     )
 
     const slots = $derived(
@@ -170,10 +175,17 @@
     {/if}
 {/snippet}
 
-<div {...restProps} bind:this={ref} class={layoutClasses.root}>
+<div
+    {...splitProps.root}
+    bind:this={ref}
+    class={layoutClasses.root}
+    onfocusin={groupFocus.onfocusin}
+    onfocusout={groupFocus.onfocusout}
+>
     <fieldset
+        {...splitProps.control}
+        {...controlAttributes}
         class={layoutClasses.fieldset}
-        aria-describedby={ariaDescribedBy}
         onfocusin={() => emit.onFocus()}
         onfocusout={(e) => {
             // Only emit blur when focus leaves the fieldset entirely, not when

@@ -40,7 +40,7 @@ export type TextareaProps = Omit<HTMLTextareaAttributes, 'class' | 'size'> & {
     highlight?: boolean
 
     /**
-     * Renders a loading spinner and optionally disables interaction.
+     * Renders a loading spinner and disables the textarea while loading.
      * @default false
      */
     loading?: boolean
