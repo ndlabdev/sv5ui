@@ -44,6 +44,8 @@
 
     const id = useId()
     const ariaId = $derived(name ? `form-field-${name}` : id)
+    let controlId = $state<string | undefined>()
+    const fieldId = $derived(controlId ?? ariaId)
 
     // Form-level context (undefined when FormField is used standalone).
     const formCtx = getFormContext()
@@ -74,7 +76,7 @@
         const registeredName = name
         untrack(() => {
             formCtx.registerField(registeredName, {
-                id: ariaId,
+                id: fieldId,
                 pattern: errorPattern,
                 eagerValidation,
                 validateOnInputDelay
@@ -88,7 +90,7 @@
     $effect(() => {
         if (!formCtx || !name) return
         formCtx.registerField(name, {
-            id: ariaId,
+            id: fieldId,
             pattern: errorPattern,
             eagerValidation,
             validateOnInputDelay
@@ -114,6 +116,19 @@
 
     const hasError = $derived(resolvedError !== undefined && resolvedError !== false)
     const errorMessage = $derived(typeof resolvedError === 'string' ? resolvedError : undefined)
+    const showsError = $derived(hasError && (!!errorMessage || !!errorSlot))
+    const showsHelp = $derived(!showsError && (!!help || !!helpSlot))
+    const showsDescription = $derived(!!description || !!descriptionSlot)
+    const labelId = $derived(label && !labelSlot ? `${ariaId}-label` : undefined)
+    const describedBy = $derived(
+        [
+            showsDescription && `${ariaId}-description`,
+            showsError && `${ariaId}-error`,
+            showsHelp && `${ariaId}-help`
+        ]
+            .filter(Boolean)
+            .join(' ')
+    )
 
     setContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY, {
         get name() {
@@ -136,6 +151,18 @@
         },
         get errorPattern() {
             return errorPattern
+        },
+        get describedBy() {
+            return describedBy
+        },
+        get labelId() {
+            return labelId
+        },
+        get required() {
+            return required
+        },
+        setControlId(next: string | undefined) {
+            controlId = next
         }
     })
 </script>
@@ -147,7 +174,7 @@
                 {#if labelSlot}
                     {@render labelSlot({ label })}
                 {:else if label}
-                    <Label.Root for={ariaId} class={classes.label}>
+                    <Label.Root id={labelId} for={fieldId} class={classes.label}>
                         {label}
                     </Label.Root>
                 {/if}
@@ -161,7 +188,9 @@
         {/if}
 
         {#if descriptionSlot}
-            {@render descriptionSlot({ description })}
+            <div id="{ariaId}-description" class="contents">
+                {@render descriptionSlot({ description })}
+            </div>
         {:else if description}
             <p id="{ariaId}-description" class={classes.description}>{description}</p>
         {/if}
@@ -172,15 +201,19 @@
             {@render children({ error: resolvedError })}
         {/if}
 
-        {#if hasError && (errorMessage || errorSlot)}
+        {#if showsError}
             {#if errorSlot}
-                {@render errorSlot({ error: resolvedError })}
+                <div id="{ariaId}-error" class="contents">
+                    {@render errorSlot({ error: resolvedError })}
+                </div>
             {:else if errorMessage}
                 <p id="{ariaId}-error" class={classes.error}>{errorMessage}</p>
             {/if}
-        {:else if help || helpSlot}
+        {:else if showsHelp}
             {#if helpSlot}
-                {@render helpSlot({ help })}
+                <div id="{ariaId}-help" class="contents">
+                    {@render helpSlot({ help })}
+                </div>
             {:else if help}
                 <p id="{ariaId}-help" class={classes.help}>{help}</p>
             {/if}

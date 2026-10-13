@@ -10,6 +10,11 @@
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        composeHandlers,
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('rating', ratingDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -46,13 +51,14 @@
     const resolvedId = $derived(id ?? formFieldContext?.ariaId ?? autoId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, hasError, {
+            invalid: true,
+            labelledBy: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     const slots = $derived(
         ratingVariants({
@@ -82,16 +88,15 @@
         emit.onChange()
         onValueChange?.(val)
     }}
-    onblur={() => emit.onBlur()}
-    onfocus={() => emit.onFocus()}
+    onblur={composeHandlers(() => emit.onBlur(), restProps.onblur)}
+    onfocus={composeHandlers(() => emit.onFocus(), restProps.onfocus)}
     id={resolvedId}
     name={resolvedName}
     {orientation}
     {disabled}
     {required}
     {readonly}
-    aria-describedby={ariaDescribedBy}
-    aria-invalid={hasError ? true : undefined}
+    {...controlAttributes}
     class={classes.root}
 >
     {#snippet children({ items })}

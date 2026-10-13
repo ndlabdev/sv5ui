@@ -797,9 +797,11 @@ describe('ImageCropper', () => {
 
         it('should hide the fill on the rotation slider', async () => {
             await renderLoaded({ rotationSlider: true })
-            const slider = document.querySelector('[aria-label="Rotation"]') as HTMLElement
+            const thumb = document.querySelector(
+                '[role="slider"][aria-label="Rotation"]'
+            ) as HTMLElement
 
-            expect(slider.querySelector('.hidden')).not.toBeNull()
+            expect(thumb.parentElement?.querySelector('.hidden')).not.toBeNull()
         })
     })
 
@@ -851,7 +853,7 @@ describe('ImageCropper', () => {
             await vi.waitFor(() =>
                 expect(
                     document
-                        .querySelector('[aria-label="Rotation"] [role="slider"]')
+                        .querySelector('[role="slider"][aria-label="Rotation"]')
                         ?.getAttribute('aria-valuenow')
                 ).toBe('90')
             )
@@ -860,7 +862,7 @@ describe('ImageCropper', () => {
             await vi.waitFor(() =>
                 expect(
                     document
-                        .querySelector('[aria-label="Rotation"] [role="slider"]')
+                        .querySelector('[role="slider"][aria-label="Rotation"]')
                         ?.getAttribute('aria-valuenow')
                 ).toBe('-90')
             )

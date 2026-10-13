@@ -14,6 +14,10 @@
     } from '../FieldGroup/field-group.variants.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('textarea', textareaDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -105,13 +109,14 @@
         loading && isTrailing ? loadingIcon : trailingIcon || (trailing ? icon : undefined)
     )
 
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, {
+            invalid: true,
+            required: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     const variantSlots = $derived(
         textareaVariants({
@@ -194,8 +199,7 @@
         id={resolvedId}
         name={resolvedName}
         disabled={disabled || loading}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={resolvedHighlight ? true : undefined}
+        {...controlAttributes}
         class={classes.base}
         onblur={handleBlur}
         oninput={handleInput}
