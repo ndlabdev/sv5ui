@@ -77,16 +77,6 @@ export * from './components/Tree/index.js'
 // Composables
 export * from './hooks/index.js'
 
-// Theme mode
-export {
-    toggleMode,
-    setMode,
-    resetMode,
-    mode,
-    userPrefersMode,
-    systemPrefersMode
-} from 'mode-watcher'
-
 // Configuration
 export { defineConfig, resetConfig } from './config.js'
 export type { UIConfig } from './config.js'

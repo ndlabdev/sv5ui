@@ -15,6 +15,10 @@
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import type { BadgeProps } from '../Badge/badge.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('inputTags', inputTagsDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -231,13 +235,14 @@
     const resolvedHighlight = $derived(highlight ?? hasError)
     const resolvedId = $derived(id ?? formFieldContext?.ariaId)
     const resolvedName = $derived(name ?? formFieldContext?.name)
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, {
+            invalid: true,
+            required: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     const leadingInteractive = $derived(!!leadingSlot && !disabled)
     const trailingInteractive = $derived(!!trailingSlot && !disabled)
@@ -347,8 +352,7 @@
         required={required && value.length === 0}
         {disabled}
         {readonly}
-        aria-describedby={ariaDescribedBy}
-        aria-invalid={resolvedHighlight ? true : undefined}
+        {...controlAttributes}
         class={classes.base}
         oninput={handleInput}
         onchange={handleChange}

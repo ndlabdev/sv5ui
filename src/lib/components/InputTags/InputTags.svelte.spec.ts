@@ -553,7 +553,7 @@ describe('InputTags', () => {
             const label = document.querySelector('label') as HTMLLabelElement
             expect(label).not.toBeNull()
             expect(label.htmlFor).toBe(getInput()!.id)
-            expect(getInput()!.getAttribute('aria-describedby')).not.toBeNull()
+            expect(getInput()!.getAttribute('aria-describedby')).toBeNull()
         })
 
         it('should show the error state after blurring with no tags', async () => {

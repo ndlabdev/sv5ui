@@ -10,6 +10,12 @@
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        composeHandlers,
+        fieldControlAttributes,
+        reportControlId,
+        splitControlProps
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('switch', switchDefaults)
     const icons = getComponentConfig('icons', iconsDefaults)
@@ -51,13 +57,14 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const splitProps = $derived(splitControlProps(restProps, { focus: true }))
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, splitProps.control, hasError, {
+            invalid: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     const hasCheckedIcon = $derived(loading || !!checkedIcon)
     const hasUncheckedIcon = $derived(loading || !!uncheckedIcon)
@@ -100,7 +107,7 @@
     })
 </script>
 
-<div {...restProps} bind:this={ref} class={classes.root}>
+<div {...splitProps.root} bind:this={ref} class={classes.root}>
     <div class={classes.container}>
         <Switch.Root
             bind:checked
@@ -108,15 +115,15 @@
                 emit.onChange()
                 onCheckedChange?.(val)
             }}
-            onblur={() => emit.onBlur()}
-            onfocus={() => emit.onFocus()}
+            {...splitProps.control}
+            onblur={composeHandlers(() => emit.onBlur(), splitProps.control.onblur)}
+            onfocus={composeHandlers(() => emit.onFocus(), splitProps.control.onfocus)}
             id={resolvedId}
             name={resolvedName}
             {value}
             disabled={isDisabled}
             {required}
-            aria-describedby={ariaDescribedBy}
-            aria-invalid={hasError ? true : undefined}
+            {...controlAttributes}
             class={classes.base}
         >
             <Switch.Thumb class={classes.thumb}>

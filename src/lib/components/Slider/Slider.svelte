@@ -9,6 +9,11 @@
     import { sliderVariants, sliderDefaults } from './slider.variants.js'
     import { getComponentConfig } from '../../config.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        composeHandlers,
+        fieldControlAttributes,
+        splitControlProps
+    } from '../../hooks/useFormField/field-control.svelte.js'
 
     const config = getComponentConfig('slider', sliderDefaults)
 
@@ -47,12 +52,12 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const resolvedSize = $derived(size ?? formFieldContext?.size ?? config.defaultVariants.size)
     const resolvedColor = $derived(hasError ? 'error' : color)
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const splitProps = $derived(splitControlProps(restProps, { focus: true }))
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, splitProps.control, hasError, {
+            invalid: true,
+            labelledBy: true
+        })
     )
 
     const asArray = $derived(Array.isArray(value) ? value : [value ?? min])
@@ -86,7 +91,7 @@
     })
 </script>
 
-<div bind:this={ref} class={classes.root} {...restProps}>
+<div bind:this={ref} class={classes.root} {...splitProps.root}>
     {#if resolvedName}
         {#each asArray as v, i (i)}
             <input type="hidden" name={resolvedName} value={v} />
@@ -106,7 +111,6 @@
         {dir}
         {thumbPositioning}
         {trackPadding}
-        aria-describedby={ariaDescribedBy}
         onValueChange={handleValueChange}
         onValueCommit={handleValueCommit}
         class={classes.base}
@@ -117,7 +121,14 @@
             </span>
 
             {#each thumbItems as item (item.index)}
-                <Slider.Thumb index={item.index} class={classes.thumb} />
+                <Slider.Thumb
+                    index={item.index}
+                    {...splitProps.control}
+                    {...controlAttributes}
+                    onfocus={composeHandlers(splitProps.control.onfocus)}
+                    onblur={composeHandlers(splitProps.control.onblur)}
+                    class={classes.thumb}
+                />
                 {#if tooltip}
                     <Slider.ThumbLabel index={item.index} class={classes.tooltip}>
                         {item.value}

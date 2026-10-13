@@ -23,6 +23,10 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
+    import {
+        fieldControlAttributes,
+        reportControlId
+    } from '../../hooks/useFormField/field-control.svelte.js'
     import { useDebouncedState } from '../../hooks/useDebouncedState/index.js'
 
     const config = getComponentConfig('selectMenu', selectMenuDefaults)
@@ -115,13 +119,14 @@
     const resolvedName = $derived(name ?? formFieldContext?.name)
 
     // ---- ARIA ----
-    const ariaDescribedBy = $derived(
-        !formFieldContext
-            ? undefined
-            : hasError
-              ? `${formFieldContext.ariaId}-error`
-              : `${formFieldContext.ariaId}-description ${formFieldContext.ariaId}-help`
+    const controlAttributes = $derived(
+        fieldControlAttributes(formFieldContext, restProps, resolvedHighlight, {
+            invalid: true,
+            labelledBy: true
+        })
     )
+
+    reportControlId(formFieldContext, () => resolvedId)
 
     // ---- Created items (internal state for createItem) ----
     let createdItems = $state<SelectMenuItem[]>([])
@@ -549,13 +554,7 @@
             aria-label={searchPlaceholder}
         />
 
-        <Combobox.Trigger
-            {...restProps}
-            id={resolvedId}
-            aria-describedby={ariaDescribedBy}
-            aria-invalid={resolvedHighlight ? true : undefined}
-            class={baseClass}
-        >
+        <Combobox.Trigger {...restProps} id={resolvedId} {...controlAttributes} class={baseClass}>
             {#snippet child({ props })}
                 <div {...props} role="button" tabindex={disabled ? -1 : 0}>
                     {#if selectedSlot && hasSelection}
