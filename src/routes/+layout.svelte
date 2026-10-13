@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { ModeWatcher } from 'mode-watcher'
-    import { toggleMode, mode } from 'mode-watcher'
-    import { Button, Icon, Link, Main } from '$lib/index.js'
+    import { Button, Icon, Link, Main, ThemeMode, ThemeModeButton, mode } from '$lib/index.js'
     import './layout.css'
     import '../sv5ui.config.js'
 
@@ -125,7 +123,7 @@
     let sidebarOpen = $state(false)
 </script>
 
-<ModeWatcher />
+<ThemeMode />
 
 <div class="min-h-screen bg-surface text-on-surface">
     <!-- Header -->
@@ -157,14 +155,7 @@
                     label="Donate"
                     size="sm"
                 />
-                <Button
-                    variant="ghost"
-                    color="secondary"
-                    icon={mode.current === 'dark' ? 'lucide:sun' : 'lucide:moon'}
-                    onclick={toggleMode}
-                    square
-                    size="sm"
-                />
+                <ThemeModeButton color="secondary" size="sm" />
             </div>
         </div>
     </header>

@@ -15,7 +15,7 @@ defineConfig({
         '<script>\n' +
         "    import 'sv5ui/theme.css'\n" +
         "    import '../sv5ui.config'  // Add this line\n" +
-        "    import { ModeWatcher } from 'sv5ui'\n" +
+        "    import { ThemeMode } from 'sv5ui'\n" +
         '<' +
         '/script>'
 
