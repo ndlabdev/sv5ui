@@ -414,4 +414,168 @@ describe('FormField label target', () => {
         )
         expect(labelOf().hasAttribute('for')).toBe(false)
     })
+
+    it.each(
+        cases
+            .filter((c) => ['CheckboxGroup', 'RadioGroup'].includes(c.name))
+            .map((c) => [c.name, c] as const)
+    )('%s in a second field with the same name selects its own item', async (_name, c) => {
+        const first = vi.fn()
+        const second = vi.fn()
+        const withHandler = (onValueChange: () => void): Case => ({
+            ...c,
+            props: { ...c.props, onValueChange }
+        })
+        vi.spyOn(console, 'warn').mockImplementation(() => {})
+        render(FormField, { name: 'plan', label: 'A', children: inField(withHandler(first)) })
+        const { container } = render(FormField, {
+            name: 'plan',
+            label: 'B',
+            children: inField(withHandler(second))
+        })
+        await vi.waitFor(() =>
+            expect(container.querySelectorAll('label').length).toBeGreaterThan(1)
+        )
+        const itemLabel = Array.from(container.querySelectorAll('label')).find(
+            (label) => label.textContent?.trim() === 'Option B'
+        ) as HTMLLabelElement
+        itemLabel.click()
+        await vi.waitFor(() => expect(second).toHaveBeenCalled())
+        expect(first).not.toHaveBeenCalled()
+    })
+
+    it.each(cases.map((c) => [c.name, c] as const))(
+        '%s reports whether its element can be the target of a label',
+        (_name, c) => {
+            const setControlId = vi.fn()
+            const { container } = mount(c, { id: 'my-id' }, field({ setControlId }))
+            const [id, labelable] = setControlId.mock.calls.at(-1) as [string, boolean]
+            const tag = container.querySelector(`#${id}`)?.tagName ?? ''
+            expect(labelable).toBe(LABELABLE.includes(tag))
+        }
+    )
+})
+
+describe('FormField ids', () => {
+    const input = cases.find((c) => c.name === 'Input') as Case
+
+    const inputIn = (scope: Element) => {
+        const element = scope.querySelector('input')
+        expect(element).not.toBeNull()
+        return element as HTMLInputElement
+    }
+
+    const resolves = (list: string | null) =>
+        (list ?? '')
+            .split(/\s+/)
+            .filter(Boolean)
+            .every((id) => !!document.getElementById(id))
+
+    const inputField = (props: Record<string, unknown>) =>
+        createRawSnippet(() => {
+            const context = getContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY)
+            return {
+                render: () => '<div></div>',
+                setup: (target) => {
+                    const instance = mountIn(input.component, {
+                        target,
+                        props,
+                        context: new Map([[FORM_FIELD_CONTEXT_KEY, context]])
+                    })
+                    return () => unmount(instance)
+                }
+            }
+        })
+
+    it('uses ariaId as the base of every published id', async () => {
+        const { container } = render(FormField, {
+            name: 'email',
+            ariaId: 'signup-email',
+            label: 'Email',
+            description: 'Work address',
+            children: inputField({})
+        })
+        await vi.waitFor(() => expect(inputIn(container).id).toBe('signup-email'))
+        const label = container.querySelector('label') as HTMLLabelElement
+        expect(label.id).toBe('signup-email-label')
+        expect(label.htmlFor).toBe('signup-email')
+        expect(inputIn(container).getAttribute('aria-describedby')).toBe('signup-email-description')
+        expect(resolves(inputIn(container).getAttribute('aria-describedby'))).toBe(true)
+    })
+
+    it('keeps two fields with the same name apart when their ariaId differs', async () => {
+        const login = render(FormField, {
+            name: 'email',
+            ariaId: 'login-email',
+            label: 'Login email',
+            children: inputField({})
+        })
+        const signup = render(FormField, {
+            name: 'email',
+            ariaId: 'signup-email',
+            label: 'Signup email',
+            children: inputField({})
+        })
+        await vi.waitFor(() => expect(inputIn(signup.container).labels).toHaveLength(1))
+        expect(inputIn(signup.container).labels?.[0].textContent?.trim()).toBe('Signup email')
+        expect(inputIn(login.container).labels?.[0].textContent?.trim()).toBe('Login email')
+    })
+
+    it('replaces whitespace in an id derived from the name', async () => {
+        const { container } = render(FormField, {
+            name: ' first  name ',
+            label: 'First name',
+            description: 'As on your passport',
+            children: inputField({})
+        })
+        await vi.waitFor(() => expect(inputIn(container).id).toBe('form-field-first-name'))
+        expect(resolves(inputIn(container).getAttribute('aria-describedby'))).toBe(true)
+        expect(inputIn(container).labels).toHaveLength(1)
+    })
+
+    it('warns once when a second field publishes the same ids', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        render(FormField, { name: 'dup-warn', label: 'One', children: inputField({}) })
+        render(FormField, { name: 'dup-warn', label: 'Two', children: inputField({}) })
+        render(FormField, { name: 'dup-warn', label: 'Three', children: inputField({}) })
+        await vi.waitFor(() => expect(warn).toHaveBeenCalled())
+        const messages = warn.mock.calls.map(([message]) => String(message))
+        expect(messages.filter((m) => m.includes('"form-field-dup-warn"'))).toHaveLength(1)
+        expect(messages.filter((m) => m.includes('"form-field-dup-warn-label"'))).toHaveLength(1)
+        expect(messages[0]).toContain('ariaId')
+    })
+
+    it('does not warn when fields that share a name have distinct ariaId', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        const { container } = render(FormField, {
+            name: 'shared',
+            ariaId: 'shared-one',
+            label: 'One',
+            children: inputField({})
+        })
+        render(FormField, {
+            name: 'shared',
+            ariaId: 'shared-two',
+            label: 'Two',
+            children: inputField({})
+        })
+        await vi.waitFor(() => expect(inputIn(container).id).toBe('shared-one'))
+        expect(warn).not.toHaveBeenCalled()
+    })
+
+    it('follows a new ariaId on re-render', async () => {
+        const { container, rerender } = render(FormField, {
+            ariaId: 'first',
+            label: 'Field',
+            description: 'Help',
+            children: inputField({})
+        })
+        await vi.waitFor(() => expect(inputIn(container).id).toBe('first'))
+        await rerender({ ariaId: 'second' })
+        await vi.waitFor(() => expect(inputIn(container).id).toBe('second'))
+        const label = container.querySelector('label') as HTMLLabelElement
+        expect(label.id).toBe('second-label')
+        expect(label.htmlFor).toBe('second')
+        expect(resolves(inputIn(container).getAttribute('aria-describedby'))).toBe(true)
+    })
 })

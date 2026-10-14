@@ -7,11 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **FormField** — `ariaId` prop sets the base of the ids the field publishes (label, description, help, error and the default control id). Set it when two fields with the same `name` render on one page, such as a sign in and a sign up form, since `form-field-<name>` would otherwise repeat and the second field's label and description point at the first field.
+- **FormField** — logs a one time console warning when an id it publishes already exists on the page, naming the id and pointing at `ariaId`.
+
+### Changed
+
+- The `svelte` peer dependency is now `^5.33.0`, up from `^5.0.0`. sv5ui uses `$props.id()`, which needs Svelte 5.20, and `bits-ui` already required 5.33, so no install that worked before is affected.
+- **CheckboxGroup**, **RadioGroup** — item ids and the RadioGroup legend id come from the component instance instead of `<id>-<value>`, so they stay unique when two groups share an `id` or a field `name`, contain no whitespace, and match between server and client. The `id` prop still sets the id of the group. A selector such as `#plan-basic` for an item no longer matches; select it through the group, for example `#plan [role="checkbox"]`.
+
 ### Fixed
 
 - **Textarea** — with `loading` and `trailing`, the spinner spins again when the field also has a `leadingSlot` or `leadingIcon`, and the leading icon no longer spins in its place.
-- **FormField** — the label drops `for` when the control is not an element `<label for>` can target, so it no longer points at a `div` or `span` (SelectMenu, Rating, RadioGroup, Slider, ColorPicker) or at an id that does not exist (CheckboxGroup). The control stays named through `aria-labelledby`. `setControlId` on the field context takes an optional `labelable` argument for custom controls.
+- **FormField** — the label drops `for` when the control is not an element `<label for>` can target, so it no longer points at a `div` or `span` (SelectMenu, Rating, RadioGroup, Slider, ColorPicker) or at an id that does not exist (CheckboxGroup). The control stays named through `aria-labelledby`. `setControlId` on the field context takes an optional `labelable` argument for custom controls. With server rendering the label still carries `for` until the page hydrates, since the control reports itself from the client.
 - **CheckboxGroup** — the `fieldset` carries the field id, so `Form` errors point at an element that exists. **RadioGroup**, **Slider** and **ColorPicker** report a user `id` to `FormField` like the other controls.
+- **FormField** — whitespace in `name` becomes `-` in the ids, so `name="first name"` no longer splits `aria-describedby` into two ids that do not exist. Names without whitespace keep the same ids.
+- **CheckboxGroup**, **RadioGroup** — with two groups that share an `id` or a field `name`, clicking an item label, or a card with `variant="card"`, selects the item of that group instead of the first group, and each item is named by its own label. The two group ids still repeat, so give fields that share a name a distinct `ariaId`.
 - **ThemeModeButton** — without `ThemeMode`, applies the stored mode when it mounts, so after a reload the page matches `mode.current` and the first click switches the visible mode.
 - **ThemeMode** — `setMode` with the mode already stored no longer dispatches a `storage` event.
 

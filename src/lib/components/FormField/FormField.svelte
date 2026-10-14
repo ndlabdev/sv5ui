@@ -2,10 +2,12 @@
     import type { FormFieldProps } from './form-field.types.js'
 
     export type Props = FormFieldProps
+
+    const warnedDuplicateIds: Record<string, true> = {}
 </script>
 
 <script lang="ts">
-    import { Label, useId } from 'bits-ui'
+    import { Label } from 'bits-ui'
     import { formFieldVariants, formFieldDefaults } from './form-field.variants.js'
     import { getComponentConfig } from '../../config.js'
     import { setContext, untrack } from 'svelte'
@@ -21,6 +23,7 @@
         ref = $bindable(null),
         ui,
         name,
+        ariaId: ariaIdProp,
         label,
         description,
         hint,
@@ -42,8 +45,10 @@
         ...restProps
     }: Props = $props()
 
-    const id = useId()
-    const ariaId = $derived(name ? `form-field-${name}` : id)
+    const id = $props.id()
+    const toId = (value: string | undefined) => value?.trim().replace(/\s+/g, '-') || undefined
+    const nameId = $derived(toId(name))
+    const ariaId = $derived(toId(ariaIdProp) ?? (nameId ? `form-field-${nameId}` : id))
     let controlId = $state<string | undefined>()
     let controlLabelable = $state(true)
     const fieldId = $derived(controlId ?? ariaId)
@@ -130,6 +135,20 @@
             .filter(Boolean)
             .join(' ')
     )
+
+    $effect(() => {
+        for (const published of [fieldId, labelId]) {
+            if (!published || warnedDuplicateIds[published]) continue
+            if (document.querySelectorAll(`[id="${CSS.escape(published)}"]`).length < 2) continue
+            warnedDuplicateIds[published] = true
+            // eslint-disable-next-line no-console
+            console.warn(
+                `[sv5ui FormField] The id "${published}" appears more than once on the page, ` +
+                    'so a label or description can point at the wrong field. ' +
+                    'Give fields that share a name a distinct ariaId.'
+            )
+        }
+    })
 
     setContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY, {
         get name() {

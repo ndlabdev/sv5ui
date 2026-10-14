@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-    import { RadioGroup, Label, useId } from 'bits-ui'
+    import { RadioGroup, Label } from 'bits-ui'
     import { radioGroupVariants, radioGroupDefaults } from './radio-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
@@ -57,11 +57,11 @@
     )
     const resolvedSize = $derived(size ?? formFieldContext?.size ?? config.defaultVariants.size)
     const resolvedColor = $derived(hasError ? 'error' : color)
-    const autoId = useId()
-    const resolvedId = $derived(id ?? formFieldContext?.ariaId ?? autoId)
+    const uid = $props.id()
+    const resolvedId = $derived(id ?? formFieldContext?.ariaId ?? uid)
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
-    const legendId = $derived(`${resolvedId}-legend`)
+    const legendId = `${uid}-legend`
 
     const splitProps = $derived(splitControlProps(restProps))
     const groupFocus = $derived(groupFocusHandlers(splitProps.root))
@@ -72,7 +72,7 @@
         })
     )
 
-    reportControlId(formFieldContext, () => resolvedId, false)
+    reportControlId(formFieldContext, () => resolvedId, { labelable: false })
 
     const slots = $derived(
         radioGroupVariants({
@@ -104,15 +104,18 @@
         description: slots.description({ class: [config.slots.description, ui?.description] })
     }))
 
-    function handleCardItemClick(e: MouseEvent, btnId: string, itemDisabled: boolean) {
+    function handleCardItemClick(
+        e: MouseEvent & { currentTarget: HTMLElement },
+        itemDisabled: boolean
+    ) {
         if (itemDisabled) return
         if ((e.target as Element).closest('button')) return
-        document.getElementById(btnId)?.click()
+        e.currentTarget.querySelector<HTMLElement>('[role=radio]')?.click()
     }
 </script>
 
-{#snippet itemContent(radioItem: RadioGroupItem)}
-    {@const itemId = `${resolvedId}-${radioItem.value}`}
+{#snippet itemContent(radioItem: RadioGroupItem, index: number)}
+    {@const itemId = `${uid}-item-${index}`}
     {@const itemDisabled = isDisabled || !!radioItem.disabled}
     <div class={layoutClasses.container}>
         <RadioGroup.Item
@@ -210,27 +213,22 @@
             {/if}
         {/if}
 
-        {#each items as radioItem (radioItem.value)}
+        {#each items as radioItem, index (radioItem.value)}
             {#if variant === 'card'}
                 <div
                     role="none"
                     class={layoutClasses.item}
                     class:opacity-75={radioItem.disabled && !isDisabled}
-                    onclick={(e) =>
-                        handleCardItemClick(
-                            e,
-                            `${resolvedId}-${radioItem.value}`,
-                            isDisabled || !!radioItem.disabled
-                        )}
+                    onclick={(e) => handleCardItemClick(e, isDisabled || !!radioItem.disabled)}
                 >
-                    {@render itemContent(radioItem)}
+                    {@render itemContent(radioItem, index)}
                 </div>
             {:else}
                 <div
                     class={layoutClasses.item}
                     class:opacity-75={radioItem.disabled && !isDisabled}
                 >
-                    {@render itemContent(radioItem)}
+                    {@render itemContent(radioItem, index)}
                 </div>
             {/if}
         {/each}

@@ -61,7 +61,7 @@
         })
     )
 
-    reportControlId(formFieldContext, () => resolvedId, false)
+    reportControlId(formFieldContext, () => resolvedId, { labelable: false })
 
     const asArray = $derived(Array.isArray(value) ? value : [value ?? min])
     const isMultiple = $derived(Array.isArray(value))

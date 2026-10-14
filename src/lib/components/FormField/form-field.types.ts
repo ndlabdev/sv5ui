@@ -15,6 +15,15 @@ export type FormFieldProps = Omit<HTMLAttributes<HTMLDivElement>, 'class'> & {
     name?: string
 
     /**
+     * Base for the ids the field publishes: the label (`<ariaId>-label`), the description,
+     * help and error elements, and the default id of the control inside.
+     * Defaults to `form-field-<name>`, or a generated id without `name`.
+     * Set it when two fields with the same `name` render on one page, so their ids stay unique.
+     * Whitespace is replaced with `-`, since an id cannot contain it.
+     */
+    ariaId?: string
+
+    /**
      * The label text displayed above the form control.
      */
     label?: string

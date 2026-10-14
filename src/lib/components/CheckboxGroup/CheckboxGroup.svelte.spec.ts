@@ -45,10 +45,12 @@ describe('CheckboxGroup', () => {
             expect(hidden).toBeTruthy()
         })
 
-        it('should render item ids with prefix', () => {
+        it('should put the id on the fieldset and give each checkbox its own id', () => {
             render(CheckboxGroup, { items: defaultItems, id: 'test' })
-            expect(getCheckbox(0).id).toBe('test-a')
-            expect(getCheckbox(1).id).toBe('test-b')
+            expect(document.querySelector('fieldset')!.id).toBe('test')
+            const ids = Array.from(getCheckboxes()).map((checkbox) => checkbox.id)
+            expect(new Set(ids).size).toBe(3)
+            expect(ids.every((id) => id && !id.startsWith('test-'))).toBe(true)
         })
 
         it('should auto-generate ids', () => {
@@ -249,7 +251,7 @@ describe('CheckboxGroup', () => {
 
         it('should associate label with checkbox via for attribute', () => {
             render(CheckboxGroup, { items: defaultItems, id: 'grp' })
-            const label = document.querySelector('label[for="grp-a"]')
+            const label = document.querySelector(`label[for="${getCheckbox(0).id}"]`)
             expect(label).toBeTruthy()
             expect(label!.textContent?.trim()).toBe('Option A')
         })
@@ -321,6 +323,107 @@ describe('CheckboxGroup', () => {
             })
             expect(getCheckbox(0).className).toMatch(/bg-success/)
             expect(getCheckbox(0).className).toMatch(/size-5/)
+        })
+    })
+
+    describe('card variant', () => {
+        const cards = (container: Element) =>
+            Array.from(container.querySelectorAll<HTMLElement>('[role="none"]'))
+
+        it('toggles its own item when the card is clicked', async () => {
+            const onValueChange = vi.fn()
+            const { container } = render(CheckboxGroup, {
+                items: defaultItems,
+                variant: 'card',
+                onValueChange
+            })
+            cards(container)[1].click()
+            await vi.waitFor(() => expect(onValueChange).toHaveBeenLastCalledWith(['b']))
+            expect(getCheckbox(1).getAttribute('aria-checked')).toBe('true')
+        })
+
+        it('toggles once when the checkbox inside the card is clicked', async () => {
+            const onValueChange = vi.fn()
+            render(CheckboxGroup, { items: defaultItems, variant: 'card', onValueChange })
+            getCheckbox(0).click()
+            await vi.waitFor(() => expect(onValueChange).toHaveBeenCalledOnce())
+            expect(onValueChange).toHaveBeenLastCalledWith(['a'])
+        })
+
+        it('ignores a click on a disabled item card', async () => {
+            const onValueChange = vi.fn()
+            const { container } = render(CheckboxGroup, {
+                items: [...defaultItems.slice(0, 2), { value: 'c', label: 'C', disabled: true }],
+                variant: 'card',
+                onValueChange
+            })
+            cards(container)[2].click()
+            await new Promise((resolve) => setTimeout(resolve, 50))
+            expect(onValueChange).not.toHaveBeenCalled()
+        })
+
+        it('toggles the item of its own group when another group shares the id', async () => {
+            const first = vi.fn()
+            const second = vi.fn()
+            render(CheckboxGroup, {
+                id: 'terms',
+                items: defaultItems,
+                variant: 'card',
+                onValueChange: first
+            })
+            const { container } = render(CheckboxGroup, {
+                id: 'terms',
+                items: defaultItems,
+                variant: 'card',
+                onValueChange: second
+            })
+            cards(container)[0].click()
+            await vi.waitFor(() => expect(second).toHaveBeenLastCalledWith(['a']))
+            expect(first).not.toHaveBeenCalled()
+        })
+    })
+
+    describe('item ids', () => {
+        const labelIn = (container: Element, text: string) =>
+            Array.from(container.querySelectorAll('label')).find(
+                (label) => label.textContent?.trim() === text
+            ) as HTMLLabelElement
+
+        const controlsIn = (container: Element) =>
+            Array.from(container.querySelectorAll<HTMLButtonElement>('button[role="checkbox"]'))
+
+        it('checks the item of its own group when its label is clicked and another group shares the id', async () => {
+            const first = vi.fn()
+            const second = vi.fn()
+            render(CheckboxGroup, { id: 'same', items: defaultItems, onValueChange: first })
+            const { container } = render(CheckboxGroup, {
+                id: 'same',
+                items: defaultItems,
+                onValueChange: second
+            })
+            labelIn(container, 'Option B').click()
+            await vi.waitFor(() => expect(second).toHaveBeenLastCalledWith(['b']))
+            expect(first).not.toHaveBeenCalled()
+        })
+
+        it('names each item by its own label when another group shares the id', () => {
+            render(CheckboxGroup, { id: 'same', items: defaultItems })
+            const { container } = render(CheckboxGroup, { id: 'same', items: defaultItems })
+            const names = controlsIn(container).map((control) =>
+                Array.from(control.labels ?? []).map((label) => label.textContent?.trim())
+            )
+            expect(names).toEqual([['Option A'], ['Option B'], ['Option C']])
+        })
+
+        it('keeps item ids free of whitespace when a value contains it', async () => {
+            const onValueChange = vi.fn()
+            const { container } = render(CheckboxGroup, {
+                items: [{ value: 'extra cheese', label: 'Extra cheese' }],
+                onValueChange
+            })
+            expect(controlsIn(container)[0].id).not.toMatch(/\s/)
+            labelIn(container, 'Extra cheese').click()
+            await vi.waitFor(() => expect(onValueChange).toHaveBeenLastCalledWith(['extra cheese']))
         })
     })
 })

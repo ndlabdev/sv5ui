@@ -89,7 +89,7 @@
         fieldControlAttributes(formFieldContext, {}, hasError, { invalid: true })
     )
 
-    reportControlId(formFieldContext, () => resolvedId, false)
+    reportControlId(formFieldContext, () => resolvedId, { labelable: false })
 
     let hsva = $state<Hsva>(parseColor(value) ?? { h: 0, s: 0, v: 0, a: 1 })
     let lastEmitted = value
