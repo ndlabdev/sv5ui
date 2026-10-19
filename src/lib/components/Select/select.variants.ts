@@ -146,25 +146,25 @@ export const selectVariants = tv({
         side: {
             top: {
                 content:
-                    'data-[state=open]:animate-[slide-in-from-bottom_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-top_100ms_ease-in_reverse]'
+                    'data-[state=open]:animate-[slide-in-from-bottom_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-top_100ms_ease-in_reverse_forwards]'
             },
             right: {
                 content:
-                    'data-[state=open]:animate-[slide-in-from-left_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-right_100ms_ease-in_reverse]'
+                    'data-[state=open]:animate-[slide-in-from-left_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-right_100ms_ease-in_reverse_forwards]'
             },
             bottom: {
                 content:
-                    'data-[state=open]:animate-[slide-in-from-top_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-bottom_100ms_ease-in_reverse]'
+                    'data-[state=open]:animate-[slide-in-from-top_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-bottom_100ms_ease-in_reverse_forwards]'
             },
             left: {
                 content:
-                    'data-[state=open]:animate-[slide-in-from-right_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-left_100ms_ease-in_reverse]'
+                    'data-[state=open]:animate-[slide-in-from-right_150ms_ease-out] data-[state=closed]:animate-[slide-in-from-left_100ms_ease-in_reverse_forwards]'
             }
         },
         transition: {
             true: {
                 content:
-                    'data-[state=open]:animate-[fade-in_150ms_ease-out,scale-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in,scale-out_100ms_ease-in]'
+                    'data-[state=open]:animate-[fade-in_150ms_ease-out,scale-in_150ms_ease-out] data-[state=closed]:animate-[fade-out_100ms_ease-in_forwards,scale-out_100ms_ease-in_forwards]'
             }
         }
     },

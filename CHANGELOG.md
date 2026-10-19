@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Modal**, **Slideover**, **Lightbox**, **Select**, **Accordion**, **Collapsible**, **ScrollArea**, **NavigationMenu** — closing animations keep their last frame, so the element no longer flashes back for one frame before it is removed. This showed up with Svelte's `experimental.async` enabled. With `unmountOnHide: false`, the previous NavigationMenu panel also no longer stays visible behind the new one. ([#245](https://github.com/ndlabdev/sv5ui/issues/245))
+- **Popover**, **DropdownMenu**, **ContextMenu**, **Tooltip**, **DatePicker**, **DateRangePicker**, **Tour** — open and close animations now play. They used utility classes from an animation plugin that sv5ui does not ship, so no CSS was generated for them. They now zoom and fade with the keyframes in `theme.css`, like Select. Apps that installed such a plugin themselves lose the small slide toward the trigger. ([#245](https://github.com/ndlabdev/sv5ui/issues/245))
+- **Modal** — `transition: 'slide'` animates on close, and the content fades while it slides. It referenced a `slide-out-to-top` keyframe that was missing from `theme.css`, and only moved the content by 0.5rem, so the dialog popped in and out. ([#245](https://github.com/ndlabdev/sv5ui/issues/245))
+
 ## [2.9.0] - 2026-10-13
 
 ### Added

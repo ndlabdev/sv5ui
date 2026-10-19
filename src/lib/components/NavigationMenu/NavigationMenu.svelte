@@ -720,7 +720,7 @@
                     onOpenChange={(open) => handleFlyoutChange(open, iv)}
                     ui={{
                         content:
-                            'origin-left data-[state=open]:animate-[zoom-in_150ms_ease] data-[state=closed]:animate-[zoom-out_150ms_ease]'
+                            'origin-left data-[state=open]:animate-[zoom-in_150ms_ease] data-[state=closed]:animate-[zoom-out_150ms_ease_forwards]'
                     }}
                 >
                     <span
