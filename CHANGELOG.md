@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Lightbox** — double-clicking the previous/next arrows no longer zooms the image. Clicking an arrow twice quickly used to zoom the new slide around the arrow and push it half off screen. ([#246](https://github.com/ndlabdev/sv5ui/issues/246))
+- **Lightbox** — the caption text can be clicked, selected and copied, and links or buttons in `captionSlot` work. Clicking the caption text used to close the viewer because pointer events passed through it to the backdrop. Clicking the gradient around the text still closes the viewer, and dragging or double-clicking the text no longer swipes or zooms. ([#246](https://github.com/ndlabdev/sv5ui/issues/246))
+- **Lightbox** — the `track` slot is rendered around the slides, so `ui.track` now applies. It had no effect before. ([#246](https://github.com/ndlabdev/sv5ui/issues/246))
+- **Lightbox** — a zoomed image can no longer be panned past its own edges, so no empty backdrop shows beside it. The pan limit now follows the rendered image size (and its rotation) instead of the stage size. This applies to wheel, pinch, drag, double-click and keyboard zoom. ([#246](https://github.com/ndlabdev/sv5ui/issues/246))
+
 ## [2.9.0] - 2026-10-13
 
 ### Added
