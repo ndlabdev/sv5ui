@@ -8,7 +8,7 @@ export const accordionVariants = tv({
         trigger:
             'group flex-1 flex items-center gap-1.5 font-medium text-sm py-3.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-w-0',
         content:
-            'data-[state=open]:animate-[accordion-down_200ms_ease-out] data-[state=closed]:animate-[accordion-up_200ms_ease-out] overflow-hidden focus:outline-none',
+            'data-[state=open]:animate-[accordion-down_200ms_ease-out] data-[state=closed]:animate-[accordion-up_200ms_ease-out_forwards] overflow-hidden focus:outline-none',
         body: 'text-sm pb-3.5',
         leadingIcon: 'shrink-0 size-5',
         trailingIcon:

@@ -19,19 +19,19 @@ export const slideoverVariants = tv({
             none: {},
             fade: {
                 overlay:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]',
                 content:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]'
             },
             slide: {
                 overlay:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]'
             },
             scale: {
                 overlay:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]',
                 content:
-                    'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)]'
+                    'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)_forwards]'
             }
         },
         side: {
@@ -74,7 +74,7 @@ export const slideoverVariants = tv({
             side: 'top',
             class: {
                 content:
-                    'data-[state=open]:animate-[slide-in-full-top_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-top_150ms_ease-in,fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[slide-in-full-top_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-top_150ms_ease-in_forwards,fade-out_150ms_ease-in_forwards]'
             }
         },
         {
@@ -82,7 +82,7 @@ export const slideoverVariants = tv({
             side: 'right',
             class: {
                 content:
-                    'data-[state=open]:animate-[slide-in-full-right_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-right_150ms_ease-in,fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[slide-in-full-right_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-right_150ms_ease-in_forwards,fade-out_150ms_ease-in_forwards]'
             }
         },
         {
@@ -90,7 +90,7 @@ export const slideoverVariants = tv({
             side: 'bottom',
             class: {
                 content:
-                    'data-[state=open]:animate-[slide-in-full-bottom_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-bottom_150ms_ease-in,fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[slide-in-full-bottom_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-bottom_150ms_ease-in_forwards,fade-out_150ms_ease-in_forwards]'
             }
         },
         {
@@ -98,7 +98,7 @@ export const slideoverVariants = tv({
             side: 'left',
             class: {
                 content:
-                    'data-[state=open]:animate-[slide-in-full-left_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-left_150ms_ease-in,fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[slide-in-full-left_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-full-left_150ms_ease-in_forwards,fade-out_150ms_ease-in_forwards]'
             }
         },
         // Sizes — left/right control width, top/bottom control height

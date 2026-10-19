@@ -47,8 +47,8 @@ export const navigationMenuVariants = tv({
             'top-0 left-0 w-full sm:absolute sm:w-auto',
             'data-[motion=from-start]:animate-[nav-from-start_250ms_ease]',
             'data-[motion=from-end]:animate-[nav-from-end_250ms_ease]',
-            'data-[motion=to-start]:animate-[nav-to-start_250ms_ease]',
-            'data-[motion=to-end]:animate-[nav-to-end_250ms_ease]'
+            'data-[motion=to-start]:animate-[nav-to-start_250ms_ease_forwards]',
+            'data-[motion=to-end]:animate-[nav-to-end_250ms_ease_forwards]'
         ],
         viewportWrapper:
             'absolute top-full left-0 z-50 flex w-full justify-start pt-1.5 [perspective:2000px]',
@@ -58,12 +58,12 @@ export const navigationMenuVariants = tv({
             'sm:[inset-inline-start:clamp(0px,calc(var(--sv5ui-nav-trigger-start)_+_(var(--sv5ui-nav-trigger-width)_-_var(--bits-navigation-menu-viewport-width))_*_var(--sv5ui-nav-align)),calc(100%_-_var(--bits-navigation-menu-viewport-width)))]',
             'transition-[width,height,inset-inline-start] duration-200 data-[instant]:transition-none',
             'data-[state=open]:animate-[nav-scale-in_200ms_ease]',
-            'data-[state=closed]:animate-[nav-scale-out_200ms_ease]'
+            'data-[state=closed]:animate-[nav-scale-out_200ms_ease_forwards]'
         ],
         indicator: [
             'top-full z-50 flex h-2 items-end justify-center overflow-hidden',
             'data-[state=visible]:animate-[fade-in_150ms_ease]',
-            'data-[state=hidden]:animate-[fade-out_150ms_ease]'
+            'data-[state=hidden]:animate-[fade-out_150ms_ease_forwards]'
         ],
         arrow: 'relative top-[60%] size-2 rotate-45 rounded-tl-sm border-t border-l border-outline-variant bg-surface-container-low',
         toggle: '',
