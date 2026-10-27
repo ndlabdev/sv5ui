@@ -1,6 +1,5 @@
 <script lang="ts">
-    const configCode = `// src/sv5ui.config.ts
-import { defineConfig } from 'sv5ui'
+    const configCode = `// src/sv5ui.config.ts\nimport { defineConfig } from 'sv5ui'
 
 defineConfig({
     button: {
