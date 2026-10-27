@@ -203,6 +203,10 @@ export function applyMode(): void {
     untrack(() => withoutTransition(writeMode))
 }
 
+export function applyModeOnce(): void {
+    if (!applied) applyMode()
+}
+
 export function applyTheme(): void {
     if (!isBrowser) return
     untrack(() => {
@@ -231,7 +235,7 @@ export function setMode(value: ColorMode): void {
         const previous = readStored(key)
         writeStored(key, value)
         version++
-        announce(key, previous, value)
+        if (previous !== value) announce(key, previous, value)
     })
     applyMode()
 }

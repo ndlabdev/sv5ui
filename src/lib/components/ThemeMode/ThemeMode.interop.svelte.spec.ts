@@ -118,12 +118,23 @@ describe('ThemeMode with a separate mode-watcher instance', () => {
 
     describe('storage event announcement', () => {
         it('announces each sv5ui change as a storage event for the mode key', () => {
+            sv5ui.setMode('light')
             const keys: (string | null)[] = []
             const listener = (event: StorageEvent) => keys.push(event.key)
             window.addEventListener('storage', listener)
             sv5ui.setMode('dark')
             window.removeEventListener('storage', listener)
             expect(keys).toEqual([KEY])
+        })
+
+        it('does not announce a call that leaves the mode unchanged', () => {
+            sv5ui.setMode('dark')
+            const listener = vi.fn()
+            window.addEventListener('storage', listener)
+            sv5ui.setMode('dark')
+            window.removeEventListener('storage', listener)
+            expect(listener).not.toHaveBeenCalled()
+            expect(localStorage.getItem(KEY)).toBe('dark')
         })
     })
 

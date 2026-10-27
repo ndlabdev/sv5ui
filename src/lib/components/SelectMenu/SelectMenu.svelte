@@ -126,7 +126,7 @@
         })
     )
 
-    reportControlId(formFieldContext, () => resolvedId)
+    reportControlId(formFieldContext, () => resolvedId, { labelable: false })
 
     // ---- Created items (internal state for createItem) ----
     let createdItems = $state<SelectMenuItem[]>([])

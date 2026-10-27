@@ -6,7 +6,12 @@
 
 <script lang="ts">
     import { onMount } from 'svelte'
-    import { mode, toggleMode, warnOnForeignWatcher } from '../ThemeMode/mode.svelte.js'
+    import {
+        applyModeOnce,
+        mode,
+        toggleMode,
+        warnOnForeignWatcher
+    } from '../ThemeMode/mode.svelte.js'
     import {
         themeModeButtonVariants,
         themeModeButtonDefaults
@@ -43,7 +48,10 @@
         return result
     }
 
-    onMount(warnOnForeignWatcher)
+    onMount(() => {
+        warnOnForeignWatcher()
+        applyModeOnce()
+    })
 
     const isDark = $derived(mode.current === 'dark')
     const resolvedSize = $derived(

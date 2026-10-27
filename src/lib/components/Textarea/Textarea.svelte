@@ -195,7 +195,9 @@
 <div class={classes.root}>
     {#if loadingLeading}
         <span class={classes.leading}>
-            <Icon name={loadingIcon} class={classes.leadingIcon} />
+            <span class="inline-flex animate-spin">
+                <Icon name={loadingIcon} class={classes.leadingIcon} />
+            </span>
         </span>
     {:else if leadingSlot}
         <span class={classes.leading}>
@@ -225,7 +227,9 @@
 
     {#if loadingTrailing}
         <span class={classes.trailing}>
-            <Icon name={loadingIcon} class={classes.trailingIcon} />
+            <span class="inline-flex animate-spin">
+                <Icon name={loadingIcon} class={classes.trailingIcon} />
+            </span>
         </span>
     {:else if trailingSlot}
         <span class={classes.trailing}>

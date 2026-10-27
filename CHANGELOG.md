@@ -7,8 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **FormField** — `ariaId` prop sets the base of the ids the field publishes (label, description, help, error and the default control id). Set it when two fields with the same `name` render on one page, such as a sign in and a sign up form, since `form-field-<name>` would otherwise repeat and the second field's label and description point at the first field.
+- **FormField** — logs a one time console warning when an id it publishes already exists on the page, naming the id and pointing at `ariaId`.
+
+### Changed
+
+- The `svelte` peer dependency is now `^5.33.0`, up from `^5.0.0`. sv5ui uses `$props.id()`, which needs Svelte 5.20, and `bits-ui` already required 5.33, so no install that worked before is affected.
+- **CheckboxGroup**, **RadioGroup** — item ids and the RadioGroup legend id come from the component instance instead of `<id>-<value>`, so they stay unique when two groups share an `id` or a field `name`, contain no whitespace, and match between server and client. The `id` prop still sets the id of the group. A selector such as `#plan-basic` for an item no longer matches; select it through the group, for example `#plan [role="checkbox"]`.
+
 ### Fixed
 
+- **Textarea** — with `loading` and `trailing`, the spinner spins again when the field also has a `leadingSlot` or `leadingIcon`, and the leading icon no longer spins in its place.
+- **FormField** — the label drops `for` when the control is not an element `<label for>` can target, so it no longer points at a `div` or `span` (SelectMenu, Rating, RadioGroup, Slider, ColorPicker) or at an id that does not exist (CheckboxGroup). The control stays named through `aria-labelledby`. `setControlId` on the field context takes an optional `labelable` argument for custom controls. With server rendering the label still carries `for` until the page hydrates, since the control reports itself from the client.
+- **CheckboxGroup** — the `fieldset` carries the field id, so `Form` errors point at an element that exists. **RadioGroup**, **Slider** and **ColorPicker** report a user `id` to `FormField` like the other controls.
+- **FormField** — whitespace in `name` becomes `-` in the ids, so `name="first name"` no longer splits `aria-describedby` into two ids that do not exist. Names without whitespace keep the same ids.
+- **CheckboxGroup**, **RadioGroup** — with two groups that share an `id` or a field `name`, clicking an item label, or a card with `variant="card"`, selects the item of that group instead of the first group, and each item is named by its own label. The two group ids still repeat, so give fields that share a name a distinct `ariaId`.
+- **ThemeModeButton** — without `ThemeMode`, applies the stored mode when it mounts, so after a reload the page matches `mode.current` and the first click switches the visible mode.
+- **ThemeMode** — `setMode` with the mode already stored no longer dispatches a `storage` event.
 - **Modal**, **Slideover**, **Lightbox**, **Select**, **Accordion**, **Collapsible**, **ScrollArea**, **NavigationMenu** — closing animations keep their last frame, so the element no longer flashes back for one frame before it is removed. This showed up with Svelte's `experimental.async` enabled. With `unmountOnHide: false`, the previous NavigationMenu panel also no longer stays visible behind the new one. ([#245](https://github.com/ndlabdev/sv5ui/issues/245))
 - **Popover**, **DropdownMenu**, **ContextMenu**, **Tooltip**, **DatePicker**, **DateRangePicker**, **Tour** — open and close animations now play. They used utility classes from an animation plugin that sv5ui does not ship, so no CSS was generated for them. They now zoom and fade with the keyframes in `theme.css`, like Select. Apps that installed such a plugin themselves lose the small slide toward the trigger. ([#245](https://github.com/ndlabdev/sv5ui/issues/245))
 - **Modal** — `transition: 'slide'` animates on close, and the content fades while it slides. It referenced a `slide-out-to-top` keyframe that was missing from `theme.css`, and only moved the content by 0.5rem, so the dialog popped in and out. ([#245](https://github.com/ndlabdev/sv5ui/issues/245))
@@ -26,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **ThemeMode** — dark mode is handled by sv5ui itself instead of wrapping `mode-watcher`. Props, exports and the `localStorage` keys (`mode-watcher-mode`, `mode-watcher-theme`) are unchanged, so stored preferences carry over. `mode-watcher` stays in `dependencies` until the next major so apps that import it directly keep building, but importing from `sv5ui` is the supported path. An app that still mounts its own `<ModeWatcher />` stays in sync with sv5ui and gets a one time console warning. Each mode change is also dispatched as a `storage` event on `window` in the same tab, so a `storage` listener that does not filter by key will see it. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
+- **FormField** — `descriptionSlot`, `helpSlot` and `errorSlot` content is wrapped in a `<div class="contents">` carrying the matching id. Layout is unchanged, but a child combinator selector such as `.my-field > .my-error` no longer matches the slot content. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
 - **Checkbox**, **CheckboxGroup**, **RadioGroup**, **Switch**, **Slider** — `aria-*` props now land on the control instead of the wrapper (`aria-hidden`, `class`, `style` and `data-*` stay on the wrapper). Selectors such as `[aria-label="…"] [role="slider"]` become `[role="slider"][aria-label="…"]`. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
 
 ### Fixed
@@ -37,8 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ThemeModeButton** — `loading` shows the spinner again instead of the mode icon. It was hidden since 2.8.0, when the button started rendering both mode icons through a slot that took precedence over the spinner.
 - **ThemeModeButton** — an `onclick` handler no longer replaces the toggle. It runs first, and calling `preventDefault()` in it cancels the toggle. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
 - **ThemeModeButton** — toggles the `dark` class even when `ThemeMode` is not mounted. The class applied on page load still comes from `ThemeMode`. ([#224](https://github.com/ndlabdev/sv5ui/issues/224))
-- **Form controls** — a user `aria-describedby` or `aria-invalid` is no longer overwritten, and inside a `FormField` it merges with the field ids. User event handlers no longer get replaced. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
-- **FormField** — the label names every control, slot content and the description stay announced next to an error, `required` sets `aria-required` on text inputs, and a user `id` keeps the label and `Form` errors linked. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
+- **Input**, **InputNumber**, **InputTags**, **Textarea**, **Select**, **SelectMenu**, **Rating**, **Checkbox**, **Switch**, **Slider**, **RadioGroup**, **CheckboxGroup**, **ColorPicker** — a user `aria-describedby` or `aria-invalid` is no longer overwritten, and inside a `FormField` it merges with the field ids. User event handlers no longer get replaced. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
+- **FormField** — the label names each of the controls above, slot content and the description stay announced next to an error, `required` sets `aria-required` on Input, InputNumber, InputTags and Textarea, and a user `id` keeps the label and `Form` errors linked. Calendar, DatePicker, DateRangePicker, TimeField, PinInput, FileUpload, Editor and ImageCropper still use the previous wiring. ([#236](https://github.com/ndlabdev/sv5ui/issues/236))
 - **Textarea**, **InputTags** — `leadingSlot` and `trailingSlot` reserve room so they no longer cover the text, and a control inside them can be clicked, matching `Input`. ([#237](https://github.com/ndlabdev/sv5ui/issues/237))
 - **Textarea**, **Select**, **SelectMenu**, **Button** — `loading` shows the spinner instead of a slot on the same side. ([#237](https://github.com/ndlabdev/sv5ui/issues/237))
 - **Breadcrumb** — two items with the same `label` render side by side instead of crashing the page with a duplicate key error. ([#241](https://github.com/ndlabdev/sv5ui/issues/241))

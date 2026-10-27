@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-    import { Checkbox, Label, useId } from 'bits-ui'
+    import { Checkbox, Label } from 'bits-ui'
     import { checkboxGroupVariants, checkboxGroupDefaults } from './checkbox-group.variants.js'
     import { getComponentConfig, iconsDefaults } from '../../config.js'
     import Icon from '../Icon/Icon.svelte'
@@ -13,6 +13,7 @@
     import {
         fieldControlAttributes,
         groupFocusHandlers,
+        reportControlId,
         splitControlProps
     } from '../../hooks/useFormField/field-control.svelte.js'
     import type { CheckboxGroupItem } from './checkbox-group.types.js'
@@ -54,8 +55,8 @@
     )
     const resolvedSize = $derived(size ?? formFieldContext?.size ?? config.defaultVariants.size)
     const resolvedColor = $derived(hasError ? 'error' : color)
-    const autoId = useId()
-    const resolvedId = $derived(id ?? formFieldContext?.ariaId ?? autoId)
+    const uid = $props.id()
+    const resolvedId = $derived(id ?? formFieldContext?.ariaId ?? uid)
     const resolvedName = $derived(name ?? formFieldContext?.name)
     const isDisabled = $derived(disabled || loading)
 
@@ -66,6 +67,8 @@
             labelledBy: !legend && !legendSlot
         })
     )
+
+    reportControlId(formFieldContext, () => resolvedId, { labelable: false })
 
     const slots = $derived(
         checkboxGroupVariants({
@@ -107,15 +110,18 @@
         onValueChange?.(value)
     }
 
-    function handleCardItemClick(e: MouseEvent, btnId: string, itemDisabled: boolean) {
+    function handleCardItemClick(
+        e: MouseEvent & { currentTarget: HTMLElement },
+        itemDisabled: boolean
+    ) {
         if (itemDisabled) return
         if ((e.target as Element).closest('button')) return
-        document.getElementById(btnId)?.click()
+        e.currentTarget.querySelector<HTMLElement>('[role=checkbox]')?.click()
     }
 </script>
 
-{#snippet itemContent(checkboxItem: CheckboxGroupItem)}
-    {@const itemId = `${resolvedId}-${checkboxItem.value}`}
+{#snippet itemContent(checkboxItem: CheckboxGroupItem, index: number)}
+    {@const itemId = `${uid}-item-${index}`}
     {@const itemDisabled = isDisabled || !!checkboxItem.disabled}
     <div class={layoutClasses.container}>
         <Checkbox.Root
@@ -185,6 +191,7 @@
     <fieldset
         {...splitProps.control}
         {...controlAttributes}
+        id={resolvedId}
         class={layoutClasses.fieldset}
         onfocusin={() => emit.onFocus()}
         onfocusout={(e) => {
@@ -203,27 +210,22 @@
             {/if}
         {/if}
 
-        {#each items as checkboxItem (checkboxItem.value)}
+        {#each items as checkboxItem, index (checkboxItem.value)}
             {#if variant === 'card'}
                 <div
                     role="none"
                     class={layoutClasses.item}
                     class:opacity-75={checkboxItem.disabled && !isDisabled}
-                    onclick={(e) =>
-                        handleCardItemClick(
-                            e,
-                            `${resolvedId}-${checkboxItem.value}`,
-                            isDisabled || !!checkboxItem.disabled
-                        )}
+                    onclick={(e) => handleCardItemClick(e, isDisabled || !!checkboxItem.disabled)}
                 >
-                    {@render itemContent(checkboxItem)}
+                    {@render itemContent(checkboxItem, index)}
                 </div>
             {:else}
                 <div
                     class={layoutClasses.item}
                     class:opacity-75={checkboxItem.disabled && !isDisabled}
                 >
-                    {@render itemContent(checkboxItem)}
+                    {@render itemContent(checkboxItem, index)}
                 </div>
             {/if}
         {/each}

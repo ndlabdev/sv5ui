@@ -76,7 +76,7 @@
         "@tiptap/starter-kit": "^3.0.0",
         "@tiptap/suggestion": "^3.0.0",
         "joi": "^17.0.0 || ^18.0.0",
-        "svelte": "^5.0.0",
+        "svelte": "^5.33.0",
         "tailwindcss": "^4.0.0",
         "tiptap-markdown": "^0.9.0",
         "valibot": "^1.0.0",
