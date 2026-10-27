@@ -25,7 +25,7 @@ export const lightboxVariants = tv({
         arrowPrev: 'start-2 sm:start-4',
         arrowNext: 'end-2 sm:end-4',
         caption:
-            'pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 p-4 pb-6 text-center bg-gradient-to-t from-black/70 to-transparent',
+            'pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col items-center gap-1 p-4 pb-6 text-center bg-gradient-to-t from-black/70 to-transparent *:pointer-events-auto *:select-text',
         captionTitle: 'text-base font-semibold text-white',
         captionDescription: 'max-w-2xl text-sm text-white/70',
         thumbnailsScroll: 'relative z-20 hidden md:block',
