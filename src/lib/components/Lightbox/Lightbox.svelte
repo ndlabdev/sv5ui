@@ -2,6 +2,8 @@
     import type { LightboxProps } from './lightbox.types.js'
 
     export type Props = LightboxProps
+
+    const INTERACTIVE_TARGETS = 'button, a, input, video, iframe'
 </script>
 
 <script lang="ts">
@@ -278,8 +280,12 @@
             return
         }
         const rect = stageEl.getBoundingClientRect()
-        const maxX = (rect.width * (scale - 1)) / 2
-        const maxY = (rect.height * (scale - 1)) / 2
+        const image = stageEl.querySelector<HTMLElement>('img[data-zoomable]')
+        const turned = rotation % 180 !== 0
+        const width = image ? (turned ? image.offsetHeight : image.offsetWidth) : rect.width
+        const height = image ? (turned ? image.offsetWidth : image.offsetHeight) : rect.height
+        const maxX = Math.max(0, (width * scale - rect.width) / 2)
+        const maxY = Math.max(0, (height * scale - rect.height) / 2)
         tx = Math.min(Math.max(tx, -maxX), maxX)
         ty = Math.min(Math.max(ty, -maxY), maxY)
     }
@@ -384,6 +390,8 @@
 
     function onDoubleClick(event: MouseEvent) {
         if (!canZoom) return
+        const target = event.target as HTMLElement
+        if (target.closest(INTERACTIVE_TARGETS)) return
         if (scale > 1) resetZoom()
         else zoomTo(Math.min(2.5, maxScale), event.clientX, event.clientY)
     }
@@ -395,7 +403,7 @@
     function onPointerDown(event: PointerEvent) {
         if (event.button !== 0 && event.pointerType === 'mouse') return
         const target = event.target as HTMLElement
-        if (target.closest('button, a, input, video, iframe')) return
+        if (target.closest(INTERACTIVE_TARGETS)) return
         downOnBackdrop = target.dataset.lbBackdrop !== undefined
         ;(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId)
         pointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
@@ -711,42 +719,52 @@
                 role="group"
                 aria-roledescription="carousel"
                 aria-label="Media"
-                data-lb-backdrop
-                onpointerdown={onPointerDown}
-                onpointermove={onPointerMove}
-                onpointerup={endPointer}
-                onpointercancel={endPointer}
-                ondblclick={onDoubleClick}
             >
-                {#each slides as slide, i (i)}
-                    {#if isWithinWindow(i)}
-                        <div
-                            class="absolute inset-0 transition-opacity duration-200"
-                            style:opacity={i === index ? 1 : 0}
-                            style:pointer-events={i === index ? 'auto' : 'none'}
-                            style:z-index={i === index ? 1 : 0}
-                            data-lb-backdrop
-                            inert={i === index ? undefined : true}
-                        >
-                            {#if slideSlot}
-                                {@render slideSlot({ slide, index: i, active: i === index, scale })}
-                            {:else}
-                                <LightboxSlide
-                                    {slide}
-                                    active={i === index}
-                                    eager={isWithinWindow(i)}
-                                    transform={transformStyle}
-                                    zoomable={canZoom}
-                                    slideClass={classes.slide}
-                                    imageClass={classes.image}
-                                    mediaClass={classes.media}
-                                    spinnerClass={classes.spinner}
-                                    loadingIcon={baseIcons.loading}
-                                />
-                            {/if}
-                        </div>
-                    {/if}
-                {/each}
+                <div
+                    class={classes.track}
+                    role="none"
+                    data-lb-backdrop
+                    onpointerdown={onPointerDown}
+                    onpointermove={onPointerMove}
+                    onpointerup={endPointer}
+                    onpointercancel={endPointer}
+                    ondblclick={onDoubleClick}
+                >
+                    {#each slides as slide, i (i)}
+                        {#if isWithinWindow(i)}
+                            <div
+                                class="absolute inset-0 transition-opacity duration-200"
+                                style:opacity={i === index ? 1 : 0}
+                                style:pointer-events={i === index ? 'auto' : 'none'}
+                                style:z-index={i === index ? 1 : 0}
+                                data-lb-backdrop
+                                inert={i === index ? undefined : true}
+                            >
+                                {#if slideSlot}
+                                    {@render slideSlot({
+                                        slide,
+                                        index: i,
+                                        active: i === index,
+                                        scale
+                                    })}
+                                {:else}
+                                    <LightboxSlide
+                                        {slide}
+                                        active={i === index}
+                                        eager={isWithinWindow(i)}
+                                        transform={transformStyle}
+                                        zoomable={canZoom}
+                                        slideClass={classes.slide}
+                                        imageClass={classes.image}
+                                        mediaClass={classes.media}
+                                        spinnerClass={classes.spinner}
+                                        loadingIcon={baseIcons.loading}
+                                    />
+                                {/if}
+                            </div>
+                        {/if}
+                    {/each}
+                </div>
 
                 {#if showArrows}
                     <Button
