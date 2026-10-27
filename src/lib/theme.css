@@ -481,6 +481,15 @@
     }
 }
 
+@keyframes slide-out-to-top {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-0.5rem);
+    }
+}
+
 @keyframes slide-in-from-bottom {
     from {
         transform: translateY(0.5rem);
