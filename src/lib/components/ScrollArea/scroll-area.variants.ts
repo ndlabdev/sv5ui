@@ -49,7 +49,7 @@ export const scrollAreaVariants = tv({
         transition: {
             true: {
                 scrollbar:
-                    'data-[state=visible]:animate-[fade-in_150ms_ease-out] data-[state=hidden]:animate-[fade-out_150ms_ease-in]'
+                    'data-[state=visible]:animate-[fade-in_150ms_ease-out] data-[state=hidden]:animate-[fade-out_150ms_ease-in_forwards]'
             },
             false: ''
         }

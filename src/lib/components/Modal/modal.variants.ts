@@ -19,21 +19,21 @@ export const modalVariants = tv({
             none: {},
             fade: {
                 overlay:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]',
                 content:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]'
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]'
             },
             slide: {
                 overlay:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]',
                 content:
-                    'data-[state=open]:animate-[slide-in-from-top_200ms_ease-out] data-[state=closed]:animate-[slide-out-to-top_150ms_ease-in]'
+                    'data-[state=open]:animate-[slide-in-from-top_200ms_ease-out,fade-in_200ms_ease-out] data-[state=closed]:animate-[slide-out-to-top_150ms_ease-in_forwards,fade-out_150ms_ease-in_forwards]'
             },
             scale: {
                 overlay:
-                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in]',
+                    'data-[state=open]:animate-[fade-in_200ms_ease-out] data-[state=closed]:animate-[fade-out_150ms_ease-in_forwards]',
                 content:
-                    'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)]'
+                    'data-[state=open]:animate-[scale-in_200ms_cubic-bezier(0.32,0.72,0,1)] data-[state=closed]:animate-[scale-out_150ms_cubic-bezier(0.32,0.72,0,1)_forwards]'
             }
         },
         size: {
