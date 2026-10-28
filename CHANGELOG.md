@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.0] - 2026-10-28
+
 ### Added
 
 - **FormField** — `ariaId` prop sets the base of the published ids, for two fields that share a `name` on one page. A console warning names a published id that already exists on the page and says whether the field wraps more than one control or shares its ids with another field. It shows once per id while the field that warned stays mounted. `setControlId(id, labelable)` on the field context takes an optional second argument for custom controls that a `<label for>` cannot target. ([#244](https://github.com/ndlabdev/sv5ui/issues/244))
