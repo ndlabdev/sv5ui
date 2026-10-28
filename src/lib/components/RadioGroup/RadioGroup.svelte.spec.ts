@@ -52,11 +52,12 @@ describe('RadioGroup', () => {
             expect(hidden).toBeTruthy()
         })
 
-        it('should render with id', () => {
+        it('should put the id on the group and give each radio its own id', () => {
             render(RadioGroup, { items: defaultItems, id: 'my-group' })
-            const radios = getRadios()
-            expect(radios[0]!.id).toBe('my-group-a')
-            expect(radios[1]!.id).toBe('my-group-b')
+            expect(document.querySelector('[role="radiogroup"]')!.id).toBe('my-group')
+            const ids = Array.from(getRadios()).map((radio) => radio.id)
+            expect(new Set(ids).size).toBe(3)
+            expect(ids.every((id) => id && !id.startsWith('my-group-'))).toBe(true)
         })
 
         it('should generate ids automatically', () => {
@@ -239,7 +240,7 @@ describe('RadioGroup', () => {
 
         it('should associate label with radio via for attribute', () => {
             render(RadioGroup, { items: defaultItems, id: 'test-group' })
-            const label = document.querySelector('label[for="test-group-a"]')
+            const label = document.querySelector(`label[for="${getRadio(0)!.id}"]`)
             expect(label).toBeTruthy()
             expect(label!.textContent).toBe('Option A')
         })
@@ -269,6 +270,134 @@ describe('RadioGroup', () => {
             render(RadioGroup, { items: defaultItems, required: true })
             const group = document.querySelector('[role="radiogroup"]')
             expect(group!.getAttribute('aria-required')).toBe('true')
+        })
+    })
+
+    describe('item name and description', () => {
+        it.each(['list', 'card'] as const)(
+            'names a %s item by its label and describes it by its description',
+            async (variant) => {
+                render(RadioGroup, {
+                    items: [{ value: 'a', label: 'Option A', description: 'First option' }],
+                    variant
+                })
+                const item = page.getByRole('radio', { name: 'Option A', exact: true })
+                await expect.element(item).toBeInTheDocument()
+                await expect.element(item).toHaveAccessibleDescription('First option')
+            }
+        )
+    })
+
+    describe('card variant', () => {
+        const cards = (container: Element) =>
+            Array.from(container.querySelectorAll<HTMLElement>('[role="none"]'))
+
+        it('selects its own item when the card is clicked', async () => {
+            const onValueChange = vi.fn()
+            const { container } = render(RadioGroup, {
+                items: defaultItems,
+                variant: 'card',
+                onValueChange
+            })
+            cards(container)[1].click()
+            await vi.waitFor(() => expect(onValueChange).toHaveBeenLastCalledWith('b'))
+            expect(getRadio(1).getAttribute('aria-checked')).toBe('true')
+        })
+
+        it('selects once when the radio inside the card is clicked', async () => {
+            const onValueChange = vi.fn()
+            render(RadioGroup, { items: defaultItems, variant: 'card', onValueChange })
+            getRadio(0).click()
+            await vi.waitFor(() => expect(onValueChange).toHaveBeenCalledOnce())
+            expect(onValueChange).toHaveBeenLastCalledWith('a')
+        })
+
+        it('ignores a click on a disabled item card', async () => {
+            const onValueChange = vi.fn()
+            const { container } = render(RadioGroup, {
+                items: [...defaultItems.slice(0, 2), { value: 'c', label: 'C', disabled: true }],
+                variant: 'card',
+                onValueChange
+            })
+            cards(container)[2].click()
+            await new Promise((resolve) => setTimeout(resolve, 50))
+            expect(onValueChange).not.toHaveBeenCalled()
+        })
+
+        it('selects the item of its own group when another group shares the id', async () => {
+            const first = vi.fn()
+            const second = vi.fn()
+            render(RadioGroup, {
+                id: 'terms',
+                items: defaultItems,
+                variant: 'card',
+                onValueChange: first
+            })
+            const { container } = render(RadioGroup, {
+                id: 'terms',
+                items: defaultItems,
+                variant: 'card',
+                onValueChange: second
+            })
+            cards(container)[0].click()
+            await vi.waitFor(() => expect(second).toHaveBeenLastCalledWith('a'))
+            expect(first).not.toHaveBeenCalled()
+        })
+    })
+
+    describe('item ids', () => {
+        const labelIn = (container: Element, text: string) =>
+            Array.from(container.querySelectorAll('label')).find(
+                (label) => label.textContent?.trim() === text
+            ) as HTMLLabelElement
+
+        const controlsIn = (container: Element) =>
+            Array.from(container.querySelectorAll<HTMLButtonElement>('button[role="radio"]'))
+
+        it('selects the item of its own group when its label is clicked and another group shares the id', async () => {
+            const first = vi.fn()
+            const second = vi.fn()
+            render(RadioGroup, { id: 'same', items: defaultItems, onValueChange: first })
+            const { container } = render(RadioGroup, {
+                id: 'same',
+                items: defaultItems,
+                onValueChange: second
+            })
+            labelIn(container, 'Option B').click()
+            await vi.waitFor(() => expect(second).toHaveBeenLastCalledWith('b'))
+            expect(first).not.toHaveBeenCalled()
+        })
+
+        it('names each item by its own label when another group shares the id', () => {
+            render(RadioGroup, { id: 'same', items: defaultItems })
+            const { container } = render(RadioGroup, { id: 'same', items: defaultItems })
+            const names = controlsIn(container).map((control) =>
+                Array.from(control.labels ?? []).map((label) => label.textContent?.trim())
+            )
+            expect(names).toEqual([['Option A'], ['Option B'], ['Option C']])
+        })
+
+        it('names the group by its own legend when another group shares the id', () => {
+            render(RadioGroup, { id: 'same', legend: 'First', items: defaultItems })
+            const { container } = render(RadioGroup, {
+                id: 'same',
+                legend: 'Second',
+                items: defaultItems
+            })
+            const group = container.querySelector('[role="radiogroup"]') as HTMLElement
+            const labelledBy = group.getAttribute('aria-labelledby') as string
+            expect(document.getElementById(labelledBy)?.textContent?.trim()).toBe('Second')
+        })
+
+        it('keeps item ids free of whitespace when a value contains it', async () => {
+            const onValueChange = vi.fn()
+            const { container } = render(RadioGroup, {
+                items: [{ value: 'extra cheese', label: 'Extra cheese' }],
+                onValueChange
+            })
+            expect(controlsIn(container)[0].id).not.toMatch(/\s/)
+            labelIn(container, 'Extra cheese').click()
+            await vi.waitFor(() => expect(onValueChange).toHaveBeenLastCalledWith('extra cheese'))
         })
     })
 })

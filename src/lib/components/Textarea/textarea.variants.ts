@@ -382,24 +382,7 @@ export const textareaVariants = tv({
         { trailing: true, size: 'sm', class: { base: 'pe-8' } },
         { trailing: true, size: 'md', class: { base: 'pe-9' } },
         { trailing: true, size: 'lg', class: { base: 'pe-10' } },
-        { trailing: true, size: 'xl', class: { base: 'pe-12' } },
-
-        // ========== LOADING ICON ANIMATION ==========
-        {
-            loading: true,
-            leading: true,
-            class: {
-                leadingIcon: 'animate-spin'
-            }
-        },
-        {
-            loading: true,
-            leading: false,
-            trailing: true,
-            class: {
-                trailingIcon: 'animate-spin'
-            }
-        }
+        { trailing: true, size: 'xl', class: { base: 'pe-12' } }
     ],
     defaultVariants: {
         variant: 'outline',

@@ -2,10 +2,20 @@
     import type { FormFieldProps } from './form-field.types.js'
 
     export type Props = FormFieldProps
+
+    const warnedDuplicateIds: Record<string, true> = {}
+
+    const duplicateIdWarning = (id: string, insideField: boolean) =>
+        `[sv5ui FormField] The id "${id}" appears more than once on the page, ` +
+        (insideField
+            ? 'because more than one control in this field uses it. A FormField labels one control: ' +
+              'give each control its own FormField, or its own id and aria-label.'
+            : 'so a label or description can point at the wrong field. ' +
+              'Give fields that share a name, or that repeat inside an {#each}, a distinct ariaId.')
 </script>
 
 <script lang="ts">
-    import { Label, useId } from 'bits-ui'
+    import { Label } from 'bits-ui'
     import { formFieldVariants, formFieldDefaults } from './form-field.variants.js'
     import { getComponentConfig } from '../../config.js'
     import { setContext, untrack } from 'svelte'
@@ -21,6 +31,7 @@
         ref = $bindable(null),
         ui,
         name,
+        ariaId: ariaIdProp,
         label,
         description,
         hint,
@@ -42,9 +53,12 @@
         ...restProps
     }: Props = $props()
 
-    const id = useId()
-    const ariaId = $derived(name ? `form-field-${name}` : id)
+    const id = $props.id()
+    const toId = (value: string | undefined) => value?.trim().replace(/\s+/g, '-') || undefined
+    const nameId = $derived(toId(name))
+    const ariaId = $derived(toId(ariaIdProp) ?? (nameId ? `form-field-${nameId}` : id))
     let controlId = $state<string | undefined>()
+    let controlLabelable = $state(true)
     const fieldId = $derived(controlId ?? ariaId)
 
     // Form-level context (undefined when FormField is used standalone).
@@ -130,6 +144,25 @@
             .join(' ')
     )
 
+    const warnedHere: string[] = []
+
+    $effect(() => {
+        for (const published of [fieldId, labelId]) {
+            if (!published || warnedDuplicateIds[published]) continue
+            const matches = document.querySelectorAll(`[id="${CSS.escape(published)}"]`)
+            if (matches.length < 2) continue
+            warnedDuplicateIds[published] = true
+            warnedHere.push(published)
+            const insideField = [...matches].filter((element) => ref?.contains(element)).length > 1
+            // eslint-disable-next-line no-console
+            console.warn(duplicateIdWarning(published, insideField))
+        }
+    })
+
+    $effect(() => () => {
+        for (const published of warnedHere) delete warnedDuplicateIds[published]
+    })
+
     setContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY, {
         get name() {
             return name
@@ -161,8 +194,9 @@
         get required() {
             return required
         },
-        setControlId(next: string | undefined) {
+        setControlId(next: string | undefined, labelable = true) {
             controlId = next
+            controlLabelable = next === undefined || labelable
         }
     })
 </script>
@@ -174,7 +208,11 @@
                 {#if labelSlot}
                     {@render labelSlot({ label })}
                 {:else if label}
-                    <Label.Root id={labelId} for={fieldId} class={classes.label}>
+                    <Label.Root
+                        id={labelId}
+                        for={controlLabelable ? fieldId : undefined}
+                        class={classes.label}
+                    >
                         {label}
                     </Label.Root>
                 {/if}

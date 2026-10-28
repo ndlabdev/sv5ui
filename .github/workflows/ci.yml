@@ -6,23 +6,19 @@ on:
     push:
         branches: [main, dev]
 
+concurrency:
+    group: ci-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
-    ci:
-        runs-on: ubuntu-latest
+    lint:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 10
 
         steps:
             - uses: actions/checkout@v6
 
-            - uses: pnpm/action-setup@v6
-              with:
-                  version: 10
-
-            - uses: actions/setup-node@v6
-              with:
-                  node-version: 22
-                  cache: pnpm
-
-            - run: pnpm install --frozen-lockfile
+            - uses: ./.github/actions/setup
 
             - name: Verify generated icons are current
               run: |
@@ -32,14 +28,42 @@ jobs:
             - name: Lint
               run: pnpm lint
 
+    check:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 10
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: ./.github/actions/setup
+
             - name: Type check
               run: pnpm check
+
+    build:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 10
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: ./.github/actions/setup
 
             - name: Build
               run: pnpm build
 
+    test:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 15
+
+        steps:
+            - uses: actions/checkout@v6
+
+            - uses: ./.github/actions/setup
+
             - name: Install Playwright browsers
-              run: pnpm exec playwright install --with-deps chromium
+              timeout-minutes: 5
+              run: pnpm exec playwright install --with-deps --only-shell chromium
 
             - name: Test
               run: pnpm test
