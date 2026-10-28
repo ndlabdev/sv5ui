@@ -122,12 +122,17 @@
 
 {#snippet itemContent(checkboxItem: CheckboxGroupItem, index: number)}
     {@const itemId = `${uid}-item-${index}`}
+    {@const labelId = checkboxItem.label && !labelSlot ? `${itemId}-label` : undefined}
+    {@const descriptionId =
+        checkboxItem.description && !descriptionSlot ? `${itemId}-description` : undefined}
     {@const itemDisabled = isDisabled || !!checkboxItem.disabled}
     <div class={layoutClasses.container}>
         <Checkbox.Root
             checked={value.includes(checkboxItem.value)}
             onCheckedChange={(checked) => toggleItem(checkboxItem.value, checked)}
             id={itemId}
+            aria-labelledby={variant === 'card' ? labelId : undefined}
+            aria-describedby={descriptionId}
             name={resolvedName}
             value={checkboxItem.value}
             disabled={itemDisabled}
@@ -150,6 +155,7 @@
             {:else if checkboxItem.label}
                 {#if variant === 'card'}
                     <span
+                        id={labelId}
                         class={[elementClasses.label, itemDisabled && 'cursor-not-allowed']
                             .filter(Boolean)
                             .join(' ')}>{checkboxItem.label}</span
@@ -170,6 +176,7 @@
                 {@render descriptionSlot({ item: checkboxItem })}
             {:else if checkboxItem.description}
                 <p
+                    id={descriptionId}
                     class={[elementClasses.description, itemDisabled && 'cursor-not-allowed']
                         .filter(Boolean)
                         .join(' ')}

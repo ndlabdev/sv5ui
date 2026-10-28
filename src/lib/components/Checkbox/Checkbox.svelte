@@ -13,6 +13,7 @@
     import {
         composeHandlers,
         fieldControlAttributes,
+        mergeIds,
         reportControlId,
         splitControlProps
     } from '../../hooks/useFormField/field-control.svelte.js'
@@ -69,6 +70,23 @@
     )
 
     reportControlId(formFieldContext, () => resolvedId)
+
+    const uid = $props.id()
+    const labelId = $derived(label && !labelSlot ? `${uid}-label` : undefined)
+    const descriptionId = $derived(
+        description && !descriptionSlot ? `${uid}-description` : undefined
+    )
+    const userNamed = $derived(
+        splitProps.control['aria-label'] !== undefined ||
+            splitProps.control['aria-labelledby'] !== undefined
+    )
+    const ownAttributes = $derived({
+        'aria-labelledby':
+            variant === 'card' && labelId && !userNamed
+                ? mergeIds(formFieldContext?.labelId, labelId)
+                : splitProps.control['aria-labelledby'],
+        'aria-describedby': mergeIds(controlAttributes['aria-describedby'], descriptionId)
+    })
 
     const resolvedIcon = $derived(loading ? loadingIcon : indeterminate ? indeterminateIcon : icon)
 
@@ -133,6 +151,7 @@
             disabled={isDisabled}
             {required}
             {...controlAttributes}
+            {...ownAttributes}
             class={classes.base}
         >
             {#snippet children({ checked: isChecked, indeterminate: isIndeterminate })}
@@ -153,7 +172,7 @@
                 {@render labelSlot({ label })}
             {:else if label}
                 {#if variant === 'card'}
-                    <span class={classes.label}>{label}</span>
+                    <span id={labelId} class={classes.label}>{label}</span>
                 {:else}
                     <Label.Root for={resolvedId} class={classes.label}>
                         {label}
@@ -164,7 +183,7 @@
             {#if descriptionSlot}
                 {@render descriptionSlot({ description })}
             {:else if description}
-                <p class={classes.description}>{description}</p>
+                <p id={descriptionId} class={classes.description}>{description}</p>
             {/if}
         </div>
     {/if}

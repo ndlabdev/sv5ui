@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
+import { page } from 'vitest/browser'
 import { createRawSnippet, getContext, mount as mountIn, unmount, type Component } from 'svelte'
 import { FORM_FIELD_CONTEXT_KEY, type FormFieldContext } from '../../hooks/useFormField/index.js'
 import FormField from './FormField.svelte'
@@ -452,6 +453,38 @@ describe('FormField label target', () => {
             const [id, labelable] = setControlId.mock.calls.at(-1) as [string, boolean]
             const tag = container.querySelector(`#${id}`)?.tagName ?? ''
             expect(labelable).toBe(LABELABLE.includes(tag))
+        }
+    )
+})
+
+describe('FormField card Checkbox name, #252', () => {
+    const checkboxIn = (props: Record<string, unknown>) =>
+        createRawSnippet(() => {
+            const context = getContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY)
+            return {
+                render: () => '<div></div>',
+                setup: (target) => {
+                    const instance = mountIn(Checkbox, {
+                        target,
+                        props,
+                        context: new Map([[FORM_FIELD_CONTEXT_KEY, context]])
+                    })
+                    return () => unmount(instance)
+                }
+            }
+        })
+
+    it.each(['list', 'card'] as const)(
+        'names a %s Checkbox by the field label and its own label',
+        async (variant) => {
+            render(FormField, {
+                label: 'Plan',
+                description: 'Billed yearly',
+                children: checkboxIn({ label: 'Pro', description: 'Best value', variant })
+            })
+            const checkbox = page.getByRole('checkbox', { name: 'Plan Pro', exact: true })
+            await expect.element(checkbox).toBeInTheDocument()
+            await expect.element(checkbox).toHaveAccessibleDescription('Billed yearly Best value')
         }
     )
 })
