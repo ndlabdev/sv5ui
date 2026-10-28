@@ -543,6 +543,47 @@ describe('FormField ids', () => {
         expect(messages.filter((m) => m.includes('"form-field-dup-warn"'))).toHaveLength(1)
         expect(messages.filter((m) => m.includes('"form-field-dup-warn-label"'))).toHaveLength(1)
         expect(messages[0]).toContain('ariaId')
+        expect(messages[0]).toContain('{#each}')
+    })
+
+    it('tells a field that wraps two controls to give each control its own field', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        const twoInputs = createRawSnippet(() => {
+            const context = getContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY)
+            return {
+                render: () => '<div></div>',
+                setup: (target) => {
+                    const instances = [0, 1].map(() =>
+                        mountIn(input.component, {
+                            target,
+                            props: {},
+                            context: new Map([[FORM_FIELD_CONTEXT_KEY, context]])
+                        })
+                    )
+                    return () => instances.forEach((instance) => unmount(instance))
+                }
+            }
+        })
+        render(FormField, { label: 'Visible hours', children: twoInputs })
+        await vi.waitFor(() => expect(warn).toHaveBeenCalled())
+        const [message] = warn.mock.calls.map(([text]) => String(text))
+        expect(message).toContain('more than one control')
+        expect(message).not.toContain('ariaId')
+    })
+
+    it('warns again when a duplicate comes back after the warning field unmounts', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+        const pair = () => [
+            render(FormField, { name: 'dup-remount', label: 'One', children: inputField({}) }),
+            render(FormField, { name: 'dup-remount', label: 'Two', children: inputField({}) })
+        ]
+        const fieldWarnings = () =>
+            warn.mock.calls.filter(([text]) => String(text).includes('"form-field-dup-remount"'))
+        const first = pair()
+        await vi.waitFor(() => expect(fieldWarnings()).toHaveLength(1))
+        first.forEach((field) => field.unmount())
+        pair()
+        await vi.waitFor(() => expect(fieldWarnings()).toHaveLength(2))
     })
 
     it('does not warn when fields that share a name have distinct ariaId', async () => {
