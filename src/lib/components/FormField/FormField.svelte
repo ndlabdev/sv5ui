@@ -4,6 +4,14 @@
     export type Props = FormFieldProps
 
     const warnedDuplicateIds: Record<string, true> = {}
+
+    const duplicateIdWarning = (id: string, insideField: boolean) =>
+        `[sv5ui FormField] The id "${id}" appears more than once on the page, ` +
+        (insideField
+            ? 'because more than one control in this field uses it. A FormField labels one control: ' +
+              'give each control its own FormField, or its own id and aria-label.'
+            : 'so a label or description can point at the wrong field. ' +
+              'Give fields that share a name, or that repeat inside an {#each}, a distinct ariaId.')
 </script>
 
 <script lang="ts">
@@ -136,18 +144,23 @@
             .join(' ')
     )
 
+    const warnedHere: string[] = []
+
     $effect(() => {
         for (const published of [fieldId, labelId]) {
             if (!published || warnedDuplicateIds[published]) continue
-            if (document.querySelectorAll(`[id="${CSS.escape(published)}"]`).length < 2) continue
+            const matches = document.querySelectorAll(`[id="${CSS.escape(published)}"]`)
+            if (matches.length < 2) continue
             warnedDuplicateIds[published] = true
+            warnedHere.push(published)
+            const insideField = [...matches].filter((element) => ref?.contains(element)).length > 1
             // eslint-disable-next-line no-console
-            console.warn(
-                `[sv5ui FormField] The id "${published}" appears more than once on the page, ` +
-                    'so a label or description can point at the wrong field. ' +
-                    'Give fields that share a name a distinct ariaId.'
-            )
+            console.warn(duplicateIdWarning(published, insideField))
         }
+    })
+
+    $effect(() => () => {
+        for (const published of warnedHere) delete warnedDuplicateIds[published]
     })
 
     setContext<FormFieldContext>(FORM_FIELD_CONTEXT_KEY, {

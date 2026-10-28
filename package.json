@@ -58,6 +58,7 @@
         }
     },
     "peerDependencies": {
+        "@sveltejs/kit": "^2.12.0",
         "@tiptap/core": "^3.0.0",
         "@tiptap/extension-bubble-menu": "^3.0.0",
         "@tiptap/extension-character-count": "^3.0.0",

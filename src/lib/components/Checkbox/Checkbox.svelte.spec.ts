@@ -319,6 +319,40 @@ describe('Checkbox', () => {
 
     // ==================== ACCESSIBILITY ====================
 
+    describe('name and description', () => {
+        it.each(['list', 'card'] as const)(
+            'names the %s checkbox by its label and describes it by its description',
+            async (variant) => {
+                render(Checkbox, { label: 'Pro', description: 'Best value', variant })
+                const checkbox = page.getByRole('checkbox', { name: 'Pro', exact: true })
+                await expect.element(checkbox).toBeInTheDocument()
+                await expect.element(checkbox).toHaveAccessibleDescription('Best value')
+            }
+        )
+
+        it('keeps a user aria-label on a card checkbox', async () => {
+            render(Checkbox, { label: 'Pro', variant: 'card', 'aria-label': 'Choose the pro plan' })
+            await expect
+                .element(page.getByRole('checkbox', { name: 'Choose the pro plan', exact: true }))
+                .toBeInTheDocument()
+        })
+
+        it('adds its description to a user aria-describedby instead of replacing it', async () => {
+            render(Checkbox, {
+                label: 'Pro',
+                description: 'Best value',
+                'aria-describedby': 'terms'
+            })
+            const ids = getCheckbox()?.getAttribute('aria-describedby')?.split(' ') ?? []
+            const description = Array.from(document.querySelectorAll('p')).find(
+                (element) => element.textContent?.trim() === 'Best value'
+            )
+            expect(ids).toContain('terms')
+            expect(description?.id).toBeTruthy()
+            expect(ids).toContain(description?.id)
+        })
+    })
+
     describe('accessibility', () => {
         it('should have role="checkbox"', async () => {
             render(Checkbox)

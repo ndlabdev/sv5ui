@@ -273,6 +273,21 @@ describe('RadioGroup', () => {
         })
     })
 
+    describe('item name and description', () => {
+        it.each(['list', 'card'] as const)(
+            'names a %s item by its label and describes it by its description',
+            async (variant) => {
+                render(RadioGroup, {
+                    items: [{ value: 'a', label: 'Option A', description: 'First option' }],
+                    variant
+                })
+                const item = page.getByRole('radio', { name: 'Option A', exact: true })
+                await expect.element(item).toBeInTheDocument()
+                await expect.element(item).toHaveAccessibleDescription('First option')
+            }
+        )
+    })
+
     describe('card variant', () => {
         const cards = (container: Element) =>
             Array.from(container.querySelectorAll<HTMLElement>('[role="none"]'))

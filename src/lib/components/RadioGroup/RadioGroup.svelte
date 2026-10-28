@@ -116,12 +116,17 @@
 
 {#snippet itemContent(radioItem: RadioGroupItem, index: number)}
     {@const itemId = `${uid}-item-${index}`}
+    {@const labelId = radioItem.label && !labelSlot ? `${itemId}-label` : undefined}
+    {@const descriptionId =
+        radioItem.description && !descriptionSlot ? `${itemId}-description` : undefined}
     {@const itemDisabled = isDisabled || !!radioItem.disabled}
     <div class={layoutClasses.container}>
         <RadioGroup.Item
             value={radioItem.value}
             disabled={itemDisabled}
             id={itemId}
+            aria-labelledby={variant === 'card' ? labelId : undefined}
+            aria-describedby={descriptionId}
             class={elementClasses.base}
         >
             {#snippet children({ checked })}
@@ -143,6 +148,7 @@
             {:else if radioItem.label}
                 {#if variant === 'card'}
                     <span
+                        id={labelId}
                         class={[elementClasses.label, itemDisabled && 'cursor-not-allowed']
                             .filter(Boolean)
                             .join(' ')}>{radioItem.label}</span
@@ -163,6 +169,7 @@
                 {@render descriptionSlot({ item: radioItem })}
             {:else if radioItem.description}
                 <p
+                    id={descriptionId}
                     class={[elementClasses.description, itemDisabled && 'cursor-not-allowed']
                         .filter(Boolean)
                         .join(' ')}
