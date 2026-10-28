@@ -76,15 +76,15 @@
     const descriptionId = $derived(
         description && !descriptionSlot ? `${uid}-description` : undefined
     )
+    const userLabelledBy = $derived(splitProps.control['aria-labelledby'] as string | undefined)
     const userNamed = $derived(
-        splitProps.control['aria-label'] !== undefined ||
-            splitProps.control['aria-labelledby'] !== undefined
+        splitProps.control['aria-label'] !== undefined || userLabelledBy !== undefined
     )
     const ownAttributes = $derived({
         'aria-labelledby':
             variant === 'card' && labelId && !userNamed
                 ? mergeIds(formFieldContext?.labelId, labelId)
-                : splitProps.control['aria-labelledby'],
+                : userLabelledBy,
         'aria-describedby': mergeIds(controlAttributes['aria-describedby'], descriptionId)
     })
 
