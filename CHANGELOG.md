@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The `svelte` peer dependency is now `^5.33.0`, up from `^5.0.0`. `bits-ui` already required 5.33, so existing installs are not affected. ([#244](https://github.com/ndlabdev/sv5ui/issues/244))
+- `@sveltejs/kit` `^2.12.0` is now a peer dependency. Header, Link, NavigationMenu, Sidebar and `useTour` import `$app/state`, which first ships in 2.12, so sv5ui already required it. ([#252](https://github.com/ndlabdev/sv5ui/issues/252))
 - **CheckboxGroup**, **RadioGroup** — item ids no longer follow `<id>-<value>`, and the RadioGroup legend id no longer follows `<id>-legend`, so they stay unique across groups and match between server and client. Select an item through its group, for example `#plan [role="checkbox"]` instead of `#plan-basic`. ([#244](https://github.com/ndlabdev/sv5ui/issues/244))
 
 ### Fixed
