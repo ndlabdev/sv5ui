@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Select** — `name` now submits the selection with the form, one entry per value with `multiple`. The trigger button no longer carries `name`, so select it through `id` or `data-select-trigger` instead. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select**, **SelectMenu** — with `name`, `required` blocks native submission while nothing is selected, also with `multiple`, and `form.reset()` clears the selection in every mode. A `Form` runs its schema only after the browser allows the submit, so add `novalidate` to it if you want schema messages for an empty `required` control. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select**, **SelectMenu** — the form inputs ignore values outside `items` and opt out of browser autofill, so the browser no longer restores a selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **SelectMenu** — with `name`, the last item in a FieldGroup keeps its rounded corners, and `space-y` no longer adds a gap below it. The form inputs now sit inside the root element, so code that expects them next to the root needs updating. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+
 ## [2.10.0] - 2026-10-28
 
 ### Added
