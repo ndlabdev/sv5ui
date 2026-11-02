@@ -29,10 +29,9 @@
     })
 
     function setValue(next: string) {
-        if (next === getValue()) return
-        if (next === '') {
-            onValueChange(multiple ? [] : '')
-        } else if (!multiple && isKnownValue(next)) {
+        if (multiple) {
+            if (next === '' && selectedValues.length > 0) onValueChange([])
+        } else if (next !== getValue() && (next === '' || isKnownValue(next))) {
             onValueChange(next)
         }
     }

@@ -23,6 +23,7 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import SelectFormInputs from '../../internal/SelectFormInputs.svelte'
+    import { fromPrimitiveValue, toPrimitiveValue } from '../../internal/selectItemValue.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
     import {
         fieldControlAttributes,
@@ -157,7 +158,7 @@
             ? Array.isArray(value)
                 ? (value as string[])
                 : []
-            : typeof value === 'string' && value !== ''
+            : typeof value === 'string' && (value !== '' || itemsMap.has(value))
               ? [value]
               : []
     )
@@ -167,6 +168,7 @@
             .filter((i): i is SelectMenuItem => i !== undefined)
     )
     const hasSelection = $derived(selectedValues.length > 0)
+    const primitiveValues = $derived(selectedValues.map(toPrimitiveValue))
     const singleSelectedItem = $derived(multiple ? undefined : selectedItems[0])
 
     function setFormValue(val: string | string[]) {
@@ -419,7 +421,7 @@
 {#snippet renderItem(item: SelectMenuItem, index: number)}
     {@const isSelected = selectedValues.includes(item.value)}
     <Combobox.Item
-        value={item.value}
+        value={toPrimitiveValue(item.value)}
         label={item.label ?? item.value}
         disabled={item.disabled}
         class={itemClass}
@@ -618,13 +620,13 @@
         onOpenChange={onUpdateOpen}
         {disabled}
         {required}
-        value={selectedValues}
+        value={primitiveValues}
         onValueChange={(val) => {
             if (Array.isArray(val) && val.includes(CREATE_ITEM_VALUE)) {
                 handleCreate()
                 return
             }
-            value = val
+            value = val.map(fromPrimitiveValue)
             emit.onChange()
         }}
     >
@@ -637,13 +639,13 @@
         onOpenChange={onUpdateOpen}
         {disabled}
         {required}
-        value={selectedValues[0] ?? ''}
+        value={primitiveValues[0] ?? ''}
         onValueChange={(val) => {
             if (val === CREATE_ITEM_VALUE) {
                 handleCreate()
                 return
             }
-            value = val
+            value = fromPrimitiveValue(val)
             emit.onChange()
         }}
     >
