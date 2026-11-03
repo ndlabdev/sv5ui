@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Modal** — rings and text inside a centered Modal no longer blur in Chrome, Edge and Safari at a device pixel ratio of 1 when the Modal has an odd height or width. The Modal now moves by whole pixels, so it can sit up to half a pixel off center. Browsers without `round()` support, such as Chrome and Edge before version 125, keep the previous centering. ([#256](https://github.com/ndlabdev/sv5ui/issues/256))
+
 ## [2.10.0] - 2026-10-28
 
 ### Added
