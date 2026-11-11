@@ -6,6 +6,7 @@ import {
     defaultAriaLabel,
     groupByIndex,
     isolatedRows,
+    numericStrings,
     paletteColor,
     resolveCategories,
     resolveColor,
@@ -119,6 +120,28 @@ describe('chart utils', () => {
             const groups = groupByIndex([{ x: 1 }, { x: '1' }], 'x')
             expect(groups).toHaveLength(1)
             expect(groups[0].index).toBe(1)
+        })
+    })
+
+    describe('numericStrings', () => {
+        it('reports the first numeric string of each key', () => {
+            expect(
+                numericStrings(
+                    [
+                        { a: 1, b: 'n/a', c: ' ' },
+                        { a: '12', b: '3.5', c: '' },
+                        { a: '7', b: 2, c: null }
+                    ],
+                    ['a', 'b', 'c']
+                )
+            ).toEqual([
+                { key: 'a', sample: '12' },
+                { key: 'b', sample: '3.5' }
+            ])
+        })
+
+        it('ignores numbers, text, blanks and keys that are not plotted', () => {
+            expect(numericStrings([{ a: 1, b: 'x', c: '', d: '5' }], ['a', 'b', 'c'])).toEqual([])
         })
     })
 

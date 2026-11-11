@@ -5,10 +5,13 @@ import {
     crosshair,
     defineChart,
     dot,
+    findNearestPoint,
     group,
     lineY,
     stack,
+    type ChartFocusStrategy,
     type ChartPoint,
+    type ChartScene,
     type ChartTooltipContentContext
 } from '@tanstack/charts'
 import { decorative } from '@tanstack/charts/mark/decorative'
@@ -48,6 +51,7 @@ export interface CartesianDefinitionOptions<T extends Record<string, any>> {
 
 export interface DonutDefinitionOptions<T extends Record<string, any>> {
     rows: ChartSeriesDatum<T>[]
+    focus?: ChartFocusStrategy<any, any, any>
     items: readonly ChartLegendItem[]
     thickness: number
     format?: (value: number) => string
@@ -214,6 +218,7 @@ export function buildDonutDefinition<T extends Record<string, any>>(
             domain: options.items.map((item) => item.key),
             range: options.items.map((item) => item.color)
         },
+        focus: options.focus,
         svgAnimation: options.transition,
         tooltip: options.tooltip
             ? {
@@ -229,6 +234,32 @@ export function buildDonutDefinition<T extends Record<string, any>>(
               }
             : false
     })
+}
+
+export interface DonutFocus {
+    strategy: ChartFocusStrategy<any, any, any>
+    track: (context: { scene: ChartScene<any, any, any> }) => void
+}
+
+export function createDonutFocus(): DonutFocus {
+    let scene: ChartScene<any, any, any> | null = null
+    const angle = (point: ChartPoint<any, any, any>) =>
+        (point.datum as { startAngle?: number }).startAngle ?? 0
+
+    return {
+        strategy: {
+            resolve: (points, { x, y, maxDistance }) => {
+                const hit = scene ? findNearestPoint(scene, x, y, maxDistance) : null
+                if (!hit) return []
+                return [points.find((point) => point.key === hit.key) ?? hit]
+            },
+            group: (_points, { point }) => [point],
+            navigation: (points) => [...points].sort((left, right) => angle(left) - angle(right))
+        },
+        track: (context) => {
+            scene = context.scene
+        }
+    }
 }
 
 export function toSeriesPoint<T extends Record<string, any>>(point: ChartPoint): SeriesPoint<T> {

@@ -86,11 +86,14 @@ export interface ChartTooltipRow {
     active: boolean
 }
 
-/** Context passed to the `tooltipSlot` snippet. */
-export interface ChartTooltipSlotProps {
+/**
+ * Context passed to the `tooltipSlot` snippet.
+ * `D` is `ChartSeriesDatum` for charts built from `data`, or the datum of the marks with `definition`.
+ */
+export interface ChartTooltipSlotProps<D = unknown> {
     title?: string
     rows: ChartTooltipRow[]
-    points: readonly ChartPoint[]
+    points: readonly ChartPoint<D>[]
 
     /** `true` once the tooltip is pinned with a click, Enter or Space. */
     pinned: boolean
@@ -106,10 +109,10 @@ export interface ChartCenterSlotProps {
     items: ChartLegendItem[]
 }
 
-export interface ChartProps<T extends Record<string, any> = Record<string, any>> extends Omit<
-    HTMLAttributes<HTMLDivElement>,
-    'class' | 'aria-label' | 'onselect'
-> {
+export interface ChartProps<
+    T extends Record<string, any> = Record<string, any>,
+    D = ChartSeriesDatum<T>
+> extends Omit<HTMLAttributes<HTMLDivElement>, 'class' | 'aria-label' | 'onselect'> {
     /**
      * Bindable reference to the root DOM element.
      */
@@ -124,7 +127,8 @@ export interface ChartProps<T extends Record<string, any> = Record<string, any>>
     /**
      * Rows to plot: one row per x value, or one row per slice for `donut`.
      * Rows that share an `index` value are added together, and rows without one are skipped.
-     * Values that are not finite numbers leave a gap.
+     * Values that are not finite numbers leave a gap. Numeric strings such as `'12'` are not
+     * parsed: convert them with `Number()` first. The chart warns once per category when it finds them.
      */
     data?: readonly T[]
 
@@ -201,6 +205,8 @@ export interface ChartProps<T extends Record<string, any> = Record<string, any>>
 
     /**
      * Formats y axis ticks and tooltip values.
+     * With server rendering, pass an explicit locale (for example `new Intl.NumberFormat('en-US')`)
+     * so the server and the browser render the same ticks.
      */
     format?: (value: number) => string
 
@@ -236,20 +242,26 @@ export interface ChartProps<T extends Record<string, any> = Record<string, any>>
 
     /**
      * Width-to-height ratio, used when `height` is not set.
+     * With server rendering, prefer it over a fixed `height`: the server markup then keeps its
+     * proportions in any container width until the page hydrates.
      */
     aspectRatio?: number
 
     /**
      * Width used on the server and before the container is measured.
+     * Set it close to the rendered width so the server markup matches the hydrated chart.
      * @default 640
      */
     initialWidth?: number
 
     /**
      * A full TanStack Charts definition for charts the props above do not cover.
-     * Takes precedence over `type`, `data`, `index` and `categories`.
+     * The definition owns the marks, colors, tooltip and animation, so these props are ignored
+     * with it: `type`, `data`, `index`, `categories`, `colors`, `stacked`, `curve`, `points`, `grid`,
+     * `xAxis`, `yAxis`, `xLabel`, `yLabel`, `legend`, `format`, `tooltip`, `transition`, `thickness`
+     * and `center`. `tooltipSlot` and the interaction callbacks receive the datum of its marks.
      */
-    definition?: ChartDefinition
+    definition?: ChartDefinition<D>
 
     /**
      * Accessible name of the chart.
@@ -264,18 +276,21 @@ export interface ChartProps<T extends Record<string, any> = Record<string, any>>
 
     /**
      * Called when a point is activated with a click, Enter or Space.
+     * `point.datum` is a `ChartSeriesDatum`, or the datum of the marks with `definition`.
      */
-    onSelect?: (point: ChartPoint<ChartSeriesDatum<T>> | null) => void
+    onSelect?: (point: ChartPoint<D> | null) => void
 
     /**
      * Called when the hovered or keyboard-focused point changes.
+     * `point.datum` is a `ChartSeriesDatum`, or the datum of the marks with `definition`.
      */
-    onFocusChange?: (point: ChartPoint<ChartSeriesDatum<T>> | null) => void
+    onFocusChange?: (point: ChartPoint<D> | null) => void
 
     /**
      * Called with every point of the focused x value.
+     * `point.datum` is a `ChartSeriesDatum`, or the datum of the marks with `definition`.
      */
-    onFocusGroupChange?: (points: readonly ChartPoint<ChartSeriesDatum<T>>[]) => void
+    onFocusGroupChange?: (points: readonly ChartPoint<D>[]) => void
 
     /**
      * Override styles for specific chart slots.
@@ -290,7 +305,7 @@ export interface ChartProps<T extends Record<string, any> = Record<string, any>>
     /**
      * Replaces the tooltip content.
      */
-    tooltipSlot?: Snippet<[ChartTooltipSlotProps]>
+    tooltipSlot?: Snippet<[ChartTooltipSlotProps<D>]>
 
     /**
      * Content in the middle of a `donut` chart.

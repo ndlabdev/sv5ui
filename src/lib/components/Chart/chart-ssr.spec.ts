@@ -63,6 +63,24 @@ describe('Chart SSR', () => {
         expect(body).toContain('class="ts-chart__arc"')
     })
 
+    it('renders default axis ticks without locale separators', () => {
+        const { body } = render(Chart, {
+            props: {
+                data: [
+                    { month: 'Jan', desktop: 12_500 },
+                    { month: 'Feb', desktop: 30_500 }
+                ],
+                index: 'month',
+                categories: ['desktop']
+            }
+        })
+        const ticks = [...body.matchAll(/data-ts-key="y-tick-label[^"]*"[^>]*>([^<]*)</g)].map(
+            (match) => match[1]
+        )
+        expect(ticks.length).toBeGreaterThan(1)
+        expect(ticks.every((tick) => /^-?\d+$/.test(tick))).toBe(true)
+    })
+
     it('renders the same markup twice for the same props', () => {
         const props = { data, index: 'month' as const, categories: ['desktop' as const], id: 'a' }
         expect(render(Chart, { props }).body).toBe(render(Chart, { props }).body)

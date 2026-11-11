@@ -86,6 +86,7 @@
     let focused = $state<string>('')
 
     const target = 200
+    let targetFocus = $state('')
     const targetDefinition = defineChart({
         marks: [
             ruleY([target], { stroke: 'var(--color-error)', strokeDasharray: '4 4' }),
@@ -428,9 +429,7 @@
                 height={240}
             >
                 {#snippet tooltipSlot({ title, points: focusedPoints })}
-                    {@const row = (
-                        focusedPoints[0]?.datum as ChartSeriesDatum<(typeof revenue)[number]>
-                    )?.row}
+                    {@const row = focusedPoints[0]?.datum.row}
                     <div class="flex min-w-40 flex-col gap-1">
                         <span class="font-medium text-on-surface">{title}</span>
                         {#if row}
@@ -497,14 +496,25 @@
         <h2 class="text-lg font-semibold">Definition</h2>
         <p class="text-sm text-on-surface-variant">
             Pass a full TanStack Charts definition for anything the props do not cover. Here a
-            dashed rule marks a target of {target}.
+            dashed rule marks a target of {target}. Callbacks receive the rows of its marks.
         </p>
         <Card variant="outline">
             <Chart
                 definition={targetDefinition}
                 aria-label="Desktop visitors against a target"
                 height={240}
+                onFocusChange={(point) =>
+                    (targetFocus = point
+                        ? `${point.datum.month}: ${point.datum.desktop - target >= 0 ? '+' : ''}${point.datum.desktop - target}`
+                        : '')}
             />
+            {#snippet footer()}
+                <span class="text-sm"
+                    >Against target: <span class="font-mono text-on-surface"
+                        >{targetFocus || 'none'}</span
+                    ></span
+                >
+            {/snippet}
         </Card>
     </section>
 

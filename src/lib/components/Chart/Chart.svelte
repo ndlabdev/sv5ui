@@ -5,21 +5,27 @@
 </script>
 
 <!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-<script lang="ts" generics="T extends Record<string, any>">
+<script lang="ts" generics="T extends Record<string, any>, D = ChartSeriesDatum<T>">
     import {
         Chart as ChartHost,
         type ChartPoint,
         type ChartTooltipBodySnippetContext
     } from '@tanstack/charts/svelte'
     import type { ChartTooltipRow as ChartContentRow } from '@tanstack/charts'
-    import type { ChartLegendItem, ChartTooltipRow } from './chart.types.js'
+    import type { ChartLegendItem, ChartSeriesDatum, ChartTooltipRow } from './chart.types.js'
     import { chartVariants, chartDefaults } from './chart.variants.js'
     import {
         buildCartesianDefinition,
         buildDonutDefinition,
+        createDonutFocus,
         toSeriesPoint
     } from './chart.definition.js'
-    import { buildSliceRows, defaultAriaLabel, resolveCategories } from './chart.utils.js'
+    import {
+        buildSliceRows,
+        defaultAriaLabel,
+        numericStrings,
+        resolveCategories
+    } from './chart.utils.js'
     import { getComponentConfig } from '../../config.js'
 
     const config = getComponentConfig('chart', chartDefaults)
@@ -59,7 +65,9 @@
         tooltipSlot,
         center,
         ...restProps
-    }: ChartProps<T> = $props()
+    }: ChartProps<T, D> = $props()
+
+    const donutFocus = createDonutFocus()
 
     const resolvedCategories = $derived(resolveCategories(categories, colors))
 
@@ -85,6 +93,7 @@
             return buildDonutDefinition({
                 rows: slices.rows,
                 items: slices.items,
+                focus: donutFocus.strategy,
                 thickness,
                 format,
                 tooltip,
@@ -122,18 +131,40 @@
 
     const chartHeight = $derived(height ?? (aspectRatio === undefined ? 300 : undefined))
 
+    function toPoint(point: ChartPoint): ChartPoint<D> {
+        return (definition ? point : toSeriesPoint<T>(point)) as ChartPoint<D>
+    }
+
     const handleSelect = $derived(
-        onSelect && ((point: ChartPoint | null) => onSelect(point && toSeriesPoint<T>(point)))
+        onSelect && ((point: ChartPoint | null) => onSelect(point && toPoint(point)))
     )
     const handleFocusChange = $derived(
-        onFocusChange &&
-            ((point: ChartPoint | null) => onFocusChange(point && toSeriesPoint<T>(point)))
+        onFocusChange && ((point: ChartPoint | null) => onFocusChange(point && toPoint(point)))
     )
     const handleFocusGroupChange = $derived(
         onFocusGroupChange &&
-            ((points: readonly ChartPoint[]) =>
-                onFocusGroupChange(points.map((point) => toSeriesPoint<T>(point))))
+            ((points: readonly ChartPoint[]) => onFocusGroupChange(points.map(toPoint)))
     )
+
+    const warnedKeys: string[] = []
+
+    $effect(() => {
+        if (definition) return
+        const plotted = type === 'donut' ? resolvedCategories.slice(0, 1) : resolvedCategories
+        for (const { key, sample } of numericStrings(
+            data,
+            plotted.map((category) => category.key)
+        )) {
+            if (warnedKeys.includes(key)) continue
+            warnedKeys.push(key)
+            // eslint-disable-next-line no-console
+            console.warn(
+                `[sv5ui Chart] "${key}" holds numeric strings such as "${sample}". ` +
+                    'Only numbers are plotted, so these values are drawn as gaps. ' +
+                    'Convert them with Number() first.'
+            )
+        }
+    })
 
     const variantSlots = $derived(chartVariants({ type }))
 
@@ -192,7 +223,7 @@
         {#if tooltipSlot}
             {@render tooltipSlot({
                 ...content,
-                points: context.points,
+                points: context.points.map(toPoint),
                 pinned: context.pinned,
                 dismiss: context.dismiss
             })}
@@ -227,6 +258,7 @@
             onSelect={handleSelect}
             onFocusChange={handleFocusChange}
             onFocusGroupChange={handleFocusGroupChange}
+            onRender={donutFocus.track}
             {tooltipBody}
         />
         {#if center && type === 'donut' && !definition}

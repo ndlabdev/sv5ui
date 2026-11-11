@@ -98,6 +98,23 @@ function sumValues<T extends Record<string, any>>(rows: readonly T[], key: strin
     return total
 }
 
+export function numericStrings<T extends Record<string, any>>(
+    data: readonly T[],
+    keys: readonly string[]
+): { key: string; sample: string }[] {
+    const found: { key: string; sample: string }[] = []
+    for (const key of keys) {
+        const sample = data.find((row) => {
+            const value = row[key]
+            return (
+                typeof value === 'string' && value.trim() !== '' && Number.isFinite(Number(value))
+            )
+        })?.[key]
+        if (sample !== undefined) found.push({ key, sample })
+    }
+    return found
+}
+
 export function buildSeriesRows<T extends Record<string, any>>(
     data: readonly T[],
     index: string,

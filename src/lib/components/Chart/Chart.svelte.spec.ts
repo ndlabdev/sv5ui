@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { createRawSnippet } from 'svelte'
 import { defineChart, lineY } from '@tanstack/charts'
+import { pie, polar, radialArc } from '@tanstack/charts/polar'
 import { scaleLinear } from '@tanstack/charts/scales/linear'
 import { scalePoint } from '@tanstack/charts/scales/point'
 import { tooltip } from '@tanstack/charts/tooltip'
@@ -509,6 +510,188 @@ describe('Chart', () => {
         })
     })
 
+    describe('donut keyboard and pointer', () => {
+        const shares = [
+            { browser: 'Chrome', visitors: 275 },
+            { browser: 'Safari', visitors: 200 },
+            { browser: 'Firefox', visitors: 187 },
+            { browser: 'Edge', visitors: 173 },
+            { browser: 'Other', visitors: 90 }
+        ]
+
+        function renderDonut() {
+            const onFocusChange = vi.fn()
+            const { container } = render(Chart, {
+                type: 'donut',
+                data: shares,
+                index: 'browser',
+                categories: ['visitors'],
+                width: 300,
+                height: 300,
+                onFocusChange
+            })
+            const label = () => onFocusChange.mock.calls.at(-1)?.[0]?.datum.label
+            return { svg: getSvg(container), label }
+        }
+
+        it('walks the slices in data order with the keyboard', async () => {
+            const { svg, label } = renderDonut()
+            svg.focus()
+            await vi.waitFor(() => expect(label()).toBe('Chrome'))
+            const visited = []
+            for (const key of [
+                'ArrowRight',
+                'ArrowRight',
+                'ArrowRight',
+                'End',
+                'Home',
+                'ArrowLeft'
+            ]) {
+                await userEvent.keyboard(`{${key}}`)
+                await new Promise((resolve) => setTimeout(resolve, 30))
+                visited.push(label())
+            }
+            expect(visited).toEqual(['Safari', 'Firefox', 'Edge', 'Other', 'Chrome', 'Chrome'])
+        })
+
+        it('focuses the slice under the pointer, up to its edges', async () => {
+            const { svg, label } = renderDonut()
+            const box = svg.getBoundingClientRect()
+            const total = shares.reduce((sum, row) => sum + row.visitors, 0)
+            let start = 0
+            for (const row of shares) {
+                const end = start + (row.visitors / total) * 2 * Math.PI
+                for (const angle of [start + 0.04, (start + end) / 2, end - 0.04]) {
+                    svg.dispatchEvent(
+                        new PointerEvent('pointermove', {
+                            clientX: box.left + box.width / 2 + 134 * Math.sin(angle),
+                            clientY: box.top + box.height / 2 - 134 * Math.cos(angle),
+                            bubbles: true,
+                            pointerType: 'mouse'
+                        })
+                    )
+                    await vi.waitFor(() => expect(label()).toBe(row.browser))
+                }
+                start = end
+            }
+        })
+    })
+
+    describe('datum', () => {
+        it('gives tooltipSlot the same donut datum as the callbacks', async () => {
+            let slotDatum: unknown
+            const tooltipSlot = createRawSnippet<[ChartTooltipSlotProps]>((props) => {
+                slotDatum = props().points[0]?.datum
+                return { render: () => '<p data-active="custom">slot</p>' }
+            })
+            const onFocusChange = vi.fn()
+            const { container } = render(Chart, {
+                type: 'donut',
+                data: browsers,
+                index: 'browser',
+                categories: ['visitors'],
+                tooltipSlot,
+                onFocusChange
+            })
+            await focusFirstPoint(container)
+            const callbackDatum = onFocusChange.mock.calls.at(-1)![0].datum
+            expect(slotDatum).toEqual(callbackDatum)
+            expect(Object.keys(slotDatum as object).sort()).toEqual(
+                ['category', 'end', 'index', 'label', 'row', 'rows', 'start', 'value'].sort()
+            )
+            expect((slotDatum as { row: unknown }).row).toBe(browsers[0])
+        })
+
+        it('passes the datum of the marks with a definition', async () => {
+            const rows = [
+                { month: 'Jan', desktop: 1 },
+                { month: 'Feb', desktop: 2 }
+            ]
+            const onFocusChange = vi.fn()
+            const { container } = render(Chart, {
+                definition: defineChart({
+                    marks: [lineY(rows, { x: 'month', y: 'desktop' })],
+                    scales: { x: { scale: () => scalePoint<string>() }, y: { scale: scaleLinear } }
+                }),
+                'aria-label': 'Desktop',
+                onFocusChange
+            })
+            getSvg(container).focus()
+            await vi.waitFor(() => expect(onFocusChange).toHaveBeenCalled())
+            expect(onFocusChange.mock.calls.at(-1)![0].datum).toBe(rows[0])
+        })
+
+        it('keeps pie data untouched in a definition', async () => {
+            const rows = [
+                { browser: 'Chrome', visitors: 3 },
+                { browser: 'Safari', visitors: 1 }
+            ]
+            const onFocusChange = vi.fn()
+            const { container } = render(Chart, {
+                definition: defineChart({
+                    marks: [
+                        polar({
+                            marks: [
+                                radialArc(pie(rows, { value: 'visitors' }), { key: 'browser' })
+                            ],
+                            scales: { angle: null, radius: null }
+                        })
+                    ],
+                    scales: { x: null, y: null }
+                }),
+                'aria-label': 'Browsers',
+                onFocusChange
+            })
+            getSvg(container).focus()
+            await vi.waitFor(() => expect(onFocusChange).toHaveBeenCalled())
+            const datum = onFocusChange.mock.calls.at(-1)![0].datum
+            expect(datum).toHaveProperty('startAngle')
+            expect(datum).toHaveProperty('browser')
+        })
+    })
+
+    describe('numeric strings', () => {
+        it('warns once per category', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+            const { rerender } = render(Chart, {
+                data: [
+                    { month: 'Jan', desktop: '12', mobile: 3 },
+                    { month: 'Feb', desktop: '7.5', mobile: '4' }
+                ],
+                index: 'month',
+                categories: ['desktop', 'mobile']
+            } as never)
+            await rerender({ height: 200 })
+            const messages = warn.mock.calls.map((call) => String(call[0]))
+            warn.mockRestore()
+            expect(messages).toHaveLength(2)
+            expect(messages[0]).toContain('"desktop" holds numeric strings such as "12"')
+            expect(messages[1]).toContain('"mobile"')
+        })
+
+        it('stays quiet for numbers, text and definitions', () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+            render(Chart, { data, index: 'month', categories })
+            render(Chart, {
+                data: [{ month: 'Jan', desktop: 'n/a', mobile: '' }],
+                index: 'month',
+                categories: ['desktop', 'mobile']
+            } as never)
+            render(Chart, {
+                definition: defineChart({
+                    marks: [lineY(data, { x: 'month', y: 'desktop' })],
+                    scales: { x: { scale: () => scalePoint<string>() }, y: { scale: scaleLinear } }
+                }),
+                data: [{ month: 'Jan', desktop: '12' }],
+                categories: ['desktop'],
+                'aria-label': 'Desktop'
+            } as never)
+            const calls = warn.mock.calls.length
+            warn.mockRestore()
+            expect(calls).toBe(0)
+        })
+    })
+
     describe('center', () => {
         const center = createRawSnippet<[ChartCenterSlotProps]>((props) => ({
             render: () =>
@@ -584,7 +767,7 @@ describe('Chart', () => {
             ],
             'values that are not finite numbers': [
                 { month: 'Jan', desktop: NaN, mobile: Infinity },
-                { month: 'Feb', desktop: '12', mobile: 4 }
+                { month: 'Feb', desktop: null, mobile: 4 }
             ],
             'negative values': [
                 { month: 'Jan', desktop: -5, mobile: 3 },

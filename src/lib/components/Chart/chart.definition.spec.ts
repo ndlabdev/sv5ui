@@ -3,6 +3,7 @@ import { createChartScene, renderChartSvg } from '@tanstack/charts'
 import {
     buildCartesianDefinition,
     buildDonutDefinition,
+    createDonutFocus,
     toSeriesPoint,
     type CartesianDefinitionOptions
 } from './chart.definition.js'
@@ -282,6 +283,61 @@ describe('chart definition', () => {
                     ariaLabel: 'Donut'
                 })
             expect(paths(12)).not.toBe(paths(48))
+        })
+    })
+
+    describe('createDonutFocus', () => {
+        const shares = [
+            { browser: 'Chrome', visitors: 275 },
+            { browser: 'Safari', visitors: 200 },
+            { browser: 'Firefox', visitors: 187 },
+            { browser: 'Edge', visitors: 173 }
+        ]
+        const slices = buildSliceRows(
+            shares,
+            'browser',
+            resolveCategories<(typeof shares)[number]>(['visitors'])[0]
+        )
+
+        function setup() {
+            const focus = createDonutFocus()
+            const definition = buildDonutDefinition({
+                ...slices,
+                focus: focus.strategy,
+                thickness: 24,
+                tooltip: true,
+                transition: false
+            })
+            const scene = createChartScene(definition, { width: 300, height: 300 })
+            return { focus, scene }
+        }
+
+        it('navigates the slices in data order', () => {
+            const { focus, scene } = setup()
+            const order = focus.strategy
+                .navigation(scene.points)
+                .map((point) => (point.datum as { label: string }).label)
+            expect(order).toEqual(['Chrome', 'Safari', 'Firefox', 'Edge'])
+        })
+
+        it('resolves nothing before the first render', () => {
+            const { focus, scene } = setup()
+            expect(
+                focus.strategy.resolve(scene.points, { x: 150, y: 20, maxDistance: 48 })
+            ).toEqual([])
+        })
+
+        it('resolves the slice under the pointer once a scene is tracked', () => {
+            const { focus, scene } = setup()
+            focus.track({ scene })
+            const [top] = focus.strategy.resolve(scene.points, { x: 160, y: 20, maxDistance: 48 })
+            expect((top.datum as { label: string }).label).toBe('Chrome')
+        })
+
+        it('groups a slice with itself only', () => {
+            const { focus, scene } = setup()
+            const point = scene.points[2]
+            expect(focus.strategy.group(scene.points, { point })).toEqual([point])
         })
     })
 
