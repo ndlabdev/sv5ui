@@ -55,7 +55,7 @@ npm install sv5ui
 # pnpm add sv5ui · yarn add sv5ui · bun add sv5ui
 ```
 
-> **Peer dependencies:** `svelte@^5` and `tailwindcss@^4`. The rich-text `Editor` and `Form` validators (TipTap, Zod/Valibot/Yup/Joi) are **optional** peers — install only what you use.
+> **Peer dependencies:** `svelte@^5` and `tailwindcss@^4`. The rich-text `Editor`, the `Chart` and `Form` validators (TipTap, TanStack Charts, Zod/Valibot/Yup/Joi) are **optional** peers — install only what you use.
 
 **2. Import the theme**
 
@@ -93,7 +93,7 @@ That's it — no provider to wrap, no config file required.
 
 ## Components
 
-SV5UI covers the surface area of a real application — forms and inputs, overlays and menus, navigation, data display, and feedback — including richer pieces many libraries leave out, like a TipTap-powered rich-text **Editor**, a data **Table**, a **Command** palette, and a **Calendar**.
+SV5UI covers the surface area of a real application — forms and inputs, overlays and menus, navigation, data display, and feedback — including richer pieces many libraries leave out, like a TipTap-powered rich-text **Editor**, a TanStack-powered **Chart**, a data **Table**, a **Command** palette, and a **Calendar**.
 
 Every component is fully typed, theme-aware, and exposes a consistent `variant` / `color` / `size` / `ui` API. Browse the complete, always-current catalog with live examples and prop tables in the **[live demo](https://sv5ui.vercel.app)**.
 
@@ -178,6 +178,7 @@ Swap `zod` for `valibot`, `yup`, or `joi` — the API is identical.
 | `tailwindcss`                     | `^4.0.0` | Yes                        |
 | `zod` / `valibot` / `yup` / `joi` | —        | Optional (form validation) |
 | `@tiptap/*`, `tiptap-markdown`    | `^3.0.0` | Optional (`Editor`)        |
+| `@tanstack/charts`                | `^1.5.0` | Optional (`Chart`)         |
 
 ## Support
 
