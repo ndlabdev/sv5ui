@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Select**, **SelectMenu** — the form inputs ignore values outside `items` and opt out of browser autofill, so the browser no longer restores a selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Select**, **SelectMenu** — an item with `value: ''` is now a real option. The trigger shows its label, it can be chosen with the mouse and the keyboard, and the list highlights it when it opens. Without such an item, `''` still shows the placeholder, and `required` still treats `''` as empty. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **SelectMenu** — with `name`, the last item in a FieldGroup keeps its rounded corners, and `space-y` no longer adds a gap below it. The form inputs now sit inside the root element, so code that expects them next to the root needs updating. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Modal** — rings and text inside a centered Modal no longer blur in Chrome, Edge and Safari at a device pixel ratio of 1 when the Modal has an odd height or width. The Modal now moves by whole pixels, so it can sit up to half a pixel off center. Browsers without `round()` support, such as Chrome and Edge before version 125, keep the previous centering. ([#256](https://github.com/ndlabdev/sv5ui/issues/256))
 
 ## [2.10.0] - 2026-10-28
 
