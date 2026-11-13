@@ -17,6 +17,7 @@
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
     import SelectFormInputs from '../../internal/SelectFormInputs.svelte'
+    import { fromPrimitiveValue, toPrimitiveValue } from '../../internal/selectItemValue.js'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
     import {
         fieldControlAttributes,
@@ -126,7 +127,7 @@
             ? Array.isArray(value)
                 ? (value as string[])
                 : []
-            : typeof value === 'string' && value !== ''
+            : typeof value === 'string' && (value !== '' || itemsMap.has(value))
               ? [value]
               : []
     )
@@ -134,6 +135,7 @@
         selectedValues.map((v) => itemsMap.get(v)).filter((i): i is SelectItem => i !== undefined)
     )
     const hasSelection = $derived(selectedValues.length > 0)
+    const primitiveValues = $derived(selectedValues.map(toPrimitiveValue))
     const singleSelectedItem = $derived(multiple ? undefined : selectedItems[0])
     const displayLabel = $derived(
         multiple
@@ -171,7 +173,7 @@
     // ---- bits-ui items for typeahead ----
     const bitsItems = $derived(
         [...itemsMap.values()].map((i) => ({
-            value: i.value,
+            value: toPrimitiveValue(i.value),
             label: i.label ?? i.value,
             disabled: i.disabled
         }))
@@ -282,7 +284,7 @@
 {#snippet renderItem(item: SelectItem, index: number)}
     {@const isSelected = selectedValues.includes(item.value)}
     <Select.Item
-        value={item.value}
+        value={toPrimitiveValue(item.value)}
         label={item.label ?? item.value}
         disabled={item.disabled}
         class={itemClass}
@@ -444,9 +446,9 @@
         {disabled}
         {required}
         items={bitsItems}
-        value={selectedValues}
+        value={primitiveValues}
         onValueChange={(val) => {
-            value = val
+            value = val.map(fromPrimitiveValue)
             emit.onChange()
         }}
     >
@@ -467,9 +469,9 @@
         {disabled}
         {required}
         items={bitsItems}
-        value={selectedValues[0] ?? ''}
+        value={primitiveValues[0] ?? ''}
         onValueChange={(val) => {
-            value = val
+            value = fromPrimitiveValue(val)
             emit.onChange()
         }}
     >
