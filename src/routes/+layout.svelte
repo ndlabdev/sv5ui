@@ -72,6 +72,8 @@
         { href: '/theme-mode-button', label: 'Theme Toggle', icon: 'lucide:sun-moon' },
         { href: '/toast', label: 'Toast', icon: 'lucide:megaphone' },
         { href: '/table', label: 'Table', icon: 'lucide:table' },
+        { href: '/chart', label: 'Chart', icon: 'lucide:chart-line' },
+        { href: '/chart/edge-cases', label: 'Chart Edge Cases', icon: 'lucide:shield-check' },
         { href: '/carousel', label: 'Carousel', icon: 'lucide:gallery-horizontal' },
         { href: '/lightbox', label: 'Lightbox', icon: 'lucide:image' },
         { href: '/image-cropper', label: 'Image Cropper', icon: 'lucide:crop' },
