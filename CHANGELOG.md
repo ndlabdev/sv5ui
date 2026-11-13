@@ -9,17 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Chart** — new component for line, area, bar and donut charts, built on TanStack Charts and imported from `sv5ui/chart`. `@tanstack/charts` is an optional peer dependency, and the main `sv5ui` entry keeps working without it. Charts are described by `data`, `index` and `categories`, with `stacked`, `curve` (`linear`, `monotone`, `step`), `points`, `grid`, `xAxis`, `yAxis`, `xLabel`, `yLabel`, `legend`, `format`, `tooltip`, `transition`, `thickness` and responsive sizing (`height`, `width`, `aspectRatio`, `initialWidth`). The `tooltipSlot` and `center` snippets customize the tooltip and the middle of a donut, `onSelect`, `onFocusChange`, `onFocusGroupChange` and `tooltipSlot` receive a typed datum with the original row, and `definition` accepts a full TanStack Charts definition whose own datum type reaches those callbacks. Numeric strings are not plotted, and the chart warns once per category when it finds them. Rows that share an `index` value are added together, rows without one are skipped, values that are not finite numbers leave a gap, and a value without neighbours keeps a dot. The SVG is rendered on the server and the chart can be explored with the keyboard, donut slices in data order. ([#260](https://github.com/ndlabdev/sv5ui/issues/260))
-- `--color-chart-1` to `--color-chart-6` theme tokens with light and dark values, also available as Tailwind colors such as `bg-chart-1`. ([#260](https://github.com/ndlabdev/sv5ui/issues/260))
+- **Chart** — line, area, bar and donut charts built on TanStack Charts, imported from `sv5ui/chart`. `@tanstack/charts` is an optional peer dependency, and the main `sv5ui` entry works without it. Charts render on the server, can be explored with the keyboard, and accept a `definition` for custom charts. ([#260](https://github.com/ndlabdev/sv5ui/issues/260))
+- `--color-chart-1` to `--color-chart-6` theme tokens for light and dark mode. ([#260](https://github.com/ndlabdev/sv5ui/issues/260))
 
 ### Fixed
 
-- **Select** — `name` now submits the selection with the form, one entry per value with `multiple`. The trigger button no longer carries `name`, so select it through `id` or `data-select-trigger` instead. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **Select**, **SelectMenu** — with `name`, `required` blocks native submission while nothing is selected, also with `multiple`, and `form.reset()` clears the selection in every mode. A `Form` runs its schema only after the browser allows the submit, so add `novalidate` to it if you want schema messages for an empty `required` control. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **Select**, **SelectMenu** — the form inputs ignore values outside `items` and opt out of browser autofill, so the browser no longer restores a selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **Select**, **SelectMenu** — an item with `value: ''` is now a real option. The trigger shows its label, it can be chosen with the mouse and the keyboard, and the list highlights it when it opens. Without such an item, `''` still shows the placeholder, and `required` still treats `''` as empty. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **SelectMenu** — with `name`, the last item in a FieldGroup keeps its rounded corners, and `space-y` no longer adds a gap below it. The form inputs now sit inside the root element, so code that expects them next to the root needs updating. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **Modal** — rings and text inside a centered Modal no longer blur in Chrome, Edge and Safari at a device pixel ratio of 1 when the Modal has an odd height or width. The Modal now moves by whole pixels, so it can sit up to half a pixel off center. Browsers without `round()` support, such as Chrome and Edge before version 125, keep the previous centering. ([#256](https://github.com/ndlabdev/sv5ui/issues/256))
+- **Select** — `name` submits the selection with the form, one entry per value with `multiple`. The trigger no longer carries `name`, so target it with `id` or `data-select-trigger`. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select**, **SelectMenu** — `required` blocks native submission while nothing is selected, and `form.reset()` clears the selection. Add `novalidate` to a `Form` to get schema messages for an empty `required` control. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select**, **SelectMenu** — the browser no longer restores an old selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select**, **SelectMenu** — an item with `value: ''` can be shown and selected. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **SelectMenu** — the form inputs now sit inside the root, so the last item in a FieldGroup keeps its rounded corners. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Modal** — rings and text no longer blur at a device pixel ratio of 1. ([#256](https://github.com/ndlabdev/sv5ui/issues/256))
 
 ## [2.10.0] - 2026-10-28
 
