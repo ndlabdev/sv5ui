@@ -55,7 +55,7 @@ npm install sv5ui
 # pnpm add sv5ui · yarn add sv5ui · bun add sv5ui
 ```
 
-> **Peer dependencies:** `svelte@^5` and `tailwindcss@^4`. The rich-text `Editor`, the `Chart` and `Form` validators (TipTap, TanStack Charts, Zod/Valibot/Yup/Joi) are **optional** peers — install only what you use.
+> **Peer dependencies:** `svelte@^5.33`, `@sveltejs/kit@^2.12` and `tailwindcss@^4`. The rich-text `Editor`, the `Chart` and `Form` validators (TipTap, TanStack Charts, Zod/Valibot/Yup/Joi) are **optional** peers — install only what you use.
 
 **2. Import the theme**
 
@@ -172,13 +172,14 @@ Swap `zod` for `valibot`, `yup`, or `joi` — the API is identical.
 
 ## Requirements
 
-| Peer                              | Version  | Required                   |
-| --------------------------------- | -------- | -------------------------- |
-| `svelte`                          | `^5.0.0` | Yes                        |
-| `tailwindcss`                     | `^4.0.0` | Yes                        |
-| `zod` / `valibot` / `yup` / `joi` | —        | Optional (form validation) |
-| `@tiptap/*`, `tiptap-markdown`    | `^3.0.0` | Optional (`Editor`)        |
-| `@tanstack/charts`                | `^1.5.0` | Optional (`Chart`)         |
+| Peer                              | Version   | Required                   |
+| --------------------------------- | --------- | -------------------------- |
+| `svelte`                          | `^5.33.0` | Yes                        |
+| `@sveltejs/kit`                   | `^2.12.0` | Yes                        |
+| `tailwindcss`                     | `^4.0.0`  | Yes                        |
+| `zod` / `valibot` / `yup` / `joi` | —         | Optional (form validation) |
+| `@tiptap/*`, `tiptap-markdown`    | `^3.0.0`  | Optional (`Editor`)        |
+| `@tanstack/charts`                | `^1.5.0`  | Optional (`Chart`)         |
 
 ## Support
 
