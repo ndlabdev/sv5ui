@@ -12,13 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Chart** — line, area, bar and donut charts built on TanStack Charts, imported from `sv5ui/chart`. `@tanstack/charts` is an optional peer dependency, and the main `sv5ui` entry works without it. Charts render on the server, can be explored with the keyboard, and accept a `definition` for custom charts. ([#260](https://github.com/ndlabdev/sv5ui/issues/260))
 - `--color-chart-1` to `--color-chart-6` theme tokens for light and dark mode. ([#260](https://github.com/ndlabdev/sv5ui/issues/260))
 
+### Changed
+
+- **Select** — the trigger button no longer carries `name`, so target it with `id` or `data-select-trigger`. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **SelectMenu** — the form inputs now sit inside the root element instead of next to it. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+
 ### Fixed
 
-- **Select** — `name` submits the selection with the form, one entry per value with `multiple`. The trigger no longer carries `name`, so target it with `id` or `data-select-trigger`. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select** — `name` submits the selection with the form, one entry per value with `multiple`. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Select**, **SelectMenu** — `required` blocks native submission while nothing is selected, and `form.reset()` clears the selection. Add `novalidate` to a `Form` to get schema messages for an empty `required` control. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Select**, **SelectMenu** — the browser no longer restores an old selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Select**, **SelectMenu** — an item with `value: ''` can be shown and selected. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **SelectMenu** — the form inputs now sit inside the root, so the last item in a FieldGroup keeps its rounded corners. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **SelectMenu** — the last item in a FieldGroup keeps its rounded corners when `name` is set. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Modal** — rings and text no longer blur at a device pixel ratio of 1. ([#256](https://github.com/ndlabdev/sv5ui/issues/256))
 
 ## [2.10.0] - 2026-10-28
