@@ -1,9 +1,10 @@
 import { page } from 'vitest/browser'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { createRawSnippet } from 'svelte'
 import Select from './Select.svelte'
 import type { SelectItemType } from './select.types.js'
+import { FORM_FIELD_CONTEXT_KEY } from '../../hooks/useFormField/index.js'
 
 const defaultItems: SelectItemType[] = [
     { value: 'apple', label: 'Apple' },
@@ -53,12 +54,6 @@ describe('Select', () => {
         it('should render with id', () => {
             render(Select, { items: defaultItems, id: 'my-select' })
             expect(getTrigger()!.id).toBe('my-select')
-        })
-
-        it('should render with name attribute', () => {
-            render(Select, { items: defaultItems, name: 'fruit' })
-            const trigger = getTrigger()!
-            expect(trigger.getAttribute('name')).toBe('fruit')
         })
 
         it('should render empty when no items provided', () => {
@@ -616,6 +611,174 @@ const slotSnippet = (id: string) =>
 
 const wrapperOf = (container: Element, id: string) =>
     container.querySelector(`#${id}`)?.parentElement as HTMLElement
+
+describe('Select form submission, #255', () => {
+    const forms: HTMLFormElement[] = []
+
+    const makeForm = () => {
+        const form = document.createElement('form')
+        document.body.append(form)
+        forms.push(form)
+        return form
+    }
+
+    const renderInForm = (props: Record<string, unknown>, context?: Map<unknown, unknown>) => {
+        const form = makeForm()
+        render(Select, {
+            target: form,
+            props: { items: defaultItems, ...props },
+            ...(context ? { context } : {})
+        })
+        return form
+    }
+
+    const submitted = (form: HTMLFormElement, name = 'fruit') => new FormData(form).getAll(name)
+
+    afterEach(() => {
+        forms.splice(0).forEach((form) => form.remove())
+    })
+
+    it('submits the selected value', () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        expect(submitted(form)).toEqual(['banana'])
+    })
+
+    it('submits one entry per selected value with multiple', () => {
+        const form = renderInForm({ name: 'fruit', multiple: true, value: ['apple', 'cherry'] })
+        expect(submitted(form)).toEqual(['apple', 'cherry'])
+    })
+
+    it('submits an empty string when nothing is selected', () => {
+        const form = renderInForm({ name: 'fruit' })
+        expect(submitted(form)).toEqual([''])
+    })
+
+    it('submits nothing when nothing is selected with multiple', () => {
+        const form = renderInForm({ name: 'fruit', multiple: true })
+        expect(submitted(form)).toEqual([])
+    })
+
+    it('does not submit while disabled', () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana', disabled: true })
+        expect(submitted(form)).toEqual([])
+    })
+
+    it('submits the option the user picks', async () => {
+        const form = renderInForm({ name: 'fruit', value: 'apple', open: true, portal: false })
+        await page.getByRole('option', { name: 'Cherry' }).click()
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['cherry']))
+    })
+
+    it('uses the name from the surrounding FormField', () => {
+        const form = renderInForm(
+            { value: 'banana' },
+            new Map([[FORM_FIELD_CONTEXT_KEY, { name: 'field-fruit', size: 'md', ariaId: 'f' }]])
+        )
+        expect(submitted(form, 'field-fruit')).toEqual(['banana'])
+    })
+
+    it('renders no input without a name', () => {
+        const form = renderInForm({ value: 'banana' })
+        expect(form.querySelector('input')).toBeNull()
+    })
+
+    it('does not put the name on the trigger button', () => {
+        renderInForm({ name: 'fruit', value: 'banana' })
+        expect(getTrigger()!.hasAttribute('name')).toBe(false)
+    })
+
+    it('keeps the input inside the root so the root stays the last child of its parent', () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        expect(form.lastElementChild).toBe(getRootWrapper())
+        expect(getRootWrapper()!.querySelector('input[name="fruit"]')).not.toBeNull()
+    })
+
+    it('keeps multiple inputs inside the root as well', () => {
+        const form = renderInForm({ name: 'fruit', multiple: true, value: ['apple', 'cherry'] })
+        expect(form.lastElementChild).toBe(getRootWrapper())
+    })
+
+    it('follows a value changed from outside', async () => {
+        const form = makeForm()
+        const { rerender } = render(Select, {
+            target: form,
+            props: { items: defaultItems, name: 'fruit', value: 'apple' }
+        })
+        await rerender({ value: 'cherry' })
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['cherry']))
+    })
+
+    it('follows values changed from outside with multiple', async () => {
+        const form = makeForm()
+        const { rerender } = render(Select, {
+            target: form,
+            props: { items: defaultItems, name: 'fruit', multiple: true, value: ['apple'] }
+        })
+        await rerender({ value: ['apple', 'cherry'] })
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['apple', 'cherry']))
+    })
+
+    it('blocks native submission while required and empty', () => {
+        expect(renderInForm({ name: 'fruit', required: true }).checkValidity()).toBe(false)
+    })
+
+    it('passes native validation while required and filled', () => {
+        const form = renderInForm({ name: 'fruit', required: true, value: 'banana' })
+        expect(form.checkValidity()).toBe(true)
+    })
+
+    it('blocks native submission while required and empty with multiple', () => {
+        const form = renderInForm({ name: 'fruit', required: true, multiple: true })
+        expect(form.checkValidity()).toBe(false)
+    })
+
+    it('passes native validation while required and filled with multiple', () => {
+        const form = renderInForm({
+            name: 'fruit',
+            required: true,
+            multiple: true,
+            value: ['apple']
+        })
+        expect(form.checkValidity()).toBe(true)
+    })
+
+    it('moves focus to the trigger when native validation fails', async () => {
+        const form = renderInForm({ name: 'fruit', required: true })
+        form.requestSubmit()
+        await vi.waitFor(() => expect(document.activeElement).toBe(getTrigger()))
+    })
+
+    it('clears the selection on form reset', async () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        form.reset()
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['']))
+        await vi.waitFor(() => expect(getTrigger()!.textContent).not.toContain('Banana'))
+    })
+
+    it('clears the selection on form reset with multiple', async () => {
+        const form = renderInForm({ name: 'fruit', multiple: true, value: ['apple', 'cherry'] })
+        form.reset()
+        await vi.waitFor(() => expect(submitted(form)).toEqual([]))
+        await vi.waitFor(() => expect(getTrigger()!.textContent).not.toContain('Apple'))
+    })
+
+    it('rejects a value that is not one of the items', async () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        const input = form.querySelector<HTMLInputElement>('input[name="fruit"]')!
+        input.value = 'not-an-item'
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['banana']))
+        expect(getTrigger()!.textContent).toContain('Banana')
+    })
+
+    it('opts every text input out of browser autofill', () => {
+        for (const props of [{}, { multiple: true }]) {
+            const form = renderInForm({ name: 'fruit', ...props })
+            const input = form.querySelector<HTMLInputElement>('input:not([type="hidden"])')!
+            expect(input.autocomplete).toBe('off')
+        }
+    })
+})
 
 describe('Select leading and trailing slots, #237', () => {
     const base = { items: [{ label: 'Option A', value: 'a' }] }

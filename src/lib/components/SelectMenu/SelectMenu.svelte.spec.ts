@@ -1,5 +1,5 @@
 import { page } from 'vitest/browser'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-svelte'
 import { createRawSnippet } from 'svelte'
 import SelectMenu from './SelectMenu.svelte'
@@ -17,6 +17,170 @@ const getTrigger = (container: Element) =>
 
 const getRootWrapper = (container: Element) =>
     getTrigger(container)?.parentElement as HTMLDivElement | null
+
+describe('SelectMenu form submission, #255', () => {
+    const forms: HTMLFormElement[] = []
+
+    const makeForm = () => {
+        const form = document.createElement('form')
+        document.body.append(form)
+        forms.push(form)
+        return form
+    }
+
+    const renderInForm = (props: Record<string, unknown>) => {
+        const form = makeForm()
+        render(SelectMenu, { target: form, props: { items: defaultItems, ...props } })
+        return form
+    }
+
+    const submitted = (form: HTMLFormElement) => new FormData(form).getAll('fruit')
+
+    afterEach(() => {
+        forms.splice(0).forEach((form) => form.remove())
+    })
+
+    it('submits the selected value', () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        expect(submitted(form)).toEqual(['banana'])
+    })
+
+    it('submits one entry per selected value with multiple', () => {
+        const form = renderInForm({ name: 'fruit', multiple: true, value: ['apple', 'cherry'] })
+        expect(submitted(form)).toEqual(['apple', 'cherry'])
+    })
+
+    it('submits an empty string when nothing is selected', () => {
+        const form = renderInForm({ name: 'fruit' })
+        expect(submitted(form)).toEqual([''])
+    })
+
+    it('submits nothing when nothing is selected with multiple', () => {
+        const form = renderInForm({ name: 'fruit', multiple: true })
+        expect(submitted(form)).toEqual([])
+    })
+
+    it('does not submit while disabled', () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana', disabled: true })
+        expect(submitted(form)).toEqual([])
+    })
+
+    it('renders no named input without a name', () => {
+        const form = renderInForm({ value: 'banana' })
+        expect(form.querySelector('input[name]')).toBeNull()
+    })
+
+    it('submits the option the user picks', async () => {
+        const form = renderInForm({ name: 'fruit', value: 'apple', open: true, portal: false })
+        await page.getByRole('option', { name: 'Cherry' }).click()
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['cherry']))
+    })
+
+    it('blocks native submission while required and empty', () => {
+        expect(renderInForm({ name: 'fruit', required: true }).checkValidity()).toBe(false)
+    })
+
+    it('passes native validation while required and filled', () => {
+        const form = renderInForm({ name: 'fruit', required: true, value: 'banana' })
+        expect(form.checkValidity()).toBe(true)
+    })
+
+    it('moves focus to the combobox when native validation fails', async () => {
+        const form = renderInForm({ name: 'fruit', required: true })
+        form.requestSubmit()
+        await vi.waitFor(() =>
+            expect(document.activeElement).toBe(form.querySelector('input[role="combobox"]'))
+        )
+    })
+
+    it('clears the selection on form reset', async () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        form.reset()
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['']))
+        await vi.waitFor(() => expect(getTrigger(form)!.textContent).not.toContain('Banana'))
+    })
+
+    it('keeps inputs inside the root so the root stays the last child of its parent', () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        expect(form.lastElementChild).toBe(getRootWrapper(form))
+    })
+
+    it('keeps multiple inputs inside the root as well', () => {
+        const form = renderInForm({ name: 'fruit', multiple: true, value: ['apple', 'cherry'] })
+        expect(form.lastElementChild).toBe(getRootWrapper(form))
+    })
+
+    it('follows a value changed from outside', async () => {
+        const form = makeForm()
+        const { rerender } = render(SelectMenu, {
+            target: form,
+            props: { items: defaultItems, name: 'fruit', value: 'apple' }
+        })
+        await rerender({ value: 'cherry' })
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['cherry']))
+    })
+
+    it('follows values changed from outside with multiple', async () => {
+        const form = makeForm()
+        const { rerender } = render(SelectMenu, {
+            target: form,
+            props: { items: defaultItems, name: 'fruit', multiple: true, value: ['apple'] }
+        })
+        await rerender({ value: ['apple', 'cherry'] })
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['apple', 'cherry']))
+    })
+
+    it('blocks native submission while required and empty with multiple', () => {
+        const form = renderInForm({ name: 'fruit', required: true, multiple: true })
+        expect(form.checkValidity()).toBe(false)
+    })
+
+    it('passes native validation while required and filled with multiple', () => {
+        const form = renderInForm({
+            name: 'fruit',
+            required: true,
+            multiple: true,
+            value: ['apple']
+        })
+        expect(form.checkValidity()).toBe(true)
+    })
+
+    it('clears the selection on form reset with multiple', async () => {
+        const form = renderInForm({ name: 'fruit', multiple: true, value: ['apple', 'cherry'] })
+        form.reset()
+        await vi.waitFor(() => expect(submitted(form)).toEqual([]))
+        await vi.waitFor(() => expect(getTrigger(form)!.textContent).not.toContain('Apple'))
+    })
+
+    it('submits an item created by the user', async () => {
+        const form = renderInForm({ name: 'fruit', createItem: true, open: true, portal: false })
+        await page
+            .getByPlaceholder(/search/i)
+            .first()
+            .fill('mango')
+        await page.getByRole('option', { name: /Create "mango"/ }).click()
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['mango']))
+    })
+
+    it('rejects a value that is not one of the items', async () => {
+        const form = renderInForm({ name: 'fruit', value: 'banana' })
+        const input = form.querySelector<HTMLInputElement>('input[name="fruit"]')!
+        input.value = 'not-an-item'
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['banana']))
+        expect(getTrigger(form)!.textContent).toContain('Banana')
+    })
+
+    it('opts every text input out of browser autofill', () => {
+        for (const props of [{}, { multiple: true }]) {
+            const form = renderInForm({ name: 'fruit', ...props })
+            const input = form.querySelector<HTMLInputElement>(
+                'input:not([type="hidden"]):not([role="combobox"])'
+            )!
+            expect(input.autocomplete).toBe('off')
+        }
+    })
+})
 
 describe('SelectMenu', () => {
     // ==================== RENDERING ====================

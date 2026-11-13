@@ -612,3 +612,60 @@ describe('Modal', () => {
         })
     })
 })
+
+describe('Modal centering, #256', () => {
+    const openModal = async (props: Record<string, unknown> = {}) => {
+        render(Modal, { open: true, title: 'Centering', transition: 'none', ...props })
+        await vi.waitFor(() =>
+            expect(document.querySelector('[data-dialog-content]')).not.toBeNull()
+        )
+        return document.querySelector('[data-dialog-content]') as HTMLElement
+    }
+
+    const offsetOf = (content: HTMLElement) => {
+        const rect = content.getBoundingClientRect()
+        const style = getComputedStyle(content)
+        return { x: rect.left - parseFloat(style.left), y: rect.top - parseFloat(style.top) }
+    }
+
+    it('moves the modal by whole pixels when its size is odd', async () => {
+        const content = await openModal({ ui: { content: 'h-[501px] w-[501px]' } })
+        const offset = offsetOf(content)
+        expect(Number.isInteger(offset.y)).toBe(true)
+        expect(Number.isInteger(offset.x)).toBe(true)
+    })
+
+    it('keeps the modal centered within half a pixel', async () => {
+        const content = await openModal({ ui: { content: 'h-[501px] w-[501px]' } })
+        const rect = content.getBoundingClientRect()
+        expect(Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2)).toBeLessThanOrEqual(
+            0.5
+        )
+        expect(Math.abs(rect.left + rect.width / 2 - window.innerWidth / 2)).toBeLessThanOrEqual(
+            0.5
+        )
+    })
+
+    it('keeps a user override of the vertical position', async () => {
+        const content = await openModal({ ui: { content: 'top-8 translate-y-0' } })
+        expect(content.getBoundingClientRect().top).toBe(32)
+    })
+
+    it.each([{ scrollable: true }, { fullscreen: true }])(
+        'does not move the modal with %o',
+        async (props) => {
+            const content = await openModal(props)
+            expect(getComputedStyle(content).translate).toBe('none')
+        }
+    )
+
+    it('falls back to the previous centering where round() is not supported', async () => {
+        const content = await openModal()
+        expect(content.className).toContain(
+            'not-supports-[translate:round(-50%,1px)]:-translate-x-1/2'
+        )
+        expect(content.className).toContain(
+            'not-supports-[translate:round(-50%,1px)]:-translate-y-1/2'
+        )
+    })
+})
