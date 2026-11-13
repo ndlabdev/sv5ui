@@ -16,6 +16,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
+    import SelectFormInputs from '../../internal/SelectFormInputs.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
     import {
         fieldControlAttributes,
@@ -139,6 +140,11 @@
             ? selectedItems.map((i) => i.label ?? i.value).join(separator)
             : (singleSelectedItem?.label ?? singleSelectedItem?.value ?? '')
     )
+
+    function setFormValue(val: string | string[]) {
+        value = val
+        emit.onChange()
+    }
 
     function removeValue(val: string) {
         if (!multiple) return
@@ -377,13 +383,7 @@
             </span>
         {/if}
 
-        <Select.Trigger
-            {...restProps}
-            id={resolvedId}
-            name={resolvedName}
-            {...controlAttributes}
-            class={baseClass}
-        >
+        <Select.Trigger {...restProps} id={resolvedId} {...controlAttributes} class={baseClass}>
             {#if selectedSlot && hasSelection}
                 {@render selectedSlot({
                     items: selectedItems,
@@ -396,6 +396,18 @@
                 <span class={placeholderClass}>{placeholder}</span>
             {/if}
         </Select.Trigger>
+
+        {#if resolvedName}
+            <SelectFormInputs
+                name={resolvedName}
+                {selectedValues}
+                {multiple}
+                {disabled}
+                {required}
+                isKnownValue={(val) => itemsMap.has(val)}
+                onValueChange={setFormValue}
+            />
+        {/if}
 
         {#if trailingSlot && !loadingTrailing}
             <span class={trailingClass}>

@@ -22,6 +22,7 @@
     import Icon from '../Icon/Icon.svelte'
     import Avatar from '../Avatar/Avatar.svelte'
     import type { AvatarSize } from '../Avatar/avatar.types.js'
+    import SelectFormInputs from '../../internal/SelectFormInputs.svelte'
     import { useFormField, useFormFieldEmit } from '../../hooks/useFormField/index.js'
     import {
         fieldControlAttributes,
@@ -167,6 +168,12 @@
     )
     const hasSelection = $derived(selectedValues.length > 0)
     const singleSelectedItem = $derived(multiple ? undefined : selectedItems[0])
+
+    function setFormValue(val: string | string[]) {
+        value = val
+        emit.onChange()
+    }
+
     const displayLabel = $derived(
         multiple
             ? selectedItems.map((i) => i.label ?? i.value).join(separator)
@@ -572,6 +579,18 @@
             {/snippet}
         </Combobox.Trigger>
 
+        {#if resolvedName}
+            <SelectFormInputs
+                name={resolvedName}
+                {selectedValues}
+                {multiple}
+                {disabled}
+                {required}
+                isKnownValue={(val) => itemsMap.has(val)}
+                onValueChange={setFormValue}
+            />
+        {/if}
+
         {#if trailingSlot && !loadingTrailing}
             <span class={trailingStyleClass}>
                 {@render trailingSlot()}
@@ -608,7 +627,6 @@
             value = val
             emit.onChange()
         }}
-        name={resolvedName}
     >
         {@render rootChildren()}
     </Combobox.Root>
@@ -628,7 +646,6 @@
             value = val
             emit.onChange()
         }}
-        name={resolvedName}
     >
         {@render rootChildren()}
     </Combobox.Root>
