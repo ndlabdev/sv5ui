@@ -116,10 +116,7 @@ export interface SelectSelectedSlotProps {
 // Component Props
 // ============================================================================
 
-type RootProps = Pick<
-    SelectRootPropsWithoutHTML,
-    'open' | 'onOpenChange' | 'name' | 'required' | 'disabled'
->
+type RootProps = Pick<SelectRootPropsWithoutHTML, 'open' | 'onOpenChange' | 'required' | 'disabled'>
 
 type ContentProps = Pick<
     SelectContentPropsWithoutHTML,
@@ -171,6 +168,13 @@ type TriggerHTMLProps = Pick<
 export interface SelectProps extends RootProps, ContentProps, TriggerHTMLProps {
     /** Custom data attributes are forwarded to the trigger element. */
     [key: `data-${string}`]: string | number | boolean | null | undefined
+
+    /**
+     * Name submitted with the form, one entry per selected value with `multiple`.
+     * Only values found in `items` are submitted. `form.reset()` clears the selection;
+     * unlike a native `<select>`, it does not return to the value the component started with.
+     */
+    name?: string
 
     // -------------------------------------------------------------------------
     // Ref

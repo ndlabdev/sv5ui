@@ -210,7 +210,9 @@ export interface SelectMenuProps extends ContentProps, TriggerHTMLProps {
     searchPlaceholder?: string
 
     /**
-     * The form field name attribute.
+     * Name submitted with the form, one entry per selected value with `multiple`.
+     * Only values found in `items`, or created with `createItem`, are submitted. `form.reset()` clears the selection;
+     * unlike a native `<select>`, it does not return to the value the component started with.
      */
     name?: string
 
