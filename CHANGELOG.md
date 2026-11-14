@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Select** — `name` submits the selection with the form, one entry per value with `multiple`. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Select**, **SelectMenu** — `required` blocks native submission while nothing is selected, and `form.reset()` clears the selection. Add `novalidate` to a `Form` to get schema messages for an empty `required` control. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
-- **Select**, **SelectMenu** — the browser no longer restores an old selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
+- **Select**, **SelectMenu** — only values found in `items` are submitted, and the browser no longer restores an old selection on back navigation. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Select**, **SelectMenu** — an item with `value: ''` can be shown and selected. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **SelectMenu** — the last item in a FieldGroup keeps its rounded corners when `name` is set. ([#255](https://github.com/ndlabdev/sv5ui/issues/255))
 - **Modal** — rings and text no longer blur at a device pixel ratio of 1. ([#256](https://github.com/ndlabdev/sv5ui/issues/256))

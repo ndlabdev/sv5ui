@@ -19,8 +19,10 @@
 
     let inputEl = $state<HTMLInputElement | null>(null)
 
+    const submittedValues = $derived(selectedValues.filter(isKnownValue))
+
     function getValue() {
-        return selectedValues.join(',')
+        return submittedValues.join(',')
     }
 
     $effect(() => {
@@ -30,7 +32,7 @@
 
     function setValue(next: string) {
         if (multiple) {
-            if (next === '' && selectedValues.length > 0) onValueChange([])
+            if (next === '' && submittedValues.length > 0) onValueChange([])
         } else if (next !== getValue() && (next === '' || isKnownValue(next))) {
             onValueChange(next)
         }
@@ -45,7 +47,7 @@
 </script>
 
 {#if multiple}
-    {#each selectedValues as selectedValue (selectedValue)}
+    {#each submittedValues as selectedValue (selectedValue)}
         <input type="hidden" {name} value={selectedValue} {disabled} />
     {/each}
 {/if}

@@ -162,6 +162,36 @@ describe('SelectMenu form submission, #255', () => {
         await vi.waitFor(() => expect(submitted(form)).toEqual(['mango']))
     })
 
+    it('does not submit a value passed in that is not one of the items', () => {
+        const form = renderInForm({ name: 'fruit', value: 'not-an-item' })
+        expect(submitted(form)).toEqual([''])
+    })
+
+    it('fails native validation while required and only an unknown value is set', () => {
+        const form = renderInForm({ name: 'fruit', value: 'not-an-item', required: true })
+        expect(form.checkValidity()).toBe(false)
+    })
+
+    it('submits only the values that are items with multiple', () => {
+        const form = renderInForm({
+            name: 'fruit',
+            multiple: true,
+            value: ['apple', 'not-an-item']
+        })
+        expect(submitted(form)).toEqual(['apple'])
+    })
+
+    it('submits the value once the items include it', async () => {
+        const form = makeForm()
+        const { rerender } = render(SelectMenu, {
+            target: form,
+            props: { name: 'fruit', items: [], value: 'banana' }
+        })
+        expect(submitted(form)).toEqual([''])
+        await rerender({ items: defaultItems })
+        await vi.waitFor(() => expect(submitted(form)).toEqual(['banana']))
+    })
+
     it('rejects a value that is not one of the items', async () => {
         const form = renderInForm({ name: 'fruit', value: 'banana' })
         const input = form.querySelector<HTMLInputElement>('input[name="fruit"]')!
