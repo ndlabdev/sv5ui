@@ -88,6 +88,14 @@
     --color-inverse-on-surface: oklch(0.929 0.013 255.51);
     --color-inverse-primary: oklch(0.707 0.165 254.62);
 
+    /* ========== CHART ========== */
+    --color-chart-1: oklch(0.575 0.163 255.53);
+    --color-chart-2: oklch(0.671 0.175 40.64);
+    --color-chart-3: oklch(0.669 0.141 162.11);
+    --color-chart-4: oklch(0.764 0.161 75.12);
+    --color-chart-5: oklch(0.716 0.141 357.39);
+    --color-chart-6: oklch(0.527 0.197 283.44);
+
     /* ========== LAYOUT ========== */
     --ui-header-height: 4rem;
 }
@@ -162,6 +170,14 @@
     --color-inverse-surface: oklch(0.929 0.013 255.51);
     --color-inverse-on-surface: oklch(0.279 0.041 260.03);
     --color-inverse-primary: oklch(0.546 0.245 262.88);
+
+    /* ========== CHART ========== */
+    --color-chart-1: oklch(0.622 0.161 255.05);
+    --color-chart-2: oklch(0.622 0.173 40.11);
+    --color-chart-3: oklch(0.621 0.128 163.11);
+    --color-chart-4: oklch(0.67 0.143 73.23);
+    --color-chart-5: oklch(0.622 0.171 0.84);
+    --color-chart-6: oklch(0.67 0.145 286.83);
 }
 
 /* ============================================
@@ -234,6 +250,14 @@
     --color-inverse-surface: var(--color-inverse-surface);
     --color-inverse-on-surface: var(--color-inverse-on-surface);
     --color-inverse-primary: var(--color-inverse-primary);
+
+    /* Chart */
+    --color-chart-1: var(--color-chart-1);
+    --color-chart-2: var(--color-chart-2);
+    --color-chart-3: var(--color-chart-3);
+    --color-chart-4: var(--color-chart-4);
+    --color-chart-5: var(--color-chart-5);
+    --color-chart-6: var(--color-chart-6);
 
     /* ========== RADIUS ========== */
     --radius-xs: 0.125rem;
