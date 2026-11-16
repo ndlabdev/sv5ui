@@ -139,9 +139,23 @@ describe('SelectFormInputs', () => {
     })
 
     it('does not name the validation input with multiple', () => {
-        const { form } = renderInForm({ multiple: true, selectedValues: ['apple', 'cherry'] })
+        const { form } = renderInForm({
+            multiple: true,
+            selectedValues: ['apple', 'cherry'],
+            isKnownValue: () => true
+        })
         expect(new FormData(form).getAll('fruit')).toEqual(['apple', 'cherry'])
         expect(form.querySelector('input:not([type="hidden"])')!.hasAttribute('name')).toBe(false)
+    })
+
+    it.each([false, true])('submits only known values (multiple: %s)', (multiple) => {
+        const { form } = renderInForm({
+            multiple,
+            required: true,
+            selectedValues: multiple ? ['apple', 'cherry'] : ['cherry']
+        })
+        expect(new FormData(form).getAll('fruit')).toEqual(multiple ? ['apple'] : [''])
+        expect(form.checkValidity()).toBe(multiple)
     })
 
     it('skips validation and submission while disabled', () => {

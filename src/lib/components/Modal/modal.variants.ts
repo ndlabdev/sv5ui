@@ -86,7 +86,7 @@ export const modalVariants = tv({
             size: ['sm', 'md', 'lg', 'xl'],
             class: {
                 content:
-                    'top-1/2 left-1/2 translate-x-[round(-50%,1px)] translate-y-[round(-50%,1px)] not-supports-[translate:round(-50%,1px)]:-translate-x-1/2 not-supports-[translate:round(-50%,1px)]:-translate-y-1/2 max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden'
+                    'top-[round(50%,1px)] left-[round(50%,1px)] translate-x-[round(-50%,1px)] translate-y-[round(-50%,1px)] not-supports-[translate:round(-50%,1px)]:top-1/2 not-supports-[translate:round(-50%,1px)]:left-1/2 not-supports-[translate:round(-50%,1px)]:-translate-x-1/2 not-supports-[translate:round(-50%,1px)]:-translate-y-1/2 max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] overflow-hidden'
             }
         }
     ],
